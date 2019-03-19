@@ -1,0 +1,129 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AirScoutViewClient.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Server_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="Server_Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9880</Value>
+    </Setting>
+    <Setting Name="RefreshRate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Map_Provider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OpenStreetMap</Value>
+    </Setting>
+    <Setting Name="Tmp_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Tmp</Value>
+    </Setting>
+    <Setting Name="Log_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Log</Value>
+    </Setting>
+    <Setting Name="MyCall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DL2ALF</Value>
+    </Setting>
+    <Setting Name="MyLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MyLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DXCall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">GB3MHZ</Value>
+    </Setting>
+    <Setting Name="DXLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DXLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MinLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MinLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MaxLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MaxLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Band" Type="ScoutBase.Core.BAND" Scope="User">
+      <Value Profile="(Default)">B1_2G</Value>
+    </Setting>
+    <Setting Name="Locator_SmallLettersForSubsquares" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Locator_AutoLength" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Locator_MaxLength" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Map_SmallMarkers" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Planes_MaxAlt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12200</Value>
+    </Setting>
+    <Setting Name="Planes_IconFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">plane.png</Value>
+    </Setting>
+    <Setting Name="Airports_IconFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">airport.png</Value>
+    </Setting>
+    <Setting Name="InfoWin_Position" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Metric" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Track" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Speed" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Alt" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Type" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Time" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Dist" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Angle" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_Epsilon" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_Squint" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Planes_Filter_Min_Alt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5000</Value>
+    </Setting>
+    <Setting Name="Planes_Filter_Min_Category" Type="AirScout.Aircrafts.PLANECATEGORY" Scope="User">
+      <Value Profile="(Default)">NONE</Value>
+    </Setting>
+    <Setting Name="Path_Band_Settings" Type="AirScout.Core.BandSettings" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Planes_MinAlt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5000</Value>
+    </Setting>
+    <Setting Name="Planes_Filter_Max_Circumcircle" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Map_AutoCenter" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

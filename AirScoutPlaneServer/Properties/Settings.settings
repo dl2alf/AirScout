@@ -1,0 +1,102 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AirScoutPlaneServer.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Windows_Startup_Minimized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Windows_Startup_Systray" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Windows_Startup_Autorun" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Webserver_Active" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Webserver_Port" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">9872</Value>
+    </Setting>
+    <Setting Name="Webserver_Welcome" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;HTML&gt;&lt;BODY&gt; Welcome to AirScout PlaneServer&lt;/BODY&gt;&lt;/HTML&gt;</Value>
+    </Setting>
+    <Setting Name="Log_Active" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Log_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%DataDir%\Log</Value>
+    </Setting>
+    <Setting Name="Database_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%DataDir%\Database</Value>
+    </Setting>
+    <Setting Name="Application_FirstRun" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Icon_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%AppDir%</Value>
+    </Setting>
+    <Setting Name="Icon_Filename" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PlaneServer.ico</Value>
+    </Setting>
+    <Setting Name="Log_Verbosity" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="Planes_MinLon" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">-15</Value>
+    </Setting>
+    <Setting Name="Planes_MaxLon" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="Planes_MinLat" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">35</Value>
+    </Setting>
+    <Setting Name="Planes_MaxLat" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="Planes_MapProvider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OpenStreetMap</Value>
+    </Setting>
+    <Setting Name="Planes_MinAlt" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">5000</Value>
+    </Setting>
+    <Setting Name="ADSBFeed_Active" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WebFeed1_Settings" Type="AirScout.PlaneFeeds.PlanefeedSettings_WF" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Planes_MaxAlt" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">20000</Value>
+    </Setting>
+    <Setting Name="Planes_Lifetime" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="Setting" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Tmp_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%DataDir%\Tmp</Value>
+    </Setting>
+    <Setting Name="Database_UpdateURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.de/UpdateURL.txt</Value>
+    </Setting>
+    <Setting Name="Database_UpdateCycle" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="WebFeed2_Settings" Type="AirScout.PlaneFeeds.PlanefeedSettings_WF" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="WebFeed3_Settings" Type="AirScout.PlaneFeeds.PlanefeedSettings_WF" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Planes_WebFeed1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[none]</Value>
+    </Setting>
+    <Setting Name="Planes_WebFeed2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[none]</Value>
+    </Setting>
+    <Setting Name="Planes_WebFeed3" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[none]</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

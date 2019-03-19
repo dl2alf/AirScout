@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ScoutBase.Stations.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Database_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Database_InMemory" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Stations_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Stations</Value>
+    </Setting>
+    <Setting Name="Stations_UpdateURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/ScoutBase/1/StationData/</Value>
+    </Setting>
+    <Setting Name="Stations_PasswordURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/airscout.pwd</Value>
+    </Setting>
+    <Setting Name="Database_BackgroundUpdate_Period" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

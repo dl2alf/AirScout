@@ -1,0 +1,380 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AirScout.PlaneFeeds.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="PF_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://droidapp.pinkfroot.com/APPAPIDROID/v7/planeUpdateFAA.php?routetype=IATA&amp;FAA=1&amp;bounds=%MAXLAT%,%MINLAT%,%MINLON%,%MAXLON%</Value>
+    </Setting>
+    <Setting Name="PF_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="Generic_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Generic Info.</Value>
+    </Setting>
+    <Setting Name="PF_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Web feed from www.planefinder.net</Value>
+    </Setting>
+    <Setting Name="Generic_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[Generic]           Dummy Plane Feed</Value>
+    </Setting>
+    <Setting Name="PF_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[WebFeed]           www.planefinder.net</Value>
+    </Setting>
+    <Setting Name="PF_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">This plane feed is being fetched from an Internet server via Deep Link 
+technology  (see http://en.wikipedia.org/wiki/Deep_link). 
+
+The use is not intended by the website owners and could be changed in URL and data format frequently and without further notice. 
+Furthermore, it might cause legal issues in some countries. 
+
+By clicking on "Accept" you understand that you are 
+
+                           DOING THAT ON YOUR OWN RISK
+
+The auhor of this software will not be responsible in any case.</Value>
+    </Setting>
+    <Setting Name="PF_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Generic_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Generic_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">This plane feed is a dummy plane feed generating random plane positions. 
+
+USE THIS FEED FOR DEMONSTRATION PURPOSE ONLY!
+
+The feed will run without fetching any data from the Internet. 
+Please do not mix it with other feeds as confusion may occur with live data.
+The call signs generated will look like "RND0001", "RND0002" etc.</Value>
+    </Setting>
+    <Setting Name="AS_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://localhost:9880/planes.json</Value>
+    </Setting>
+    <Setting Name="AS_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="AS_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[WebFeed]           AirScout Web Server</Value>
+    </Setting>
+    <Setting Name="AS_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AS_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AS_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Web feed from another AirScout server.</Value>
+    </Setting>
+    <Setting Name="FJ_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FJ_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FJ_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="FJ_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Reads plane positions out of a JSON file.</Value>
+    </Setting>
+    <Setting Name="FJ_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[FileFeed]          JSON file</Value>
+    </Setting>
+    <Setting Name="FJ_Path" Type="System.String" Scope="User">
+      <Value Profile="(Default)">planes.json</Value>
+    </Setting>
+    <Setting Name="ADSB_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[RawData]           ADSBSharp data </Value>
+    </Setting>
+    <Setting Name="ADSB_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Raw data feed from simple ADS-B receivers (DVB-T dongles).
+Use this feed thogether with ADSBSharp.
+
+
+</Value>
+    </Setting>
+    <Setting Name="ADSB_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ADSB_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ADSB_Server" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="ADSB_Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">47806</Value>
+    </Setting>
+    <Setting Name="ADSB_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="ADSB_Binary" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ADSB_Report_Messages" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ADSB_MarkLocal" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTL_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[RawData]           RTL1090 data </Value>
+    </Setting>
+    <Setting Name="RTL_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Raw data feed from simple ADS-B receivers (DVB-T dongles).
+Use this feed together with RTL1090.exe.
+
+Feed software must output raw data either binary or ASCII format via TCP.
+
+
+</Value>
+    </Setting>
+    <Setting Name="RTL_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTL_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RTL_Server" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="RTL_Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">31001</Value>
+    </Setting>
+    <Setting Name="RTL_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="RTL_Binary" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTL_Report_Messages" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RTL_MarkLocal" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AJ_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">This plane feed is being fetched from an Internet server via Deep Link 
+technology  (see http://en.wikipedia.org/wiki/Deep_link). 
+
+The use is not intended by the website owners and could be changed in URL and data format frequently and without further notice. 
+Furthermore, it might cause legal issues in some countries. 
+
+By clicking on "Accept" you understand that you are 
+
+                           DOING THAT ON YOUR OWN RISK
+
+The auhor of this software will not be responsible in any case.</Value>
+    </Setting>
+    <Setting Name="AJ_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AJ_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">JSON file from web feed with auto detection of content</Value>
+    </Setting>
+    <Setting Name="AJ_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="AJ_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[WebFeed]           Automatic JSON file detection</Value>
+    </Setting>
+    <Setting Name="AJ_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AJ_Index_UTC" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Hex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Call" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Lat" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Lon" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Alt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Speed" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Reg" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Track" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Type" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Min_Elements" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="AJ_Min_Planes" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Squawk" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_AutoIndex" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Radar" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Flight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="AJ_Index_Route" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="FR_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">This plane feed is being fetched from Flightradar24.com  website
+after checking your valid premium accout.
+Even though AirScout is checking your account status online:
+This service is not authorized by Fligthradar24 and is not guaranteed 
+to work under all circumstances.Paying for a FR24 premium account
+does not automatically grants the right to access the data via AirScout.
+
+By clicking on "Accept" you understand that you are 
+
+                           DOING THAT ON YOUR OWN RISK
+
+The auhor of this software will not be responsible in any case.</Value>
+    </Setting>
+    <Setting Name="FR_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FR_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Web feed from www.flightradar24.com. You need a premim account to use this service.</Value>
+    </Setting>
+    <Setting Name="FR_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="FR_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[WebFeed]           www.flightradar24.com</Value>
+    </Setting>
+    <Setting Name="FR_Login_User" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="FR_Login_Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="VR_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Web feed from Virtual Radar Server</Value>
+    </Setting>
+    <Setting Name="VR_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[WebFeed]           Virtual Radar Server</Value>
+    </Setting>
+    <Setting Name="VR_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="VR_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="VR_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="VR_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://public-api.adsbexchange.com/VirtualRadar/AircraftList.json?fNBnd=%MAXLAT%&amp;fSBnd=%MINLAT%&amp;fWBnd=%MINLON%&amp;fEBnd=%MAXLON%&amp;fAltL=%MINALTFT%&amp;fAltU=%MAXALTFT%</Value>
+    </Setting>
+    <Setting Name="PF_SaveToFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="FR_SaveToFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AJ_SaveToFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="VR_SaveToFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WF_Disclaimer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="WF_Disclaimer_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="WF_Info" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Universal Web Feed</Value>
+    </Setting>
+    <Setting Name="WF_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="WF_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[WebFeed]     Universal Web Feed</Value>
+    </Setting>
+    <Setting Name="WF_SaveToFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WF_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="WF_Index_Call" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Alt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Flight" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Hex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Lat" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Lon" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Radar" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Reg" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Route" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Speed" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Squawk" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Track" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_Type" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Index_UTC" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Min_Elements" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_Min_Planes" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WF_AutoIndex" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="VR_ExtendedPlausibilityCheck" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="VR_EstimatedPosition_MaxError" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="VR_LogErrors" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,560 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AirScout.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MyCall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DL2ALF</Value>
+    </Setting>
+    <Setting Name="DXCall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">GB3MHZ</Value>
+    </Setting>
+    <Setting Name="Band" Type="ScoutBase.Core.BAND" Scope="User">
+      <Value Profile="(Default)">B1_2G</Value>
+    </Setting>
+    <Setting Name="Planes_Update" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="Planes_MinAlt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5000</Value>
+    </Setting>
+    <Setting Name="Map_AutoCenter" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Planes_Draw_Path" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Path_GroundClearance" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Planes_MaxAlt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12200</Value>
+    </Setting>
+    <Setting Name="MyHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">14</Value>
+    </Setting>
+    <Setting Name="DXHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="Calls_FileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Database\calls.txt</Value>
+    </Setting>
+    <Setting Name="WSJTCalls_FileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Database\call3.txt</Value>
+    </Setting>
+    <Setting Name="Watchlist_MaxCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="Planes_Filter_Min_Alt" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Planes_Filter_Min_Category" Type="AirScout.Aircrafts.PLANECATEGORY" Scope="User">
+      <Value Profile="(Default)">NONE</Value>
+    </Setting>
+    <Setting Name="MinLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-15</Value>
+    </Setting>
+    <Setting Name="MaxLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="MinLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">35</Value>
+    </Setting>
+    <Setting Name="MaxLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="MyLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">50.937067</Value>
+    </Setting>
+    <Setting Name="MyLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">10.68327</Value>
+    </Setting>
+    <Setting Name="DXLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">52.05626084</Value>
+    </Setting>
+    <Setting Name="DXLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1.28022909</Value>
+    </Setting>
+    <Setting Name="DXElevation" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">23</Value>
+    </Setting>
+    <Setting Name="MyElevation" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">328</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="QRZ_URL_Database" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.qrz.com/db/</Value>
+    </Setting>
+    <Setting Name="Path_NearFieldSuppression" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Path_History_StepWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Alarm_BringWindowToFront" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Alarm_PlaySound" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Alarm_Distance" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Alarm_Activate" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LocalObstruction_FileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Database\localobstructions.txt</Value>
+    </Setting>
+    <Setting Name="Path_Cubic_Spline" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Horizon_Plot_Cartesian" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Horizon_Plot_Polar" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WinTest_Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9871</Value>
+    </Setting>
+    <Setting Name="Server_Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9872</Value>
+    </Setting>
+    <Setting Name="Path_BestCaseElevation" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Icon_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Icon</Value>
+    </Setting>
+    <Setting Name="Planes_IconFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">plane.png</Value>
+    </Setting>
+    <Setting Name="Planes_PlaneFeed2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[none]</Value>
+    </Setting>
+    <Setting Name="Planes_PlaneFeed3" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[none]</Value>
+    </Setting>
+    <Setting Name="Planes_PlaneFeed1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[WebFeed]           Virtual Radar Server</Value>
+    </Setting>
+    <Setting Name="Planes_Position_TTL" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="Server_Activate" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Server_Name" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AS</Value>
+    </Setting>
+    <Setting Name="Map_Provider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OpenStreetMap</Value>
+    </Setting>
+    <Setting Name="Map_Provider_Accepted" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Map_ToolTipFont" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Microsoft Sans Serif; 11;Bold</Value>
+    </Setting>
+    <Setting Name="SpecLab_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://localhost:10080/</Value>
+    </Setting>
+    <Setting Name="SpecLab_Update" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="SpecLab_FileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">_fft_expt.json</Value>
+    </Setting>
+    <Setting Name="SpecLab_F1" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">400</Value>
+    </Setting>
+    <Setting Name="SpecLab_F2" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1600</Value>
+    </Setting>
+    <Setting Name="SpecLab_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_Metric" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Imperial" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_Position" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Time" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Epsilon" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_Squint" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Track" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Type" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Alt" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Dist" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InfoWin_Speed" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_Angle" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SFTP_PwdURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">HTTP://WWW.AIRSCOUT.EU/DOWNLOADS/AIRSCOUT.PWD</Value>
+    </Setting>
+    <Setting Name="First_Agree" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="First_Disagree" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="First_Privacy" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="FirstRun" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Map_ShowZoomBox" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Map_ShowFilterBox" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Map_ShowAlarmBox" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Map_ShowInfoBox" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="MainSplitter_Distance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="MapSplitter_Distance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="Track_Activate" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Track_SetAz" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Track_SetEl" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Planes_IconSize_L" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">16</Value>
+    </Setting>
+    <Setting Name="Planes_IconSize_M" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">24</Value>
+    </Setting>
+    <Setting Name="Planes_IconSize_H" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">36</Value>
+    </Setting>
+    <Setting Name="Planes_IconSize_S" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">48</Value>
+    </Setting>
+    <Setting Name="Webserver_Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9880</Value>
+    </Setting>
+    <Setting Name="News_LastUpdate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">01/31/2015 15:21:00</Value>
+    </Setting>
+    <Setting Name="News_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3600</Value>
+    </Setting>
+    <Setting Name="News_URL" Type="System.Uri" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/news.html</Value>
+    </Setting>
+    <Setting Name="Track_UDP_WinTest" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Track_DDE_HRD" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Track_Serial_Port" Type="System.String" Scope="User">
+      <Value Profile="(Default)">COM13</Value>
+    </Setting>
+    <Setting Name="Track_Serial_Baudrate" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4800</Value>
+    </Setting>
+    <Setting Name="Track_Serial_GS232_AZ" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Track_File_WSJT" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Track_File_Native" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Track_Serial_GS232_AZEL" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Track_UDP_AirScout" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Track_Serial_None" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Track_UDP_None" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Track_DDE_None" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Track_File_None" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Track_UDP_WinTest_Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9871</Value>
+    </Setting>
+    <Setting Name="Track_UDP_AirScout_Port" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9872</Value>
+    </Setting>
+    <Setting Name="Donate_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/donate.html</Value>
+    </Setting>
+    <Setting Name="Planes_Filter_Max_Circumcircle" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Time_Mode_Online" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Time_Offline" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2015-02-25</Value>
+    </Setting>
+    <Setting Name="Airports_IconFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">airport.png</Value>
+    </Setting>
+    <Setting Name="Airports_Activate" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Database_Airlines_FileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Database\Airlines.txt</Value>
+    </Setting>
+    <Setting Name="Database_Airlines_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.flugzeuginfo.net/table_airlinecodes_airline_en.php</Value>
+    </Setting>
+    <Setting Name="Map_Update" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Database_Update_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/database/</Value>
+    </Setting>
+    <Setting Name="Background_Update_OnStartup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="General_WindowState" Type="System.Windows.Forms.FormWindowState" Scope="User">
+      <Value Profile="(Default)">Maximized</Value>
+    </Setting>
+    <Setting Name="General_WindowSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="General_WindowLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="Background_Update_Periodically" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Background_Update_Period" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="Tmp_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Tmp</Value>
+    </Setting>
+    <Setting Name="Log_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Log</Value>
+    </Setting>
+    <Setting Name="Database_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Database</Value>
+    </Setting>
+    <Setting Name="Locator_MaxLength" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Locator_AutoLength" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Locator_SmallLettersForSubsquares" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Elevation_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\ElevationData</Value>
+    </Setting>
+    <Setting Name="Watchlist" Type="AirScout.Watchlist" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Connectivity_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu</Value>
+    </Setting>
+    <Setting Name="Watchlist_SyncWithKST" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Watchlist_Activated" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Analysis_History_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://history.adsbexchange.com/Aircraftlist.json/</Value>
+    </Setting>
+    <Setting Name="Analysis_History_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Analysis_History_Date" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">2017-07-01</Value>
+    </Setting>
+    <Setting Name="Analysis_History_ZIPFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Analysis_History_Stepwidth" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="Analysis_History_LoadFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Horizon_Plot_Map" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Version" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Elevation_GLOBE_EnableCache" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_EnableCache" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_EnableCache" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_Copyright" Type="System.String" Scope="User">
+      <Value Profile="(Default)">
+Maidenhead locator system elvation tiles calculated by DL2ALF based on elevation data of the GLOBE project:
+
+GLOBE Task Team and others (Hastings, David A., Paula K. Dunbar, Gerald M. Elphingstone, Mark Bootz, Hiroshi Murakami, Hiroshi Maruyama, 
+Hiroshi Masaharu, Peter Holland, John Payne, Nevin A. Bryant, Thomas L. Logan, J.-P. Muller, Gunter Schreier, and John S. MacDonald), eds., 1999. 
+
+The Global Land One-kilometer Base Elevation (GLOBE) Digital Elevation Model, 
+Version 1.0. National Oceanic and Atmospheric Administration, National Geophysical Data Center, 325 Broadway, Boulder, Colorado 80305-3328, U.S.A. 
+
+Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/globe.html) and CD-ROMs. </Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_Copyright" Type="System.String" Scope="User">
+      <Value Profile="(Default)">
+Maidenhead locator system elvation tiles calculated by DL2ALF based on elevation data of the SRTM project:
+
+This material is based on SRTM3 data V3.0 services provided by the OpenTopography Facility with support from the National Science Foundation under NSF Award Numbers 1226353 &amp; 1225810
+http://opentopo.sdsc.edu/raster?opentopoID=OTSRTM.042013.4326.1
+
+The Shuttle Radar Topography Mission (SRTM) obtained elevation data on a near-global scale to generate the most complete high-resolution digital topographic database of Earth. SRTM consisted of a specially modified radar system that flew onboard the Space Shuttle Endeavour during an 11-day mission in February of 2000. SRTM is an international project spearheaded by the National Geospatial-Intelligence Agency (NGA) and the National Aeronautics and Space Administration (NASA).
+
+Version 3: Elimination of the voids in the NASA SRTM DEM was the primary goal of a project under the NASA MEaSUREs (Making Earth System Data Records for Use in Research Environments) Program. Ultimately this was achieved by filling the voids with elevation data primarily from the ASTER GDEM2 (Global Digital Elevation Model Version 2) and secondarily from the USGS GMTED2010 elevation model or the USGS National Elevation Dataset (NED). For more information on this dataset visit the LP DAAC NASA Shuttle Radar Topography Mission Global 3 arc second page.
+
+ASTER GDEM is a product of NASA and METI. See https://lpdaac.usgs.gov/dataset_discovery/aster
+
+MEaSUREs data and products are available at no charge from the LP DAAC.See https://lpdaac.usgs.gov/dataset_discovery/measures
+
+
+
+
+
+</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_Copyright" Type="System.String" Scope="User">
+      <Value Profile="(Default)">
+Maidenhead locator system elvation tiles calculated by DL2ALF based on elevation data of the SRTM project:
+
+This material is based on SRTM1 data V3.0 services provided by the OpenTopography Facility with support from the National Science Foundation under NSF Award Numbers 1226353 &amp; 1225810
+http://opentopo.sdsc.edu/raster?opentopoID=OTSRTM.082015.4326.1
+
+The Shuttle Radar Topography Mission (SRTM) obtained elevation data on a near-global scale to generate the most complete high-resolution digital topographic database of Earth. SRTM consisted of a specially modified radar system that flew onboard the Space Shuttle Endeavour during an 11-day mission in February of 2000. SRTM is an international project spearheaded by the National Geospatial-Intelligence Agency (NGA) and the National Aeronautics and Space Administration (NASA).
+Version 3: Elimination of the voids in the NASA SRTM DEM was the primary goal of a project under the NASA MEaSUREs (Making Earth System Data Records for Use in Research Environments) Program. Ultimately this was achieved by filling the voids with elevation data primarily from the ASTER GDEM2 (Global Digital Elevation Model Version 2) and secondarily from the USGS GMTED2010 elevation model or the USGS National Elevation Dataset (NED). NASA SRTM V3.0 three-arc-second data are provided in two forms: (1) by three-by-three averaging of the one arc-second samples, and (2) by extracting the middle sample of those same three-by-three samples. For more information on this dataset visit the LP DAAC NASA Shuttle Radar Topography Mission Global 1 arc second page.
+https://lpdaac.usgs.gov/dataset_discovery/measures/measures_products_table/srtmgl1
+
+ASTER GDEM is a product of NASA and METI. See https://lpdaac.usgs.gov/dataset_discovery/aster
+
+MEaSUREs data and products are available at no charge from the LP DAAC.See https://lpdaac.usgs.gov/dataset_discovery/measures
+
+
+
+
+</Value>
+    </Setting>
+    <Setting Name="Path_MaxLength" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="Background_Calculations_Enable" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="StationsDatabase_Status" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Path_Band_Settings" Type="AirScout.Core.BandSettings" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Background_Calculations_ThreadWait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MyCalls" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
+      <Value Profile="(Default)">DL2ALF</Value>
+    </Setting>
+    <Setting Name="Map_SmallMarkers" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ElevationModel" Type="ScoutBase.Elevation.ELEVATIONMODEL" Scope="User">
+      <Value Profile="(Default)">NONE</Value>
+    </Setting>
+    <Setting Name="AircraftDatabase_Status" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Horizon_MaxDist" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_DatabaseStatus" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_DatabaseStatus" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_DatabaseStatus" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="AircraftDatabase_MaxSize" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1500</Value>
+    </Setting>
+    <Setting Name="AircraftDatabase_MaxDaysLifetime" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="AircraftDatabase_MaxCount" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">10000000</Value>
+    </Setting>
+    <Setting Name="Analysis_CrossingHistory_WithSignalLevel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Analysis_CrossingHistory_AmbiguousGap" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Planes_KeepHistory" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

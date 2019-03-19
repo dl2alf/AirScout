@@ -1,0 +1,211 @@
+   
+Revision History for the OrbitTools.Core assembly - Public Edition
+Copyright (c) Michael F. Henry
+www.zeptomoby.com/satellites
+
+Version 1.1.0.0 2012-10-27
+
+   Added classes EciTime, GeoTime, and TopoTime which encapsulate 
+      coordinate information along with a Julian date. This formalizes the
+      connection between coordinates and an associated time, and allows use
+      of the base classes Eci, Geo, and Topo when the time component
+      is not needed.
+   Added new constructor Geo.Geo(Geo geo).
+   Added new constructor Site.Site(Geo geo).
+   Added RotateX(), RotateY(), RotateZ(), and Translate() methods to 
+      class Vector.
+
+   Breaking changes:
+
+   1. Renamed class CoordGeo to Geo, and removed default constructor.
+   2. Renamed class CoordTopo to Topo, and removed default constructor.
+   3. Class Eci no longer contains a Date property (use new class EciTime).
+   4. Method Eci.ToGeo() removed; use class Geo constructor.
+   5. Method Site.GetPosition() returns type EciTime.
+   6. IOrbit.GetPosition() returns type EciTime (2 overloads).
+   7. Method Site.GetLookAngle() returns type TopoTime.
+
+Version 1.0.6.0 2012-08-24
+
+   Added ToString() to class Eci.
+   Added ToString() and degree-based lat/lon properties to class CoordGeo.
+   Added degree-based azimuth/elevation properties to class CoordTopo.
+
+   Breaking changes:
+
+      1. Renamed CoordTopo.Azimuth to AzimuthRad.
+      2. Renamed CoordTopo.Elevation to ElevationRad.
+
+Version 1.0.5.0 2012-06-21
+
+   Fixed the string-based property Tle.Epoch which was dropping leading
+   zeros from single-digit year and day values. Thanks to T. Doyle for
+   reporting this issue.
+
+   Updated the string-based Tle.GetField() to remove all leading/trailing
+   whitespace from returned strings.
+
+   Added methods Site.LatitudeDeg() and Site.LongitudeDeg().
+
+   Breaking changes:
+
+      1. Removed "IsAeUnits" from the constructor for class Eci.
+      2. Removed method Eci.AeToKm().
+      3. Removed enumeration VectorUnits.
+      4. Renamed Globals.Deg2Rad() to ToRadians().
+      5. Renamed Globals.Rad2Deg() to ToDegrees().
+      6. Renamed Tle.IsValidLine() to IsValidFormat().
+      7. Renamed CoordGeo.Latitude() to LatitudeRad().
+      8. Renamed CoordGeo.Longitude() to LongitudeRad().
+      9. Renamed Site.Latitude() to LatitudeRad().
+     10. Renamed Site.Longitude() to LongitudeRad().
+
+Version 1.0.4.0 2012-05-28
+
+   Some AMSAT TLEs use a non-standard scientific notation format that
+   excludes the sign of the exponent when the exponent is positive.
+   Updated Tle.ExpToDecimal() to correctly parse these TLEs. Thanks to
+   T. Doyle for reporting this issue.
+
+Version 1.0.3.1 2012-04-26
+
+   Use generic Dictionary<> instead of HashTable. 
+   Remove references to class CategoryAttribute.
+
+Version 1.0.3.0 2011-08-21
+
+   Allow TLE satellite names up to twenty-four characters.
+   Compile with Visual Studio 2010.
+
+Version 1.0.2.2 2011-06-26
+
+   Repaired Site.ToString(), which had formatting errors.
+   
+Version 1.0.2.1 2011-05-17
+
+   Field Site.m_Geo is now private property "Geo".
+   Added copy constructor for class Vector.
+   
+   Breaking changes:
+   
+      1. Removed Globals.E6a
+      2. Removed Globals.TwoThird
+
+Version 1.0.2.0 2010-12-31
+
+   Assembly marked as CLSCompliant(true), and ComVisible(false).
+   Fixed white-space removal code in Tle.IsValidLine().
+   Pass CultureInfo objects to all calls to Parse() and ToString().
+   Removed unneeded variable initializations.
+   
+   Breaking changes from prior version:
+
+      1. Renamed Tle.getUnits() to GetUnits() and made the method static.
+      2. Tle.ConvertUnits() is now a static method.
+      3. Tle.Key() is now a static method.
+   
+   New behaviors:
+   
+      1. Site.GetLookAngle() throws class ArgumentException (and not class
+         Exception) when the eci argument does not have kilometer-based
+         units.
+   
+Version 1.0.1.0 2010-12-22
+
+   Provide GMT when throwing DecayExceptions.
+
+Version 1.0.0.0 2010-09-26
+
+   Split the OrbitTools project into two assemblies: 
+   
+      Core.dll  - Contains core functionality such as Tle, Julian, etc.               
+      Orbit.dll - Contains SGP4/SDP4 and class Orbit functionality.
+           
+   Dividing the project into two assemblies allows an easier upgrade path
+   for users who wish to transition to the Professional version of the
+   software.
+   
+   Method Tle.ExpToDecimal() now uses the invariant culture when parsing
+   the exponent value. This fixes a problem encountered by users who do
+   not use Windows English regional settings.
+   
+   Added new exception classes PropagatorException and DecayException.   
+
+   Compile with Visual Studio 2008.
+   
+   Breaking changes from prior (single assembly) release:
+   
+   All method names now use Pascal casing:
+      1. Renamed Tle.getField() (3 overloads) to GetField().
+      2. Renamed Site.getPosition() to Site.GetPosition().
+      3. Renamed Site.getLookAngle() to Site.GetLookAngle(). This method now
+         throws System.ArgumentException on error (and not System.Exception).
+      4. Renamed Site.toString() to Site.ToString().
+      5. Renamed Julian.toGMST() to Julian.ToGmst().
+      6. Renamed Julian.toLMST() to Julian.ToLmst().
+      7. Renamed Julian.toTime() to Julian.ToTime().
+      8. Renamed Eci.toGeo() to Eci.ToGeo().
+      9. Renamed EciBase.ae2km() to EciBase.Ae2Km().
+     10. All fields in class Globals renamed using Pascal casing.
+
+                       ********************
+Revision history below this point was for the single-assembly version of 
+the library. Only comments relevant to the files that were moved into the 
+Core.dll assembly have been retained. All other comments were moved into
+the revision notes file for the Orbit.dll assembly.
+                       ********************
+   
+Version 1.9.1.0 10/18/2009
+   
+   Corrected problem in ExpToDecimal() that was dropping the last 
+   significant digit of the mantissa.
+
+Version 1.9.0.0 01/25/2009
+
+   Corrected argument range checking in Julian.Initialize(). Also, the
+   type of exception thrown if an argument is invalid has changed from 
+   "Exception" to "ArgumentOutOfRangeException".
+
+Version 1.8.0.0 01/02/2009
+
+   (Incremented due to changes in Orbit.cs)
+
+Version 1.7.0.0 12/08/2007
+   
+   Added overrides of several functions to accept System.DateTime arguments.
+   Converted Orbit.Period() to a property and changed return type to TimeSpan.
+
+Version 1.6.0.0 08/08/2007
+
+   Added ECF support.
+   Use invariant culture when parsing strings. 
+
+Version 1.5.0.0 01/28/2006
+
+   Namespace is now "Zeptomoby.OrbitTools".
+
+Version 1.4.0.0 11/05/2005
+
+   More interface rework; many methods are now properties.
+
+Version 1.3.0.0 07/19/2005
+   
+   Added EpochJulian property to Tle class. Logic was previously located in
+   class Orbit's constructor.  The Tle class has been updated to better work
+   with the .NET property grid control.
+
+Version 1.2.0.0 06/01/2005
+
+   Rework interfaces using C# accessors. Minor code updates.
+
+   Confusion in the Julian day constant values introduced a bug SDP4; the 
+   constants were repaired.  Specifically, 2415020.0 is 12:00, on Dec 31, 1899,
+   or the beginning of Julian "Jan Zero" in the year 1900.
+
+   Simplify Tle.ExpToDecimal() by converting input string into Double-Parsable
+   form, i.e., " 12345-3" => " 12345e-3", and then simply call Double.Parse().
+
+Version 1.1.0.0 12/01/2004
+
+   Baseline release.
+

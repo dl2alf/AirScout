@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="The orientation of the scrollbar">
+    <Position X="4.896" Y="1.75" Height="0.49" Width="1.356" />
+  </Comment>
+  <Comment CommentText="The states of the arrow buttons">
+    <Position X="4.885" Y="2.521" Height="0.49" Width="1.356" />
+  </Comment>
+  <Comment CommentText="The state of the scrollbar">
+    <Position X="4.875" Y="3.292" Height="0.49" Width="1.356" />
+  </Comment>
+  <Comment CommentText="The renderer class">
+    <Position X="4.906" Y="1.031" Height="0.49" Width="1.356" />
+  </Comment>
+  <Class Name="CustomScrollBar.ScrollBarEx">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>xwLZOI+MYQRBgCAhYCLBEIFqARgDeiQCYIGggIJnAEI=</HashCode>
+      <FileName>ScrollBarEx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CustomScrollBar.ScrollBarExRenderer" Collapsed="true">
+    <Position X="2.5" Y="1" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>SAAABIAQAAAiCAAABAIACACAAgABAIAAAAAGAAAAoAQ=</HashCode>
+      <FileName>ScrollBarExRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="CustomScrollBar.ScrollBarArrowButtonState" Collapsed="true">
+    <Position X="2.5" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAABCBAACAQAAAAAAAAAIAAAAAAAAIRA=</HashCode>
+      <FileName>ScrollBarArrowButtonState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CustomScrollBar.ScrollBarOrientation" Collapsed="true">
+    <Position X="2.5" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ScrollBarOrientation.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="CustomScrollBar.ScrollBarState" Collapsed="true">
+    <Position X="2.5" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAAAIAIAAAgAAAAAAAEAAA=</HashCode>
+      <FileName>ScrollBarState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

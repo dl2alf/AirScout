@@ -1,0 +1,545 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{17498590-2CFF-4D24-BFB8-549D14BD2545}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AirScout</RootNamespace>
+    <AssemblyName>AirScout</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>false</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <SupportUrl>http://www.dl0gth.de/software/airscout</SupportUrl>
+    <TargetCulture>en-GB</TargetCulture>
+    <ProductName>AirScout</ProductName>
+    <PublisherName>DL2ALF</PublisherName>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>63A018CBEFF856D37BB8205182B79FA75AC368C1</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>AirScout_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>AirScout.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Main.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.110.0\lib\net40\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CleanupDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CleanupDlg.Designer.cs">
+      <DependentUpon>CleanupDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CrossingHistoryDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CrossingHistoryDlg.Designer.cs">
+      <DependentUpon>CrossingHistoryDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LocalObstructionsDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LocalObstructionsDlg.Designer.cs">
+      <DependentUpon>LocalObstructionsDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapStationDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapStationDlg.Designer.cs">
+      <DependentUpon>MapStationDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PathCalculator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ElevationCopyrightDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ElevationCopyrightDlg.Designer.cs">
+      <DependentUpon>ElevationCopyrightDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FirstRunWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FirstRunWizard.Designer.cs">
+      <DependentUpon>FirstRunWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LicenseDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LicenseDlg.Designer.cs">
+      <DependentUpon>LicenseDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PlaneFeedDisclaimerDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlaneFeedDisclaimerDlg.Designer.cs">
+      <DependentUpon>PlaneFeedDisclaimerDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HistoryFromURLDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HistoryFromURLDlg.Designer.cs">
+      <DependentUpon>HistoryFromURLDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HorizonDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HorizonDlg.Designer.cs">
+      <DependentUpon>HorizonDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapDlg.Designer.cs">
+      <DependentUpon>MapDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapProviderDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapProviderDlg.Designer.cs">
+      <DependentUpon>MapProviderDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PlaneFeedSettingsDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlaneFeedSettingsDlg.Designer.cs">
+      <DependentUpon>PlaneFeedSettingsDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Planefinder.cs" />
+    <Compile Include="OptionsDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OptionsDlg.Designer.cs">
+      <DependentUpon>OptionsDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PlaneHistoryDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlaneHistoryDlg.Designer.cs">
+      <DependentUpon>PlaneHistoryDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DatabaseStatus.cs" />
+    <Compile Include="ReflectionDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReflectionDlg.Designer.cs">
+      <DependentUpon>ReflectionDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ScoutBaseDatabaseMaintenanceDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScoutBaseDatabaseMaintenanceDlg.Designer.cs">
+      <DependentUpon>ScoutBaseDatabaseMaintenanceDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SetTimeDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SetTimeDlg.Designer.cs">
+      <DependentUpon>SetTimeDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="Splash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Splash.Designer.cs">
+      <DependentUpon>Splash.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrafficDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrafficDlg.Designer.cs">
+      <DependentUpon>TrafficDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Watchlist.cs" />
+    <Compile Include="WatchlistDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WatchlistDlg.Designer.cs">
+      <DependentUpon>WatchlistDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Webserver.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Content Include="airport.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\donate.png" />
+    <None Include="AirScout_clean.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Icons\Map.png" />
+    <None Include="Icons\Map2.png" />
+    <Content Include="Readme_Linux.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="TERMSANDCONDITIONS">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="VersionHistory.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="CleanupDlg.resx">
+      <DependentUpon>CleanupDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CrossingHistoryDlg.resx">
+      <DependentUpon>CrossingHistoryDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ElevationCopyrightDlg.resx">
+      <DependentUpon>ElevationCopyrightDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FirstRunWizard.resx">
+      <DependentUpon>FirstRunWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LicenseDlg.resx">
+      <DependentUpon>LicenseDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LocalObstructionsDlg.resx">
+      <DependentUpon>LocalObstructionsDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapStationDlg.resx">
+      <DependentUpon>MapStationDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlaneFeedDisclaimerDlg.resx">
+      <DependentUpon>PlaneFeedDisclaimerDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HistoryFromURLDlg.resx">
+      <DependentUpon>HistoryFromURLDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HorizonDlg.resx">
+      <DependentUpon>HorizonDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapDlg.resx">
+      <DependentUpon>MapDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapProviderDlg.resx">
+      <DependentUpon>MapProviderDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionsDlg.resx">
+      <DependentUpon>OptionsDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlaneFeedSettingsDlg.resx">
+      <DependentUpon>PlaneFeedSettingsDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlaneHistoryDlg.resx">
+      <DependentUpon>PlaneHistoryDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="ReflectionDlg.resx">
+      <DependentUpon>ReflectionDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScoutBaseDatabaseMaintenanceDlg.resx">
+      <DependentUpon>ScoutBaseDatabaseMaintenanceDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SetTimeDlg.resx">
+      <DependentUpon>SetTimeDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Splash.resx">
+      <DependentUpon>Splash.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrafficDlg.resx">
+      <DependentUpon>TrafficDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WatchlistDlg.resx">
+      <DependentUpon>WatchlistDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="AirScout_TemporaryKey.pfx" />
+    <None Include="app.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="libSQLite.Interop.so">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\DataSources\AirScout.Properties.Settings.datasource" />
+    <None Include="Properties\DataSources\OptionsDlg.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AeroWizard\AeroWizard\AeroWizard.csproj">
+      <Project>{199c12c4-3eef-4d08-bac3-f2a62bcf969c}</Project>
+      <Name>AeroWizard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AirScout.AircraftPositions\AirScout.AircraftPositions.csproj">
+      <Project>{be467e28-c202-4d71-bb17-9086861ad75f}</Project>
+      <Name>AirScout.AircraftPositions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AirScout.Aircrafts\AirScout.Aircrafts.csproj">
+      <Project>{288a26ec-b690-41a2-84e5-61c9b7b74046}</Project>
+      <Name>AirScout.Aircrafts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AirScout.Core\AirScout.Core.csproj">
+      <Project>{41b66be4-6086-4ae3-be31-c81ee6b10154}</Project>
+      <Name>AirScout.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AirScout.Signals\AirScout.Signals.csproj">
+      <Project>{3d34943b-caca-426d-9fc0-661531668e87}</Project>
+      <Name>AirScout.Signals</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CustomScrollBar\CustomScrollBar.csproj">
+      <Project>{80c7dc34-e1f6-4da8-affb-904c06a3623b}</Project>
+      <Name>CustomScrollBar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DotNetZip\Zip\Zip DLL.csproj">
+      <Project>{d3b0ad67-44d8-4b3d-bed9-ce1fd6de2c5a}</Project>
+      <Name>Zip DLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OrbitTools\OrbitTools\Orbit.Core\Orbit.Core.csproj">
+      <Project>{99510ed5-99e0-405d-bcac-9159a7426d61}</Project>
+      <Name>Orbit.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OrbitTools\OrbitTools\Orbit\Orbit.csproj">
+      <Project>{baa5fe10-3e3a-4d5d-ab3d-4b50d6ac0321}</Project>
+      <Name>Orbit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OxyPlot\Source\OxyPlot.WindowsForms\OxyPlot.WindowsForms.csproj">
+      <Project>{8bc521ad-81cf-4e6c-8898-be67527e7064}</Project>
+      <Name>OxyPlot.WindowsForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OxyPlot\Source\OxyPlot\OxyPlot.csproj">
+      <Project>{507de008-21ac-469b-bc30-23b239832af6}</Project>
+      <Name>OxyPlot</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScoutBase\ScoutBase.Core\ScoutBase.Core.csproj">
+      <Project>{EE86E933-D883-4B18-80EB-0FBA55EC67C6}</Project>
+      <Name>ScoutBase.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScoutBase\ScoutBase.Elevation\ScoutBase.Elevation.csproj">
+      <Project>{009cabfd-726d-481f-972d-0a218e0ad9b9}</Project>
+      <Name>ScoutBase.Elevation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScoutBase\ScoutBase.Propagation\ScoutBase.Propagation.csproj">
+      <Project>{610db007-5f74-4b5d-8b71-5e2c163a99b3}</Project>
+      <Name>ScoutBase.Propagation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScoutBase\ScoutBase.Stations\ScoutBase.Stations.csproj">
+      <Project>{358e87d7-849f-412a-b487-f7b7d585a7f9}</Project>
+      <Name>ScoutBase.Stations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SQLiteDatabase\SQLiteDatabase\SQLiteDatabase.csproj">
+      <Project>{6056D3BE-7002-4A6A-A9EA-6FF45122A3C7}</Project>
+      <Name>SQLiteDatabase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AirScout.PlaneFeeds\AirScout.PlaneFeeds.csproj">
+      <Project>{EA78AD40-1505-406F-8049-744E58D93F54}</Project>
+      <Name>AirScout.PlaneFeeds</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AquaGauge\AquaGauge.csproj">
+      <Project>{0E5542E0-FC5D-4F67-950D-9F28C5D1225A}</Project>
+      <Name>AquaGauge</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CubicSpline\CubicSpline\CubicSpline.csproj">
+      <Project>{CD637EDA-E0C3-4ABF-8E24-A5B94892311C}</Project>
+      <Name>CubicSpline</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GreatMaps\GMap.NET.Core\GMap.NET.Core.csproj">
+      <Project>{D0C39D9D-BED0-418B-9A5E-713176CAF40C}</Project>
+      <Name>GMap.NET.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GreatMaps\GMap.NET.WindowsForms\GMap.NET.WindowsForms.csproj">
+      <Project>{E06DEF77-F933-42FB-AFD7-DB2D0D8D6A98}</Project>
+      <Name>GMap.NET.WindowsForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NDDE\NDde\Source\NDde\NDde.csproj">
+      <Project>{D77772F9-3D3D-40BA-B95F-05C45878078F}</Project>
+      <Name>NDde</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SerializableGenerics\SerializableGenerics.csproj">
+      <Project>{ef2eb181-4d5b-4418-a280-bfa1d53550be}</Project>
+      <Name>SerializableGenerics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WinTest\WinTest.csproj">
+      <Project>{7B815C51-6896-4989-BD1B-8D2D7A116AA3}</Project>
+      <Name>WinTest</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\Intro.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icons\question mark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 und x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="plane.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Main.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,60 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ScoutBase.Data.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="GLOBE_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ElevationData\GLOBE</Value>
+    </Setting>
+    <Setting Name="GLOBE_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="GLOBE_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://www.ngdc.noaa.gov/mgg/topo/DATATILES/elev/</Value>
+    </Setting>
+    <Setting Name="GLOBE_URLs" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://www.ngdc.noaa.gov/mgg/topo/DATATILES/elev/
+https://www.airscout.eu/downloads/GLOBE</Value>
+    </Setting>
+    <Setting Name="SRTM3_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ElevationData\SRTM3</Value>
+    </Setting>
+    <Setting Name="SRTM3_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SRTM3_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://dds.cr.usgs.gov/srtm/version2_1/SRTM3/Eurasia/</Value>
+    </Setting>
+    <Setting Name="SRTM3_URLs" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://dds.cr.usgs.gov/srtm/version2_1/SRTM3/Africa/
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM3/Australia/
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM3/Eurasia/
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM3/Islands/
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM3/North_America/
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM3/South_America/</Value>
+    </Setting>
+    <Setting Name="SRTM1_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ElevationData\SRTM1</Value>
+    </Setting>
+    <Setting Name="SRTM1_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SRTM1_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://dds.cr.usgs.gov/srtm/version2_1/SRTM1/</Value>
+    </Setting>
+    <Setting Name="SRTM1_URLs" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://dds.cr.usgs.gov/srtm/version2_1/SRTM1/Region_01
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM1/Region_02
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM1/Region_03
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM1/Region_04
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM1/Region_05
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM1/Region_06
+https://dds.cr.usgs.gov/srtm/version2_1/SRTM1/Region_07</Value>
+    </Setting>
+    <Setting Name="Database_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Database_InMemory" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

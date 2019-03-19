@@ -1,0 +1,40 @@
+image: Visual Studio 2017
+
+configuration: 
+  - Release
+
+pull_requests:
+  do_not_increment_build_number: true
+
+install:
+  - cinst gitversion.portable --version=3.6.4 -y
+  - cinst gitlink --version=2.3.0 -y
+
+before_build:
+  - appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+  - NuGet restore Source/OxyPlot.AppVeyor.sln
+  - gitversion /l console /output buildserver /updateAssemblyInfo
+
+build_script:
+  - msbuild Source/OxyPlot.AppVeyor.sln "/property:Platform=Any CPU" "/property:Version=%GitVersion_NuGetVersion%" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+ 
+after_build:
+  - gitlink c:\projects\oxyplot -u https://github.com/oxyplot/oxyplot -f Source/OxyPlot.AppVeyor.sln
+  - NuGet pack Source\OxyPlot.Wpf\OxyPlot.Wpf.nuspec -version "%GitVersion_NuGetVersion%" -OutputDirectory Source\OxyPlot.Wpf\bin\Release
+  - NuGet pack Source\OxyPlot.Windows\OxyPlot.Windows.nuspec -version "%GitVersion_NuGetVersion%" -OutputDirectory Source\OxyPlot.Windows\bin\Release
+  - NuGet pack Source\OxyPlot.WindowsForms\OxyPlot.WindowsForms.nuspec -version "%GitVersion_NuGetVersion%" -OutputDirectory Source\OxyPlot.WindowsForms\bin\Release
+  - NuGet pack Source\OxyPlot.OpenXml\OxyPlot.OpenXml.nuspec -version "%GitVersion_NuGetVersion%" -OutputDirectory Source\OxyPlot.OpenXml\bin\Release
+  - NuGet pack Source\OxyPlot.Pdf\OxyPlot.Pdf.nuspec -version "%GitVersion_NuGetVersion%" -OutputDirectory Source\OxyPlot.Pdf\bin\Release
+
+artifacts:
+  - path: '**/bin/Release/**/*.nupkg'
+    name: packages
+
+deploy:
+  provider: NuGet
+  server: https://www.myget.org/F/oxyplot/api/v2/package
+  api_key:
+    secure: 2GnqgfpkOUH6Umfn1WWlun0b021+QeInBXkgQOQfa4/wDOYHLT757rrjTsb0lmon
+  skip_symbols: false
+  symbol_server:           # remove to push symbols to SymbolSource.org
+  artifact: packages

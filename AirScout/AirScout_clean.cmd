@@ -1,0 +1,1 @@
+AirScout.exe /clean

@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ScoutBase.Core.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LogWriter_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LogWriter_FileFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">log_{0:d}.log</Value>
+    </Setting>
+    <Setting Name="LogWriter_QueueSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="LogWriter_MaxAge" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="LogWriter_MessageFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">"{0:t}: {1}"</Value>
+    </Setting>
+    <Setting Name="LogWriter_Verbosity" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

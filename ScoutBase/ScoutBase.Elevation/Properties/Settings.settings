@@ -1,0 +1,45 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ScoutBase.Elevation.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Database_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Database_InMemory" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">GLOBE</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_UpdateURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/ScoutBase/1/ElevationData/GLOBE</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_JSONFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">globe.json</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SRTM3</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_UpdateURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/ScoutBase/1/ElevationData/SRTM3</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_JSONFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">srtm3.json</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SRTM1</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_UpdateURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/ScoutBase/1/ElevationData/SRTM1</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_JSONFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">srtm1.json</Value>
+    </Setting>
+    <Setting Name="Datatbase_BackgroundUpdate_Period" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="Database_BackgroundUpdate_ThreadWait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

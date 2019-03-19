@@ -1,0 +1,142 @@
+   
+Revision History for the OrbitTools.Orbit assembly - Public Edition
+Copyright (c) Michael F. Henry
+www.zeptomoby.com/satellites
+
+Version 1.1.0.0 2012-10-27
+
+   OrbitTools.Core library updates:
+      Class CoordGeo renamed Geo, added derived class GeoTime.
+      Class CoordTopo renamed Topo.
+      Use new classes EciTime, GeoTime, TopoTime.
+
+   Breaking changes:
+   
+   1. Orbit.GetPosition() now returns type EciTime.
+
+Version 1.0.5.0 2012-06-02
+
+   Updates for OrbitTools.Core changes:
+
+      Boolean "IsAeUnits" was removed from the constructor for class Eci.
+      Eci.AeToKm() was removed.
+      The enumeration VectorUnits was removed.
+      Global functions to convert between degrees and radians were renamed.
+
+Version 1.0.4.0 2011-12-19
+
+   Fix Orbit.TPlusEpoch(); it was not using UTC time.
+
+Version 1.0.3.0 2011-10-01
+
+   Performance changes:
+
+      1. Class Orbit now uses caching variables for common TLE orbital 
+         parameters like inclination, argument of perigee, etc.
+
+   Breaking changes:
+
+      1. Method Orbit.MeanAnomaly() is now property Orbit.MeanAnomaly.
+      2. Method Orbit.MeanAnomaly(DateTime) has been removed.
+
+Version 1.0.2.0 2011-08-21 
+
+   Compile with Visual Studio 2010.
+
+Version 1.0.1.1 2011-05-17
+
+   Renamed Orbit.RadGet() to Orbit.GetRad().
+   Renamed Orbit.DegGet() to Orbit.GetDeg().
+   
+   Breaking changes:
+   
+      1. Changed Orbit.SatName() (2 overloads) into two properties:
+         SatName and SatNameLong (a change that was erroneously dropped
+         from version 1.0.0.0)
+      2. Renamed property Orbit.mnMotion to Orbit.TleMeanMotion.
+   
+Version 1.0.1.0 2010-12-31
+
+   Assembly marked as CLSCompliant(true), and ComVisible(false).
+   Removed unused local from class NoradSDP4 c'tor.
+   
+Version 1.0.0.0 2010-09-26
+
+   Split the OrbitTools project into two assemblies:
+   
+      Core.dll  - Contains core functionality such as Tle, Julian, etc.
+      Orbit.dll - Contains SGP4/SDP4 and class Orbit functionality.
+
+   Dividing the project into two assemblies allows an easier upgrade path
+   for users who wish to transition to the Professional version of the
+   software.
+
+   Orbit.GetPosition() no longer throws class Exception, but instead
+   throws class DecayException or class PropagationException.
+   
+   Compile with Visual Studio 2008.
+               
+   Breaking changes from prior (single assembly) release:
+   
+      1. Assembly name is Zeptomoby.OrbitTools.Orbit.dll, and requires
+         assembly Zeptomoby.OrbitTools.Core.dll.
+      2. Changed Orbit.SatName() (2 overloads) into two properties:
+         SatName and SatNameLong.
+      3. Renamed Orbit.mnAnomaly() (2 overloads) to MeanAnomaly().
+      4. Renamed Orbit.getPosition() (2 overloads) to GetPosition().
+
+                       ********************
+Revision history below this point was for the single-assembly version of 
+the library. Only comments relevant to the files that were moved into the 
+Orbit.dll assembly have been retained. All other comments were moved into
+the revision notes file for the Core.dll assembly.
+                       ********************
+
+Version 1.9.1.0 10/18/2009
+   
+   (Version incremented due to changes in Tle.cs)
+
+Version 1.9.0.0 01/25/2009
+
+   (Version incremented due to changes in Julian.cs)
+
+Version 1.8.0.0 01/02/2009
+
+   The orbit axis recovered from orbital elements is now correctly
+   associated with the semimajor axis (and not the semiminor axis).
+   This change does not effect SGP4/SDP4 output calculations, but
+   does correct class Orbit's convenience properties SemiMajor, SemiMinor,
+   Major, Minor, etc. Thanks to C. Wee for discovering this issue.
+
+   Renamed class Orbit's public property "mnMotionRec" to "MeanMotion".
+
+Version 1.7.0.0 12/08/2007
+   
+   Added overrides of several functions to accept System.DateTime arguments.
+   Converted Orbit.Period() to a property and changed return type to TimeSpan.
+
+Version 1.6.0.0 08/08/2007
+
+   (Version incremented due to changes in Tle.cs)
+
+Version 1.5.0.0 01/28/2006
+
+   Namespace is now "Zeptomoby.OrbitTools".
+
+Version 1.4.0.0 11/05/2005
+
+   More interface rework; many methods are now properties.
+
+Version 1.3.0.0 07/19/2005
+
+   Fixed error in calculating Orbit.m_kmPerigeeRec (which is not used by
+   the SDP4 or SGP4 algorithms). Accessor is now a property. Added Orbit.Apogee
+   counterpart property.
+   
+Version 1.2.0.0 06/01/2005
+
+   Rework interfaces using C# accessors. Minor code updates.
+
+Version 1.1.0.0 12/01/2004
+
+   Baseline release.

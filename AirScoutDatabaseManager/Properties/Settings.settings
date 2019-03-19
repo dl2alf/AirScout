@@ -1,0 +1,93 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AirScoutDatabaseManager.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MinLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-15</Value>
+    </Setting>
+    <Setting Name="MaxLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="MinLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">35</Value>
+    </Setting>
+    <Setting Name="MaxLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="Map_Provider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OpenStreetMap</Value>
+    </Setting>
+    <Setting Name="QRZ_URL_Database" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.qrz.com/db/</Value>
+    </Setting>
+    <Setting Name="Log_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Log</Value>
+    </Setting>
+    <Setting Name="Database_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Database</Value>
+    </Setting>
+    <Setting Name="Tmp_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Tmp</Value>
+    </Setting>
+    <Setting Name="Export_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Export</Value>
+    </Setting>
+    <Setting Name="Station_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/ScoutBase/1/StationData/</Value>
+    </Setting>
+    <Setting Name="QRZ_URL_Login" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://xmldata.qrz.com/xml/current/?username=dl2alf;password=271192;agent=AirScout</Value>
+    </Setting>
+    <Setting Name="QRZ_URL_XMLData" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://xmldata.qrz.com/xml/current/</Value>
+    </Setting>
+    <Setting Name="SFTP_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">www.airscout.eu</Value>
+    </Setting>
+    <Setting Name="SFTP_User" Type="System.String" Scope="User">
+      <Value Profile="(Default)">u45565180-airscout</Value>
+    </Setting>
+    <Setting Name="SFTP_Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">airscout</Value>
+    </Setting>
+    <Setting Name="Airlines_Update_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://www.flightradar24.com/_json/airlines.php</Value>
+    </Setting>
+    <Setting Name="Airports_Update_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://www.flightradar24.com/_json/airports2.php</Value>
+    </Setting>
+    <Setting Name="Aircrafts_BaseURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://data.flightradar24.com/zones/fcgi/feed.js?faa=1&amp;mlat=1&amp;flarm=0&amp;adsb=1&amp;gnd=0&amp;air=1&amp;vehicles=0&amp;estimated=0&amp;maxage=0&amp;gliders=0&amp;stats=1</Value>
+    </Setting>
+    <Setting Name="StationDatabase_Export_LocalDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Z:\CSharp\AirScout\Database\ScoutBase\V1</Value>
+    </Setting>
+    <Setting Name="StationDatabase_Export_RemoteDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/wsb4556518002/downloads/ScoutBase/1/StationData</Value>
+    </Setting>
+    <Setting Name="StationDatabase_Export_User" Type="System.String" Scope="User">
+      <Value Profile="(Default)">u45565180</Value>
+    </Setting>
+    <Setting Name="StationDatabase_Export_Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="StationDatabase_Export_RemoteHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">home208518495.1and1-/data.host</Value>
+    </Setting>
+    <Setting Name="AircraftDatabase_Export_LocalDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Z:\CSharp\AirScout\Database\AirScout\V1</Value>
+    </Setting>
+    <Setting Name="AircraftDatabase_Export_Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AircraftDatabase_Export_RemoteDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/wsb4556518002/downloads/AirScout/1/AircraftData</Value>
+    </Setting>
+    <Setting Name="AircraftDatabase_Export_RemoteHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">home208518495.1and1-/data.host</Value>
+    </Setting>
+    <Setting Name="AircraftDatabase_Export_User" Type="System.String" Scope="User">
+      <Value Profile="(Default)">u45565180</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

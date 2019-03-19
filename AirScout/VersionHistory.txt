@@ -1,0 +1,153 @@
+﻿2014-01-04:	V1.0.0.0
+====================
+
+Initial Version
+
+2014-01-09: V1.0.0.1
+====================
+
+- Bugfix:	Activation of AirScout server via "Activate Server" checkbox on "Options/Network" does not work. No server functions available --> fixed (tnx SM7EYW)
+
+
+2015-02-08: V1.1.0.0
+====================
+
+- Bugfix:	Lat/Lon textboxes at "Options/Planes" do not show the current settings from "Options/General" tab. --> fixed (tnx VK6KDX)
+- Bugfix:	Program is crashing when pressing the "Show Traffic" button on the "Options/Planes" tab on an empty plane position database
+			(e.g. no plane positions were loaded neither from Internet nor from a local file) --> fixed (tnx VK6KDX)
+- Bugfix:	InfoWindow: Elevation is showing wrong values --> fixed
+- Feature:	Accessiblity enhancement, minimize Zoom, Fliter and Alarm Boxes to save screen space when using larger system fonts. 
+			New splitters between map, info box and elevation details, positions were saved now.
+			Ensure that the basic window elements are always visible.	 (tnx IK1ZOF)
+- Bugfix:   several text box input in the Options window (e.g. Sepctrum Lab Server URL) is not saved correctly after pressing "Apply" or "OK" --> fixed
+- Feature:  new plane feeds created including random source and new web feeds, file feeds and raw data input from ADS-B receiver (DVB-T stick based with RTL1090)
+- Feature:  AirScout web server functionalitity
+- Feature:  News Feed included in separate tab
+- Feature:  Plane tracking by several ways included (experimental)
+- Feature:  Import call sign database from previous versions or other sources
+- Feature:  New (scalable) plane icons according to category (tnx OK1TEH)
+
+
+2015-xx-xx: V1.1.0.1 (not published)
+====================================
+
+- Bugfix:   Donate button issue - Program hangs or shows "Script error" while trying to load the website from the server --> fixed (tnx SM6CEN)
+- Bugfix:   Antenna tracking does not stop when selected AP disappeared, sending "0.0" values for Az/El instead of stop sending data--> fixed
+- Bugfix:   Planes with category "S" (Superheavy) were shown as "M" sized icons --> fixed
+- Bugfix:   GLOBE source unusable outside Europe: changed URL, tiles and data format --> fixed, complete new tile handling and download strategy is implemented (tnx VK2BJP)
+- Bugfix:   Corrupted lat/lon information in <www.planefinder.net> feed, major amount of planes is dropped --> not fixed so far(tnx W3SZ)
+- Bugfix:   Error in 2-line TLE handling for ISS --> fixed
+- Feature:  Playing of historical data (Offline mode) when double-clicking on UTC field in "Pause" mode
+
+2016-12-11: V1.2.0.1
+====================
+
+- Feature:  SQLite database for callsigns, locations and elevation as basic function in ScoutBase
+- Feature:  SQLite database for aircrafts, types, registrations, airlines and airports
+- Feature:  Airports can be shown on map now
+- Feature:  New web feed for Virtual Radar Server 
+- Feature:  New web feed for www.planefinder.net
+- Feature:  New Auto JSON web feed, with auto detection of data for work with different feeds and formats not yet known (experimental)
+- Feature:  Screen update rate can be changed now (Default = 1sec)
+- Bugfix:   "Play/Pause" îs now the default button again. You can toggle the mode by hitting <Enter>.
+- Feature:  Wizard on startup guiding through all basic settings
+- Bugfix:   complete rework of Options dialog
+- Feature:  enhanced locator in/output, 6-14 digits available
+- Feature:  new watchlist, keeps history, can be maintained, calls are shown on the map, clicking on it changes path
+- Feature:  no admin rights necessary anymore, all files are now stored in local user space
+- Feature:  window layout, position and size is kept now
+
+2016-12-20: V1.2.0.2
+====================
+
+- Bugfix:   FirstRunWizard windows remained on topmost position blocking other dialogs--> fixed (tnx G3XDY)
+- Feature:  downgrade FirstRunWizard to Microsoft .Net4.0 and get back Winodws XP compatibitliy (tnx OK1TEH)
+- Feature:  design back button as classic button in FirstRunWizard regardless of Windows Design Rules (tnx DL8AAU)
+- Bugfix:   Reset settings to factory default does not work properly for plane feeds --> fixed
+- Bugfix:   use of "Best Case Elevation" even when given location is exact --> fixed (tnx G3XDY)
+- Bugfix:   "Best Case Elevation" did not work properly when more than one elevation model is activated --> fixed
+- Feature:  added QRZ lookup for own callsign on FirstRunWizard (tnx DL8AAU)
+- Bugfix:   proper handling of input (callsign, lat/lon, locator textboxes)
+- Bugfix:   proper handling of drag marker for own locaton on map (FirstRunWizard) --> fixed
+- Bugfix:   aircrafts did not show up on first run --> fixed (tnx G3XDY)
+- Bugfix:   database updater did not load elevation tiles from web --> fixed
+- Feature:  buttons for default elevation path added at Options/GLOBE, SRTM3, SRTM1
+
+2016-12-23: V1.2.0.3
+====================
+
+- Feature:  new threadsafe LogWriter object created and extensive logging implemented
+- Bugfix:   download of SRTM elevation tiles does not work on WinXP due to missing TLS1.2 implementation --> Workaround
+
+2016-12-24: V1.2.0.4
+====================
+
+- Bugfix:   several issues when entering a completly unknown callsign --> fixed (tnx SM6CEN)
+- Bugfix:   station detail boxes in FirtsRuznWizard and Options/Stations differ in order --> fixed
+- Feature:  adjust MapWindow zoom automatically in FirstRunWizard when changing locator
+- Bugfix:   initial DXCall was set to GB3MHL, this is outdated --> fixed, DXCall now set to GB3MHZ (tnx G3XDY)
+- Bugfix:   loss of callsign database if closed before DatabaseUpdater was finished > fixed
+- Bugfix:   LastUpdated timestamps are not handled correctly, preventing user from altering locator once set as new --> fixed
+
+2017-01-02: V1.2.0.5
+====================
+
+- Bugfix:   Antenna height was not set to 10m by default in the HorizonCalculationDlg --> fixed (tnx DL8AAU)
+- Bugfix:	Elevation data and antenna height textboxes were not set in Options/Stations --> fixed
+- Bugfix:   DXStation details were not filled when enetering Options/Stations --> fixed
+- Bugfix:	ADSBSharp and RTL1090 feeds: exeptions while receiving misformatted messages were blocking the decoder for 10sec, no position messages could be decoded --> fixed (tnx PE1ITR)
+- Bugfix:	ADSBSharp and RTL1090 feeds: endless loop when not receiving a start character via TCP(binary mode only) --> fixed with receiving timeout (10sec)
+- Feature:  Aircraft database is now updated also from received  web feeds 
+- Bugfix:   Redraw loop to maximaized window when alarms occur --> fixed (tnx DL8AAU)
+- Bugfix:   Frequency calcluation wrong in HorizonDlg with special CultureInfo --> fixed (tnx DL8AAU)
+- Bugfix:   Callsign does not update in DXCall combobox when clicking on a marker from watchlist --> fixed (tnx OZ9GE)
+- Bugfix:   Changes on database were discarded when done before database background update was finished --> fixed
+
+2017-xx-xx: V1.2.0.6 (not published)
+====================
+
+- Bugfix:   AirScout crashes when Options/Database/Update local database is set to "Never" --> fixed (tnx DL3IAE)
+- Bugfix:   AirScout does not set DXCall properly when triggered from wtKST to show path and DXLocator does not match with database --> fixed (tnx DL8AAU)
+- Feature:  Import old callsign database from previous versions as TXT-file (tnx F1EBK)
+- Bugfix:   Import of initial database files crashed
+- Bugfix:   misformatted tracking file in WSJT format (azel.dat) --> fixed (tnx DJ5AR)	
+- Bugfix:   creating an empty database under unknown circumstances which causes AirScout to crash on next startup --> Workaround implemented (check for empty lookup tables before saving to database)
+
+2017-xx-xx: V1.2.0.7 (not published)
+====================
+
+- Bugfix:   "Jumping planes" due to incorrect timestamps when using VirtualRadarServer --> Workaround implemented (check server time and calculate offset)
+- Feature:  using GAlt (corrected altitude by air pressure) when using VirtualRadarServer giving more accurate altitude asl
+- Feature:  History Analysis tab implemented to load an play with historical data
+- Bugfix:   band specific setting of maximum distance to path not working --> fixed (tnx DL8AAU)
+- Feature:  show Radio Horizon on map as an additional option to easy locate obstructions on topology
+
+2018-xx-xx: V1.3.0.3 (not published)
+====================
+
+- Bugfix:   Web downloader now allows redirection (e.g. http:// --> https://) --> fixed (tnx DL8AAU)
+- Feature:  new database structure (internal)
+- Feature:  extended database structure --> storing location per user & 6digit locator, storing QRV info per user & 6digit locator & band
+- Feature:  new elevation tile structure and download procedure
+- Feature:  latest SQLite library version and "Any CPU" feature, AirScout now running as 32bit or 64bit application on both Windows and Linux
+- Feature:	Linux/Mono compatibility allows running AirScout native in a Linux/Mono environment (details and limitations see readme_Linux.txt)
+- Feature:  New charts library for enhanced presentation and Linux/Mono compatibility
+- Feature:  Enhanced station details dialog with map for easier location change and QRV info per callsign, locator and band
+- Feature:  new background procedures for station and elevation database updates
+- Feature:  new background procedure for propagation path pre-calculation
+- Feature:	extended error logging
+
+2019-xx-xx: V1.3.0.4 
+====================
+
+- Feature:  new "Multi-Path" feature to monitor more than one path at the same time, enhanced watch list features
+- Feature:  new common database layout for aircraft database
+- Feature:  keep aircraft positions in database instead of in memory
+- Feature:  local obstruction is now kept in database, new dialog window in "Stations" tab to enter obstruction data
+- Bugfix:   Showing of airports in map could not be switched off --> fixed (tnx DL8AAU)
+- Bugfix:   Calculation of squint angle was intransparent and probably incorrect, its now defined as the difference between both angles theta (refer to handbook) --> fixed
+- Feature:  Enhanced spectrum tab with zoomed map for supervising nearest plane in real time, singal strength is kept in database for further analysis
+- Feature:  Enhanced webserver functionality, deliver path and nearest planes info on HTTP-request via JSON, makes it possible to run one ore more AirScout view clients
+- Feature:  Enhanced analysis tab with history player and import/export functions
+- Feature:  [Virtual Radar Server] Extended plausibility check to avoid "jumping planes" due to incorrect position messages (estimate position from older messages and check against latest message)
+- Feature:  [PlaneFeeds] improved recovery of missing data/empty fields in captured messages
