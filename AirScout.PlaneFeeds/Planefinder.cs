@@ -9,6 +9,7 @@ using System.Windows;
 using System.Globalization;
 using System.Net;
 using System.IO;
+using AirScout.Core;
 using AirScout.Aircrafts;
 using AirScout.PlaneFeeds.Generic;
 using Newtonsoft.Json;

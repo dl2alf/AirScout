@@ -6301,7 +6301,7 @@ namespace AirScout
                                                     {
                                                         info.Time = DateTime.MinValue;
                                                     }
-                                                    if (PlaneInfo.Check(info) &&
+                                                    if (PlaneInfoChecker.Check(info) &&
                                                         (info.Alt_m >= Properties.Settings.Default.Planes_MinAlt) &&
                                                         (info.Alt_m <= Properties.Settings.Default.Planes_MaxAlt) &&
                                                         (info.Lat >= Properties.Settings.Default.MinLat) &&

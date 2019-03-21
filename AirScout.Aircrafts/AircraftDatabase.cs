@@ -12,6 +12,7 @@ using System.Data.SQLite;
 using Newtonsoft.Json;
 using System.Windows.Forms;
 using System.ComponentModel;
+using AirScout.Core;
 
 namespace AirScout.Aircrafts
 {
@@ -2392,7 +2393,7 @@ namespace AirScout.Aircrafts
                     try
                     {
                         // update aircraft information
-                        if (PlaneInfo.Check_Hex(plane.Hex) && PlaneInfo.Check_Call(plane.Call) && PlaneInfo.Check_Reg(plane.Reg) && PlaneInfo.Check_Type(plane.Type))
+                        if (PlaneInfoChecker.Check_Hex(plane.Hex) && PlaneInfoChecker.Check_Call(plane.Call) && PlaneInfoChecker.Check_Reg(plane.Reg) && PlaneInfoChecker.Check_Type(plane.Type))
                             AircraftData.Database.AircraftInsertOrUpdateIfNewer(new AircraftDesignator(plane.Hex, plane.Call, plane.Reg, plane.Type, plane.Time));
                         // update aircraft type information
                         if (!String.IsNullOrEmpty(plane.Type))

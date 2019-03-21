@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using AirScout.Core;
 using AirScout.Aircrafts;
 using AirScout.PlaneFeeds.Generic;
 using LibADSB;
@@ -339,6 +340,9 @@ namespace AirScout.PlaneFeeds
             DXLon = args.DXLon;
             MinAlt = args.MinAlt;
             MaxAlt = args.MaxAlt;
+
+            // keep history settings from arguments
+            KeepHistory = args.KeepHistory;
 
             // check boundaries
             if ((MaxLat <= MinLat) || (MaxLon <= MinLon))

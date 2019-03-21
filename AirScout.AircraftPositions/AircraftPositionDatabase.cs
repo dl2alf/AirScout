@@ -12,6 +12,8 @@ using System.Data.SQLite;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using AirScout.Core;
+using AirScout.Aircrafts;
 
 namespace AirScout.AircraftPositions
 {
@@ -930,6 +932,98 @@ namespace AirScout.AircraftPositions
             List<AircraftPositionDesignator> ap = AircraftPositionGetAll();
             DataTableAircraftPositions dtl = new DataTableAircraftPositions(ap);
             return dtl;
+        }
+
+        #endregion
+
+        #region PlaneInfo
+
+        public int PlaneInfoBulkInsertOrUpdateIfNewer(List<PlaneInfo> planes)
+        {
+            if (planes == null)
+                return 0;
+            int i = 0;
+            lock (db)
+            {
+                db.BeginTransaction();
+                foreach (PlaneInfo plane in planes)
+                {
+                    try
+                    {
+                        // update aircraft information
+                        if (PlaneInfoChecker.Check_Hex(plane.Hex) && PlaneInfoChecker.Check_Call(plane.Call))
+                            AircraftPositionData.Database.AircraftPositionInsertOrUpdateIfNewer(new AircraftPositionDesignator(plane.Hex, plane.Call, plane.Lat, plane.Lon, plane.Alt, plane.Track, plane.Speed, plane.Time));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.WriteMessage(ex.ToString());
+                        return -1;
+                    }
+                }
+                db.Commit();
+            }
+            return i;
+        }
+
+        public int PlaneInfoBulkInsertOrUpdateIfNewer(BackgroundWorker caller, List<PlaneInfo> planes)
+        {
+            if (planes == null)
+                return 0;
+            int i = 0;
+            lock (db)
+            {
+                db.BeginTransaction();
+                foreach (PlaneInfo plane in planes)
+                {
+                    try
+                    {
+                        // update aircraft information
+                        if (PlaneInfoChecker.Check_Hex(plane.Hex) && PlaneInfoChecker.Check_Call(plane.Call))
+                            AircraftPositionData.Database.AircraftPositionInsertOrUpdateIfNewer(new AircraftPositionDesignator(plane.Hex, plane.Call, plane.Lat, plane.Lon, plane.Alt, plane.Track, plane.Speed, plane.Time));
+                    }
+                    catch (Exception ex)
+                    {
+                        db.Rollback();
+                        Log.WriteMessage(ex.ToString());
+                        return -1;
+                    }
+                    // abort if called from background worker and cancellation pending
+                    if (caller != null)
+                    {
+                        if (caller.WorkerSupportsCancellation && caller.CancellationPending)
+                        {
+                            db.Rollback();
+                            return -1;
+                        }
+                    }
+
+                }
+                db.Commit();
+            }
+            return i;
+        }
+
+        public List<PlaneInfo> PlaneInfoGetAll(DateTime newerthan)
+        {
+            List<PlaneInfo> l = new List<PlaneInfo>();
+            int i = SupportFunctions.DateTimeToUNIXTime(newerthan);
+            // SELECT max(AircraftPositions.Lastupdated) AS LastUpdated, Call, Reg, AircraftPositions.Hex, Lat, Lon, Track, Alt, Speed, TypeCode, Manufacturer, Model, Category FROM AircraftPositions INNER JOIN Aircrafts ON AircraftPositions.Hex = Aircrafts.Hex INNER JOIN AircraftTypes ON AircraftTypes.ICAO = Aircrafts.TypeCode WHERE AircraftPositions.LastUpdated > 1500000 GROUP BY AircraftPositions.Hex
+            DataTable Result = db.Select("SELECT max(AircraftPositions.Lastupdated) AS LastUpdated, Call, Reg, AircraftPositions.Hex, Lat, Lon, Track, Alt, Speed, TypeCode, Manufacturer, Model, Category FROM AircraftPositions INNER JOIN Aircrafts ON AircraftPositions.Hex = Aircrafts.Hex INNER JOIN AircraftTypes ON AircraftTypes.ICAO = Aircrafts.TypeCode WHERE AircraftPositions.LastUpdated > " + i.ToString() + " GROUP BY AircraftPositions.Hex");
+            if (!IsValid(Result) || (Result.Rows.Count == 0))
+                return l;
+            foreach (DataRow row in Result.Rows)
+            {
+                PlaneInfo info = new PlaneInfo(row);
+                try
+                {
+                    l.Add(info);
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage("Error inserting PlaneInfo[" + info.ToString() + "]: " + ex.ToString());
+                }
+            }
+            return l;
         }
 
         #endregion

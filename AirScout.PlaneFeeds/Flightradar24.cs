@@ -12,6 +12,7 @@ using System.Net;
 using System.IO;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using AirScout.Core;
 using AirScout.Aircrafts;
 using AirScout.PlaneFeeds.Generic;
 using Newtonsoft.Json;

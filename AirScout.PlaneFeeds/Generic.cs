@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Net;
 using System.IO;
 using System.Xml.Serialization;
+using AirScout.Core;
 using AirScout.Aircrafts;
 using ScoutBase.Core;
 
@@ -206,6 +207,10 @@ namespace AirScout.PlaneFeeds.Generic
             MinAlt = args.MinAlt;
             MaxAlt = args.MaxAlt;
 
+            // keep history settings from arguments
+            KeepHistory = args.KeepHistory;
+
+
             Status = STATUS.OK;
 
             // narrow args according to QSO partners
@@ -270,7 +275,8 @@ namespace AirScout.PlaneFeeds.Generic
                     planes.Add(info);
                 }
                 ReportProgress((int)PROGRESS.PLANES, planes);
-                AircraftData.Database.PlaneInfoBulkInsertOrUpdateIfNewer(planes);
+                // do not update anything in database
+//                AircraftData.Database.PlaneInfoBulkInsertOrUpdateIfNewer(planes);
                 string msg = "[" + start.ToString("HH:mm:ss") + "] " +
                     count.ToString() + " Positions randomized.";
                 this.ReportProgress((int)PROGRESS.STATUS, msg);

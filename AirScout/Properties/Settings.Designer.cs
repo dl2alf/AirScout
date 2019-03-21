@@ -157,30 +157,6 @@ namespace AirScout.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\Database\\calls.txt")]
-        public string Calls_FileName {
-            get {
-                return ((string)(this["Calls_FileName"]));
-            }
-            set {
-                this["Calls_FileName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\Database\\call3.txt")]
-        public string WSJTCalls_FileName {
-            get {
-                return ((string)(this["WSJTCalls_FileName"]));
-            }
-            set {
-                this["WSJTCalls_FileName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1000")]
         public int Watchlist_MaxCount {
             get {
@@ -206,9 +182,9 @@ namespace AirScout.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("NONE")]
-        public global::AirScout.Aircrafts.PLANECATEGORY Planes_Filter_Min_Category {
+        public global::AirScout.Core.PLANECATEGORY Planes_Filter_Min_Category {
             get {
-                return ((global::AirScout.Aircrafts.PLANECATEGORY)(this["Planes_Filter_Min_Category"]));
+                return ((global::AirScout.Core.PLANECATEGORY)(this["Planes_Filter_Min_Category"]));
             }
             set {
                 this["Planes_Filter_Min_Category"] = value;
@@ -440,18 +416,6 @@ namespace AirScout.Properties {
             }
             set {
                 this["Alarm_Activate"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Database\\localobstructions.txt")]
-        public string LocalObstruction_FileName {
-            get {
-                return ((string)(this["LocalObstruction_FileName"]));
-            }
-            set {
-                this["LocalObstruction_FileName"] = value;
             }
         }
         
@@ -1393,30 +1357,6 @@ namespace AirScout.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\Database\\Airlines.txt")]
-        public string Database_Airlines_FileName {
-            get {
-                return ((string)(this["Database_Airlines_FileName"]));
-            }
-            set {
-                this["Database_Airlines_FileName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.flugzeuginfo.net/table_airlinecodes_airline_en.php")]
-        public string Database_Airlines_URL {
-            get {
-                return ((string)(this["Database_Airlines_URL"]));
-            }
-            set {
-                this["Database_Airlines_URL"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int Map_Update {
             get {
@@ -1549,18 +1489,6 @@ namespace AirScout.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\Database")]
-        public string Database_Directory {
-            get {
-                return ((string)(this["Database_Directory"]));
-            }
-            set {
-                this["Database_Directory"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public decimal Locator_MaxLength {
             get {
@@ -1592,18 +1520,6 @@ namespace AirScout.Properties {
             }
             set {
                 this["Locator_SmallLettersForSubsquares"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\ElevationData")]
-        public string Elevation_Directory {
-            get {
-                return ((string)(this["Elevation_Directory"]));
-            }
-            set {
-                this["Elevation_Directory"] = value;
             }
         }
         
@@ -1948,7 +1864,6 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("DL2ALF")]
         public global::System.Collections.Generic.List<System.String> MyCalls {
             get {
                 return ((global::System.Collections.Generic.List<System.String>)(this["MyCalls"]));
@@ -2111,6 +2026,30 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
             }
             set {
                 this["Planes_KeepHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\Database")]
+        public string Database_Directory {
+            get {
+                return ((string)(this["Database_Directory"]));
+            }
+            set {
+                this["Database_Directory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\ElevationData")]
+        public string Elevation_Directory {
+            get {
+                return ((string)(this["Elevation_Directory"]));
+            }
+            set {
+                this["Elevation_Directory"] = value;
             }
         }
     }

@@ -35,12 +35,6 @@
     <Setting Name="DXHeight" Type="System.Double" Scope="User">
       <Value Profile="(Default)">30</Value>
     </Setting>
-    <Setting Name="Calls_FileName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\Database\calls.txt</Value>
-    </Setting>
-    <Setting Name="WSJTCalls_FileName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\Database\call3.txt</Value>
-    </Setting>
     <Setting Name="Watchlist_MaxCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1000</Value>
     </Setting>
@@ -106,9 +100,6 @@
     </Setting>
     <Setting Name="Alarm_Activate" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="LocalObstruction_FileName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Database\localobstructions.txt</Value>
     </Setting>
     <Setting Name="Path_Cubic_Spline" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -344,12 +335,6 @@
     <Setting Name="Airports_Activate" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Database_Airlines_FileName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\Database\Airlines.txt</Value>
-    </Setting>
-    <Setting Name="Database_Airlines_URL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://www.flugzeuginfo.net/table_airlinecodes_airline_en.php</Value>
-    </Setting>
     <Setting Name="Map_Update" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
@@ -383,9 +368,6 @@
     <Setting Name="Log_Directory" Type="System.String" Scope="User">
       <Value Profile="(Default)">\Log</Value>
     </Setting>
-    <Setting Name="Database_Directory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\Database</Value>
-    </Setting>
     <Setting Name="Locator_MaxLength" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
@@ -394,9 +376,6 @@
     </Setting>
     <Setting Name="Locator_SmallLettersForSubsquares" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="Elevation_Directory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">\ElevationData</Value>
     </Setting>
     <Setting Name="Watchlist" Type="AirScout.Watchlist" Scope="User">
       <Value Profile="(Default)" />
@@ -515,7 +494,7 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="MyCalls" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
-      <Value Profile="(Default)">DL2ALF</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Map_SmallMarkers" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -555,6 +534,12 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
     </Setting>
     <Setting Name="Planes_KeepHistory" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Database_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Database</Value>
+    </Setting>
+    <Setting Name="Elevation_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\ElevationData</Value>
     </Setting>
   </Settings>
 </SettingsFile>

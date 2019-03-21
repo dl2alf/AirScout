@@ -9,7 +9,9 @@ using System.Windows;
 using System.Globalization;
 using System.Net;
 using System.IO;
+using AirScout.Core;
 using AirScout.Aircrafts;
+using AirScout.AircraftPositions;
 using AirScout.PlaneFeeds.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -224,7 +226,6 @@ namespace AirScout.PlaneFeeds
             LogDirectory = args.LogDirectory;
             TmpDirectory = args.TmpDirectory;
             DatabaseDirectory = args.DatabaseDirectory;
-            KeepHistory = args.KeepHistory;
 
             // set boundaries from arguments
             MaxLat = args.MaxLat;
@@ -237,6 +238,9 @@ namespace AirScout.PlaneFeeds
             DXLon = args.DXLon;
             MinAlt = args.MinAlt;
             MaxAlt = args.MaxAlt;
+
+            // keep history settings from arguments
+            KeepHistory = args.KeepHistory;
 
             // intialize variables
             VC.AddVar("APPDIR", AppDirectory);
@@ -369,7 +373,7 @@ namespace AirScout.PlaneFeeds
                                             // get hex first
                                             plane.Hex = ReadPropertyString(o, "Icao");
                                             // do basic check on hex --> is strictly needed as identifier
-                                            if (!PlaneInfo.Check_Hex(plane.Hex))
+                                            if (!PlaneInfoChecker.Check_Hex(plane.Hex))
                                             {
                                                 if (Properties.Settings.Default.VR_LogErrors)
                                                     Log.WriteMessage("Incorrect aircraft data received [Hex]: " + plane.Hex);
@@ -378,7 +382,7 @@ namespace AirScout.PlaneFeeds
                                             }
                                             // get position and do basic check on lat/lon
                                             plane.Lat = ReadPropertyDouble(o, "Lat");
-                                            if (!PlaneInfo.Check_Lat(plane.Lat))
+                                            if (!PlaneInfoChecker.Check_Lat(plane.Lat))
                                             {
                                                 if (Properties.Settings.Default.VR_LogErrors)
                                                     Log.WriteMessage("Incorrect aircraft data received [Lat]: " + plane.Lat.ToString("F8", CultureInfo.InvariantCulture));
@@ -386,7 +390,7 @@ namespace AirScout.PlaneFeeds
                                                 continue;
                                             }
                                             plane.Lon = ReadPropertyDouble(o, "Long");
-                                            if (!PlaneInfo.Check_Lon(plane.Lon))
+                                            if (!PlaneInfoChecker.Check_Lon(plane.Lon))
                                             {
                                                 if (Properties.Settings.Default.VR_LogErrors)
                                                     Log.WriteMessage("Incorrect aircraft data received [Lon]: " + plane.Lon.ToString("F8", CultureInfo.InvariantCulture));
@@ -397,7 +401,7 @@ namespace AirScout.PlaneFeeds
                                             // 2017-07-23: take "GAlt" (corrected altitude by air pressure) rather than "Alt"
                                             plane.Alt = ReadPropertyDoubleToInt(o, "GAlt");
                                             // do basic chekc on altitude
-                                            if (!PlaneInfo.Check_Alt(plane.Alt))
+                                            if (!PlaneInfoChecker.Check_Alt(plane.Alt))
                                             {
                                                 // try to recover altitude from previuos messages
                                                 PlaneInfo info = null;
@@ -421,7 +425,7 @@ namespace AirScout.PlaneFeeds
                                             // get callsign
                                             plane.Call = ReadPropertyString(o, "Call");
                                             // do basic check --> try to recover from cache if check fails or set it to [unknown]
-                                            if (!PlaneInfo.Check_Call(plane.Call))
+                                            if (!PlaneInfoChecker.Check_Call(plane.Call))
                                             {
                                                 PlaneInfo info = null;
                                                 if (PlanePositions.TryGetValue(plane.Hex, out info))
@@ -432,7 +436,7 @@ namespace AirScout.PlaneFeeds
                                                     plane.Call = "[unknown]";
                                             }
                                             // still unknown --> try to recover last known call from database
-                                            if (!PlaneInfo.Check_Call(plane.Call))
+                                            if (!PlaneInfoChecker.Check_Call(plane.Call))
                                             {
                                                 AircraftDesignator ad = AircraftData.Database.AircraftFindByHex(plane.Hex);
                                                 if (ad != null)
@@ -445,7 +449,7 @@ namespace AirScout.PlaneFeeds
                                             // get registration
                                             plane.Reg = ReadPropertyString(o, "Reg");
                                             // do basic check --> try to recover from cache if check fails or set it to [unknown]
-                                            if (!PlaneInfo.Check_Reg(plane.Reg))
+                                            if (!PlaneInfoChecker.Check_Reg(plane.Reg))
                                             {
                                                 PlaneInfo info = null;
                                                 if (PlanePositions.TryGetValue(plane.Hex, out info))
@@ -456,7 +460,7 @@ namespace AirScout.PlaneFeeds
                                                     plane.Reg = "[unknown]";
                                             }
                                             // still unknown --> try to recover last known reg from database
-                                            if (!PlaneInfo.Check_Reg(plane.Reg))
+                                            if (!PlaneInfoChecker.Check_Reg(plane.Reg))
                                             {
                                                 AircraftDesignator ad = AircraftData.Database.AircraftFindByHex(plane.Hex);
                                                 if (ad != null)
@@ -469,7 +473,7 @@ namespace AirScout.PlaneFeeds
                                             // get track
                                             plane.Track = ReadPropertyDoubleToInt(o, "Trak");
                                             // do basic check
-                                            if (!PlaneInfo.Check_Track(plane.Track))
+                                            if (!PlaneInfoChecker.Check_Track(plane.Track))
                                             {
                                                 if (Properties.Settings.Default.VR_LogErrors)
                                                     Log.WriteMessage("Incorrect aircraft data received [Track]: " + plane.Track.ToString("F8", CultureInfo.InvariantCulture));
@@ -479,7 +483,7 @@ namespace AirScout.PlaneFeeds
                                             // get speed
                                             plane.Speed = ReadPropertyDoubleToInt(o, "Spd");
                                             // do basic check
-                                            if (!PlaneInfo.Check_Speed(plane.Speed))
+                                            if (!PlaneInfoChecker.Check_Speed(plane.Speed))
                                             {
                                                 // try to recover speed from previous messages
                                                 PlaneInfo info = null;
@@ -516,7 +520,7 @@ namespace AirScout.PlaneFeeds
                                             }
                                             // get type info
                                             plane.Type = ReadPropertyString(o, "Type");
-                                            if (!PlaneInfo.Check_Type(plane.Type))
+                                            if (!PlaneInfoChecker.Check_Type(plane.Type))
                                             {
                                                 AircraftDesignator ad = AircraftData.Database.AircraftFindByHex(plane.Hex);
                                                 if (ad != null)
@@ -539,7 +543,7 @@ namespace AirScout.PlaneFeeds
                                             if (plane.Type == "A388")
                                                 plane.Category = PLANECATEGORY.SUPERHEAVY;
                                             // try to recover type info from database if check fails
-                                            if (!PlaneInfo.Check_Manufacturer(plane.Manufacturer) || !PlaneInfo.Check_Model(plane.Model))
+                                            if (!PlaneInfoChecker.Check_Manufacturer(plane.Manufacturer) || !PlaneInfoChecker.Check_Model(plane.Model))
                                             {
                                                 AircraftTypeDesignator td = AircraftData.Database.AircraftTypeFindByICAO(plane.Type);
                                                 if (td != null)
@@ -592,6 +596,9 @@ namespace AirScout.PlaneFeeds
                                 this.ReportProgress((int)PROGRESS.PLANES, planes);
                                 // update global database
                                 AircraftData.Database.PlaneInfoBulkInsertOrUpdateIfNewer(this, planes);
+                                // update position database if enabled
+                                if (KeepHistory)
+                                    AircraftPositionData.Database.PlaneInfoBulkInsertOrUpdateIfNewer(planes);
                                 st.Stop();
                                 string msg = "[" + DateTime.UtcNow.ToString("HH:mm:ss") + "] " +
                                     total.ToString() + " Positions updated from " + url + ", " +

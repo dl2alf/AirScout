@@ -56,8 +56,7 @@
     <Compile Include="AircraftType.cs" />
     <Compile Include="Aircraft.cs" />
     <Compile Include="AircraftDatabaseUpdater.cs" />
-    <Compile Include="PlaneCategory.cs" />
-    <Compile Include="PlaneInfo.cs" />
+    <Compile Include="PlaneInfoChecker.cs" />
     <Compile Include="PlaneInfoCache.cs" />
     <Compile Include="PlaneInfoConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +68,10 @@
     <Compile Include="AircraftDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AirScout.Core\AirScout.Core.csproj">
+      <Project>{41b66be4-6086-4ae3-be31-c81ee6b10154}</Project>
+      <Name>AirScout.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScoutBase\ScoutBase.Core\ScoutBase.Core.csproj">
       <Project>{ee86e933-d883-4b18-80eb-0fba55ec67c6}</Project>
       <Name>ScoutBase.Core</Name>

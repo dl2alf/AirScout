@@ -107,6 +107,10 @@
       <Project>{288a26ec-b690-41a2-84e5-61c9b7b74046}</Project>
       <Name>AirScout.Aircrafts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AirScout.Core\AirScout.Core.csproj">
+      <Project>{41b66be4-6086-4ae3-be31-c81ee6b10154}</Project>
+      <Name>AirScout.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScoutBase\ScoutBase.Core\ScoutBase.Core.csproj">
       <Project>{EE86E933-D883-4B18-80EB-0FBA55EC67C6}</Project>
       <Name>ScoutBase.Core</Name>

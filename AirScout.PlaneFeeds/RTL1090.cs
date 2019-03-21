@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using AirScout.Core;
 using AirScout.Aircrafts;
 using AirScout.PlaneFeeds.Generic;
 using LibADSB;

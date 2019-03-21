@@ -11,6 +11,7 @@ using System.Net;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using AirScout.Core;
 using AirScout.Aircrafts;
 using AirScout.PlaneFeeds.Generic;
 using Newtonsoft.Json;

@@ -5,7 +5,7 @@ using System.Text;
 using ScoutBase.Core;
 using System.Reflection;
 
-namespace AirScout.Aircrafts
+namespace AirScout.Core
 {
     public enum PLANECATEGORY
     {
