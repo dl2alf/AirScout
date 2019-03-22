@@ -1438,7 +1438,7 @@ namespace AirScoutDatabaseManager
                                 ad.Reg = fr24ad.reg;
                                 ad.TypeCode = fr24ad.typecode;
                                 ad.LastUpdated = DateTime.UtcNow;
-                                if (PlaneInfo.Check_Hex(ad.Hex) && PlaneInfo.Check_Call(ad.Call) && PlaneInfo.Check_Reg(ad.Reg) && PlaneInfo.Check_Type(ad.TypeCode))
+                                if (PlaneInfoChecker.Check_Hex(ad.Hex) && PlaneInfoChecker.Check_Call(ad.Call) && PlaneInfoChecker.Check_Reg(ad.Reg) && PlaneInfoChecker.Check_Type(ad.TypeCode))
                                     aircrafts.Add(ad);
                                 else
                                 {
