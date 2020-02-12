@@ -106,23 +106,23 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DeviceId, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeviceId.4.5.0\lib\net40\DeviceId.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
-      <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Core.1.0.110.0\lib\net40\System.Data.SQLite.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Data.SQLite, Version=1.0.112.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.112.0\lib\net40\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Design" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Net" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
@@ -148,6 +148,18 @@
     </Compile>
     <Compile Include="CrossingHistoryDlg.Designer.cs">
       <DependentUpon>CrossingHistoryDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DatabaseEditDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DatabaseEditDlg.Designer.cs">
+      <DependentUpon>DatabaseEditDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DatabaseMaintenanceDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DatabaseMaintenanceDlg.Designer.cs">
+      <DependentUpon>DatabaseMaintenanceDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="LocalObstructionsDlg.cs">
       <SubType>Form</SubType>
@@ -240,6 +252,12 @@
     <Compile Include="ReflectionDlg.Designer.cs">
       <DependentUpon>ReflectionDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="AircraftDatabaseMaintenanceDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AircraftDatabaseMaintenanceDlg.Designer.cs">
+      <DependentUpon>AircraftDatabaseMaintenanceDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="ScoutBaseDatabaseMaintenanceDlg.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -299,6 +317,12 @@
     <EmbeddedResource Include="CrossingHistoryDlg.resx">
       <DependentUpon>CrossingHistoryDlg.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DatabaseEditDlg.resx">
+      <DependentUpon>DatabaseEditDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DatabaseMaintenanceDlg.resx">
+      <DependentUpon>DatabaseMaintenanceDlg.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ElevationCopyrightDlg.resx">
       <DependentUpon>ElevationCopyrightDlg.cs</DependentUpon>
     </EmbeddedResource>
@@ -350,6 +374,9 @@
     </Compile>
     <EmbeddedResource Include="ReflectionDlg.resx">
       <DependentUpon>ReflectionDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AircraftDatabaseMaintenanceDlg.resx">
+      <DependentUpon>AircraftDatabaseMaintenanceDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ScoutBaseDatabaseMaintenanceDlg.resx">
       <DependentUpon>ScoutBaseDatabaseMaintenanceDlg.cs</DependentUpon>
@@ -408,6 +435,14 @@
       <Project>{41b66be4-6086-4ae3-be31-c81ee6b10154}</Project>
       <Name>AirScout.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AirScout.PlaneFeeds.Plugin\AirScout.PlaneFeeds.Plugin.csproj">
+      <Project>{36945dbd-96c8-41e7-9168-f83c42e67af3}</Project>
+      <Name>AirScout.PlaneFeeds.Plugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AirScout.PlaneFeeds\AirScout.PlaneFeeds.csproj">
+      <Project>{ea78ad40-1505-406f-8049-744e58d93f54}</Project>
+      <Name>AirScout.PlaneFeeds</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AirScout.Signals\AirScout.Signals.csproj">
       <Project>{3d34943b-caca-426d-9fc0-661531668e87}</Project>
       <Name>AirScout.Signals</Name>
@@ -440,6 +475,10 @@
       <Project>{EE86E933-D883-4B18-80EB-0FBA55EC67C6}</Project>
       <Name>ScoutBase.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ScoutBase\ScoutBase.Database\ScoutBase.Database.csproj">
+      <Project>{89e6c7a3-6064-479e-a710-37c7293cf47c}</Project>
+      <Name>ScoutBase.Database</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScoutBase\ScoutBase.Elevation\ScoutBase.Elevation.csproj">
       <Project>{009cabfd-726d-481f-972d-0a218e0ad9b9}</Project>
       <Name>ScoutBase.Elevation</Name>
@@ -455,10 +494,6 @@
     <ProjectReference Include="..\SQLiteDatabase\SQLiteDatabase\SQLiteDatabase.csproj">
       <Project>{6056D3BE-7002-4A6A-A9EA-6FF45122A3C7}</Project>
       <Name>SQLiteDatabase</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AirScout.PlaneFeeds\AirScout.PlaneFeeds.csproj">
-      <Project>{EA78AD40-1505-406F-8049-744E58D93F54}</Project>
-      <Name>AirScout.PlaneFeeds</Name>
     </ProjectReference>
     <ProjectReference Include="..\AquaGauge\AquaGauge.csproj">
       <Project>{0E5542E0-FC5D-4F67-950D-9F28C5D1225A}</Project>
@@ -528,12 +563,12 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets')" />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.112.0\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.112.0\build\net40\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.110.0\build\net40\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.112.0\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.112.0\build\net40\System.Data.SQLite.Core.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

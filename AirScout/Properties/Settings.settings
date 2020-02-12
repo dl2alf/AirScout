@@ -41,7 +41,7 @@
     <Setting Name="Planes_Filter_Min_Alt" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="Planes_Filter_Min_Category" Type="AirScout.Aircrafts.PLANECATEGORY" Scope="User">
+    <Setting Name="Planes_Filter_Min_Category" Type="AirScout.Core.PLANECATEGORY" Scope="User">
       <Value Profile="(Default)">NONE</Value>
     </Setting>
     <Setting Name="MinLon" Type="System.Double" Scope="User">
@@ -205,9 +205,6 @@
     </Setting>
     <Setting Name="InfoWin_Angle" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="SFTP_PwdURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">HTTP://WWW.AIRSCOUT.EU/DOWNLOADS/AIRSCOUT.PWD</Value>
     </Setting>
     <Setting Name="First_Agree" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -490,14 +487,11 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
     <Setting Name="Background_Calculations_ThreadWait" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="Password" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="MyCalls" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Map_SmallMarkers" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ElevationModel" Type="ScoutBase.Elevation.ELEVATIONMODEL" Scope="User">
       <Value Profile="(Default)">NONE</Value>
@@ -540,6 +534,57 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
     </Setting>
     <Setting Name="Elevation_Directory" Type="System.String" Scope="User">
       <Value Profile="(Default)">\ElevationData</Value>
+    </Setting>
+    <Setting Name="Plugin_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\Plugin</Value>
+    </Setting>
+    <Setting Name="Planes_Interval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="Planes_ExtendedPlausibilityCheck_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Planes_ExtendedPlausibilityCheck_MaxErrorDist" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Planes_LogErrors" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Plugins_Update_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/AirScoutPlugins/</Value>
+    </Setting>
+    <Setting Name="AirScout_Instance_ID" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AirScout_Register_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/usr/register.php</Value>
+    </Setting>
+    <Setting Name="AirScout_GetKey_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/usr/getkey.php</Value>
+    </Setting>
+    <Setting Name="AirScout_UploadLocation_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/usr/upload_location.php</Value>
+    </Setting>
+    <Setting Name="AirScout_UploadQRV_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/usr/upload_qrv.php</Value>
+    </Setting>
+    <Setting Name="AirScout_Device_ID" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AircraftDatabase_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\AirScout\AircraftData</Value>
+    </Setting>
+    <Setting Name="StationsDatabase_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\ScoutBase\StationData</Value>
+    </Setting>
+    <Setting Name="ElevationDatabase_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\ScoutBase\ElevationData</Value>
+    </Setting>
+    <Setting Name="PropagationDatabase_Directory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\ScoutBase\PropagationData</Value>
+    </Setting>
+    <Setting Name="Map_LabelCalls" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

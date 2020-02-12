@@ -95,6 +95,8 @@ namespace AirScout
             tb_Horizon_ElevationModel.Text = Properties.Settings.Default.ElevationModel.ToString();
             // setting User Agent to fix Open Street Map issue 2016-09-20
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_Horizon.MapProvider.RefererUrl = "";
             // set initial settings for main map
             gm_Horizon.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
             gm_Horizon.IgnoreMarkerOnMouseWheel = true;
@@ -521,7 +523,7 @@ namespace AirScout
             }
             catch ( Exception ex)
             {
-                MapDlg.Log.WriteMessage(ex.ToString());
+                MapDlg.Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 

@@ -28,14 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScoutBaseDatabaseMaintenanceDlg));
             this.ss_Main = new System.Windows.Forms.StatusStrip();
             this.tsl_Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lv_Tables = new System.Windows.Forms.ListView();
             this.ch_TableName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ch_Entries = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_Description = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ch_Entries = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_Action = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lbl_Info = new System.Windows.Forms.Label();
             this.ss_Main.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -75,6 +77,7 @@
             this.ch_Entries,
             this.ch_Action});
             this.lv_Tables.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lv_Tables.HideSelection = false;
             this.lv_Tables.Location = new System.Drawing.Point(6, 19);
             this.lv_Tables.Name = "lv_Tables";
             this.lv_Tables.Size = new System.Drawing.Size(508, 114);
@@ -87,30 +90,41 @@
             this.ch_TableName.Text = "TableName";
             this.ch_TableName.Width = 78;
             // 
-            // ch_Entries
-            // 
-            this.ch_Entries.Text = "Entries";
-            this.ch_Entries.Width = 77;
-            // 
             // ch_Description
             // 
             this.ch_Description.Text = "Description";
             this.ch_Description.Width = 203;
+            // 
+            // ch_Entries
+            // 
+            this.ch_Entries.Text = "Entries";
+            this.ch_Entries.Width = 77;
             // 
             // ch_Action
             // 
             this.ch_Action.Text = "Action";
             this.ch_Action.Width = 107;
             // 
+            // lbl_Info
+            // 
+            this.lbl_Info.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Info.Location = new System.Drawing.Point(12, 163);
+            this.lbl_Info.Name = "lbl_Info";
+            this.lbl_Info.Size = new System.Drawing.Size(502, 144);
+            this.lbl_Info.TabIndex = 2;
+            this.lbl_Info.Text = resources.GetString("lbl_Info.Text");
+            this.lbl_Info.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // ScoutBaseDatabaseMaintenanceDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(543, 343);
+            this.Controls.Add(this.lbl_Info);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.ss_Main);
             this.Name = "ScoutBaseDatabaseMaintenanceDlg";
-            this.Text = "ScoutBaseDatabaseMaintenanceDlg";
+            this.Text = "ScoutBase Database Maintenance";
             this.ss_Main.ResumeLayout(false);
             this.ss_Main.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -129,5 +143,6 @@
         private System.Windows.Forms.ColumnHeader ch_Entries;
         private System.Windows.Forms.ColumnHeader ch_Description;
         private System.Windows.Forms.ColumnHeader ch_Action;
+        private System.Windows.Forms.Label lbl_Info;
     }
 }

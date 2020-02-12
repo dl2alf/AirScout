@@ -11,6 +11,16 @@ using System.Diagnostics;
 
 namespace ScoutBase.Core
 {
+
+    public static class LogLevel
+    {
+        public const int Nothing = 0;
+        public const int Info = 10;
+        public const int Warning = 20;
+        public const int Error = 30;
+        public const int Panic = 255;
+    }
+
     /// <summary>
     /// A Logging class implementing the Singleton pattern and an internal Queue to be flushed perdiodically.
     /// It is designed to work in a multithreading environment
@@ -190,7 +200,7 @@ namespace ScoutBase.Core
         /// The single instance method that writes a message to the log file queue
         /// </summary>
         /// <param name="message">The message to write to the log</param>
-        public void WriteMessage(string message, int errorlevel = 0, bool debugdetails = true)
+        public void WriteMessage(string message, int errorlevel = LogLevel.Info, bool debugdetails = true)
         {
             // return on errorlevel below verbosity threshold
             if (errorlevel < Verbosity)

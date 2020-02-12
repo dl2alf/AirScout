@@ -458,9 +458,9 @@ namespace AirScoutViewClient.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("NONE")]
-        public global::AirScout.Aircrafts.PLANECATEGORY Planes_Filter_Min_Category {
+        public global::AirScout.Core.PLANECATEGORY Planes_Filter_Min_Category {
             get {
-                return ((global::AirScout.Aircrafts.PLANECATEGORY)(this["Planes_Filter_Min_Category"]));
+                return ((global::AirScout.Core.PLANECATEGORY)(this["Planes_Filter_Min_Category"]));
             }
             set {
                 this["Planes_Filter_Min_Category"] = value;

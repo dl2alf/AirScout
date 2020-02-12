@@ -14,9 +14,6 @@
     <Setting Name="Stations_UpdateURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://www.airscout.eu/downloads/ScoutBase/1/StationData/</Value>
     </Setting>
-    <Setting Name="Stations_PasswordURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://www.airscout.eu/downloads/airscout.pwd</Value>
-    </Setting>
     <Setting Name="Database_BackgroundUpdate_Period" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
     </Setting>

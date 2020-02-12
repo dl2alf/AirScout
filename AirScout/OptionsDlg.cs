@@ -19,7 +19,6 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
-using AirScout.PlaneFeeds.Generic;
 using AirScout.PlaneFeeds;
 using AirScout.Core;
 using AirScout.Aircrafts;
@@ -28,9 +27,9 @@ using ScoutBase.Stations;
 using ScoutBase.Elevation;
 using ScoutBase.Propagation;
 using ScoutBase;
-using Renci.SshNet;
 using Newtonsoft.Json;
 using static ScoutBase.Core.ZIP;
+using AirScout.PlaneFeeds.Plugin.MEFContract;
 
 namespace AirScout
 {
@@ -280,7 +279,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return Path.GetFileName(dir);
         }
@@ -390,43 +389,50 @@ namespace AirScout
 
         private void btn_Options_ScoutBase_Database_Maintenance_Click(object sender, EventArgs e)
         {
-            ScoutBaseDatabaseMaintenanceDlg Dlg = new ScoutBaseDatabaseMaintenanceDlg();
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(StationData.Database);
             Dlg.ShowDialog();
         }
 
         private void btn_Options_AirScout_Database_Maintenance_Click(object sender, EventArgs e)
         {
-
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(AircraftData.Database);
+            Dlg.ShowDialog();
         }
 
         private void btn_Options_Propagation_GLOBE_Database_Maintenance_Click(object sender, EventArgs e)
         {
-
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(PropagationData.Database, ELEVATIONMODEL.GLOBE);
+            Dlg.ShowDialog();
         }
 
         private void btn_Options_Propagation_SRTM3_Database_Maintenance_Click(object sender, EventArgs e)
         {
-
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(PropagationData.Database, ELEVATIONMODEL.SRTM3);
+            Dlg.ShowDialog();
         }
 
         private void btn_Options_Propagation_SRTM1_Database_Maintenance_Click(object sender, EventArgs e)
         {
-
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(PropagationData.Database, ELEVATIONMODEL.SRTM1);
+            Dlg.ShowDialog();
         }
 
         private void btn_Options_Elevation_GLOBE_Database_Maintenance_Click(object sender, EventArgs e)
         {
-
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(ElevationData.Database, ELEVATIONMODEL.GLOBE);
+            Dlg.ShowDialog();
         }
 
         private void btn_Options_Elevation_SRTM3_Database_Maintenance_Click(object sender, EventArgs e)
         {
-
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(ElevationData.Database, ELEVATIONMODEL.SRTM3);
+            Dlg.ShowDialog();
         }
 
         private void btn_Options_Elevation_SRTM1_Database_Maintenance_Click(object sender, EventArgs e)
         {
-
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(ElevationData.Database, ELEVATIONMODEL.SRTM1);
+            Dlg.ShowDialog();
         }
 
         #endregion
@@ -896,10 +902,10 @@ namespace AirScout
         {
             if (MyLocation_Check() && MyQRV_Check())
             {
-                SFTPDoWorkEventArgs args = new SFTPDoWorkEventArgs();
+                StationDataUpdaterDoWorkEventArgs args = new StationDataUpdaterDoWorkEventArgs();
                 args.ld = StationData.Database.LocationFind(tb_Options_MyCall.Text, MaidenheadLocator.LocFromLatLon(tb_Options_MyLat.Value, tb_Options_MyLon.Value, false, 3));
                 args.qrvs = StationData.Database.QRVFind(tb_Options_MyCall.Text, MaidenheadLocator.LocFromLatLon(tb_Options_MyLat.Value, tb_Options_MyLon.Value, false, 3));
-                bw_SFTP.RunWorkerAsync(args);
+                bw_StationDataUpdater.RunWorkerAsync(args);
             }
         }
 
@@ -907,10 +913,10 @@ namespace AirScout
         {
             if (DXLocation_Check() && DXQRV_Check())
             {
-                SFTPDoWorkEventArgs args = new SFTPDoWorkEventArgs();
+                StationDataUpdaterDoWorkEventArgs args = new StationDataUpdaterDoWorkEventArgs();
                 args.ld = StationData.Database.LocationFind(tb_Options_DXCall.Text, MaidenheadLocator.LocFromLatLon(tb_Options_DXLat.Value, tb_Options_DXLon.Value, false, 3));
                 args.qrvs = StationData.Database.QRVFind(tb_Options_DXCall.Text, MaidenheadLocator.LocFromLatLon(tb_Options_DXLat.Value, tb_Options_DXLon.Value, false, 3));
-                bw_SFTP.RunWorkerAsync(args);
+                bw_StationDataUpdater.RunWorkerAsync(args);
             }
         }
 
@@ -1085,7 +1091,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -1218,7 +1224,7 @@ namespace AirScout
         {
             bw_GLOBE_MapUpdater.ReportProgress(0, "GLOBE: Creating elevation tile catalogue...");
             // get all locs needed for covered area
-            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(ELEVATIONMODEL.GLOBE, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_GLOBE_MapUpdater, ELEVATIONMODEL.GLOBE, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
             bw_GLOBE_MapUpdater.ReportProgress(0, "GLOBE: Processing tiles...");
             int missing = 0;
             int found = 0;
@@ -1336,7 +1342,7 @@ namespace AirScout
         private void bw_SRTM3_MapUpdater_DoWork(object sender, DoWorkEventArgs e)
         {
             bw_SRTM3_MapUpdater.ReportProgress(0, "SRTM3: Creating elevation tile catalogue...");
-            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(ELEVATIONMODEL.SRTM3, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_SRTM3_MapUpdater, ELEVATIONMODEL.SRTM3, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
             bw_SRTM3_MapUpdater.ReportProgress(0, "SRTM3: Processing tiles...");
             int missing = 0;
             int found = 0;
@@ -1454,7 +1460,7 @@ namespace AirScout
         private void bw_SRTM1_MapUpdater_DoWork(object sender, DoWorkEventArgs e)
         {
             bw_SRTM1_MapUpdater.ReportProgress(0, "SRTM1: Creating elevation tile catalogue...");
-            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(ELEVATIONMODEL.SRTM1, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_SRTM1_MapUpdater, ELEVATIONMODEL.SRTM1, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
             bw_SRTM1_MapUpdater.ReportProgress(0, "SRTM1: Processing tiles...");
             int missing = 0;
             int found = 0;
@@ -1603,16 +1609,27 @@ namespace AirScout
             cb_Options_PlaneFeed1.Items.Add("[none]");
             cb_Options_PlaneFeed2.Items.Add("[none]");
             cb_Options_PlaneFeed3.Items.Add("[none]");
-            ArrayList feeds = new PlaneFeedEnumeration().EnumFeeds();
-            foreach (PlaneFeed feed in feeds)
+            // select plane feeds
+            if (ParentDlg.PlaneFeedPlugins != null)
             {
-                cb_Options_PlaneFeed1.Items.Add(feed);
-                cb_Options_PlaneFeed2.Items.Add(feed);
-                cb_Options_PlaneFeed3.Items.Add(feed);
+                foreach (var plugin in ParentDlg.PlaneFeedPlugins)
+                {
+                    cb_Options_PlaneFeed1.Items.Add(plugin);
+                    cb_Options_PlaneFeed2.Items.Add(plugin);
+                    cb_Options_PlaneFeed3.Items.Add(plugin);
+                }
             }
             cb_Options_PlaneFeed1.SelectedIndex = cb_Options_PlaneFeed1.FindStringExact(Properties.Settings.Default.Planes_PlaneFeed1);
-            cb_Options_PlaneFeed2.SelectedIndex = cb_Options_PlaneFeed1.FindStringExact(Properties.Settings.Default.Planes_PlaneFeed2);
-            cb_Options_PlaneFeed3.SelectedIndex = cb_Options_PlaneFeed1.FindStringExact(Properties.Settings.Default.Planes_PlaneFeed3);
+            cb_Options_PlaneFeed2.SelectedIndex = cb_Options_PlaneFeed2.FindStringExact(Properties.Settings.Default.Planes_PlaneFeed2);
+            cb_Options_PlaneFeed3.SelectedIndex = cb_Options_PlaneFeed3.FindStringExact(Properties.Settings.Default.Planes_PlaneFeed3);
+            // reset all feeds not found anymore
+            if (cb_Options_PlaneFeed1.SelectedIndex < 0)
+                cb_Options_PlaneFeed1.SelectedItem = "[none]";
+            if (cb_Options_PlaneFeed2.SelectedIndex < 0)
+                cb_Options_PlaneFeed2.SelectedItem = "[none]";
+            if (cb_Options_PlaneFeed3.SelectedIndex < 0)
+                cb_Options_PlaneFeed3.SelectedItem = "[none]";
+
             // fill planes filter dropdown
             string[] cats = PlaneCategories.GetStringValues();
             foreach (string cat in cats)
@@ -1623,7 +1640,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -1643,10 +1660,11 @@ namespace AirScout
                 btn_Options_PlaneFeed1_Settings.Enabled = false;
                 btn_Options_PlaneFeed1_Import.Enabled = false;
                 btn_Options_PlaneFeed1_Export.Enabled = false;
+                btn_Options_PlaneFeed1_Default.Enabled = false;
                 Properties.Settings.Default.Planes_PlaneFeed1 = "[none]";
                 return;
             }
-            PlaneFeed feed = (PlaneFeed)cb_Options_PlaneFeed1.SelectedItem;
+            IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed1.SelectedItem;
             // show disclaimer if necessary
             if (!String.IsNullOrEmpty(feed.Disclaimer) && (String.IsNullOrEmpty(feed.DisclaimerAccepted)))
             {
@@ -1667,11 +1685,17 @@ namespace AirScout
                     ID = ID + "," + DateTime.UtcNow.ToString("u");
                     ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                     feed.DisclaimerAccepted = ID;
+                    feed.SaveSettings();
+                }
+                else
+                {
+                    cb_Options_PlaneFeed1.SelectedItem = "[none]";
                 }
             }
             btn_Options_PlaneFeed1_Settings.Enabled = feed.HasSettings;
             btn_Options_PlaneFeed1_Import.Enabled = feed.CanImport;
             btn_Options_PlaneFeed1_Export.Enabled = feed.CanExport;
+            btn_Options_PlaneFeed1_Default.Enabled = true;
             Properties.Settings.Default.Planes_PlaneFeed1 = feed.Name;
         }
 
@@ -1682,10 +1706,11 @@ namespace AirScout
                 btn_Options_PlaneFeed2_Settings.Enabled = false;
                 btn_Options_PlaneFeed2_Import.Enabled = false;
                 btn_Options_PlaneFeed2_Export.Enabled = false;
+                btn_Options_PlaneFeed2_Default.Enabled = false;
                 Properties.Settings.Default.Planes_PlaneFeed2 = "[none]";
                 return;
             }
-            PlaneFeed feed = (PlaneFeed)cb_Options_PlaneFeed2.SelectedItem;
+            IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed2.SelectedItem;
             // show disclaimer if necessary
             if (!String.IsNullOrEmpty(feed.Disclaimer) && (String.IsNullOrEmpty(feed.DisclaimerAccepted)))
             {
@@ -1706,11 +1731,17 @@ namespace AirScout
                     ID = ID + "," + DateTime.UtcNow.ToString("u");
                     ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                     feed.DisclaimerAccepted = ID;
+                    feed.SaveSettings();
+                }
+                else
+                {
+                    cb_Options_PlaneFeed2.SelectedItem = "[none]";
                 }
             }
             btn_Options_PlaneFeed2_Settings.Enabled = feed.HasSettings;
             btn_Options_PlaneFeed2_Import.Enabled = feed.CanImport;
             btn_Options_PlaneFeed2_Export.Enabled = feed.CanExport;
+            btn_Options_PlaneFeed2_Default.Enabled = true;
             Properties.Settings.Default.Planes_PlaneFeed2 = feed.Name;
         }
 
@@ -1721,10 +1752,11 @@ namespace AirScout
                 btn_Options_PlaneFeed3_Settings.Enabled = false;
                 btn_Options_PlaneFeed3_Import.Enabled = false;
                 btn_Options_PlaneFeed3_Export.Enabled = false;
+                btn_Options_PlaneFeed3_Default.Enabled = false;
                 Properties.Settings.Default.Planes_PlaneFeed3 = "[none]";
                 return;
             }
-            PlaneFeed feed = (PlaneFeed)cb_Options_PlaneFeed3.SelectedItem;
+            IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed3.SelectedItem;
             // show disclaimer if necessary
             if (!String.IsNullOrEmpty(feed.Disclaimer) && (String.IsNullOrEmpty(feed.DisclaimerAccepted)))
             {
@@ -1745,11 +1777,17 @@ namespace AirScout
                     ID = ID + "," + DateTime.UtcNow.ToString("u");
                     ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                     feed.DisclaimerAccepted = ID;
+                    feed.SaveSettings();
+                }
+                else
+                {
+                    cb_Options_PlaneFeed3.SelectedItem = "[none]";
                 }
             }
             btn_Options_PlaneFeed3_Settings.Enabled = feed.HasSettings;
             btn_Options_PlaneFeed3_Import.Enabled = feed.CanImport;
             btn_Options_PlaneFeed3_Export.Enabled = feed.CanExport;
+            btn_Options_PlaneFeed3_Default.Enabled = true;
             Properties.Settings.Default.Planes_PlaneFeed3 = feed.Name;
         }
 
@@ -1758,11 +1796,14 @@ namespace AirScout
             try
             {
                 PlaneFeedSettingsDlg Dlg = new PlaneFeedSettingsDlg();
-                Dlg.lbl_Info.Text = ((PlaneFeed)cb_Options_PlaneFeed1.SelectedItem).Info;
-                Dlg.pg_Main.SelectedObject = ((PlaneFeed)cb_Options_PlaneFeed1.SelectedItem).GetFeedSettings();
+                Dlg.Text = ((IPlaneFeedPlugin)cb_Options_PlaneFeed1.SelectedItem).Name;
+                Dlg.lbl_Info.Text = ((IPlaneFeedPlugin)cb_Options_PlaneFeed1.SelectedItem).Info;
+                Dlg.lbl_Version.Text = ((IPlaneFeedPlugin)cb_Options_PlaneFeed1.SelectedItem).Version;
+                Dlg.pg_Main.SelectedObject = ((IPlaneFeedPlugin)cb_Options_PlaneFeed1.SelectedItem).GetSettings();
                 if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                 }
+                ((IPlaneFeedPlugin)cb_Options_PlaneFeed1.SelectedItem).SaveSettings();
             }
             catch
             {
@@ -1775,11 +1816,14 @@ namespace AirScout
             try
             {
                 PlaneFeedSettingsDlg Dlg = new PlaneFeedSettingsDlg();
-                Dlg.lbl_Info.Text = ((PlaneFeed)cb_Options_PlaneFeed2.SelectedItem).Info;
-                Dlg.pg_Main.SelectedObject = ((PlaneFeed)cb_Options_PlaneFeed2.SelectedItem).GetFeedSettings();
+                Dlg.Text = ((IPlaneFeedPlugin)cb_Options_PlaneFeed2.SelectedItem).Name;
+                Dlg.lbl_Info.Text = ((IPlaneFeedPlugin)cb_Options_PlaneFeed2.SelectedItem).Info;
+                Dlg.lbl_Version.Text = ((IPlaneFeedPlugin)cb_Options_PlaneFeed2.SelectedItem).Version;
+                Dlg.pg_Main.SelectedObject = ((IPlaneFeedPlugin)cb_Options_PlaneFeed2.SelectedItem).GetSettings();
                 if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                 }
+                ((IPlaneFeedPlugin)cb_Options_PlaneFeed2.SelectedItem).SaveSettings();
             }
             catch
             {
@@ -1792,11 +1836,14 @@ namespace AirScout
             try
             {
                 PlaneFeedSettingsDlg Dlg = new PlaneFeedSettingsDlg();
-                Dlg.lbl_Info.Text = ((PlaneFeed)cb_Options_PlaneFeed3.SelectedItem).Info;
-                Dlg.pg_Main.SelectedObject = ((PlaneFeed)cb_Options_PlaneFeed3.SelectedItem).GetFeedSettings();
+                Dlg.Text = ((IPlaneFeedPlugin)cb_Options_PlaneFeed3.SelectedItem).Name;
+                Dlg.lbl_Info.Text = ((IPlaneFeedPlugin)cb_Options_PlaneFeed3.SelectedItem).Info;
+                Dlg.lbl_Version.Text = ((IPlaneFeedPlugin)cb_Options_PlaneFeed3.SelectedItem).Version;
+                Dlg.pg_Main.SelectedObject = ((IPlaneFeedPlugin)cb_Options_PlaneFeed3.SelectedItem).GetSettings();
                 if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                 }
+                ((IPlaneFeedPlugin)cb_Options_PlaneFeed3.SelectedItem).SaveSettings();
             }
             catch
             {
@@ -1808,8 +1855,8 @@ namespace AirScout
         {
             try
             {
-                PlaneFeed feed = (PlaneFeed)cb_Options_PlaneFeed1.SelectedItem;
-                feed.Import();
+                IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed1.SelectedItem;
+                feed.ImportSettings();
             }
             catch (Exception ex)
             {
@@ -1821,8 +1868,8 @@ namespace AirScout
         {
             try
             {
-                PlaneFeed feed = (PlaneFeed)cb_Options_PlaneFeed2.SelectedItem;
-                feed.Import();
+                IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed2.SelectedItem;
+                feed.ImportSettings();
             }
             catch (Exception ex)
             {
@@ -1834,8 +1881,8 @@ namespace AirScout
         {
             try
             {
-                PlaneFeed feed = (PlaneFeed)cb_Options_PlaneFeed3.SelectedItem;
-                feed.Import();
+                IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed3.SelectedItem;
+                feed.ImportSettings();
             }
             catch (Exception ex)
             {
@@ -1847,8 +1894,8 @@ namespace AirScout
         {
             try
             {
-                PlaneFeed feed = (PlaneFeed)cb_Options_PlaneFeed1.SelectedItem;
-                feed.Export();
+                IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed1.SelectedItem;
+                feed.ExportSettings();
             }
             catch (Exception ex)
             {
@@ -1860,8 +1907,8 @@ namespace AirScout
         {
             try
             {
-                PlaneFeed feed = (PlaneFeed)cb_Options_PlaneFeed2.SelectedItem;
-                feed.Export();
+                IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed2.SelectedItem;
+                feed.ExportSettings();
             }
             catch (Exception ex)
             {
@@ -1874,14 +1921,53 @@ namespace AirScout
         {
             try
             {
-                PlaneFeed feed = (PlaneFeed)cb_Options_PlaneFeed3.SelectedItem;
-                feed.Export();
+                IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed3.SelectedItem;
+                feed.ExportSettings();
             }
             catch (Exception ex)
             {
                 // do nothing
             }
 
+        }
+
+        private void btn_Options_PlaneFeed1_Default_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed1.SelectedItem;
+                feed.ResetSettings();
+            }
+            catch (Exception ex)
+            {
+                // do nothing
+            }
+        }
+
+        private void btn_Options_PlaneFeed2_Default_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed2.SelectedItem;
+                feed.ResetSettings();
+            }
+            catch (Exception ex)
+            {
+                // do nothing
+            }
+        }
+
+        private void btn_Options_PlaneFeed3_Default_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_Options_PlaneFeed3.SelectedItem;
+                feed.ResetSettings();
+            }
+            catch (Exception ex)
+            {
+                // do nothing
+            }
         }
 
         private void cb_Options_Planes_Filter_Min_Cat_SelectedIndexChanged(object sender, EventArgs e)
@@ -1892,7 +1978,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -2047,7 +2133,7 @@ namespace AirScout
             bw_GLOBE_MapUpdater.CancelAsync();
             bw_SRTM3_MapUpdater.CancelAsync();
             bw_SRTM1_MapUpdater.CancelAsync();
-            bw_SFTP.CancelAsync();
+            bw_StationDataUpdater.CancelAsync();
             // do garbage collection
             GC.Collect();
         }
@@ -2083,56 +2169,41 @@ namespace AirScout
             }
         }
 
-        #region SFTP
+        #region StationDataUpdater
 
-        private void bw_SFTP_DoWork(object sender, DoWorkEventArgs e)
+        private void bw_StationDataUpdater_DoWork(object sender, DoWorkEventArgs e)
         {
             Log.WriteMessage("Started.");
             try
             {
-                SFTPDoWorkEventArgs args = (SFTPDoWorkEventArgs)e.Argument;
-                bw_SFTP.ReportProgress(0, "Connecting FTP - Server...");
-                // generate file with user info
-                string locfilename = ParentDlg.TmpDirectory + Path.DirectorySeparatorChar + Properties.Settings.Default.MyCall.Replace("/", "_") + ".loc";
-                string qrvfilename = ParentDlg.TmpDirectory + Path.DirectorySeparatorChar + Properties.Settings.Default.MyCall.Replace("/", "_") + ".qrv";
+                StationDataUpdaterDoWorkEventArgs args = (StationDataUpdaterDoWorkEventArgs)e.Argument;
+                string encoded;
+                string result;
                 JsonSerializerSettings settings = new JsonSerializerSettings();
                 settings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 settings.FloatFormatHandling = FloatFormatHandling.String;
                 settings.Formatting = Newtonsoft.Json.Formatting.Indented;
                 string json = JsonConvert.SerializeObject(args.ld, settings);
-                using (StreamWriter sw = new StreamWriter(locfilename))
+                encoded = Encryption.OpenSSLEncrypt(json, ParentDlg.SessionKey);
+                WebClient client = new WebClient();
+                result = client.UploadString(Properties.Settings.Default.AirScout_UploadLocation_URL + "?id=" + Properties.Settings.Default.AirScout_Instance_ID, encoded);
+                foreach (QRVDesignator qrv in args.qrvs)
                 {
-                    sw.WriteLine(json);
+                    json = JsonConvert.SerializeObject(qrv, settings);
+                    encoded = Encryption.OpenSSLEncrypt(json, ParentDlg.SessionKey);
+                    result = client.UploadString(Properties.Settings.Default.AirScout_UploadQRV_URL + "?id=" + Properties.Settings.Default.AirScout_Instance_ID, encoded);
                 }
-                json = JsonConvert.SerializeObject(args.qrvs, settings);
-                using (StreamWriter sw = new StreamWriter(qrvfilename))
-                {
-                    sw.WriteLine(json);
-                }
-                using (var sftp = new SftpClient(Password.GetSFTPURL(Properties.Settings.Default.Password), Password.GetSFTPUser(Properties.Settings.Default.Password), Password.GetSFTPPassword(Properties.Settings.Default.Password)))
-                {
-                    var stream = File.OpenRead(locfilename);
-                    sftp.Connect();
-                    sftp.UploadFile(stream, Path.GetFileName(locfilename), true);
-                    sftp.Disconnect();
-                    stream.Close();
-                    stream = File.OpenRead(qrvfilename);
-                    sftp.Connect();
-                    sftp.UploadFile(stream, Path.GetFileName(qrvfilename), true);
-                    sftp.Disconnect();
-                    stream.Close();
-                }
-                bw_SFTP.ReportProgress(100, "Location upload successful.");
+                bw_StationDataUpdater.ReportProgress(100, "Location upload successful.");
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
-                bw_SFTP.ReportProgress(-1, "Error while uploading location:" + ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                bw_StationDataUpdater.ReportProgress(-1, "Error while uploading location:" + ex.Message);
             }
             Log.WriteMessage("Finished.");
         }
 
-        private void bw_SFTP_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void bw_StationDataUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             try
             {
@@ -2143,7 +2214,7 @@ namespace AirScout
             }
         }
 
-        private void bw_SFTP_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void bw_StationDataUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
 
         }
@@ -2153,7 +2224,7 @@ namespace AirScout
 
     }
 
-    public class SFTPDoWorkEventArgs
+    public class StationDataUpdaterDoWorkEventArgs
     {
         public LocationDesignator ld;
         public List<QRVDesignator> qrvs;

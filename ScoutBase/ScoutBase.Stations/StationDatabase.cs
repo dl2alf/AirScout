@@ -18,6 +18,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Windows;
 using ScoutBase.Core;
+using ScoutBase.Database;
 using Newtonsoft.Json;
 
 namespace ScoutBase.Stations
@@ -39,82 +40,25 @@ namespace ScoutBase.Stations
     /// <summary>
     /// Holds the Station information in a database structure.
     /// </summary>
-    public class StationDatabase
+    public class StationDatabase : ScoutBaseDatabase
     {
-        System.Data.SQLite.SQLiteDatabase db;
-
-        private string DBPath;
-
-        private static LogWriter Log = LogWriter.Instance;
-
-        public readonly int UserVersion = 1;
-
         public StationDatabase()
         {
-            db = OpenDatabase("stations.db3");
+            UserVersion = 1;
+            Name = "ScoutBase Station Database";
+            Description = "The Scoutbase Station Database is containing location and QRV infos. Each information has a unique key: \n" +
+                "callsign and 6-digit Maidenhead locator square. \n" +
+                "The database is periodically updated from a global web resource. The user can modify / add entries via user interface.";
+            // add table description manually
+            TableDescriptions.Add(LocationDesignator.TableName, "Holds location information.");
+            TableDescriptions.Add(QRVDesignator.TableName, "Holds QRV information.");
+            db = OpenDatabase("stations.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
             // create tables with schemas if not exist
             if (!LocationTableExists())
                 LocationCreateTable();
             if (!QRVTableExists())
                 QRVCreateTable();
         }
-
-        private System.Data.SQLite.SQLiteDatabase OpenDatabase(string name)
-        {
-            System.Data.SQLite.SQLiteDatabase db = null;
-            try
-            {
-                // check if database path exists --> create if not
-                if (!Directory.Exists(DefaultDatabaseDirectory()))
-                    Directory.CreateDirectory(DefaultDatabaseDirectory());
-                // check if database is already on disk 
-                DBPath = DefaultDatabaseDirectory();
-                if (!File.Exists(Path.Combine(DBPath, name)))
-                {
-                    // create one on disk
-                    System.Data.SQLite.SQLiteDatabase dbn = new System.Data.SQLite.SQLiteDatabase(Path.Combine(DBPath, name));
-                    // open database
-                    dbn.Open();
-                    // set user version
-                    dbn.SetUserVerion(UserVersion);
-                    dbn.Close();
-                }
-                // check for in-memory database --> open from disk, if not
-                if (Properties.Settings.Default.Database_InMemory)
-                    db = System.Data.SQLite.SQLiteDatabase.CreateInMemoryDB(Path.Combine(DBPath, name));
-                else
-                {
-                    db = new System.Data.SQLite.SQLiteDatabase(Path.Combine(DBPath, name));
-                    db.Open();
-                }
-                // get version info
-                int v = db.GetUserVersion();
-                // do upgrade stuff here
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error initializing database: " + ex.Message);
-                throw new TypeInitializationException(this.GetType().Name, ex);
-            }
-            return db;
-        }
-
-        public void BackupDatabase()
-        {
-            if (db == null)
-                return;
-            // save in-memory database to disk
-            if (db.IsInMemory)
-                db.BackupDatabase(db.DiskFileName);
-            else
-                db.Close();
-        }
-
-        public bool IsInMemory()
-        {
-            return db.IsInMemory;
-        }
-
         public string DefaultDatabaseDirectory()
         {
             // create default database directory name
@@ -165,73 +109,6 @@ namespace ScoutBase.Stations
         {
             return Properties.Settings.Default.Stations_UpdateURL;
         }
-
-
-        public DATABASESTATUS GetDBStatus()
-        {
-            if (db != null)
-                return db.Status;
-            return DATABASESTATUS.UNDEFINED;
-        }
-
-        public void SetDBStatus(DATABASESTATUS status)
-        {
-            if (db != null)
-                db.Status = status;
-        }
-
-        public bool GetDBStatusBit(DATABASESTATUS statusbit)
-        {
-            if (db != null)
-                return (((int)db.Status) & ((int)statusbit)) > 0;
-            return false;
-        }
-
-        public void SetDBStatusBit(DATABASESTATUS statusbit)
-        {
-            if (db != null)
-                db.Status |= statusbit;
-        }
-
-        public void ResetDBStatusBit(DATABASESTATUS statusbit)
-        {
-            if (db != null)
-                db.Status &= ~statusbit;
-        }
-
-        public void BeginTransaction()
-        {
-            if (db == null)
-                return;
-            db.BeginTransaction();
-        }
-
-        public void Commit()
-        {
-            if (db == null)
-                return;
-            db.Commit();
-        }
-
-        private DataTable Select(System.Data.SQLite.SQLiteDatabase db, string sql)
-        {
-            return db.Select(sql);
-        }
-
-        public string GetDBLocation()
-        {
-            if (db == null)
-                return "";
-            return db.DBLocation;
-        }
-
-        public double GetDBSize()
-        {
-            if (db == null)
-                return 0;
-            return db.DBSize;
-        }
-
 
         #region Location
 
@@ -585,7 +462,7 @@ namespace ScoutBase.Stations
                     }
                     catch (Exception ex)
                     {
-                        Log.WriteMessage("Error inserting location [" + ld.Call + "]: " + ex.ToString());
+                        Log.WriteMessage("Error inserting location [" + ld.Call + "]: " + ex.ToString(), LogLevel.Error);
                         errors++;
                     }
                 }
@@ -593,7 +470,7 @@ namespace ScoutBase.Stations
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -612,7 +489,7 @@ namespace ScoutBase.Stations
                     }
                     catch (Exception ex)
                     {
-                        Log.WriteMessage("Error deleting location [" + ld.Call + "]: " + ex.ToString());
+                        Log.WriteMessage("Error deleting location [" + ld.Call + "]: " + ex.ToString(), LogLevel.Error);
                         errors++;
                     }
                 }
@@ -620,7 +497,7 @@ namespace ScoutBase.Stations
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -653,7 +530,7 @@ namespace ScoutBase.Stations
         public List<LocationDesignator> LocationGetAll()
         {
             List<LocationDesignator> l = new List<LocationDesignator>();
-            DataTable Result = db.Select("SELECT * FROM " + LocationDesignator.TableName);
+            DataTable Result = db.Select("SELECT * FROM " + LocationDesignator.TableName + " ORDER BY Call ASC");
             if ((Result == null) || (Result.Rows.Count == 0))
                 return l;
             foreach (DataRow row in Result.Rows)
@@ -669,7 +546,7 @@ namespace ScoutBase.Stations
             List<LocationDesignator> l = new List<LocationDesignator>();
             int i = 0;
             SQLiteCommand cmd = new SQLiteCommand(db.DBConnection);
-            cmd.CommandText = "SELECT * FROM " + LocationDesignator.TableName;
+            cmd.CommandText = "SELECT * FROM " + LocationDesignator.TableName + " ORDER BY Call ASC";
             SQLiteDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -694,7 +571,7 @@ namespace ScoutBase.Stations
             List<LocationDesignator> l = new List<LocationDesignator>();
             lock (db.DBCommand)
             {
-                db.DBCommand.CommandText = "SELECT * FROM " + LocationDesignator.TableName + " WHERE Lat >= @minlat AND Lat <= @maxlat AND Lon >= @minlon AND Lon <= @maxlon";
+                db.DBCommand.CommandText = "SELECT * FROM " + LocationDesignator.TableName + " WHERE Lat >= @minlat AND Lat <= @maxlat AND Lon >= @minlon AND Lon <= @maxlon ORDER BY Call ASC";
                 db.DBCommand.Parameters.Clear();
                 db.DBCommand.Parameters.AddWithValue("@minlat", minlat);
                 db.DBCommand.Parameters.AddWithValue("@maxlat", maxlat);
@@ -717,7 +594,7 @@ namespace ScoutBase.Stations
             List<LocationDesignator> l = new List<LocationDesignator>();
             int i = 0;
             SQLiteCommand cmd = new SQLiteCommand(db.DBConnection);
-            cmd.CommandText = "SELECT * FROM " + LocationDesignator.TableName + " WHERE Lat >= @minlat AND Lat <= @maxlat AND Lon >= @minlon AND Lon <= @maxlon";
+            cmd.CommandText = "SELECT * FROM " + LocationDesignator.TableName + " WHERE Lat >= @minlat AND Lat <= @maxlat AND Lon >= @minlon AND Lon <= @maxlon ORDER BY Call ASC";
             cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@minlat", minlat);
             cmd.Parameters.AddWithValue("@maxlat", maxlat);
@@ -813,7 +690,7 @@ namespace ScoutBase.Stations
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return l;
         }
@@ -852,7 +729,7 @@ namespace ScoutBase.Stations
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return l;
         }
@@ -1107,7 +984,7 @@ namespace ScoutBase.Stations
                     }
                     catch (Exception ex)
                     {
-                        Log.WriteMessage("Error inserting QRV [" + qrv.Call + "]: " + ex.ToString());
+                        Log.WriteMessage("Error inserting QRV [" + qrv.Call + "]: " + ex.ToString(), LogLevel.Error);
                         errors++;
                     }
                 }
@@ -1115,7 +992,7 @@ namespace ScoutBase.Stations
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1134,7 +1011,7 @@ namespace ScoutBase.Stations
                     }
                     catch (Exception ex)
                     {
-                        Log.WriteMessage("Error deleting QRV [" + qrv.Call + "]: " + ex.ToString());
+                        Log.WriteMessage("Error deleting QRV [" + qrv.Call + "]: " + ex.ToString(), LogLevel.Error);
                         errors++;
                     }
                 }
@@ -1142,7 +1019,7 @@ namespace ScoutBase.Stations
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1174,7 +1051,7 @@ namespace ScoutBase.Stations
 
         public List<QRVDesignator> QRVGetAll()
         {
-            DataTable Result = db.Select("SELECT * FROM " + QRVDesignator.TableName);
+            DataTable Result = db.Select("SELECT * FROM " + QRVDesignator.TableName + " ORDER BY Call ASC");
             if ((Result != null) && (Result.Rows.Count > 0))
             {
                 List<QRVDesignator> l = new List<QRVDesignator>();
@@ -1195,7 +1072,7 @@ namespace ScoutBase.Stations
             List<QRVDesignator> l = new List<QRVDesignator>();
             int i = 0;
             SQLiteCommand cmd = new SQLiteCommand(db.DBConnection);
-            cmd.CommandText = "SELECT * FROM " + QRVDesignator.TableName;
+            cmd.CommandText = "SELECT * FROM " + QRVDesignator.TableName + " ORDER BY Call ASC";
             SQLiteDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
@@ -1221,7 +1098,7 @@ namespace ScoutBase.Stations
             qrv.Band = band;
             lock (db.DBCommand)
             {
-                db.DBCommand.CommandText = "SELECT * FROM " + QRVDesignator.TableName + " WHERE Band = @Band";
+                db.DBCommand.CommandText = "SELECT * FROM " + QRVDesignator.TableName + " WHERE Band = @Band ORDER BY Call ASC";
                 db.DBCommand.Parameters.Clear();
                 db.DBCommand.Parameters.Add(qrv.AsInt32("Band"));
                 DataTable Result = db.Select(db.DBCommand);
@@ -1248,7 +1125,7 @@ namespace ScoutBase.Stations
             qrv.Band = band;
             int i = 0;
             SQLiteCommand cmd = new SQLiteCommand(db.DBConnection);
-            cmd.CommandText = "SELECT * FROM " + QRVDesignator.TableName + " WHERE Band = @Band";
+            cmd.CommandText = "SELECT * FROM " + QRVDesignator.TableName + " WHERE Band = @Band ORDER BY Call ASC";
             cmd.Parameters.Clear();
             cmd.Parameters.Add(qrv.AsInt32("Band"));
             SQLiteDataReader reader = cmd.ExecuteReader();

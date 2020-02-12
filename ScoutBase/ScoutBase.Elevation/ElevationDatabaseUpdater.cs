@@ -177,7 +177,7 @@ namespace ScoutBase.Elevation
             {
                 // get all locs needed for covered area
                 // try to read cached catalogue first
-                ElevationCatalogue cat = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(StartOptions.Model, StartOptions.MinLat, StartOptions.MinLon, StartOptions.MaxLat, StartOptions.MaxLon);
+                ElevationCatalogue cat = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(null, StartOptions.Model, StartOptions.MinLat, StartOptions.MinLon, StartOptions.MaxLat, StartOptions.MaxLon);
                 // process tiles
                 List<ElevationTileDesignator> tiles = new List<ElevationTileDesignator>();
                 foreach (KeyValuePair<string, DateTime> availabletile in cat.Files)
@@ -239,7 +239,7 @@ namespace ScoutBase.Elevation
             {
                 // get all locs needed for covered area
                 // try to read cached catalogue first
-                ElevationCatalogue cat = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(StartOptions.Model, StartOptions.MinLat, StartOptions.MinLon, StartOptions.MaxLat, StartOptions.MaxLon);
+                ElevationCatalogue cat = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(null, StartOptions.Model, StartOptions.MinLat, StartOptions.MinLon, StartOptions.MaxLat, StartOptions.MaxLon);
                 // process tiles
                 foreach (KeyValuePair<string, DateTime> availabletile in cat.Files)
                 {

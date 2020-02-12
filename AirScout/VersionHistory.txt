@@ -137,7 +137,7 @@ Initial Version
 - Feature:  new background procedure for propagation path pre-calculation
 - Feature:	extended error logging
 
-2019-xx-xx: V1.3.0.4 
+2019-xx-xx: V1.3.0.4 (not published)
 ====================
 
 - Feature:  new "Multi-Path" feature to monitor more than one path at the same time, enhanced watch list features
@@ -151,3 +151,38 @@ Initial Version
 - Feature:  Enhanced analysis tab with history player and import/export functions
 - Feature:  [Virtual Radar Server] Extended plausibility check to avoid "jumping planes" due to incorrect position messages (estimate position from older messages and check against latest message)
 - Feature:  [PlaneFeeds] improved recovery of missing data/empty fields in captured messages
+- Bugfix:	Error 403 (forbidden) when loading map tiles from OpenStreetMap --> fixed
+
+2020-02-02: V1.3.0.5 
+====================
+ 
+- Feature:	New AirScout user space on webserver, including PHP scripts for upload download information and keys
+- Feature:	New database on webserver containing station info, qrv info and keys
+- Feature:	[Security enhancement] generate a unique AirScout instance key and a temporary session key each time AirScout is starting up, all traffic is now encrypted
+- Feature:  [Plugin framework for plane feeds] allowing to update feeds online and to write own feeds
+- Feature:	New and refurbished plane feeds, according to the new plane feed framework
+- Feature:  News tab is moved to map tab to get more space for viewing content
+
+2020-02-04: V1.3.0.6
+====================
+
+- Bugfix:	Planefeed plugins do not show up on some configurations - seems to be a problem with .NET security policies --> fixed (tnx DL8AAU)
+- Bugfix:	Users cannot click on a single plane to show info permanently when in PLAY mode, also no tracking of a single plane is possible --> fixed (tnx IN3UPQ)
+- Bugfix:   Calculation of elevation angle is wrong, always showing abt. 0°, tracking not working --> fixed (tnx IN3UPQ)
+
+2020-xx-xx: V1.3.0.7
+====================
+
+- Bugfix:	The AirScout_clean.cmd does not work properly when trying to cleanup files (database files are locked) --> fixed
+- Bugfix:	Session key sometimes was not genrated at fresh install, resulting in limited functionality --> fixed
+- Bugfix:	Watchlist in multi-path mode always scrolls back to top position after watchlist is updated, watchlist is getting inoperable on large amounts of calls --> fixed
+- Bugfix:	Sometimes a MemoryCounter could not created by the system, Exception will occur and AirScout will not start --> fixed
+- Feature:	Create a progress indicator while creating elevation tile catalogue --> number of tiles processed is displayed now (tnx DL8AAU)
+- Feature:	colour checked items in watch list according to their AS potential (tnx DF9IC)
+- Feature:	Sort selected items to the top of watch list to better view all selected items at once
+- Feature:	label checked items from watch list in map premantently when in Multi-Path Mode (call sign only) (tnx DF9IC)
+- Bugfix:	several minor bugs when managing watch list (calls not sorted, multiple adding adding possible) --> fixed (tnx DL8AAU)
+
+
+
+

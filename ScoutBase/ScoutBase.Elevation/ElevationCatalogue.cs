@@ -44,7 +44,7 @@ namespace ScoutBase.Elevation
 
         public SortedDictionary<string, DateTime> Files = new SortedDictionary<string, DateTime>();
 
-        public ElevationCatalogue (string baseurl, string basedir, double minlat, double minlon, double maxlat, double maxlon)
+        public ElevationCatalogue (BackgroundWorker caller, string baseurl, string basedir, double minlat, double minlon, double maxlat, double maxlon)
         {
             BaseURL = baseurl;
             if (!BaseURL.EndsWith("/"))
@@ -64,6 +64,12 @@ namespace ScoutBase.Elevation
             SortedDictionary<string, string> squares = new SortedDictionary<string, string>();
             foreach (string s in sq)
                 squares.Add(s, null);
+            // report progress
+            if (caller != null)
+            {
+                if (caller.WorkerReportsProgress)
+                    caller.ReportProgress(0, "Downloading elevation tile catalogue from web (please wait)...");
+            }
             // get locs catalogue from web
             AutoDecompressionWebClient client = new AutoDecompressionWebClient();
             client.DownloadFileIfNewer(url, zipfilename, true,true);
@@ -76,6 +82,7 @@ namespace ScoutBase.Elevation
                 {
                     Stopwatch st = new Stopwatch();
                     st.Start();
+                    int i = 0;
                     while (!sr.EndOfStream)
                     { 
                         string s = sr.ReadLine();
@@ -85,8 +92,15 @@ namespace ScoutBase.Elevation
                             {
                                 string[] a = s.Split(';');
                                 DateTime lastupdated;
+                                string square = a[0].Substring(0, 4).ToUpper();
                                 string dummy;
-                                if (squares.TryGetValue(a[0].Substring(0, 4).ToUpper(), out dummy))
+                                if (caller != null)
+                                {
+                                    if( (caller.WorkerReportsProgress) && (i%1000 == 0))
+
+                                        caller.ReportProgress(0, "Updating elevation tile information [" + i.ToString() + "], please wait...");
+                                }
+                                if (squares.TryGetValue(square, out dummy))
                                 {
                                     if (!this.Files.TryGetValue(a[0], out lastupdated))
                                         this.Files.Add(a[0], DateTime.ParseExact(a[1], "yyyy-MM-dd HH:mm:ssZ", CultureInfo.InvariantCulture).ToUniversalTime());
@@ -97,6 +111,7 @@ namespace ScoutBase.Elevation
                         {
 
                         }
+                        i++;
                     }
                     st.Stop();
                     Console.WriteLine("Reading catalogue: " + st.ElapsedMilliseconds.ToString() + " ms.");

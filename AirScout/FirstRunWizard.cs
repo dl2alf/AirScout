@@ -20,7 +20,7 @@ using ScoutBase;
 using ScoutBase.Core;
 using ScoutBase.Stations;
 using ScoutBase.Elevation;
-using AirScout.PlaneFeeds.Generic;
+using AirScout.PlaneFeeds.Plugin.MEFContract;
 
 namespace AirScout
 {
@@ -39,8 +39,11 @@ namespace AirScout
 
         private LogWriter Log = LogWriter.Instance;
 
-        public FirstRunWizard()
+        MapDlg ParentDlg;
+
+        public FirstRunWizard(MapDlg parentdlg)
         {
+            ParentDlg = parentdlg;
             InitializeComponent();
         }
 
@@ -49,6 +52,8 @@ namespace AirScout
             Log.WriteMessage("Loading.");
             // set initial settings for CoverageMap
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_Coverage.MapProvider.RefererUrl = "";
             gm_Coverage.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
             gm_Coverage.IgnoreMarkerOnMouseWheel = true;
             gm_Coverage.MinZoom = 0;
@@ -64,6 +69,8 @@ namespace AirScout
 
             // set initial settings for GLOBEMap
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_GLOBE.MapProvider.RefererUrl = "";
             gm_GLOBE.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
             gm_GLOBE.IgnoreMarkerOnMouseWheel = true;
             gm_GLOBE.MinZoom = 0;
@@ -79,6 +86,8 @@ namespace AirScout
 
             // set initial settings for SRTM3Map
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_SRTM3.MapProvider.RefererUrl = "";
             gm_SRTM3.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
             gm_SRTM3.IgnoreMarkerOnMouseWheel = true;
             gm_SRTM3.MinZoom = 0;
@@ -94,6 +103,8 @@ namespace AirScout
 
             // set initial settings for SRTM1Map
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_SRTM1.MapProvider.RefererUrl = "";
             gm_SRTM1.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
             gm_SRTM1.IgnoreMarkerOnMouseWheel = true;
             gm_SRTM1.MinZoom = 0;
@@ -109,6 +120,8 @@ namespace AirScout
 
             // set initial settings for user details
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_Callsign.MapProvider.RefererUrl = "";
             gm_Callsign.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
             gm_Callsign.IgnoreMarkerOnMouseWheel = true;
             gm_Callsign.MinZoom = 0;
@@ -151,7 +164,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(),LogLevel.Error);
             }
             if (rb_TermsAndConditions.Text.Length > 0)
                 cb_TermsAndConditions.Enabled = true;
@@ -286,7 +299,7 @@ namespace AirScout
         {
             bw_GLOBE_MapUpdater.ReportProgress(0, "Creating elevation tile catalogue (please wait)...");
             // get all locs needed for covered area
-            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(ELEVATIONMODEL.GLOBE, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_GLOBE_MapUpdater, ELEVATIONMODEL.GLOBE, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
             bw_GLOBE_MapUpdater.ReportProgress(0, "Processing tiles...");
             // report tile count
             bw_GLOBE_MapUpdater.ReportProgress(2, availabletiles.Files.Keys.Count);
@@ -343,7 +356,7 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(),LogLevel.Error);
                 }
             }
             else if (e.ProgressPercentage == 1)
@@ -436,7 +449,7 @@ namespace AirScout
         {
             bw_SRTM3_MapUpdater.ReportProgress(0, "Creating elevation tile catalogue (please wait)...");
             // get all locs needed for covered area
-            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(ELEVATIONMODEL.SRTM3, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_SRTM3_MapUpdater, ELEVATIONMODEL.SRTM3, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
             bw_SRTM3_MapUpdater.ReportProgress(0, "Processing tiles...");
             // report tile count
             bw_SRTM3_MapUpdater.ReportProgress(2, availabletiles.Files.Keys.Count);
@@ -493,7 +506,7 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             else if (e.ProgressPercentage == 1)
@@ -581,7 +594,7 @@ namespace AirScout
         {
             bw_SRTM1_MapUpdater.ReportProgress(0, "Creating elevation tile catalogue (please wait)...");
             // get all locs needed for covered area
-            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(ELEVATIONMODEL.SRTM1, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_SRTM1_MapUpdater, ELEVATIONMODEL.SRTM1, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
             bw_SRTM1_MapUpdater.ReportProgress(0, "Processing tiles...");
             // report tile count
             bw_SRTM1_MapUpdater.ReportProgress(2, availabletiles.Files.Keys.Count);
@@ -638,7 +651,7 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             else if (e.ProgressPercentage == 1)
@@ -1010,12 +1023,14 @@ namespace AirScout
             cb_PlaneFeed1.Items.Add("[none]");
             cb_PlaneFeed2.Items.Add("[none]");
             cb_PlaneFeed3.Items.Add("[none]");
-            ArrayList feeds = new PlaneFeedEnumeration().EnumFeeds();
-            foreach (PlaneFeed feed in feeds)
+            if (ParentDlg.PlaneFeedPlugins != null)
             {
-                cb_PlaneFeed1.Items.Add(feed);
-                cb_PlaneFeed2.Items.Add(feed);
-                cb_PlaneFeed3.Items.Add(feed);
+                foreach (var plugin in ParentDlg.PlaneFeedPlugins)
+                {
+                    cb_PlaneFeed1.Items.Add(plugin);
+                    cb_PlaneFeed2.Items.Add(plugin);
+                    cb_PlaneFeed3.Items.Add(plugin);
+                }
             }
             cb_PlaneFeed1.SelectedIndex = cb_PlaneFeed1.FindStringExact(Properties.Settings.Default.Planes_PlaneFeed1);
             cb_PlaneFeed2.SelectedIndex = cb_PlaneFeed1.FindStringExact(Properties.Settings.Default.Planes_PlaneFeed2);
@@ -1031,7 +1046,36 @@ namespace AirScout
                 ValidatePlaneFeeds();
                 return;
             }
+            /*
             PlaneFeed feed = (PlaneFeed)cb_PlaneFeed1.SelectedItem;
+            // show disclaimer if necessary
+            if (!String.IsNullOrEmpty(feed.Disclaimer) && (String.IsNullOrEmpty(feed.DisclaimerAccepted)))
+            {
+                PlaneFeedDisclaimerDlg Dlg = new PlaneFeedDisclaimerDlg();
+                Dlg.tb_DisclaimerText.Text = feed.Disclaimer;
+                if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    // making a unique ID for confirmation
+                    string ID = "";
+                    try
+                    {
+                        ID = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion", "ProductId", "");
+                    }
+                    catch
+                    {
+                        ID = "Key not found!";
+                    }
+                    ID = ID + "," + DateTime.UtcNow.ToString("u");
+                    ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                    feed.DisclaimerAccepted = ID;
+                }
+                else
+                {
+                    cb_PlaneFeed1.SelectedItem = "[none]";
+                }
+            }
+            */
+            IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_PlaneFeed1.SelectedItem;
             // show disclaimer if necessary
             if (!String.IsNullOrEmpty(feed.Disclaimer) && (String.IsNullOrEmpty(feed.DisclaimerAccepted)))
             {
@@ -1070,6 +1114,7 @@ namespace AirScout
                 ValidatePlaneFeeds();
                 return;
             }
+            /*
             PlaneFeed feed = (PlaneFeed)cb_PlaneFeed2.SelectedItem;
             // show disclaimer if necessary
             if (!String.IsNullOrEmpty(feed.Disclaimer) && (String.IsNullOrEmpty(feed.DisclaimerAccepted)))
@@ -1094,6 +1139,35 @@ namespace AirScout
                 }
             }
             Properties.Settings.Default.Planes_PlaneFeed2 = feed.Name;
+            */
+            IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_PlaneFeed2.SelectedItem;
+            // show disclaimer if necessary
+            if (!String.IsNullOrEmpty(feed.Disclaimer) && (String.IsNullOrEmpty(feed.DisclaimerAccepted)))
+            {
+                PlaneFeedDisclaimerDlg Dlg = new PlaneFeedDisclaimerDlg();
+                Dlg.tb_DisclaimerText.Text = feed.Disclaimer;
+                if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    // making a unique ID for confirmation
+                    string ID = "";
+                    try
+                    {
+                        ID = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion", "ProductId", "");
+                    }
+                    catch
+                    {
+                        ID = "Key not found!";
+                    }
+                    ID = ID + "," + DateTime.UtcNow.ToString("u");
+                    ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                    feed.DisclaimerAccepted = ID;
+                }
+                else
+                {
+                    cb_PlaneFeed2.SelectedItem = "[none]";
+                }
+            }
+            Properties.Settings.Default.Planes_PlaneFeed2 = feed.Name;
             ValidatePlaneFeeds();
         }
 
@@ -1105,6 +1179,7 @@ namespace AirScout
                 ValidatePlaneFeeds();
                 return;
             }
+            /*
             PlaneFeed feed = (PlaneFeed)cb_PlaneFeed3.SelectedItem;
             // show disclaimer if necessary
             if (!String.IsNullOrEmpty(feed.Disclaimer) && (String.IsNullOrEmpty(feed.DisclaimerAccepted)))
@@ -1126,6 +1201,35 @@ namespace AirScout
                     ID = ID + "," + DateTime.UtcNow.ToString("u");
                     ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                     feed.DisclaimerAccepted = ID;
+                }
+            }
+            Properties.Settings.Default.Planes_PlaneFeed3 = feed.Name;
+            */
+            IPlaneFeedPlugin feed = (IPlaneFeedPlugin)cb_PlaneFeed3.SelectedItem;
+            // show disclaimer if necessary
+            if (!String.IsNullOrEmpty(feed.Disclaimer) && (String.IsNullOrEmpty(feed.DisclaimerAccepted)))
+            {
+                PlaneFeedDisclaimerDlg Dlg = new PlaneFeedDisclaimerDlg();
+                Dlg.tb_DisclaimerText.Text = feed.Disclaimer;
+                if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    // making a unique ID for confirmation
+                    string ID = "";
+                    try
+                    {
+                        ID = (string)Registry.GetValue("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion", "ProductId", "");
+                    }
+                    catch
+                    {
+                        ID = "Key not found!";
+                    }
+                    ID = ID + "," + DateTime.UtcNow.ToString("u");
+                    ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+                    feed.DisclaimerAccepted = ID;
+                }
+                else
+                {
+                    cb_PlaneFeed3.SelectedItem = "[none]";
                 }
             }
             Properties.Settings.Default.Planes_PlaneFeed3 = feed.Name;

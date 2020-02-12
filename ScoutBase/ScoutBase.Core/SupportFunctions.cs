@@ -1068,7 +1068,7 @@ namespace ScoutBase.Core
                 return "";
             string[] a = s.Split('\t');
             string user = a[1].Trim();
-            return Encryption.DecryptString(user);
+            return Encryption.SimpleDecryptString(user);
         }
 
         public static string GetSFTPPassword(string s)
@@ -1079,7 +1079,7 @@ namespace ScoutBase.Core
                 return "";
             string[] a = s.Split('\t');
             string pwd = a[2].Trim();
-            return Encryption.DecryptString(pwd);
+            return Encryption.SimpleDecryptString(pwd);
         }
     }
 

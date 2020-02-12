@@ -155,9 +155,6 @@ namespace AirScout.Aircrafts
                     // estimate new position 
                     LatLon.GPoint newpos = LatLon.DestinationPoint(info.Lat, info.Lon, info.Track, dist);
                     double d = LatLon.Distance(info.Lat, info.Lon, newpos.Lat, newpos.Lon);
-                    Console.WriteLine(d);
-                    if (d > 100)
-                        Console.WriteLine("Error");
                     info.Lat = newpos.Lat;
                     info.Lon = newpos.Lon;
                     info.Time = at;

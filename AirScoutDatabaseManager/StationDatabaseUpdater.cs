@@ -33,7 +33,7 @@ namespace AirScoutDatabaseManager
                 DOWNLOADFILESTATUS status = cl.DownloadFileIfNewer(url, filename, true, true);
                 if ((status & DOWNLOADFILESTATUS.ERROR) > 0)
                 {
-                    Log.WriteMessage("Error while downloading and extracting " + filename);
+                    Log.WriteMessage("Error while downloading and extracting " + filename, LogLevel.Error);
                     return false;
                 }
                 else if (((status & DOWNLOADFILESTATUS.NEWER) > 0) || ((status & DOWNLOADFILESTATUS.NOTNEWER) > 0))
@@ -65,7 +65,7 @@ namespace AirScoutDatabaseManager
             catch (Exception ex)
             {
                 // Error loading database
-                Log.WriteMessage("[" + url + "]: " + ex.ToString());
+                Log.WriteMessage("[" + url + "]: " + ex.ToString(), LogLevel.Error);
             }
             return false;
         }
@@ -98,7 +98,7 @@ namespace AirScoutDatabaseManager
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             bw_DatabaseUpdater.ReportProgress(0, "Updating callsigns finished.");
             Log.WriteMessage("Finished.");
@@ -117,7 +117,7 @@ namespace AirScoutDatabaseManager
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 

@@ -28,6 +28,9 @@ namespace ScoutBase.Stations
     public class StationDatabaseUpdaterStartOptions
     {
         public string Name;
+        public string InstanceID;
+        public string SessionKey;
+        public string GetKeyURL;
         public BACKGROUNDUPDATERSTARTOPTIONS Options;
     }
 
@@ -36,9 +39,8 @@ namespace ScoutBase.Stations
     [DefaultPropertyAttribute("Name")]
     public class StationDatabaseUpdater : BackgroundWorker
     {
-
-        StationDatabaseUpdaterStartOptions StartOptions;
         string Password = "";
+        StationDatabaseUpdaterStartOptions StartOptions;
 
         public StationDatabaseUpdater() : base()
         {
@@ -153,17 +155,19 @@ namespace ScoutBase.Stations
             if (String.IsNullOrEmpty(Thread.CurrentThread.Name))
                 Thread.CurrentThread.Name = nameof(StationDatabaseUpdater);
             this.ReportProgress(0, "Updating station database...");
-            // get current AirScout password phrase from website and store it in settings
+            // get current AirScout password phrase for Unzip from website
             try
             {
-                // get upload info
-                WebRequest myWebRequest = WebRequest.Create(Properties.Settings.Default.Stations_PasswordURL);
-                WebResponse myWebResponse = myWebRequest.GetResponse();
-                Stream ReceiveStream = myWebResponse.GetResponseStream();
-                Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
-                StreamReader readStream = new StreamReader(ReceiveStream, encode);
-                Password = readStream.ReadToEnd();
-                Password = ScoutBase.Core.Password.GetSFTPPassword(Password);
+                WebClient client = new WebClient();
+                string result = client.DownloadString(StartOptions.GetKeyURL +
+                            "?id=" + StartOptions.InstanceID +
+                            "&key=zip");
+                if (!result.StartsWith("Error:"))
+                {
+                    result = result.Trim('\"');
+                    Password = Encryption.OpenSSLDecrypt(result, StartOptions.SessionKey);
+                }
+
             }
             catch (Exception ex)
             {

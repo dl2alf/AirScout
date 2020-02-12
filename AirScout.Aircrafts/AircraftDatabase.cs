@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Data;
 using System.Diagnostics;
 using ScoutBase.Core;
+using ScoutBase.Database;
 using ScoutBase.Propagation;
 using System.Data.SQLite;
 using Newtonsoft.Json;
@@ -33,16 +34,8 @@ namespace AirScout.Aircrafts
     /// <summary>
     /// Holds the Aircraft information in a database structure.
     /// </summary>
-    public class AircraftDatabase
+    public class AircraftDatabase : ScoutBaseDatabase
     {
-        System.Data.SQLite.SQLiteDatabase db;
-
-        private string DBPath;
-
-        private static LogWriter Log = LogWriter.Instance;
-
-        public readonly int UserVersion = 1;
-
         public long AircraftRegistrationMinLength { get; private set; }
         public long AircraftRegistrationMaxLength { get; private set; }
 
@@ -54,7 +47,20 @@ namespace AirScout.Aircrafts
 
         public AircraftDatabase()
         {
-            db = OpenDatabase("aircrafts.db3");
+            UserVersion = 1;
+            Name = "AirScout Aircraft Database";
+            Description = "Holds all aircraft, airline and airport information.\n" +
+                "The information is updated periodically from a global web resource.\n" +
+                "The user cannot change any item.";
+            UserVersion = 1;
+            Name = "ScoutBase Elevation Database";
+            // add table description manually
+            TableDescriptions.Add(AircraftRegistrationDesignator.TableName, "Holds aircraft registration information.");
+            TableDescriptions.Add(AircraftTypeDesignator.TableName, "Holds aircraft type information.");
+            TableDescriptions.Add(AircraftDesignator.TableName, "Holds basic aircraft information.");
+            TableDescriptions.Add(AirlineDesignator.TableName, "Holds airline information.");
+            TableDescriptions.Add(AirportDesignator.TableName, "Holds airport information.");
+            db = OpenDatabase("aircrafts.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
             // set auto vacuum mode to "Full" to allow database to reduce size on disk
             // requires a vacuum command to change database layout
             AUTOVACUUMMODE mode = db.GetAutoVacuum();
@@ -93,75 +99,6 @@ namespace AirScout.Aircrafts
             CloseDatabase(db);
         }
 
-        private System.Data.SQLite.SQLiteDatabase OpenDatabase(string name)
-        {
-            System.Data.SQLite.SQLiteDatabase db = null;
-            try
-            {
-                // check if database path exists --> create if not
-                if (!Directory.Exists(DefaultDatabaseDirectory()))
-                    Directory.CreateDirectory(DefaultDatabaseDirectory());
-                // check if database is already on disk 
-                DBPath = DefaultDatabaseDirectory();
-                if (!File.Exists(Path.Combine(DBPath, name)))
-                {
-                    // create one on disk
-                    System.Data.SQLite.SQLiteDatabase dbn = new System.Data.SQLite.SQLiteDatabase(Path.Combine(DBPath, name));
-                    // open database
-                    dbn.Open();
-                    // set user version
-                    dbn.SetUserVerion(UserVersion);
-                    // set auto vacuum mode to full
-                    dbn.SetAutoVacuum(AUTOVACUUMMODE.FULL);
-                    dbn.Close();
-                }
-                // check for in-memory database --> open from disk, if not
-                if (Properties.Settings.Default.Database_InMemory)
-                    db = System.Data.SQLite.SQLiteDatabase.CreateInMemoryDB(Path.Combine(DBPath, name));
-                else
-                {
-                    db = new System.Data.SQLite.SQLiteDatabase(Path.Combine(DBPath, name));
-                    db.Open();
-                }
-                // get version info
-                int v = db.GetUserVersion();
-                // do upgrade stuff here
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error initilalizing database: " + ex.Message);
-                throw new TypeInitializationException(this.GetType().Name, ex);
-            }
-            return db;
-        }
-
-        private void CloseDatabase(System.Data.SQLite.SQLiteDatabase db)
-        {
-            if (db == null)
-                return;
-            // save in-memory database to disk
-            if (db.IsInMemory)
-                db.BackupDatabase(db.DBLocation);
-            //            else
-            //                db.Close();
-        }
-
-        public void BackupDatabase()
-        {
-            if (db == null)
-                return;
-            // save in-memory database to disk
-            if (db.IsInMemory)
-                db.BackupDatabase(db.DiskFileName);
-            else
-                db.Close();
-        }
-
-        public bool IsInMemory()
-        {
-            return db.IsInMemory;
-        }
-
         public string DefaultDatabaseDirectory()
         {
             // create default database directory name
@@ -193,80 +130,6 @@ namespace AirScout.Aircrafts
             if (!String.IsNullOrEmpty(product))
                 dir = Path.Combine(dir, product);
             return Path.Combine(dir, "AircraftData");
-        }
-
-        public DATABASESTATUS GetDBStatus()
-        {
-            if (db != null)
-                return db.Status;
-            return DATABASESTATUS.UNDEFINED;
-        }
-
-        public void SetDBStatus(DATABASESTATUS status)
-        {
-            if (db != null)
-                db.Status = status;
-        }
-
-        public bool GetDBStatusBit(DATABASESTATUS statusbit)
-        {
-            if (db != null)
-                return (((int)db.Status) & ((int)statusbit)) > 0;
-            return false;
-        }
-
-        public void SetDBStatusBit(DATABASESTATUS statusbit)
-        {
-            if (db != null)
-                db.Status |= statusbit;
-        }
-
-        public void ResetDBStatusBit(DATABASESTATUS statusbit)
-        {
-            if (db != null)
-                db.Status &= ~statusbit;
-        }
-
-        public void BeginTransaction()
-        {
-            if (db == null)
-                return;
-            db.BeginTransaction();
-        }
-
-        public void Commit()
-        {
-            if (db == null)
-                return;
-            db.Commit();
-        }
-
-        private DataTable Select(System.Data.SQLite.SQLiteDatabase db, string sql)
-        {
-            return db.Select(sql);
-        }
-
-        public string GetDBLocation()
-        {
-            if (db == null)
-                return "";
-            return db.DBLocation;
-        }
-
-        public double GetDBSize()
-        {
-            if (db == null)
-                return 0;
-            return db.DBSize;
-        }
-
-        private bool IsValid(object obj)
-        {
-            if (obj == null)
-                return false;
-            if (obj.GetType() == typeof(DBNull))
-                return false;
-            return true;
         }
 
         #region Aircrafts
@@ -377,7 +240,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -400,7 +263,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -423,7 +286,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -445,7 +308,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -544,7 +407,7 @@ namespace AirScout.Aircrafts
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage("Error inserting aircraft [" + ad.Hex + "]: " + ex.ToString());
+                            Log.WriteMessage("Error inserting aircraft [" + ad.Hex + "]: " + ex.ToString(), LogLevel.Error);
                             errors++;
                         }
                     }
@@ -553,7 +416,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -574,7 +437,7 @@ namespace AirScout.Aircrafts
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage("Error deleting aircraft [" + ad.Hex + "]: " + ex.ToString());
+                            Log.WriteMessage("Error deleting aircraft [" + ad.Hex + "]: " + ex.ToString(), LogLevel.Error);
                             errors++;
                         }
                     }
@@ -583,7 +446,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -615,7 +478,7 @@ namespace AirScout.Aircrafts
             }
             catch(Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return i;
         }
@@ -833,7 +696,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -858,7 +721,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -888,7 +751,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -910,7 +773,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);                
                 }
             }
             return null;
@@ -1023,7 +886,7 @@ namespace AirScout.Aircrafts
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage("Error inserting AircraftType [" + td.ICAO + ", " + td.IATA + "]: " + ex.ToString());
+                            Log.WriteMessage("Error inserting AircraftType [" + td.ICAO + ", " + td.IATA + "]: " + ex.ToString(), LogLevel.Error);
                             errors++;
                         }
                     }
@@ -1032,7 +895,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1062,7 +925,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1245,7 +1108,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -1270,7 +1133,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -1300,7 +1163,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -1322,7 +1185,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -1423,7 +1286,7 @@ namespace AirScout.Aircrafts
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage("Error inserting Airline [" + ld.ICAO + ", " + ld.IATA + "]: " + ex.ToString());
+                            Log.WriteMessage("Error inserting Airline [" + ld.ICAO + ", " + ld.IATA + "]: " + ex.ToString(), LogLevel.Error);
                             errors++;
                         }
                     }
@@ -1432,7 +1295,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1453,7 +1316,7 @@ namespace AirScout.Aircrafts
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage("Error inserting Airline [" + ld.ICAO + ", " + ld.IATA + "]: " + ex.ToString());
+                            Log.WriteMessage("Error inserting Airline [" + ld.ICAO + ", " + ld.IATA + "]: " + ex.ToString(), LogLevel.Error);
                             errors++;
                         }
                     }
@@ -1462,7 +1325,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1645,7 +1508,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -1670,7 +1533,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -1700,7 +1563,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -1722,7 +1585,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -1829,7 +1692,7 @@ namespace AirScout.Aircrafts
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage("Error inserting Airport [" + pd.ICAO + ", " + pd.IATA + "]: " + ex.ToString());
+                            Log.WriteMessage("Error inserting Airport [" + pd.ICAO + ", " + pd.IATA + "]: " + ex.ToString(), LogLevel.Error);
                             errors++;
                         }
                     }
@@ -1838,7 +1701,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1859,7 +1722,7 @@ namespace AirScout.Aircrafts
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage("Error inserting Airport [" + pd.ICAO + ", " + pd.IATA + "]: " + ex.ToString());
+                            Log.WriteMessage("Error inserting Airport [" + pd.ICAO + ", " + pd.IATA + "]: " + ex.ToString(), LogLevel.Error);
                             errors++;
                         }
                     }
@@ -1868,7 +1731,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -2102,7 +1965,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -2124,7 +1987,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             return null;
@@ -2226,7 +2089,7 @@ namespace AirScout.Aircrafts
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage("Error inserting AircraftRegistration [" + rd.Prefix + "]: " + ex.ToString());
+                            Log.WriteMessage("Error inserting AircraftRegistration [" + rd.Prefix + "]: " + ex.ToString(), LogLevel.Error);
                             errors++;
                         }
                     }
@@ -2235,7 +2098,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -2256,7 +2119,7 @@ namespace AirScout.Aircrafts
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage("Error deleting AircraftRegistration [" + rd.Prefix + "]: " + ex.ToString());
+                            Log.WriteMessage("Error deleting AircraftRegistration [" + rd.Prefix + "]: " + ex.ToString(), LogLevel.Error);
                             errors++;
                         }
                     }
@@ -2265,7 +2128,7 @@ namespace AirScout.Aircrafts
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -2403,7 +2266,7 @@ namespace AirScout.Aircrafts
                     }
                     catch (Exception ex)
                     {
-                        Log.WriteMessage(ex.ToString());
+                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
                         return -1;
                     }
                 }
@@ -2436,7 +2299,7 @@ namespace AirScout.Aircrafts
                     catch (Exception ex)
                     {
                         db.Rollback();
-                        Log.WriteMessage(ex.ToString());
+                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
                         return -1;
                     }
                     // abort if called from background worker and cancellation pending
@@ -2472,7 +2335,7 @@ namespace AirScout.Aircrafts
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage("Error inserting PlaneInfo[" + info.ToString() + "]: " + ex.ToString());
+                    Log.WriteMessage("Error inserting PlaneInfo[" + info.ToString() + "]: " + ex.ToString(), LogLevel.Error);
                 }
             }
             return l;
@@ -2674,13 +2537,13 @@ namespace AirScout.Aircrafts
                     }
                     catch (Exception ex)
                     {
-                        Log.WriteMessage(ex.ToString());
+                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return l;
         }

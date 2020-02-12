@@ -28,7 +28,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
     }

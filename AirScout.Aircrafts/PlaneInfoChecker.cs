@@ -159,6 +159,13 @@ namespace AirScout.Aircrafts
             return true;
         }
 
+        public static bool Check_Airport(string airport)
+        {
+            if (String.IsNullOrEmpty(airport))
+                return false;
+            return true;
+        }
+
         public static bool Check(PlaneInfo info)
         {
             // checks a PlaneInfo object

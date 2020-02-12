@@ -217,6 +217,8 @@ namespace AirScout
                                 {
                                     Log.WriteMessage(Name + " error processing call [" + ld.Call + "]: " + ex.ToString());
                                 }
+                                // keep cpu load low --> TODO: find better solution here
+                                Thread.Sleep(10);
                             }
                             // wait to keep cpu load low
                             Thread.Sleep(Properties.Settings.Default.Background_Calculations_ThreadWait);
@@ -224,7 +226,7 @@ namespace AirScout
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage(ex.ToString());
+                            Log.WriteMessage(ex.ToString(), LogLevel.Error);
                         }
                     }
                     // sleep when running periodically

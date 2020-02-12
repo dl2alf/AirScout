@@ -12,7 +12,7 @@ namespace AirScout.Aircrafts.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -80,18 +80,6 @@ namespace AirScout.Aircrafts.Properties {
             }
             set {
                 this["Database_BackgroundUpdate_Period"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.airscout.eu/downloads/airscout.pwd")]
-        public string Aircrafts_PasswordURL {
-            get {
-                return ((string)(this["Aircrafts_PasswordURL"]));
-            }
-            set {
-                this["Aircrafts_PasswordURL"] = value;
             }
         }
     }

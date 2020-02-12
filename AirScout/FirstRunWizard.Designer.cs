@@ -131,8 +131,9 @@
             this.sw_FirstRun.Pages.Add(this.wp_UserDetails);
             this.sw_FirstRun.Pages.Add(this.wp_PlaneFeeds);
             this.sw_FirstRun.Pages.Add(this.wp_Finish);
-            this.sw_FirstRun.Size = new System.Drawing.Size(784, 539);
-            this.sw_FirstRun.StepListFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
+            this.sw_FirstRun.Size = new System.Drawing.Size(834, 539);
+            this.sw_FirstRun.StepListFont = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sw_FirstRun.StepListWidth = 200;
             this.sw_FirstRun.TabIndex = 0;
             this.sw_FirstRun.Text = "Welcome to AirScout";
             this.sw_FirstRun.Title = "Welcome to AirScout";
@@ -148,7 +149,7 @@
             this.wp_TermsAndConditions.Size = new System.Drawing.Size(586, 398);
             this.sw_FirstRun.SetStepText(this.wp_TermsAndConditions, "Agree to the Terms and Conditions");
             this.wp_TermsAndConditions.TabIndex = 2;
-            this.wp_TermsAndConditions.Text = "Agree to the Terms and Conditions";
+            this.wp_TermsAndConditions.Text = "Agree to the Terms and C.";
             this.wp_TermsAndConditions.Enter += new System.EventHandler(this.wp_TermsAndConditions_Enter);
             // 
             // cb_TermsAndConditions
@@ -200,7 +201,7 @@
             this.label6.ForeColor = System.Drawing.Color.Red;
             this.label6.Location = new System.Drawing.Point(14, 24);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(533, 30);
+            this.label6.Size = new System.Drawing.Size(532, 30);
             this.label6.TabIndex = 9;
             this.label6.Text = "CAUTION: Select area of interest just as large to cover a range of 1000-2000km ar" +
     "ound your qth.\r\nLarger areas together with SRTM3 and SRTM1 elevation data will r" +
@@ -222,7 +223,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(14, 85);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(147, 15);
+            this.label4.Size = new System.Drawing.Size(148, 15);
             this.label4.TabIndex = 8;
             this.label4.Text = "Max. Latitude (-90 ... + 90):";
             // 
@@ -294,7 +295,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(251, 85);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(167, 15);
+            this.label2.Size = new System.Drawing.Size(168, 15);
             this.label2.TabIndex = 3;
             this.label2.Text = "Max. Longitude (-180 ... +180):";
             // 
@@ -655,7 +656,7 @@
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(9, 6);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(530, 60);
+            this.label19.Size = new System.Drawing.Size(531, 60);
             this.label19.TabIndex = 28;
             this.label19.Text = resources.GetString("label19.Text");
             // 
@@ -985,7 +986,7 @@
             this.tsl_Status});
             this.ss_Main.Location = new System.Drawing.Point(0, 539);
             this.ss_Main.Name = "ss_Main";
-            this.ss_Main.Size = new System.Drawing.Size(784, 22);
+            this.ss_Main.Size = new System.Drawing.Size(834, 22);
             this.ss_Main.TabIndex = 1;
             this.ss_Main.Text = "statusStrip1";
             // 
@@ -999,7 +1000,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(834, 561);
             this.Controls.Add(this.sw_FirstRun);
             this.Controls.Add(this.ss_Main);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

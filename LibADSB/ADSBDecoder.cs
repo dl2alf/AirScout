@@ -239,35 +239,38 @@ namespace LibADSB
                 return ("Parity error, no decode.");
             }
             // parity is OK, let's start to sort the messages and calculate
-//                                        Console.WriteLine(msg.ToString());
-            try
+            //                                        Console.WriteLine(msg.ToString());
+            // lock adsbinfolist
+            lock (adsbinfos)
             {
-
-                if (msg.GetType() == typeof(IdentificationMsg))
+                try
                 {
-                    // Identification message;
-                    return DecodeIdentificationMsg(msg, timestamp);
+                    if (msg.GetType() == typeof(IdentificationMsg))
+                    {
+                        // Identification message;
+                        return DecodeIdentificationMsg(msg, timestamp);
+                    }
+                    else if (msg.GetType() == typeof(AirbornePositionMsg))
+                    {
+                        // Airborne position message
+                        return DecodeAirbornePositionMsg(msg, timestamp);
+                    }
+                    else if (msg.GetType() == typeof(VelocityOverGroundMsg))
+                    {
+                        // Velocity over ground message
+                        return DecodeVelocityOverGroundMsg(msg, timestamp);
+                    }
+                    else if (msg.GetType() == typeof(AirspeedHeadingMsg))
+                    {
+                        // Airspeed heading message
+                        return DecodeAirspeedHeadingMsg(msg, timestamp);
+                    }
                 }
-                else if (msg.GetType() == typeof(AirbornePositionMsg))
+                catch (Exception ex)
                 {
-                    // Airborne position message
-                    return DecodeAirbornePositionMsg(msg, timestamp);
+                    string s = msg.GetType().ToString();
+                    return "Error while decoding " + s + ": " + ex.Message;
                 }
-                else if (msg.GetType() == typeof(VelocityOverGroundMsg))
-                {
-                    // Velocity over ground message
-                    return DecodeVelocityOverGroundMsg(msg, timestamp);
-                }
-                else if (msg.GetType() == typeof(AirspeedHeadingMsg))
-                {
-                    // Airspeed heading message
-                    return DecodeAirspeedHeadingMsg(msg, timestamp);
-                }
-            }
-            catch (Exception ex)
-            {
-                string s = msg.GetType().ToString();
-                return "Error while decoding " + s + ": " + ex.Message;
             }
             return ("Unknown message.");
         }

@@ -205,6 +205,8 @@ namespace AirScoutDatabaseManager
             Log.WriteMessage("Starting up.");
             // set initial settings for CoverageMap
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_Coverage.MapProvider.RefererUrl = "";
             gm_Coverage.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
             gm_Coverage.IgnoreMarkerOnMouseWheel = true;
             gm_Coverage.MinZoom = 0;
@@ -219,6 +221,8 @@ namespace AirScoutDatabaseManager
             gm_Coverage.Overlays.Add(Coverageoverlay);
             // set initial settings for locations map
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_Locations.MapProvider.RefererUrl = "";
             gm_Locations.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
             gm_Locations.IgnoreMarkerOnMouseWheel = true;
             gm_Locations.MinZoom = 0;
@@ -456,7 +460,7 @@ namespace AirScoutDatabaseManager
                     }
                     catch (Exception ex)
                     {
-                        Log.WriteMessage(ex.ToString());
+                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
                     }
                 }
                 ImportLocations(dt);
@@ -786,7 +790,7 @@ namespace AirScoutDatabaseManager
                         // different loc?
                         if (loc != qrzloc)
                         {
-                            Log.WriteMessage("QRZ.COM: Locator is different [" + call + "]: " + loc + " <> " + qrzloc);
+                            Log.WriteMessage("QRZ.COM: Locator is different [" + call + "]: " + loc + " <> " + qrzloc, LogLevel.Warning);
                             callsdiffloc++;
                         }
                         // precise location by user or geocode?
@@ -840,7 +844,7 @@ namespace AirScoutDatabaseManager
                             }
                             else
                             {
-                                Log.WriteMessage("QRZ.COM: Locator is different [" + call + "]: " + loc + " <> " + qrzloc);
+                                Log.WriteMessage("QRZ.COM: Locator is different [" + call + "]: " + loc + " <> " + qrzloc, LogLevel.Warning);
                                 callsdiffloc++;
                             }
                         }
@@ -867,7 +871,7 @@ namespace AirScoutDatabaseManager
                 {
                     errors++;
                     bw_QRZ.ReportProgress((int)LOCATIONSTATE.ERROR, ex.Message);
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
         }
@@ -909,7 +913,7 @@ namespace AirScoutDatabaseManager
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
         }
@@ -942,7 +946,7 @@ namespace AirScoutDatabaseManager
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -1024,7 +1028,7 @@ namespace AirScoutDatabaseManager
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -1060,7 +1064,7 @@ namespace AirScoutDatabaseManager
                             }
                             catch (Exception ex)
                             {
-                                Log.WriteMessage(ex.ToString());
+                                Log.WriteMessage(ex.ToString(), LogLevel.Error);
                                 qrv_err++;
                             }
                             row["LastUpdated"] = lastupdated;
@@ -1077,7 +1081,7 @@ namespace AirScoutDatabaseManager
                                     }
                                     catch (Exception ex)
                                     {
-                                        Log.WriteMessage(ex.ToString());
+                                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
                                         qrv_err++;
                                     }
                                 }
@@ -1091,7 +1095,7 @@ namespace AirScoutDatabaseManager
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.ToString());
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
         }
@@ -1212,7 +1216,7 @@ namespace AirScoutDatabaseManager
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             SayQRV("Finished.");
 
@@ -1276,7 +1280,7 @@ namespace AirScoutDatabaseManager
             {
                 using (StreamWriter sw = new StreamWriter(Dlg.FileName,false))
                 {
-                    string s = tb_SFTP_URL.Text + "\t" + Encryption.EncryptString(tb_SFTP_User.Text) + "\t" + Encryption.EncryptString(tb_SFTP_Password.Text);
+                    string s = tb_SFTP_URL.Text + "\t" + Encryption.SimpleEncryptString(tb_SFTP_User.Text) + "\t" + Encryption.SimpleEncryptString(tb_SFTP_Password.Text);
                     sw.WriteLine(s);
                 }
             }

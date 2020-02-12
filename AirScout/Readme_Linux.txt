@@ -39,6 +39,7 @@ To get ist running on your system, please follow the steps below
 - some minor graphics issues, sometimes text does not fit in bounds
 - some minor textbox select issues (text is not selected when clicking once in the MyCall or DXCall textbox)
 - Settings upgrade from previous versions do not work, always use default settings when upgrading
+- database view for maintenance does not work --> SQLite-DataAdapter issues
 - Program sometimes does not close properly, stops working while saving settings to disk
 
 

@@ -237,31 +237,38 @@ namespace GMap.NET.WindowsForms
       {
          if(Control != null)
          {
-            foreach(GMapMarker obj in Markers)
-            {
-               if(obj.IsVisible)
-               {
-                  Control.UpdateMarkerLocalPosition(obj);
-               }
-            }
+                try
+                {
+                    foreach (GMapMarker obj in Markers)
+                    {
+                        if (obj.IsVisible)
+                        {
+                            Control.UpdateMarkerLocalPosition(obj);
+                        }
+                    }
 
-            foreach(GMapPolygon obj in Polygons)
-            {
-               if(obj.IsVisible)
-               {
-                  Control.UpdatePolygonLocalPosition(obj);
-               }
-            }
+                    foreach (GMapPolygon obj in Polygons)
+                    {
+                        if (obj.IsVisible)
+                        {
+                            Control.UpdatePolygonLocalPosition(obj);
+                        }
+                    }
 
-            foreach(GMapRoute obj in Routes)
-            {
-               if(obj.IsVisible)
-               {
-                  Control.UpdateRouteLocalPosition(obj);
-               }
+                    foreach (GMapRoute obj in Routes)
+                    {
+                        if (obj.IsVisible)
+                        {
+                            Control.UpdateRouteLocalPosition(obj);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Force update failed: " + ex.ToString());
+                }
             }
-         }
-      }
+        }
 
       /// <summary>
       /// renders objects/routes/polygons
@@ -271,55 +278,61 @@ namespace GMap.NET.WindowsForms
       {
          if(Control != null)
          {
-            if(Control.RoutesEnabled)
-            {
-               foreach(GMapRoute r in Routes)
-               {
-                  if(r.IsVisible)
-                  {
-                     r.OnRender(g);
-                  }
-               }
-            }
+            try
+            { 
+                if(Control.RoutesEnabled)
+                {
+                    foreach(GMapRoute r in Routes)
+                    {
+                        if(r.IsVisible)
+                        {
+                            r.OnRender(g);
+                        }
+                    }
+                }
 
-            if(Control.PolygonsEnabled)
-            {
-               foreach(GMapPolygon r in Polygons)
-               {
-                  if(r.IsVisible)
-                  {
-                     r.OnRender(g);
-                  }
-               }
-            }
+                if(Control.PolygonsEnabled)
+                {
+                    foreach(GMapPolygon r in Polygons)
+                    {
+                        if(r.IsVisible)
+                        {
+                            r.OnRender(g);
+                        }
+                    }
+                }
 
-            if(Control.MarkersEnabled)
-            {
-               // markers
-               foreach(GMapMarker m in Markers)
-               {
-                  //if(m.IsVisible && (m.DisableRegionCheck || Control.Core.currentRegion.Contains(m.LocalPosition.X, m.LocalPosition.Y)))
-                  if(m.IsVisible || m.DisableRegionCheck)
-                  {
-                     m.OnRender(g);
-                  }
-               }
-
-               // tooltips above
-               foreach(GMapMarker m in Markers)
-               {
-                  //if(m.ToolTip != null && m.IsVisible && Control.Core.currentRegion.Contains(m.LocalPosition.X, m.LocalPosition.Y))
-                  if(m.ToolTip != null && m.IsVisible)
-                  {
-                     if(!string.IsNullOrEmpty(m.ToolTipText) && (m.ToolTipMode == MarkerTooltipMode.Always || (m.ToolTipMode == MarkerTooltipMode.OnMouseOver && m.IsMouseOver)))
-                     {
-                        m.ToolTip.OnRender(g);
-                     }
-                  }
-               }
+                    if (Control.MarkersEnabled)
+                    {
+                        // markers
+                        foreach (GMapMarker m in Markers)
+                        {
+                            //if(m.IsVisible && (m.DisableRegionCheck || Control.Core.currentRegion.Contains(m.LocalPosition.X, m.LocalPosition.Y)))
+                            if (m.IsVisible || m.DisableRegionCheck)
+                            {
+                                m.OnRender(g);
+                            }
+                        }
+                        // tooltips above
+                        foreach (GMapMarker m in Markers)
+                        {
+                            //if(m.ToolTip != null && m.IsVisible && Control.Core.currentRegion.Contains(m.LocalPosition.X, m.LocalPosition.Y))
+                            if (m.ToolTip != null && m.IsVisible)
+                            {
+                                if (!string.IsNullOrEmpty(m.ToolTipText) && (m.ToolTipMode == MarkerTooltipMode.Always || (m.ToolTipMode == MarkerTooltipMode.OnMouseOver && m.IsMouseOver)))
+                                {
+                                    m.ToolTip.OnRender(g);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Rendering failed: " + ex.ToString());
+                }
             }
-         }
-      }
+        }
 
 #if !PocketPC
       #region ISerializable Members

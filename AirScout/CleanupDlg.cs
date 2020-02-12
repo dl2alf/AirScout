@@ -53,12 +53,12 @@ namespace AirScout
                 ScoutBase.Stations.Properties.Settings.Default.Reset();
             }
             if (cb_AirScout_Database.Checked)
-                DeleteDirectory(AircraftData.Database.DefaultDatabaseDirectory());
+                DeleteDirectory(Properties.Settings.Default.AircraftDatabase_Directory);
             if (cb_ScoutBase_Database.Checked)
             {
-                DeleteDirectory(StationData.Database.DefaultDatabaseDirectory());
-                DeleteDirectory(ElevationData.Database.DefaultDatabaseDirectory());
-                DeleteDirectory(PropagationData.Database.DefaultDatabaseDirectory());
+                DeleteDirectory(Properties.Settings.Default.StationsDatabase_Directory);
+                DeleteDirectory(Properties.Settings.Default.ElevationDatabase_Directory);
+                DeleteDirectory(Properties.Settings.Default.PropagationDatabase_Directory);
             }
             if (cb_LogFiles.Checked)
                 DeleteDirectory(ParentDlg.LogDirectory);
@@ -66,6 +66,8 @@ namespace AirScout
                 DeleteDirectory(ParentDlg.ElevationDirectory);
             if (cb_TmpFiles.Checked)
                 DeleteDirectory(ParentDlg.TmpDirectory);
+            if (cb_PluginFiles.Checked)
+                DeleteDirectory(ParentDlg.PluginDirectory);
         }
 
         private void DeleteDirectory(string target_dir)

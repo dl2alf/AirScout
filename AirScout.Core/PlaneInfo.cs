@@ -72,6 +72,9 @@ namespace AirScout.Core
         public string Manufacturer { get; set; }
         public string Model { get; set; }
         public PLANECATEGORY Category { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+        public int VSpeed { get; set; }
 
         public LatLon.GPoint IntPoint = null;
         public double IntQRB = double.MaxValue;
@@ -102,6 +105,9 @@ namespace AirScout.Core
             Manufacturer = "";
             Model = "";
             Category = PLANECATEGORY.NONE;
+            From = "";
+            To = "";
+            VSpeed = 0;
         }
 
         public PlaneInfo(DateTime time, string call, string reg, string hex, double lat, double lon, double track, double alt, double speed, string type, string manufacturer, string model, PLANECATEGORY category)
@@ -204,4 +210,9 @@ namespace AirScout.Core
 
     }
 
+    // List of plane infos
+    public class PlaneInfoList : List<PlaneInfo>
+    {
+
+    }
 }

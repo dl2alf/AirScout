@@ -317,6 +317,8 @@ namespace AirScoutPlaneServer
             // set initial settings for CoverageMap
             // setting User Agent to fix Open Street Map issue 2016-09-20
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_Planes_Coverage.MapProvider.RefererUrl = "";
             gm_Planes_Coverage.MapProvider = GMapProviders.Find(Properties.Settings.Default.Planes_MapProvider);
             gm_Planes_Coverage.IgnoreMarkerOnMouseWheel = true;
             gm_Planes_Coverage.MinZoom = 0;

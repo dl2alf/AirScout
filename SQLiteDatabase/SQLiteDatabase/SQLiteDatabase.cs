@@ -231,9 +231,15 @@ namespace System.Data.SQLite
             dt2.Columns.Add("Tables");
             for (int i = 0; i < dt.Rows.Count; i++)
             {
+                /*
                 string t = dt.Rows[i]["name"] + "";
                 if (t != "sqlite_sequence")
                     dt2.Rows.Add(t);
+                */
+                if (dt.Rows[i]["type"].ToString() == "table")
+                {
+                    dt2.Rows.Add(dt.Rows[i]["name"].ToString());
+                }
             }
             return dt2;
         }

@@ -116,6 +116,7 @@ namespace AirScout.AircraftPositions
                     {
                         this.ReportProgress(-1, ex.ToString());
                     }
+                    this.ReportProgress(0, "");
                     // sleep 
                     int i = 0;
                     while (!this.CancellationPending && (i < interval))

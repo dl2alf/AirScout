@@ -396,7 +396,7 @@ namespace AirScoutViewClient
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             Log.WriteMessage("Finished.");
         }
@@ -608,7 +608,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 // do nothing
             }
             return json;
@@ -676,7 +676,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return true;
         }
@@ -714,7 +714,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return l;
         }
@@ -747,7 +747,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return ld;
         }
@@ -785,7 +785,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return l;
         }
@@ -818,7 +818,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return ld;
         }
@@ -851,7 +851,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return EPath;
         }
@@ -884,7 +884,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return PPath;
         }
@@ -923,7 +923,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return l;
         }
@@ -1243,7 +1243,7 @@ namespace AirScoutViewClient
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
         }
@@ -1372,7 +1372,7 @@ namespace AirScoutViewClient
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -1494,7 +1494,7 @@ namespace AirScoutViewClient
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -1519,7 +1519,7 @@ namespace AirScoutViewClient
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -1622,7 +1622,7 @@ namespace AirScoutViewClient
             catch (Exception ex)
             {
                 // do nothing if item not found in planes list
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 

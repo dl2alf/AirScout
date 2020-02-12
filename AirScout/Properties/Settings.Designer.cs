@@ -12,7 +12,7 @@ namespace AirScout.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -836,18 +836,6 @@ namespace AirScout.Properties {
             }
             set {
                 this["InfoWin_Angle"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("HTTP://WWW.AIRSCOUT.EU/DOWNLOADS/AIRSCOUT.PWD")]
-        public string SFTP_PwdURL {
-            get {
-                return ((string)(this["SFTP_PwdURL"]));
-            }
-            set {
-                this["SFTP_PwdURL"] = value;
             }
         }
         
@@ -1852,18 +1840,6 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Password {
-            get {
-                return ((string)(this["Password"]));
-            }
-            set {
-                this["Password"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public global::System.Collections.Generic.List<System.String> MyCalls {
             get {
                 return ((global::System.Collections.Generic.List<System.String>)(this["MyCalls"]));
@@ -1875,7 +1851,7 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Map_SmallMarkers {
             get {
                 return ((bool)(this["Map_SmallMarkers"]));
@@ -2050,6 +2026,210 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
             }
             set {
                 this["Elevation_Directory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\Plugin")]
+        public string Plugin_Directory {
+            get {
+                return ((string)(this["Plugin_Directory"]));
+            }
+            set {
+                this["Plugin_Directory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int Planes_Interval {
+            get {
+                return ((int)(this["Planes_Interval"]));
+            }
+            set {
+                this["Planes_Interval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Planes_ExtendedPlausibilityCheck_Enabled {
+            get {
+                return ((bool)(this["Planes_ExtendedPlausibilityCheck_Enabled"]));
+            }
+            set {
+                this["Planes_ExtendedPlausibilityCheck_Enabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int Planes_ExtendedPlausibilityCheck_MaxErrorDist {
+            get {
+                return ((int)(this["Planes_ExtendedPlausibilityCheck_MaxErrorDist"]));
+            }
+            set {
+                this["Planes_ExtendedPlausibilityCheck_MaxErrorDist"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Planes_LogErrors {
+            get {
+                return ((bool)(this["Planes_LogErrors"]));
+            }
+            set {
+                this["Planes_LogErrors"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.airscout.eu/downloads/AirScoutPlugins/")]
+        public string Plugins_Update_URL {
+            get {
+                return ((string)(this["Plugins_Update_URL"]));
+            }
+            set {
+                this["Plugins_Update_URL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AirScout_Instance_ID {
+            get {
+                return ((string)(this["AirScout_Instance_ID"]));
+            }
+            set {
+                this["AirScout_Instance_ID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.airscout.eu/usr/register.php")]
+        public string AirScout_Register_URL {
+            get {
+                return ((string)(this["AirScout_Register_URL"]));
+            }
+            set {
+                this["AirScout_Register_URL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.airscout.eu/usr/getkey.php")]
+        public string AirScout_GetKey_URL {
+            get {
+                return ((string)(this["AirScout_GetKey_URL"]));
+            }
+            set {
+                this["AirScout_GetKey_URL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.airscout.eu/usr/upload_location.php")]
+        public string AirScout_UploadLocation_URL {
+            get {
+                return ((string)(this["AirScout_UploadLocation_URL"]));
+            }
+            set {
+                this["AirScout_UploadLocation_URL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.airscout.eu/usr/upload_qrv.php")]
+        public string AirScout_UploadQRV_URL {
+            get {
+                return ((string)(this["AirScout_UploadQRV_URL"]));
+            }
+            set {
+                this["AirScout_UploadQRV_URL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AirScout_Device_ID {
+            get {
+                return ((string)(this["AirScout_Device_ID"]));
+            }
+            set {
+                this["AirScout_Device_ID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\AirScout\\AircraftData")]
+        public string AircraftDatabase_Directory {
+            get {
+                return ((string)(this["AircraftDatabase_Directory"]));
+            }
+            set {
+                this["AircraftDatabase_Directory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\ScoutBase\\StationData")]
+        public string StationsDatabase_Directory {
+            get {
+                return ((string)(this["StationsDatabase_Directory"]));
+            }
+            set {
+                this["StationsDatabase_Directory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\ScoutBase\\ElevationData")]
+        public string ElevationDatabase_Directory {
+            get {
+                return ((string)(this["ElevationDatabase_Directory"]));
+            }
+            set {
+                this["ElevationDatabase_Directory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\ScoutBase\\PropagationData")]
+        public string PropagationDatabase_Directory {
+            get {
+                return ((string)(this["PropagationDatabase_Directory"]));
+            }
+            set {
+                this["PropagationDatabase_Directory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Map_LabelCalls {
+            get {
+                return ((bool)(this["Map_LabelCalls"]));
+            }
+            set {
+                this["Map_LabelCalls"] = value;
             }
         }
     }

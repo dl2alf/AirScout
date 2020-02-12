@@ -120,4 +120,10 @@
   <metadata name="ss_Main.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="lbl_Info.Text" xml:space="preserve">
+    <value>The Scoutbase database is containing location and QRV infos. Each information has a unique database key: 
+callsign and 6-digit Maidenhead locator square. 
+
+The database is periodically updated from a global web database. The operator can modify/add entries. </value>
+  </data>
 </root>

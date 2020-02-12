@@ -17,8 +17,5 @@
     <Setting Name="Database_BackgroundUpdate_Period" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">60</Value>
     </Setting>
-    <Setting Name="Aircrafts_PasswordURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://www.airscout.eu/downloads/airscout.pwd</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

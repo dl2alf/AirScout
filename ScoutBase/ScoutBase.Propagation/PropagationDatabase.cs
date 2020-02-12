@@ -15,6 +15,7 @@ using System.Threading;
 using System.Data;
 using System.Data.SQLite;
 using ScoutBase.Core;
+using ScoutBase.Database;
 using ScoutBase.Elevation;
 using SQLiteDatabase;
 using Newtonsoft.Json;
@@ -71,7 +72,7 @@ namespace ScoutBase.Propagation
     /// <summary>
     /// Holds the Station information in a database structure.
     /// </summary>
-    public class PropagationDatabase
+    public class PropagationDatabase : ScoutBaseDatabase
     {
 
         public double NearFieldSuppression { get; set; }
@@ -80,17 +81,20 @@ namespace ScoutBase.Propagation
         System.Data.SQLite.SQLiteDatabase srtm3;
         System.Data.SQLite.SQLiteDatabase srtm1;
 
-        private string DBPath;
-
-        private static LogWriter Log = LogWriter.Instance;
-
-        public readonly int UserVersion = 1;
-
         public PropagationDatabase()
         {
-            globe = OpenDatabase("globe.db3");
-            srtm3 = OpenDatabase("srtm3.db3");
-            srtm1 = OpenDatabase("srtm1.db3");
+            UserVersion = 1;
+            Name = "ScoutBase Propagation Database";
+            Description = "The Scoutbase Propagation Database is containing propagation path and horizon information.\n" +
+                "The info is unique for one single or between two geographical locations, heights, frequency, F1-Clearance and calculation stepwidth.\n" +
+                "All calculations are based on a distinct elevation model GLOBE, SRTM3 or SRTM1.\n" +
+                "All values are (pre-)calculated and stored at runtime.";
+            // add table description manually
+            TableDescriptions.Add(PropagationPathDesignator.TableName, "Holds propagation path information.");
+            TableDescriptions.Add(PropagationHorizonDesignator.TableName, "Holds propagation horizon information.");
+            globe = OpenDatabase("globe.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
+            srtm3 = OpenDatabase("srtm3.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
+            srtm1 = OpenDatabase("srtm1.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
             // create tables with schemas if not exist
             // create tables with schemas if not exist
             if (!PropagationPathTableExists(ELEVATIONMODEL.GLOBE))
@@ -116,59 +120,7 @@ namespace ScoutBase.Propagation
             CloseDatabase(srtm1);
         }
 
-
-        private System.Data.SQLite.SQLiteDatabase OpenDatabase(string name)
-        {
-            System.Data.SQLite.SQLiteDatabase db = null;
-            try
-            {
-                // check if database path exists --> create if not
-                if (!Directory.Exists(DefaultDatabaseDirectory()))
-                    Directory.CreateDirectory(DefaultDatabaseDirectory());
-                // check if database is already on disk 
-                DBPath = DefaultDatabaseDirectory();
-                if (!File.Exists(Path.Combine(DBPath, name)))
-                {
-                    // create one on disk
-                    System.Data.SQLite.SQLiteDatabase dbn = new System.Data.SQLite.SQLiteDatabase(Path.Combine(DBPath, name));
-                    // open database
-                    dbn.Open();
-                    // set user version
-                    dbn.SetUserVerion(UserVersion);
-                    dbn.Close();
-                }
-                // check for in-memory database --> open from disk, if not
-                if (Properties.Settings.Default.Database_InMemory)
-                    db = System.Data.SQLite.SQLiteDatabase.CreateInMemoryDB(Path.Combine(DBPath, name));
-                else
-                {
-                    db = new System.Data.SQLite.SQLiteDatabase(Path.Combine(DBPath, name));
-                    db.Open();
-                }
-                // get version info
-                int v = db.GetUserVersion();
-                // do database upgrade stuff here
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error initilalizing database: " + ex.Message);
-                throw new TypeInitializationException(this.GetType().Name, ex);
-            }
-            return db;
-        }
-
-        private void CloseDatabase(System.Data.SQLite.SQLiteDatabase db)
-        {
-            if (db == null)
-                return;
-            // save in-memory database to disk
-            if (db.IsInMemory)
-                db.BackupDatabase(db.DBLocation);
-            //            else
-            //                db.Close();
-        }
-
-        private System.Data.SQLite.SQLiteDatabase GetPropagationDatabase(ELEVATIONMODEL model)
+        public System.Data.SQLite.SQLiteDatabase GetPropagationDatabase(ELEVATIONMODEL model)
         {
             switch (model)
             {
@@ -181,25 +133,12 @@ namespace ScoutBase.Propagation
 
         public void BackupDatabase(ELEVATIONMODEL model)
         {
-            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
-            if (db == null)
-                return;
-            // save in-memory database to disk
-            if (db.IsInMemory)
-                db.BackupDatabase(db.DiskFileName);
-            else
-                db.Close();
+            this.BackupDatabase(GetPropagationDatabase(model));
         }
 
         public bool IsInMemory(ELEVATIONMODEL model)
         {
-            switch (model)
-            {
-                case ELEVATIONMODEL.GLOBE: return globe.IsInMemory;
-                case ELEVATIONMODEL.SRTM3: return srtm3.IsInMemory;
-                case ELEVATIONMODEL.SRTM1: return srtm1.IsInMemory;
-                default: return false;
-            }
+            return this.IsInMemory(GetPropagationDatabase(model));
         }
 
 
@@ -238,70 +177,52 @@ namespace ScoutBase.Propagation
 
         public DATABASESTATUS GetDBStatus(ELEVATIONMODEL model)
         {
-            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
-            if (db != null)
-                return db.Status;
-            return DATABASESTATUS.UNDEFINED;
+            return this.GetDBStatus(GetPropagationDatabase(model));
         }
 
         public void SetDBStatus(ELEVATIONMODEL model, DATABASESTATUS status)
         {
-            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
-            if (db != null)
-                db.Status = status;
+            this.SetDBStatus(status, GetPropagationDatabase(model));
         }
 
         public bool GetDBStatusBit(ELEVATIONMODEL model, DATABASESTATUS statusbit)
         {
-            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
-            if (db != null)
-                return (((int)db.Status) & ((int)statusbit)) > 0;
-            return false;
+            return this.GetDBStatusBit(statusbit, GetPropagationDatabase(model));
         }
 
         public void SetDBStatusBit(ELEVATIONMODEL model, DATABASESTATUS statusbit)
         {
-            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
-            if (db != null)
-                db.Status |= statusbit;
+            this.SetDBStatusBit(statusbit, GetPropagationDatabase(model));
         }
 
         public void ResetDBStatusBit(ELEVATIONMODEL model, DATABASESTATUS statusbit)
         {
-            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
-            if (db != null)
-                db.Status &= ~statusbit;
+            this.ResetDBStatusBit(statusbit, GetPropagationDatabase(model));
         }
 
         public void BeginTransaction(ELEVATIONMODEL model)
         {
-            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
-            if (db == null)
-                return;
-            db.BeginTransaction();
+            this.BeginTransaction(GetPropagationDatabase(model));
         }
 
         public void Commit(ELEVATIONMODEL model)
         {
-            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
-            if (db == null)
-                return;
-            db.Commit();
+            this.BeginTransaction(GetPropagationDatabase(model));
         }
 
-        private DataTable Select(System.Data.SQLite.SQLiteDatabase db, string sql)
+        private DataTable Select(ELEVATIONMODEL model, string sql)
         {
-            return db.Select(sql);
+            return this.Select(sql, GetPropagationDatabase(model));
         }
 
         public string GetDBLocation(ELEVATIONMODEL model)
         {
-            return GetPropagationDatabase(model).DBLocation;
+            return this.GetDBLocation(GetPropagationDatabase(model));
         }
 
         public double GetDBSize(ELEVATIONMODEL model)
         {
-            return GetPropagationDatabase(model).DBSize;
+            return this.GetDBSize(GetPropagationDatabase(model));
         }
 
 

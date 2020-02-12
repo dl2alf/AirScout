@@ -44,17 +44,14 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Configuration;
 using WinTest;
-using Renci.SshNet;
 using System.Diagnostics;
 using AquaControls;
-using AirScout.Core;
-using AirScout.PlaneFeeds.Generic;
-using AirScout.Aircrafts;
 using NDde;
 using NDde.Server;
 using NDde.Client;
 using ScoutBase;
 using ScoutBase.Core;
+using ScoutBase.Database;
 using ScoutBase.Elevation;
 using ScoutBase.Stations;
 using ScoutBase.Propagation;
@@ -66,13 +63,20 @@ using SQLiteDatabase;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Security.Cryptography;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using OxyPlot;
 using OxyPlot.WindowsForms;
 using OxyPlot.Series;
 using OxyPlot.Axes;
 using System.Data.SQLite;
+using DeviceId;
+using AirScout.Core;
+using AirScout.Aircrafts;
+using AirScout.PlaneFeeds;
 using AirScout.AircraftPositions;
 using AirScout.Signals;
+using AirScout.PlaneFeeds.Plugin.MEFContract;
 
 namespace AirScout
 {
@@ -227,10 +231,77 @@ namespace AirScout
                 // fully qualify path
                 if (!elevationdir.Contains(Path.VolumeSeparatorChar))
                     elevationdir = Path.Combine(AppDataDirectory, elevationdir);
-                return elevationdir;
+                    return elevationdir;
             }
         }
 
+        [CategoryAttribute("Directories")]
+        [DescriptionAttribute("Plugin Directory")]
+        public string PluginDirectory
+        {
+            get
+            {
+                // get Property
+                string plugindir = Properties.Settings.Default.Plugin_Directory;
+                // replace Windows/Linux directory spearator chars
+                plugindir = plugindir.Replace('\\', Path.DirectorySeparatorChar);
+                plugindir = plugindir.Replace('/', Path.DirectorySeparatorChar);
+                // set to default value if empty
+                if (String.IsNullOrEmpty(plugindir))
+                    plugindir = "plugin";
+                // replace variables, if any
+                plugindir = VC.ReplaceAllVars(plugindir);
+                // remove directory separator chars at begin and end
+                plugindir = plugindir.TrimStart(Path.DirectorySeparatorChar);
+                plugindir = plugindir.TrimEnd(Path.DirectorySeparatorChar);
+                // fully qualify path
+                if (!plugindir.Contains(Path.VolumeSeparatorChar))
+                    plugindir = Path.Combine(AppDataDirectory, plugindir);
+                return plugindir;
+            }
+        }
+
+        [CategoryAttribute("General")]
+        [DescriptionAttribute("Main Splitter Distance")]
+        private int MainSplitterDistance
+        {
+            get
+            {
+                return sc_Main.SplitterDistance;
+            }
+            set
+            {
+                // check bounds
+                if ((value > 0) && (value < this.Width))
+                    sc_Main.SplitterDistance = value;
+                else
+                    sc_Main.SplitterDistance = this.Width - gb_Map_Info_DefaultWidth;
+            }
+        }
+
+        [CategoryAttribute("General")]
+        [DescriptionAttribute("Map Splitter Distance")]
+        private int MapSplitterDistance
+        {
+            get
+            {
+                return sc_Map.SplitterDistance;
+            }
+            set
+            {
+                // check bounds
+                if ((value > 0) && (value < this.Height))
+                    sc_Map.SplitterDistance = value;
+                else
+                    sc_Map.SplitterDistance = this.Height - tc_Main_DefaultHeight;
+            }
+        }
+
+        [ImportMany(AllowRecomposition = true)] // This is a signal to the MEF framework to load all matching exported assemblies.
+        public List<Lazy<IPlaneFeedPlugin>> LazyPlaneFeedPlugins = new List<Lazy<IPlaneFeedPlugin>>();
+        public List<IPlaneFeedPlugin> PlaneFeedPlugins = new List<IPlaneFeedPlugin>();
+
+        // Log
         public static LogWriter Log;
 
         public VarConverter VC = new VarConverter();
@@ -286,8 +357,11 @@ namespace AirScout
         // Tooltip font
         public Font ToolTipFont;
 
-        // right control boxes
-        int gb_Map_Info_Width = 0;
+        // Default width of right info box (get on startup as set in Designer)
+        int gb_Map_Info_DefaultWidth = 0;
+
+        // Default height of bottom tab control (get on startup as set in Designer)
+        int tc_Main_DefaultHeight = 0;
 
         int gb_Map_Info_MaximizedHeight = 0;
         int gb_Map_Zoom_MaximizedHeight = 0;
@@ -298,10 +372,7 @@ namespace AirScout
         int gb_Map_Filter_MinimizedHeigth = 0;
         int gb_Map_Alarms_MinimizedHeight = 0;
 
-        int CurrentMapSplitterDistance = 0;
-
         // Plane feeds
-        public ArrayList PlaneFeeds;
         public PlaneFeed bw_PlaneFeed1;
         public PlaneFeed bw_PlaneFeed2;
         public PlaneFeed bw_PlaneFeed3;
@@ -326,14 +397,14 @@ namespace AirScout
         public PathCalculator bw_SRTM3PathCalculator = new PathCalculator(ELEVATIONMODEL.SRTM3);
         public PathCalculator bw_SRTM1PathCalculator = new PathCalculator(ELEVATIONMODEL.SRTM1);
 
-        // Modes
+        // Operating modes
         AIRSCOUTPATHMODE PathMode = AIRSCOUTPATHMODE.NONE;
         AIRSCOUTLIFEMODE LifeMode = AIRSCOUTLIFEMODE.NONE;
         AIRSCOUTPLAYMODE PlayMode = AIRSCOUTPLAYMODE.NONE;
 
         private int Time_Offline_Interval = 0;
 
-        // charting
+        // Charting
 
         // path chart
         PlotModel pm_Path = new PlotModel();
@@ -366,7 +437,7 @@ namespace AirScout
         int SpectrumPointsCount = 0;
         int SpectrumMaxPoints = 600;
 
-        // webbrowser
+        // Webbrowser
         private System.Windows.Forms.WebBrowser wb_News = null;
 
         CultureInfo LocalCulture;
@@ -383,12 +454,15 @@ namespace AirScout
         private List<AircraftPositionDesignator> AllPositions = new List<AircraftPositionDesignator>();
         private long AircraftPositionsCount = 0;
 
-        // nearest plane
+        // Nearest plane
         private PlaneInfo NearestPlane = null;
 
         // Airports
         private List<AirportDesignator> Airports = new List<AirportDesignator>();
 
+        // Session key
+        public string SessionKey = "";
+            
         #region Startup & Initialization
 
         public MapDlg()
@@ -402,7 +476,7 @@ namespace AirScout
             InitializeComponent();
 
             // do basic initialization
-            this.Text = "AirScout - Aircraft Scatter Prediction V" + Application.ProductVersion + " (c) 2013-2018 DL2ALF";
+            this.Text = "AirScout - Aircraft Scatter Prediction V" + Application.ProductVersion + " (c) 2013-2020 DL2ALF";
 
             // create a new renderer wich is clipping the status text on overflow
             ss_Main.Renderer = new ClippingToolStripRenderer();
@@ -452,8 +526,132 @@ namespace AirScout
             bw_GLOBEPathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
             bw_SRTM3PathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
             bw_SRTM1PathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
+
             // save FirstRun property before trying to upgrade user settings
             FirstRun = Properties.Settings.Default.FirstRun;
+        }
+
+        string DecryptStringFromBytesAes(byte[] cipherText, byte[] key, byte[] iv)
+        {
+            // Check arguments.
+            if (cipherText == null || cipherText.Length <= 0)
+                throw new ArgumentNullException("cipherText");
+            if (key == null || key.Length <= 0)
+                throw new ArgumentNullException("key");
+            if (iv == null || iv.Length <= 0)
+                throw new ArgumentNullException("iv");
+
+            // Declare the RijndaelManaged object
+            // used to decrypt the data.
+            RijndaelManaged aesAlg = null;
+
+            // Declare the string used to hold
+            // the decrypted text.
+            string plaintext;
+
+            // Create a RijndaelManaged object
+            // with the specified key and IV.
+            aesAlg = new RijndaelManaged { Mode = CipherMode.CBC, Padding = PaddingMode.None, KeySize = 256, BlockSize = 128, Key = key, IV = iv };
+
+            // Create a decrytor to perform the stream transform.
+            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+            // Create the streams used for decryption.
+            using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+            {
+                using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                {
+                    using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                    {
+                        // Read the decrypted bytes from the decrypting stream
+                        // and place them in a string.
+                        plaintext = srDecrypt.ReadToEnd();
+                        srDecrypt.Close();
+                    }
+                }
+            }
+
+            return plaintext;
+        }
+
+        private string OpenSSLDecrypt(string encrypted, string passphrase)
+        {
+            //get the key bytes (not sure if UTF8 or ASCII should be used here doesn't matter if no extended chars in passphrase)
+            var key = Encoding.UTF8.GetBytes(passphrase);
+
+            //pad key out to 32 bytes (256bits) if its too short
+            if (key.Length < 32)
+            {
+                var paddedkey = new byte[32];
+                Buffer.BlockCopy(key, 0, paddedkey, 0, key.Length);
+                key = paddedkey;
+            }
+
+            //setup an empty iv
+            var iv = new byte[16];
+
+            //get the encrypted data and decrypt
+            byte[] encryptedBytes = Convert.FromBase64String(encrypted);
+            return DecryptStringFromBytesAes(encryptedBytes, key, iv);
+        }
+
+        public void InitializeSession()
+        {
+            // register this AirScout instance
+            try
+            {
+                WebClient client;
+                string result;
+                Log.WriteMessage("Registering AirScout: Creating Instance ID");
+                // check AirScout instance id and generate new if not set
+                if (String.IsNullOrEmpty(Properties.Settings.Default.AirScout_Instance_ID))
+                {
+                    Properties.Settings.Default.AirScout_Instance_ID = Guid.NewGuid().ToString();
+                }
+                Log.WriteMessage("Registering AirScout: Creating Device ID");
+                // create an unique device id
+                DeviceIdBuilder devid = new DeviceIdBuilder();
+                Log.WriteMessage("Registering AirScout: Creating Device ID [MachineName]:" + devid.AddMachineName().ToString());
+                // not supported on Mono
+                if (!SupportFunctions.IsMono)
+                {
+                    Log.WriteMessage("Registering AirScout: Creating Device ID [MACAddress]:" + devid.AddMacAddress().ToString());
+                    Log.WriteMessage("Registering AirScout: Creating Device ID [Processor]:" + devid.AddProcessorId().ToString());
+                    Log.WriteMessage("Registering AirScout: Creating Device ID [Motherboard]:" + devid.AddMotherboardSerialNumber().ToString());
+                }
+                // store in settings if not set so far
+                if (String.IsNullOrEmpty(Properties.Settings.Default.AirScout_Device_ID) || (devid.ToString() != Properties.Settings.Default.AirScout_Device_ID))
+                {
+                    // not set or not the same, assuming AirScout is running on a new machine --> create a new instance id
+                    Properties.Settings.Default.AirScout_Instance_ID = Guid.NewGuid().ToString();
+                }
+                // store device id in settings
+                Properties.Settings.Default.AirScout_Device_ID = devid.ToString();
+                Log.WriteMessage("Registering AirScout: Getting Session Key");
+                // get new session key
+                client = new WebClient();
+                string id = Properties.Settings.Default.AirScout_Instance_ID;
+                result = client.DownloadString(Properties.Settings.Default.AirScout_Register_URL +
+                    "?id=" + Properties.Settings.Default.AirScout_Instance_ID +
+                    "&mycall=" + Properties.Settings.Default.MyCall +
+                    "&mylat=" + Properties.Settings.Default.MyLat.ToString() +
+                    "&mylon=" + Properties.Settings.Default.MyLon.ToString() +
+                    "&myversion=" + Application.ProductVersion);
+                if (!result.ToLower().Contains("error"))
+                    {
+                    SessionKey = Encryption.OpenSSLDecrypt(result, Properties.Settings.Default.AirScout_Instance_ID);
+                }
+                else
+                {
+                    Log.WriteMessage("Error while registering AirScout: " + result);
+                    MessageBox.Show(result + "\n\nSome functionality might be limited.", "Error while registering AirScout");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.WriteMessage("Error while registering AirScout: " + ex.ToString());
+                MessageBox.Show(ex.Message + "\n\nSome functionality might be limited.", "Error while registering AirScout");
+            }
+            Log.WriteMessage("Registering AirScout successful.");
         }
 
         public void CheckDirectories()
@@ -469,6 +667,156 @@ namespace AirScout
                 Directory.CreateDirectory(DatabaseDirectory);
             if (!Directory.Exists(ElevationDirectory))
                 Directory.CreateDirectory(ElevationDirectory);
+            if (!Directory.Exists(PluginDirectory))
+                Directory.CreateDirectory(PluginDirectory);
+        }
+
+        public void CopyPlugins(string srcdir, string dstdir, string filespec)
+        {
+            // move the planefeed plugins from program directory to the plugins directory but only if they not exist
+            // otherwise do version check
+            string[] srcplugins = Directory.GetFiles(srcdir, filespec);
+            foreach (string srcplugin in srcplugins)
+            {
+                try
+                {
+                    string filename = Path.GetFileName(srcplugin);
+                    string srcversion = FileVersionInfo.GetVersionInfo(srcplugin).FileVersion;
+                    DateTime srctime = File.GetLastWriteTimeUtc(srcplugin);
+                    // calculate destination file name
+                    string dstplugin = dstdir + Path.DirectorySeparatorChar + filename;
+                    if (!File.Exists(dstplugin))
+                    {
+                        // copy file if not exists
+                        File.Copy(srcplugin, dstplugin);
+                        Log.WriteMessage("Plugin Manager: Copied plugin " + filename + "[" + srcversion + "].");
+                    }
+                    else
+                    {
+                        // do version check
+                        string dstversion = FileVersionInfo.GetVersionInfo(dstplugin).FileVersion;
+                        DateTime dsttime = File.GetLastWriteTimeUtc(dstplugin);
+                        if (srcversion.CompareTo(dstversion) > 0)
+                        {
+                            // overwrite dstfile if newer version
+                            File.Copy(srcplugin, dstplugin, true);
+                            Log.WriteMessage("Plugin Manager: Replaced plugin " + filename + "[" + dstversion + "] with newer version [" + srcversion + "].");
+                        }
+                        else if (srcversion.CompareTo(dstversion) == 0)
+                        {
+                            if (srctime > dsttime)
+                            {
+                                // overwrite dstfile if same version but newer 
+                                File.Copy(srcplugin, dstplugin, true);
+                                Log.WriteMessage("Plugin Manager: Replaced plugin " + filename + "[" + dsttime.ToString("yyyy-MM-dd HH:mm:ss") + "] with newer file [" + srctime.ToString("yyyy-MM-dd HH:mm:ss") + "].");
+                            }
+                        }
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // log Error to Console, Log is not initialized yet
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+            }
+        }
+
+        private void LoadPlugins()
+        {
+            // chek for planefeed plugins
+            Log.WriteMessage("Loading plugins...");
+            // get major&minor version
+            string mainversion = Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.')[0] + "." + Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.')[1];
+            string filespec = "AirScout.PlaneFeeds.Plugin.*.dll";
+
+            // first copy plugins from application directory to plugin directory if they not exist or newer
+            CopyPlugins(AppDirectory, PluginDirectory, filespec);
+
+            // check for new plugins on the web resource
+            try
+            {
+                // clear temporary files
+                try
+                {
+                    SupportFunctions.DeleteFilesFromDirectory(TmpDirectory, new string[] { "*.tmp", "*.PendingOverwrite" });
+                    SupportFunctions.DeleteFilesFromDirectory(TmpDirectory, filespec);
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                // calculate url
+                string url = Properties.Settings.Default.Plugins_Update_URL + "/" + mainversion + "/" + "planefeeds.zip";
+                string filename = Path.Combine(TmpDirectory, "planefeeds.zip");
+                // get zip file
+                AutoDecompressionWebClient cl = new AutoDecompressionWebClient();
+                DOWNLOADFILESTATUS status = cl.DownloadFileIfNewer(url, filename, true, true);
+                if (((status & DOWNLOADFILESTATUS.ERROR) > 0) && ((status & DOWNLOADFILESTATUS.NOTFOUND) > 0))
+                {
+                    Log.WriteMessage("PluginManager: checking plugins --> nothing found on web or error while downloading.");
+                }
+                else if (((status & DOWNLOADFILESTATUS.NEWER) > 0) || ((status & DOWNLOADFILESTATUS.NOTNEWER) > 0))
+                {
+                    // update files with web resource if newer
+                    // copy plugins from application directory to plugin directory
+                    CopyPlugins(TmpDirectory, PluginDirectory, filespec);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
+            }
+
+            // load available plugins, we need a robust algorithm here!
+            // error while composing a single plugin or error during call to plugin constructor must not affect loading of other plugins!
+            // furthermore: DirectoryCatalog does not work on Linux when plugins are placed in other directory than program's main directory
+            // solution -->
+            // try to compose each single plugin first and collect "clean" plugins in a container for error-free composing with Lazy<T>
+            // after that, try to call each plugin's constructor and collect "clean" plugins in a separate list for further use
+            try
+            {
+                List<AssemblyCatalog> catalog = new List<AssemblyCatalog>();
+                foreach (string plfile in Directory.GetFiles(PluginDirectory, filespec, SearchOption.AllDirectories))
+                {
+                    try
+                    {
+                        // try to import a single plugin 
+                        var tmpcatalog = new AssemblyCatalog(System.Reflection.Assembly.UnsafeLoadFrom(plfile));
+                        var tmpcontainer = new CompositionContainer(tmpcatalog);
+                        tmpcontainer.ComposeParts(this);
+                        // add to main catalog only when composition was OK
+                        tmpcontainer.Dispose();
+                        catalog.Add(tmpcatalog);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.WriteMessage("Error while loading plugin[" + plfile + "]: " + ex.ToString(), LogLevel.Error);
+                    }
+                }
+                // catalog should cointain only "clean" plugins so composing all parts should be possible without errors
+                var container = new CompositionContainer(new AggregateCatalog(catalog));
+                container.ComposeParts(this);
+                foreach (Lazy<IPlaneFeedPlugin> lazyplugin in LazyPlaneFeedPlugins)
+                {
+                    try
+                    {
+                        // try to call plaugin constructor and add the value to Planefeeds list
+                        var plugin = lazyplugin.Value;
+                        if (plugin != null)
+                            PlaneFeedPlugins.Add(plugin);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.WriteMessage("Error while loading plugin: " + ex.ToString(), LogLevel.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
+            }
+            Log.WriteMessage("Loading plugins successful.");
         }
 
         /// <summary>
@@ -481,6 +829,22 @@ namespace AirScout
             string p = (string)Properties.Settings.Default.Properties[propertyname].DefaultValue;
             Type t = Properties.Settings.Default.Properties[propertyname].PropertyType;
             return Convert.ChangeType(p, t);
+        }
+
+        private string QualifyDatabaseDirectory(string databasedir)
+        {
+            // replace Windows/Linux directory spearator chars
+            databasedir = databasedir.Replace('\\', Path.DirectorySeparatorChar);
+            databasedir = databasedir.Replace('/', Path.DirectorySeparatorChar);
+            // replace variables, if any
+            databasedir = VC.ReplaceAllVars(databasedir);
+            // remove directory separator chars at begin and end
+            databasedir = databasedir.TrimStart(Path.DirectorySeparatorChar);
+            databasedir = databasedir.TrimEnd(Path.DirectorySeparatorChar);
+            // fully qualify path
+            if (!databasedir.Contains(Path.VolumeSeparatorChar))
+                databasedir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), databasedir);
+            return databasedir;
         }
 
         private void InitializeSettings()
@@ -517,6 +881,12 @@ namespace AirScout
             // set antenna height to 10m be default
             Properties.Settings.Default.MyHeight = 10;
             Properties.Settings.Default.DXHeight = 10;
+
+            // check database directory settings
+            Properties.Settings.Default.AircraftDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.AircraftDatabase_Directory);
+            Properties.Settings.Default.StationsDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.StationsDatabase_Directory);
+            Properties.Settings.Default.ElevationDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.StationsDatabase_Directory);
+            Properties.Settings.Default.PropagationDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.PropagationDatabase_Directory);
         }
 
         private void CheckSettings()
@@ -607,6 +977,11 @@ namespace AirScout
             Properties.Settings.Default.Elevation_SRTM1_DatabaseStatus = DATABASESTATUS.UNDEFINED;
             // set nearfield suppression
             PropagationData.Database.NearFieldSuppression = Properties.Settings.Default.Path_NearFieldSuppression;
+            // get all database directories and store it in settings
+            Properties.Settings.Default.AircraftDatabase_Directory = AircraftData.Database.DefaultDatabaseDirectory();
+            Properties.Settings.Default.StationsDatabase_Directory = StationData.Database.DefaultDatabaseDirectory();
+            Properties.Settings.Default.ElevationDatabase_Directory = ElevationData.Database.DefaultDatabaseDirectory();
+            Properties.Settings.Default.PropagationDatabase_Directory = PropagationData.Database.DefaultDatabaseDirectory();
             Log.WriteMessage("Finished.");
         }
 
@@ -628,8 +1003,9 @@ namespace AirScout
                 // Check properties
                 SplashDlg.Status("Checking settings...");
                 CheckSettings();
-                // get AirScout password phrase
-                InitializePassword();
+                // check, copy and load plugins
+                SplashDlg.Status("Loading plugins...");
+                LoadPlugins();
                 // Initialize database
                 SplashDlg.Status("Initializing database...");
                 InitializeDatabase();
@@ -642,6 +1018,8 @@ namespace AirScout
                 // initialize map
                 // setting User Agent to fix Open Street Map issue 2016-09-20
                 GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+                // clearing referrer URL issue 2019-12-14
+                gm_Main.MapProvider.RefererUrl = "";
                 // set initial settings for main map
                 gm_Main.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
                 gm_Main.IgnoreMarkerOnMouseWheel = true;
@@ -653,16 +1031,19 @@ namespace AirScout
                 gm_Main.ScalePen = new Pen(Color.Black, 3);
                 gm_Main.MapScaleInfoEnabled = true;
                 gm_Main.Overlays.Add(gmo_Airports);
-                gm_Main.Overlays.Add(gmo_Callsigns);
                 gm_Main.Overlays.Add(gmo_PropagationPaths);
                 gm_Main.Overlays.Add(gmo_Routes);
                 gm_Main.Overlays.Add(gmo_Objects);
                 gm_Main.Overlays.Add(gmo_Planes);
+                gm_Main.Overlays.Add(gmo_Callsigns);
 
                 // setting User Agent to fix Open Street Map issue 2016-09-20
                 GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+                // clearing referrer URL issue 2019-12-14
+                gm_Main.MapProvider.RefererUrl = "";
                 // set initial settings for main map
                 gm_Nearest.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
+                gm_Main.MapProvider.RefererUrl = "";
                 gm_Nearest.IgnoreMarkerOnMouseWheel = true;
                 gm_Nearest.MinZoom = 0;
                 gm_Nearest.MaxZoom = 20;
@@ -700,26 +1081,27 @@ namespace AirScout
                 gb_Map_Filter.MouseClick += new MouseEventHandler(this.gb_Map_Filter_MouseClick);
                 gb_Map_Alarms.MouseClick += new MouseEventHandler(this.gb_Map_Alarms_MouseClick);
 
-                // get installed plane feeds
-                PlaneFeeds = new PlaneFeedEnumeration().EnumFeeds();
-
-                // set planefeed event handler
-                foreach (PlaneFeed feed in PlaneFeeds)
+                if (PlaneFeedPlugins != null)
                 {
-                    feed.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                    foreach (IPlaneFeedPlugin plugin in PlaneFeedPlugins)
+                    {
+                        if (Properties.Settings.Default.Planes_PlaneFeed1 == plugin.Name)
+                        {
+                            bw_PlaneFeed1 = new PlaneFeed();
+                            bw_PlaneFeed1.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                        }
+                        if (Properties.Settings.Default.Planes_PlaneFeed2 == plugin.Name)
+                        {
+                            bw_PlaneFeed2 = new PlaneFeed();
+                            bw_PlaneFeed2.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                        }
+                        if (Properties.Settings.Default.Planes_PlaneFeed3 == plugin.Name)
+                        {
+                            bw_PlaneFeed3 = new PlaneFeed();
+                            bw_PlaneFeed3.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                        }
+                    }
                 }
-
-                // select feeds
-                foreach (PlaneFeed feed in PlaneFeeds)
-                {
-                    if (Properties.Settings.Default.Planes_PlaneFeed1 == feed.Name)
-                        bw_PlaneFeed1 = feed;
-                    if (Properties.Settings.Default.Planes_PlaneFeed2 == feed.Name)
-                        bw_PlaneFeed2 = feed;
-                    if (Properties.Settings.Default.Planes_PlaneFeed3 == feed.Name)
-                        bw_PlaneFeed3 = feed;
-                }
-
                 // update image list sizes
                 il_Planes_L.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_L, Properties.Settings.Default.Planes_IconSize_L);
                 il_Planes_M.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_M, Properties.Settings.Default.Planes_IconSize_M);
@@ -768,8 +1150,6 @@ namespace AirScout
                         }
                         CheckDirectories();
                         CheckSettings();
-                        // get passphrase again
-                        InitializePassword();
                         // reset topmost state
                         SplashDlg.TopMost = false;
                         // must have internet connection on FirstRun
@@ -785,7 +1165,7 @@ namespace AirScout
                         // show FirstRunWizard
                         try
                         {
-                            FirstRunWizard Dlg = new FirstRunWizard();
+                            FirstRunWizard Dlg = new FirstRunWizard(this);
                             if (Dlg.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                             {
                                 Log.WriteMessage("Aborting FirstRunWizard.");
@@ -809,7 +1189,7 @@ namespace AirScout
                         }
                         catch (Exception ex)
                         {
-                            Log.WriteMessage(ex.Message);
+                            Log.WriteMessage(ex.ToString(), LogLevel.Error);
                             // flush the log and exit immediately
                             Log.FlushLog();
                             System.Environment.Exit(-1);
@@ -818,12 +1198,14 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
+                // get initial widths and heigths
+                gb_Map_Info_DefaultWidth = gb_Map_Info.Width;
+                tc_Main_DefaultHeight = tc_Main.Height;
+
                 // refresh the Layout
                 OnSizeChanged(null);
-                // get initial width of boxes
-                gb_Map_Info_Width = gb_Map_Info.Width;
 
                 // get initial height of boxes
                 gb_Map_Info_MinimizedHeight = gb_Map_Info.Height - gb_Map_Info.DisplayRectangle.Height;
@@ -835,26 +1217,34 @@ namespace AirScout
                 gb_Map_Filter_MaximizedHeigth = gb_Map_Filter.Height;
                 gb_Map_Alarms_MaximizedHeight = gb_Map_Alarms.Height;
 
-                // correct splitter values if default
-                if (Properties.Settings.Default.MainSplitter_Distance <= 0)
-                    Properties.Settings.Default.MainSplitter_Distance = this.Width - gb_Map_Info_Width;
-                if (Properties.Settings.Default.MapSplitter_Distance <= 0)
-                    Properties.Settings.Default.MapSplitter_Distance = this.Height - 300;
-
                 // check directories and settings for missing values
                 CheckDirectories();
                 CheckSettings();
 
-                // select plane feeds again
-                foreach (PlaneFeed feed in PlaneFeeds)
+                if (PlaneFeedPlugins != null)
                 {
-                    if (Properties.Settings.Default.Planes_PlaneFeed1 == feed.Name)
-                        bw_PlaneFeed1 = feed;
-                    if (Properties.Settings.Default.Planes_PlaneFeed2 == feed.Name)
-                        bw_PlaneFeed2 = feed;
-                    if (Properties.Settings.Default.Planes_PlaneFeed3 == feed.Name)
-                        bw_PlaneFeed3 = feed;
+                    foreach (IPlaneFeedPlugin plugin in PlaneFeedPlugins)
+                    {
+                        if (Properties.Settings.Default.Planes_PlaneFeed1 == plugin.Name)
+                        {
+                            bw_PlaneFeed1 = new PlaneFeed();
+                            bw_PlaneFeed1.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                        }
+                        if (Properties.Settings.Default.Planes_PlaneFeed2 == plugin.Name)
+                        {
+                            bw_PlaneFeed2 = new PlaneFeed();
+                            bw_PlaneFeed2.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                        }
+                        if (Properties.Settings.Default.Planes_PlaneFeed3 == plugin.Name)
+                        {
+                            bw_PlaneFeed3 = new PlaneFeed();
+                            bw_PlaneFeed3.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                        }
+                    }
                 }
+
+                // register this instance of AirScout and get a session key
+                InitializeSession();
 
                 // start permanent background workers
                 StartAllBackgroundWorkers();
@@ -922,7 +1312,10 @@ namespace AirScout
             catch (Exception ex)
             {
                 // close the application in case of any exception
-                Log.WriteMessage(ex.ToString());
+                if (Log != null)
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                else
+                    Console.WriteLine("Fatal Error: " + ex.ToString());
                 // close the splash window
                 if (SplashDlg != null)
                     SplashDlg.Close();
@@ -946,27 +1339,42 @@ namespace AirScout
                     this.Size = Properties.Settings.Default.General_WindowSize;
                     this.Location = Properties.Settings.Default.General_WindowLocation;
                     this.WindowState = Properties.Settings.Default.General_WindowState;
-                    // set splitter positions
-                    sc_Map.SplitterDistance = Properties.Settings.Default.MapSplitter_Distance;
-                    sc_Main.SplitterDistance = Properties.Settings.Default.MainSplitter_Distance;
-                    CurrentMapSplitterDistance = Properties.Settings.Default.MapSplitter_Distance;
-                    // hide latest news tab
-                    tp_News.Hide();
                 }
                 else
                 {
                     // ignore window settings under Linux/Mono
                     // start always maximized
                     this.WindowState = FormWindowState.Maximized;
-                    sc_Map.SplitterDistance = this.Height - 220;
-                    sc_Main.SplitterDistance = this.Width - gb_Map_Info_Width;
 
                 }
             }
             catch (Exception ex)
             {
                 // do nothing if failed
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                // reset splitter positions to its default value in settings
+                Properties.Settings.Default.MainSplitter_Distance = -1;
+                Properties.Settings.Default.MapSplitter_Distance = -1;
+            }
+            // restore splitter positions
+            try
+            {
+                if (!SupportFunctions.IsMono)
+                {
+                    MapSplitterDistance = Properties.Settings.Default.MapSplitter_Distance;
+                    MainSplitterDistance = Properties.Settings.Default.MainSplitter_Distance;
+                }
+                else
+                {
+                    // ignore window settings under Linux/Mono and always use default values
+                    sc_Map.SplitterDistance = -1;
+                    sc_Main.SplitterDistance = -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                // do nothing if failed
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             // make main window visible
             this.Visible = true;
@@ -976,6 +1384,42 @@ namespace AirScout
             // simulate splitter click
             this.sc_Map_SplitterMoved(this, null);
             this.sc_Main_SplitterMoved(this, null);
+        }
+
+        // creates plane feed work event arguments from settings
+        private PlaneFeedWorkEventArgs CreatePlaneFeedWorkEventArgs(string feedname)
+        {
+            PlaneFeedWorkEventArgs feedargs = new PlaneFeedWorkEventArgs();
+            feedargs.Feed = null;
+            foreach (IPlaneFeedPlugin plugin in PlaneFeedPlugins)
+            {
+                if (plugin.Name == feedname)
+                    feedargs.Feed = plugin;
+            }
+            feedargs.AppDirectory = AppDirectory;
+            feedargs.AppDataDirectory = AppDataDirectory;
+            feedargs.LogDirectory = LogDirectory;
+            feedargs.TmpDirectory = TmpDirectory;
+            feedargs.DatabaseDirectory = DatabaseDirectory;
+            feedargs.MaxLat = Properties.Settings.Default.MaxLat;
+            feedargs.MinLon = Properties.Settings.Default.MinLon;
+            feedargs.MinLat = Properties.Settings.Default.MinLat;
+            feedargs.MaxLon = Properties.Settings.Default.MaxLon;
+            feedargs.MinAlt = Properties.Settings.Default.Planes_MinAlt;
+            feedargs.MaxAlt = Properties.Settings.Default.Planes_MaxAlt;
+            feedargs.MyLat = Properties.Settings.Default.MyLat;
+            feedargs.MyLon = Properties.Settings.Default.MyLon;
+            feedargs.DXLat = Properties.Settings.Default.DXLat;
+            feedargs.DXLon = Properties.Settings.Default.DXLon;
+            feedargs.KeepHistory = Properties.Settings.Default.Planes_KeepHistory;
+            feedargs.Interval = Properties.Settings.Default.Planes_Interval;
+            feedargs.ExtendedPlausibilityCheck_Enable = Properties.Settings.Default.Planes_ExtendedPlausibilityCheck_Enabled;
+            feedargs.ExtendedPlausiblityCheck_MaxErrorDist = Properties.Settings.Default.Planes_ExtendedPlausibilityCheck_MaxErrorDist;
+            feedargs.LogErrors = Properties.Settings.Default.Planes_LogErrors;
+            feedargs.InstanceID = Properties.Settings.Default.AirScout_Instance_ID;
+            feedargs.SessionKey = SessionKey;
+            feedargs.GetKeyURL = Properties.Settings.Default.AirScout_GetKey_URL;
+            return feedargs;
         }
 
         private void StartAllBackgroundWorkers()
@@ -1004,6 +1448,9 @@ namespace AirScout
                 {
                     StationDatabaseUpdaterStartOptions startoptions = new StationDatabaseUpdaterStartOptions();
                     startoptions.Name = "Stations";
+                    startoptions.InstanceID = Properties.Settings.Default.AirScout_Instance_ID;
+                    startoptions.SessionKey = SessionKey;
+                    startoptions.GetKeyURL = Properties.Settings.Default.AirScout_GetKey_URL;
                     startoptions.Options = BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE;
                     bw_StationDatabaseUpdater.RunWorkerAsync(startoptions);
                 }
@@ -1011,6 +1458,9 @@ namespace AirScout
                 {
                     AircraftDatabaseUpdaterStartOptions startoptions = new AircraftDatabaseUpdaterStartOptions();
                     startoptions.Name = "Aircrafts";
+                    startoptions.InstanceID = Properties.Settings.Default.AirScout_Instance_ID;
+                    startoptions.SessionKey = SessionKey;
+                    startoptions.GetKeyURL = Properties.Settings.Default.AirScout_GetKey_URL;
                     startoptions.Options = BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE;
                     bw_AircraftDatabaseUpdater.RunWorkerAsync(startoptions);
                 }
@@ -1066,6 +1516,9 @@ namespace AirScout
                 {
                     StationDatabaseUpdaterStartOptions startoptions = new StationDatabaseUpdaterStartOptions();
                     startoptions.Name = "Stations";
+                    startoptions.InstanceID = Properties.Settings.Default.AirScout_Instance_ID;
+                    startoptions.SessionKey = SessionKey;
+                    startoptions.GetKeyURL = Properties.Settings.Default.AirScout_GetKey_URL;
                     startoptions.Options = BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY;
                     bw_StationDatabaseUpdater.RunWorkerAsync(startoptions);
                 }
@@ -1073,6 +1526,9 @@ namespace AirScout
                 {
                     AircraftDatabaseUpdaterStartOptions startoptions = new AircraftDatabaseUpdaterStartOptions();
                     startoptions.Name = "Aircrafts";
+                    startoptions.InstanceID = Properties.Settings.Default.AirScout_Instance_ID;
+                    startoptions.SessionKey = SessionKey;
+                    startoptions.GetKeyURL = Properties.Settings.Default.AirScout_GetKey_URL;
                     startoptions.Options = BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY;
                     bw_AircraftDatabaseUpdater.RunWorkerAsync(startoptions);
                 }
@@ -1123,69 +1579,12 @@ namespace AirScout
                     bw_SRTM1PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
             }
             if ((bw_PlaneFeed1 != null) && (!bw_PlaneFeed1.IsBusy))
-            {
-                PlaneFeedWorkEventArgs feedargs = new PlaneFeedWorkEventArgs();
-                feedargs.AppDirectory = AppDirectory;
-                feedargs.AppDataDirectory = AppDataDirectory;
-                feedargs.LogDirectory = LogDirectory;
-                feedargs.TmpDirectory = TmpDirectory;
-                feedargs.DatabaseDirectory = DatabaseDirectory;
-                feedargs.MaxLat = Properties.Settings.Default.MaxLat;
-                feedargs.MinLon = Properties.Settings.Default.MinLon;
-                feedargs.MinLat = Properties.Settings.Default.MinLat;
-                feedargs.MaxLon = Properties.Settings.Default.MaxLon;
-                feedargs.MinAlt = Properties.Settings.Default.Planes_MinAlt;
-                feedargs.MaxAlt = Properties.Settings.Default.Planes_MaxAlt;
-                feedargs.MyLat = Properties.Settings.Default.MyLat;
-                feedargs.MyLon = Properties.Settings.Default.MyLon;
-                feedargs.DXLat = Properties.Settings.Default.DXLat;
-                feedargs.DXLon = Properties.Settings.Default.DXLon;
-                feedargs.KeepHistory = Properties.Settings.Default.Planes_KeepHistory;
-                bw_PlaneFeed1.RunWorkerAsync(feedargs);
-            }
+                bw_PlaneFeed1.RunWorkerAsync(CreatePlaneFeedWorkEventArgs(Properties.Settings.Default.Planes_PlaneFeed1));
             if ((bw_PlaneFeed2 != null) && (!bw_PlaneFeed2.IsBusy))
-            {
-                PlaneFeedWorkEventArgs feedargs = new PlaneFeedWorkEventArgs();
-                feedargs.AppDirectory = AppDirectory;
-                feedargs.AppDataDirectory = AppDataDirectory;
-                feedargs.LogDirectory = LogDirectory;
-                feedargs.TmpDirectory = TmpDirectory;
-                feedargs.DatabaseDirectory = DatabaseDirectory;
-                feedargs.MaxLat = Properties.Settings.Default.MaxLat;
-                feedargs.MinLon = Properties.Settings.Default.MinLon;
-                feedargs.MinLat = Properties.Settings.Default.MinLat;
-                feedargs.MaxLon = Properties.Settings.Default.MaxLon;
-                feedargs.MinAlt = Properties.Settings.Default.Planes_MinAlt;
-                feedargs.MaxAlt = Properties.Settings.Default.Planes_MaxAlt;
-                feedargs.MyLat = Properties.Settings.Default.MyLat;
-                feedargs.MyLon = Properties.Settings.Default.MyLon;
-                feedargs.DXLat = Properties.Settings.Default.DXLat;
-                feedargs.DXLon = Properties.Settings.Default.DXLon;
-                feedargs.KeepHistory = Properties.Settings.Default.Planes_KeepHistory;
-                bw_PlaneFeed2.RunWorkerAsync(feedargs);
-            }
+                bw_PlaneFeed2.RunWorkerAsync(CreatePlaneFeedWorkEventArgs(Properties.Settings.Default.Planes_PlaneFeed2));
             if ((bw_PlaneFeed3 != null) && (!bw_PlaneFeed3.IsBusy))
-            {
-                PlaneFeedWorkEventArgs feedargs = new PlaneFeedWorkEventArgs();
-                feedargs.AppDirectory = AppDirectory;
-                feedargs.AppDataDirectory = AppDataDirectory;
-                feedargs.LogDirectory = LogDirectory;
-                feedargs.TmpDirectory = TmpDirectory;
-                feedargs.DatabaseDirectory = DatabaseDirectory;
-                feedargs.MaxLat = Properties.Settings.Default.MaxLat;
-                feedargs.MinLon = Properties.Settings.Default.MinLon;
-                feedargs.MinLat = Properties.Settings.Default.MinLat;
-                feedargs.MaxLon = Properties.Settings.Default.MaxLon;
-                feedargs.MinAlt = Properties.Settings.Default.Planes_MinAlt;
-                feedargs.MaxAlt = Properties.Settings.Default.Planes_MaxAlt;
-                feedargs.MyLat = Properties.Settings.Default.MyLat;
-                feedargs.MyLon = Properties.Settings.Default.MyLon;
-                feedargs.DXLat = Properties.Settings.Default.DXLat;
-                feedargs.DXLon = Properties.Settings.Default.DXLon;
-                feedargs.KeepHistory = Properties.Settings.Default.Planes_KeepHistory;
-                bw_PlaneFeed3.RunWorkerAsync(feedargs);
-            }
-            if (Properties.Settings.Default.Server_Activate)
+                bw_PlaneFeed3.RunWorkerAsync(CreatePlaneFeedWorkEventArgs(Properties.Settings.Default.Planes_PlaneFeed3));
+                if (Properties.Settings.Default.Server_Activate)
             {
                 if ((bw_WinTestReceive != null) && (!bw_WinTestReceive.IsBusy))
                     bw_WinTestReceive.RunWorkerAsync();
@@ -1412,7 +1811,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             Log.WriteMessage("Finished.");
         }
@@ -1589,28 +1988,9 @@ namespace AirScout
             this.tp_News.Controls.Add(this.wb_News);
         }
 
-        private void InitializePassword()
-        {
-            // get current AirScout password phrase from website and store it in settings
-            try
-            {
-                // get upload info
-                WebRequest myWebRequest = WebRequest.Create(Properties.Settings.Default.SFTP_PwdURL);
-                WebResponse myWebResponse = myWebRequest.GetResponse();
-                Stream ReceiveStream = myWebResponse.GetResponseStream();
-                Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
-                StreamReader readStream = new StreamReader(ReceiveStream, encode);
-                string s = readStream.ReadToEnd();
-                Properties.Settings.Default.Password = s;
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString());
-            }
-        }
-
         private void UpdateAirports()
         {
+            /*
             if (!Properties.Settings.Default.Airports_Activate)
                 return;
             if ((Airports == null) || (Airports.Count == 0))
@@ -1628,9 +2008,11 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
+//            gm_Main.Refresh();
+            */
         }
 
         private void ti_Startup_Tick(object sender, EventArgs e)
@@ -1816,62 +2198,6 @@ namespace AirScout
             {
                 Application.Exit();
             }
-            /*
-            // show/hide group boxes
-            if (Properties.Settings.Default.Map_ShowInfoBox)
-            {
-                gb_Map_Info.ClientSize = new System.Drawing.Size(gb_Map_Info.ClientSize.Width, gb_Map_Info_MaximizedHeight);
-                if (gb_Map_Info.Text != "˄ Info")
-                    gb_Map_Info.Text = "˄ Info";
-            }
-            else
-            {
-                gb_Map_Info.ClientSize = new System.Drawing.Size(gb_Map_Info.ClientSize.Width, gb_Map_Info_MinimizedHeight);
-                if (gb_Map_Info.Text != "˅ Info")
-                    gb_Map_Info.Text = "˅ Info";
-            }
-            if (Properties.Settings.Default.Map_ShowZoomBox)
-            {
-                gb_Map_Zoom.ClientSize = new System.Drawing.Size(gb_Map_Zoom.ClientSize.Width, gb_Map_Zoom_MaximizedHeight);
-                if (gb_Map_Zoom.Text != "˄ Map Zoom")
-                    gb_Map_Zoom.Text = "˄ Map Zoom";
-            }
-            else
-            {
-                gb_Map_Zoom.ClientSize = new System.Drawing.Size(gb_Map_Zoom.ClientSize.Width, gb_Map_Zoom_MinimizedHeight);
-                if (gb_Map_Zoom.Text != "˅ Map Zoom")
-                    gb_Map_Zoom.Text = "˅ Map Zoom";
-            }
-            if (Properties.Settings.Default.Map_ShowFilterBox)
-            {
-                gb_Map_Filter.ClientSize = new System.Drawing.Size(gb_Map_Filter.ClientSize.Width, gb_Map_Filter_MaximizedHeigth);
-                if (gb_Map_Filter.Text != "˄ Planes Filter")
-                    gb_Map_Filter.Text = "˄ Planes Filter";
-            }
-            else
-            {
-                gb_Map_Filter.ClientSize = new System.Drawing.Size(gb_Map_Filter.ClientSize.Width, gb_Map_Filter_MinimizedHeigth);
-                if (gb_Map_Filter.Text != "˅ Planes Filter")
-                    gb_Map_Filter.Text = "˅ Planes Filter";
-            }
-            if (Properties.Settings.Default.Map_ShowAlarmBox)
-            {
-                gb_Map_Alarms.ClientSize = new System.Drawing.Size(gb_Map_Alarms.ClientSize.Width, gb_Map_Alarms_MaximizedHeight);
-                if (gb_Map_Alarms.Text != "˄ Alarms")
-                    gb_Map_Alarms.Text = "˄ Alarms";
-            }
-            else
-            {
-                gb_Map_Alarms.ClientSize = new System.Drawing.Size(gb_Map_Alarms.ClientSize.Width, gb_Map_Alarms_MinimizedHeight);
-                if (gb_Map_Alarms.Text != "˅ Alarms")
-                    gb_Map_Alarms.Text = "˅ Alarms";
-            }
-            // show/hide panes
-            gmo_Airports.IsVisibile = Properties.Settings.Default.Airports_Activate;
-            gmo_Callsigns.IsVisibile = Properties.Settings.Default.Watchlist_Activated;
-
-            pa_Map_Boxes.ClientSize = new System.Drawing.Size(pa_Map_Boxes.ClientSize.Width, ClientSize.Height - ss_Main.Height);
-            */
             // enable/disable watchlist button
             if (btn_Control_Manage_Watchlist.Enabled == Properties.Settings.Default.Watchlist_SyncWithKST)
                 btn_Control_Manage_Watchlist.Enabled = !Properties.Settings.Default.Watchlist_SyncWithKST;
@@ -1883,9 +2209,12 @@ namespace AirScout
 
         private void MapDlg_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Log.WriteMessage(Application.ProductName + " is closing.");
-            // flush the Log for the first time to save all messages
-            Log.FlushLog();
+            if (Log != null)
+            {
+                Log.WriteMessage(Application.ProductName + " is closing.");
+                // flush the Log for the first time to save all messages
+                Log.FlushLog();
+            }
             //save window size, state and location
             Properties.Settings.Default.General_WindowLocation = this.Location;
             if (this.WindowState == FormWindowState.Normal)
@@ -1900,15 +2229,15 @@ namespace AirScout
                 // cancel background workers
                 CancelAllBackgroundWorkers();
                 // save splitter positions
-                Properties.Settings.Default.MainSplitter_Distance = sc_Main.SplitterDistance;
-                Properties.Settings.Default.MapSplitter_Distance = CurrentMapSplitterDistance;
+                Properties.Settings.Default.MainSplitter_Distance = MainSplitterDistance;
+                Properties.Settings.Default.MapSplitter_Distance = MapSplitterDistance;
                 // invalidate tracking values
                 Properties.Settings.Default.Track_SetAz = double.NaN;
                 Properties.Settings.Default.Track_SetEl = double.NaN;
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             finally
             {
@@ -1979,31 +2308,59 @@ namespace AirScout
 
         private void Say(string text)
         {
-            if (String.Compare(tsl_Status.Text, text) == 0)
-                return;
-            tsl_Status.Text = text;
+            try
+            {
+                if (String.Compare(tsl_Status.Text, text) == 0)
+                    return;
+                tsl_Status.Text = text;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void SayDatabase(string text)
         {
-            if (String.Compare(tsl_Database.Text, text) == 0)
-                return;
-            tsl_Database.Text = text;
+            try
+            {
+                if (String.Compare(tsl_Database.Text, text) == 0)
+                    return;
+                tsl_Database.Text = text;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void SayCalculations(string text)
         {
-            if (String.Compare(tsl_Calculations.Text, text) == 0)
-                return;
-            tsl_Calculations.Text = text;
+            try
+            {
+                if (String.Compare(tsl_Calculations.Text, text) == 0)
+                    return;
+                tsl_Calculations.Text = text;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void SayAnalysis(string text)
         {
-            if (String.Compare(tb_Analysis_Status.Text, text) == 0)
-                return;
-            tb_Analysis_Status.Text = text;
-            tb_Analysis_Status.Refresh();
+            try
+            {
+                if (String.Compare(tb_Analysis_Status.Text, text) == 0)
+                    return;
+                tb_Analysis_Status.Text = text;
+                tb_Analysis_Status.Refresh();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void UpdateStatus()
@@ -2083,7 +2440,7 @@ namespace AirScout
                     catch (Exception ex)
                     {
                         // do nothing if failed
-                        Log.WriteMessage(ex.Message);
+                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
                     }
                     this.BringToFront();
                     this.Activate();
@@ -2114,7 +2471,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             Log.WriteMessage("Finished.");
         }
@@ -2166,7 +2523,7 @@ namespace AirScout
                 if (!MaidenheadLocator.IsPrecise(ld.Lat, ld.Lon, 3))
                 {
                     ElvMinMaxInfo maxinfo = GetMinMaxElevationLoc(ld.Loc);
-                    if (maxinfo != null)
+                    if (maxinfo.MaxElv != ElevationData.Database.ElvMissingFlag)
                     {
                         ld.Lat = maxinfo.MaxLat;
                         ld.Lon = maxinfo.MaxLon;
@@ -2196,7 +2553,7 @@ namespace AirScout
                 if (!MaidenheadLocator.IsPrecise(ld.Lat, ld.Lon, 3))
                 {
                     ElvMinMaxInfo maxinfo = GetMinMaxElevationLoc(ld.Loc);
-                    if (maxinfo != null)
+                    if (maxinfo.MaxElv != ElevationData.Database.ElvMissingFlag)
                     {
                         ld.Lat = maxinfo.MaxLat;
                         ld.Lon = maxinfo.MaxLon;
@@ -2229,7 +2586,7 @@ namespace AirScout
                 if (!MaidenheadLocator.IsPrecise(ld.Lat, ld.Lon, 3))
                 {
                     ElvMinMaxInfo maxinfo = GetMinMaxElevationLoc(ld.Loc);
-                    if (maxinfo != null)
+                    if (maxinfo.MaxElv != ElevationData.Database.ElvMissingFlag)
                     {
                         ld.Lat = maxinfo.MaxLat;
                         ld.Lon = maxinfo.MaxLon;
@@ -2309,12 +2666,13 @@ namespace AirScout
                     elv.MinElv = info.MinElv;
                 }
             }
+            /*
             // set it to zero if still invalid
             if (elv.MaxElv == ElevationData.Database.ElvMissingFlag)
                 elv.MaxElv = 0;
             if (elv.MinElv == ElevationData.Database.ElvMissingFlag)
                 elv.MinElv = 0;
-
+            */
             return elv;
         }
 
@@ -2479,6 +2837,8 @@ namespace AirScout
                 bw_PlaneFeed1 = null;
                 bw_PlaneFeed2 = null;
                 bw_PlaneFeed3 = null;
+
+                /*
                 foreach (PlaneFeed feed in PlaneFeeds)
                 {
                     if (Properties.Settings.Default.Planes_PlaneFeed1 == feed.Name)
@@ -2487,6 +2847,29 @@ namespace AirScout
                         bw_PlaneFeed2 = feed;
                     if (Properties.Settings.Default.Planes_PlaneFeed3 == feed.Name)
                         bw_PlaneFeed3 = feed;
+                }
+
+            */
+                if (PlaneFeedPlugins != null)
+                {
+                    foreach (IPlaneFeedPlugin plugin in PlaneFeedPlugins)
+                    {
+                        if (Properties.Settings.Default.Planes_PlaneFeed1 == plugin.Name)
+                        {
+                            bw_PlaneFeed1 = new PlaneFeed();
+                            bw_PlaneFeed1.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                        }
+                        if (Properties.Settings.Default.Planes_PlaneFeed2 == plugin.Name)
+                        {
+                            bw_PlaneFeed2 = new PlaneFeed();
+                            bw_PlaneFeed2.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                        }
+                        if (Properties.Settings.Default.Planes_PlaneFeed3 == plugin.Name)
+                        {
+                            bw_PlaneFeed3 = new PlaneFeed();
+                            bw_PlaneFeed3.ProgressChanged += new ProgressChangedEventHandler(bw_PlaneFeed_ProgressChanged);
+                        }
+                    }
                 }
                 // update timer interval
                 ti_Progress.Interval = Properties.Settings.Default.Map_Update * 1000;
@@ -2538,7 +2921,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             // change button image
             btn_Map_PlayPause.Image = il_Main.Images[0];
@@ -2555,6 +2938,7 @@ namespace AirScout
             gb_Analysis_Database.Enabled = false;
             gb_Analysis_Player.Enabled = false;
             tc_Main.Enabled = false;
+//            tc_Map.Enabled = false;
             //referesh main window
             this.Refresh();
         }
@@ -2579,6 +2963,7 @@ namespace AirScout
             gb_Analysis_Database.Enabled = true;
             gb_Analysis_Player.Enabled = true;
             tc_Main.Enabled = true;
+            tc_Map.Enabled = true;
             // stop tracking
             Properties.Settings.Default.Track_SetAz = double.NaN;
             Properties.Settings.Default.Track_SetEl = double.NaN;
@@ -2613,12 +2998,12 @@ namespace AirScout
                 ppoints = ppath.GetInfoPoints();
                 // calculate midpoint
                 ScoutBase.Core.LatLon.GPoint midpoint = LatLon.MidPoint(ppath.Lat1, ppath.Lon1, ppath.Lat2, ppath.Lon2);
-                GMapMarker gmmid = new GMarkerGoogle(new PointLatLng(midpoint.Lat, midpoint.Lon), ToolTipFont, Properties.Settings.Default.Map_SmallMarkers ? GMarkerGoogleType.blue_small : GMarkerGoogleType.blue_dot);
+                GMapMarker gmmid = new GMarkerGoogle(new PointLatLng(midpoint.Lat, midpoint.Lon), ToolTipFont, ((PathMode == AIRSCOUTPATHMODE.MULTI) && Properties.Settings.Default.Map_SmallMarkers) ? GMarkerGoogleType.blue_small : GMarkerGoogleType.blue_dot);
                 gmmid.ToolTipText = ppath.Location1.Call + " <> " + ppath.Location2.Call;
                 gmmid.ToolTipMode = MarkerTooltipMode.OnMouseOver;
                 gmo_Objects.Markers.Add(gmmid);
                 // calculate dx end
-                gmm_DXLoc = new GMarkerGoogle(new PointLatLng(ppath.Lat2, ppath.Lon2), ToolTipFont, Properties.Settings.Default.Map_SmallMarkers ? GMarkerGoogleType.yellow_small : GMarkerGoogleType.yellow_dot);
+                gmm_DXLoc = new GMarkerGoogle(new PointLatLng(ppath.Lat2, ppath.Lon2), ToolTipFont, ((PathMode == AIRSCOUTPATHMODE.MULTI) && Properties.Settings.Default.Map_SmallMarkers) ? GMarkerGoogleType.yellow_small : GMarkerGoogleType.yellow_dot);
                 gmm_DXLoc.ToolTipText = ppath.Location2.Call + "\n" +
                     ppath.Location2.Lat.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
                     ppath.Location2.Lon.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
@@ -2688,7 +3073,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -2752,7 +3137,7 @@ namespace AirScout
             if (myqrv.Power == 0)
                 myqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
             // draw my end on the map
-            gmm_MyLoc = new GMarkerGoogle(new PointLatLng(myloc.Lat, myloc.Lon), ToolTipFont, Properties.Settings.Default.Map_SmallMarkers ? GMarkerGoogleType.red_small : GMarkerGoogleType.red_dot);
+            gmm_MyLoc = new GMarkerGoogle(new PointLatLng(myloc.Lat, myloc.Lon), ToolTipFont, ((PathMode == AIRSCOUTPATHMODE.MULTI) && Properties.Settings.Default.Map_SmallMarkers) ? GMarkerGoogleType.red_small : GMarkerGoogleType.red_dot);
             gmm_MyLoc.ToolTipText = myloc.Call + "\n" +
                 myloc.Lat.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
                 myloc.Lon.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
@@ -3024,7 +3409,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -3049,7 +3434,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -3300,6 +3685,7 @@ namespace AirScout
             // check if any plane is on list --> return empty list
             if ((ActivePlanes == null) || (ActivePlanes.Count == 0))
                 return;
+            bool anyselected = false;
             // draw all planes
             foreach (PlaneInfo plane in ActivePlanes.Values)
             {
@@ -3340,10 +3726,11 @@ namespace AirScout
                         }
 
                         // count the planes drawed and update caption
-                        gb_Map.Text = "Map [" + gmo_Planes.Markers.Count.ToString() + " plane(s)]";
+                        tp_Map.Text = "Map [" + gmo_Planes.Markers.Count.ToString() + " plane(s)]";
                         // if selected: draw the thin path to crossing point if one
                         if (isselected)
                         {
+                            anyselected = true;
                             if (plane.IntPoint != null)
                             {
                                 GMapRoute intpath = new GMapRoute(plane.Call);
@@ -3362,10 +3749,10 @@ namespace AirScout
                                     plane.Lon);
                                 // calculate elevation
                                 // TODO: adjust K-Factor to settings
-                                double h = (GetElevation(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon) + Properties.Settings.Default.MyHeight) / 1000;
-                                double H = plane.Alt_m / 1000.0;
+                                double h = (GetElevation(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon) + Properties.Settings.Default.MyHeight);
+                                double H = plane.Alt_m;
                                 double dist = LatLon.Distance(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, plane.Lat, plane.Lon);
-                                double el = Propagation.EpsilonFromHeights(h, dist, H, (LatLon.Earth.Radius * Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].K_Factor) / Math.PI * 180);
+                                double el = Propagation.EpsilonFromHeights(h, dist, H, LatLon.Earth.Radius * Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].K_Factor) / Math.PI * 180;
                                 // set tracking values
                                 Properties.Settings.Default.Track_SetAz = az;
                                 Properties.Settings.Default.Track_SetEl = el;
@@ -3398,23 +3785,24 @@ namespace AirScout
                     // set alarm if one
                     if (alarm)
                         Alarm(alarm_msg);
-                    // stop tracking if selected object is lost for any reason
-                    if (!isselected)
-                    {
-                        Properties.Settings.Default.Track_SetAz = double.NaN;
-                        Properties.Settings.Default.Track_SetEl = double.NaN;
-                    }
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
+            }
+            // stop tracking if selected object is lost for any reason
+            if (!anyselected)
+            {
+                Properties.Settings.Default.Track_SetAz = double.NaN;
+                Properties.Settings.Default.Track_SetEl = double.NaN;
             }
 
         }
 
         private void UpdatePlanes()
         {
+
             // get current time
 
             // update status
@@ -3449,11 +3837,15 @@ namespace AirScout
                 st.Reset();
                 st.Start();
                 NearestPlane = null;
+                double highestpotential = 0;
                 // get nearest planes per path
                 List<PlaneInfo> nearestplanes = AircraftData.Database.GetNearestPlanes(DateTime.UtcNow, ppath, allplanes, Properties.Settings.Default.Planes_Filter_Max_Circumcircle, Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].MaxDistance, Properties.Settings.Default.Planes_MaxAlt);
 
                 foreach (PlaneInfo plane in nearestplanes)
                 {
+                    // maintain highest potential
+                    if (plane.Potential > highestpotential)
+                        highestpotential = plane.Potential;
                     // add or update plane in active planes list
                     PlaneInfo activeplane;
                     if (ActivePlanes.TryGetValue(plane.Hex, out activeplane))
@@ -3461,7 +3853,7 @@ namespace AirScout
                         // plane found --> update if necessary
                         bool update = false;
                         // plane has higher potential
-                        if (plane.Potential > activeplane.Potential)
+                        if ((plane.IntPoint != null) && (plane.Potential > activeplane.Potential))
                             update = true;
                         // plane has same potetial but is nearer to path
                         else if ((plane.Potential == activeplane.Potential) && (plane.IntQRB < activeplane.IntQRB))
@@ -3500,6 +3892,21 @@ namespace AirScout
                         }
                     }
                 }
+                // colour callsign in watchlist if in MULTIPATH mode
+                if (PathMode == AIRSCOUTPATHMODE.MULTI)
+                {
+                    string dxcall = ppath.Location2.Call;
+                    ListViewItem item = lv_Control_Watchlist.FindItemWithText(dxcall);
+                    if (item != null)
+                    {
+                        // store potential in watchlist item and refresh if necessaray
+                        if (item.ToolTipText != highestpotential.ToString())
+                        {
+                            item.ToolTipText = highestpotential.ToString();
+                            lv_Control_Watchlist.Refresh();
+                        }
+                    }
+                }
                 st.Stop();
                 // Log.WriteMessage("Get nearest planes: " + ActivePlanes.Count.ToString() + " plane(s), " + st.ElapsedMilliseconds.ToString() + " ms.");
             }
@@ -3518,6 +3925,8 @@ namespace AirScout
             st.Stop();
             // Log.WriteMessage("Drawing planes: " + ActivePlanes.Count.ToString() + " plane(s), " + st.ElapsedMilliseconds.ToString() + " ms.");
 
+            // set focus on the map object
+            this.ActiveControl = gm_Main;
         }
 
         #endregion
@@ -3541,48 +3950,87 @@ namespace AirScout
                 LocationDesignator dxloc = LocationFindOrCreate(item.Call, item.Loc);
                 GMarkerGoogle gm = new GMarkerGoogle(new PointLatLng(dxloc.Lat, dxloc.Lon), ToolTipFont, (dxloc.Source == GEOSOURCE.FROMUSER) ? GMarkerGoogleType.green_small : GMarkerGoogleType.white_small);
                 gm.ToolTipText = dxloc.Call;
-                gm.ToolTipMode = MarkerTooltipMode.OnMouseOver;
+                if ((PathMode == AIRSCOUTPATHMODE.MULTI) && Properties.Settings.Default.Map_LabelCalls && item.Checked)
+                    gm.ToolTipMode = MarkerTooltipMode.Always;
+                else
+                    gm.ToolTipMode = MarkerTooltipMode.OnMouseOver;
                 gm.Tag = dxloc.Call;
                 gmo_Callsigns.Markers.Add(gm);
             }
         }
 
+        private void AddListViewItem (WatchlistItem item)
+        {
+            LocationDesignator dxcall = StationData.Database.LocationFindOrCreate(item.Call, item.Loc);
+            ListViewItem lvi = new ListViewItem(item.Call);
+            lvi.Name = "Call";
+            ListViewItem.ListViewSubItem lsi = new ListViewItem.ListViewSubItem(lvi, item.Loc);
+            lsi.Name = "Loc";
+            lvi.SubItems.Add(lsi);
+            lv_Control_Watchlist.Items.Add(lvi);
+            if (item.Checked)
+                lvi.Checked = true;
+            if (item.Selected)
+                lvi.Selected = true;
+            // tag item as "Out of Range"
+            if (item.OutOfRange)
+            {
+                lvi.Tag = "OOR";
+                lvi.ForeColor = Color.LightGray;
+            }
+            else
+            {
+                lvi.BackColor = (dxcall.Source == GEOSOURCE.FROMUSER) ? Color.PaleGreen : Color.White;
+            }
+
+        }
+
         private void RefreshWatchlistView()
         {
+            
             // set watchlistupdating flag
             WatchlistUpdating = true;
+            // keep scroll position
+            int topItemIndex = 0;
+            try
+            {
+                topItemIndex = lv_Control_Watchlist.TopItem.Index;
+            }
+            catch (Exception ex)
+            { 
+                // do nothing
+            }
             // update listview
             lv_Control_Watchlist.BeginUpdate();
             lv_Control_Watchlist.Items.Clear();
+            // run twice, add checked items first, then all others
             foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
             {
                 // nasty!! Should never be null!
                 if (item == null)
                     continue;
-                LocationDesignator dxcall = StationData.Database.LocationFindOrCreate(item.Call, item.Loc);
-                ListViewItem lvi = new ListViewItem(item.Call);
-                lvi.Name = "Call";
-                ListViewItem.ListViewSubItem lsi = new ListViewItem.ListViewSubItem(lvi, item.Loc);
-                lsi.Name = "Loc";
-                lvi.SubItems.Add(lsi);
-                lv_Control_Watchlist.Items.Add(lvi);
                 if (item.Checked)
-                    lvi.Checked = true;
-                if (item.Selected)
-                    lvi.Selected = true;
-                // tag item as "Out of Range"
-                if (item.OutOfRange)
-                {
-                    lvi.Tag = "OOR";
-                    lvi.ForeColor = Color.LightGray;
-                }
-                else
-                {
-                    lvi.BackColor = (dxcall.Source == GEOSOURCE.FROMUSER) ? Color.PaleGreen : Color.White;
-                }
+                    AddListViewItem(item);
             }
-            lv_Control_Watchlist.Sort();
+            foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
+            {
+                // nasty!! Should never be null!
+                if (item == null)
+                    continue;
+                if (!item.Checked)
+                    AddListViewItem(item);
+            }
+            //            lv_Control_Watchlist.Sort();
             lv_Control_Watchlist.EndUpdate();
+            // restore scroll position
+            try
+            {
+                lv_Control_Watchlist.TopItem = lv_Control_Watchlist.Items[topItemIndex];
+            }
+            catch (Exception ex)
+            { 
+                // do nothing
+            }
             // reset watchlistupdating flag
             WatchlistUpdating = false;
         }
@@ -3593,21 +4041,6 @@ namespace AirScout
 
         private void MapDlg_SizeChanged(object sender, EventArgs e)
         {
-            try
-            {
-                // ensure that the Info panel is fully visible
-                // set the splitter according to Info panel width
-                int dist = sc_Main.Width - gb_Map_Info_Width - 5;
-                if ((dist > 0) && (dist < sc_Main.Width))
-                    sc_Main.SplitterDistance = dist;
-                // set the infowin height according to window size
-//                int height = sc_Main.Height - gb_CommonInfo.Height - gb_Map_Buttons.Height - 5;
-//                tc_ControlPanel.Height = height;
-            }
-            catch
-            {
-                // do nothing if window is minimized or otherwise invisible
-            }
         }
 
         private void MapDlg_Resize(object sender, EventArgs e)
@@ -3760,7 +4193,7 @@ namespace AirScout
             catch (Exception ex)
             {
                 // do nothing if item not found in planes list
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -3796,6 +4229,9 @@ namespace AirScout
         private void gm_Main_Paint(object sender, PaintEventArgs e)
         {
             // paint gauges on top of the map if enabled
+            bool track = Properties.Settings.Default.Track_Activate;
+            double az = Properties.Settings.Default.Track_SetAz;
+            double el = Properties.Settings.Default.Track_SetEl;
             if (Properties.Settings.Default.Track_Activate &&
                 (Properties.Settings.Default.Track_SetAz >= 0) &&
                 (Properties.Settings.Default.Track_SetAz <= 360) &&
@@ -3883,8 +4319,7 @@ namespace AirScout
             if (PathMode != AIRSCOUTPATHMODE.SINGLE)
             {
                 PathMode = AIRSCOUTPATHMODE.SINGLE;
-                // restore splitter distance
-                sc_Map.SplitterDistance = CurrentMapSplitterDistance;
+                tc_Map.SelectedTab = tp_Map;
             }
         }
 
@@ -3905,7 +4340,6 @@ namespace AirScout
 
         private void cb_MyCall_TextChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("cb_MyCall_TextChanged: " + cb_MyCall.Text);
             int i = cb_MyCall.SelectionStart;
             Properties.Settings.Default.MyCall = cb_MyCall.Text;
             // clear locator entries
@@ -4169,9 +4603,8 @@ namespace AirScout
         {
             if (PathMode != AIRSCOUTPATHMODE.MULTI)
             {
-                CurrentMapSplitterDistance = sc_Map.SplitterDistance;
                 PathMode = AIRSCOUTPATHMODE.MULTI;
-                sc_Map.SplitterDistance = gm_Main.Height + tc_Main.Height;
+                tc_Map.SelectedTab = tp_Map;
             }
         }
 
@@ -4258,21 +4691,52 @@ namespace AirScout
         {
             TextFormatFlags flags = TextFormatFlags.LeftAndRightPadding;
             e.DrawBackground();
-            CheckBoxRenderer.DrawCheckBox(e.Graphics, new System.Drawing.Point(ClientRectangle.Location.X + 4, ClientRectangle.Location.Y), WatchlistAllCheckedState);
+            CheckBoxRenderer.DrawCheckBox(e.Graphics, new System.Drawing.Point(ClientRectangle.Location.X + 4, ClientRectangle.Location.Y + 1), WatchlistAllCheckedState);
             e.DrawText(flags);
         }
 
         private void lv_Control_Watchlist_DrawItem(object sender, DrawListViewItemEventArgs e)
-        {
-            e.DrawDefault = true;
+        {   
+            if (e.Item != null)
+            {
+                if ((PlayMode == AIRSCOUTPLAYMODE.FORWARD) &&  !String.IsNullOrEmpty(e.Item.ToolTipText))
+                {
+                    Color bkcolor = e.Item.BackColor;
+                    try
+                    {
+                        double potential = double.Parse(e.Item.ToolTipText);
+                        if (potential > 0)
+                            bkcolor = Color.Orange;
+                        if (potential > 50)
+                            bkcolor = Color.Red;
+                        if (potential > 75)
+                            bkcolor = Color.Magenta;
+                    }
+                    catch (Exception ex)
+                    {
+                        // do nothing
+                    }
+                    if (bkcolor != e.Item.BackColor)
+                    {
+                        e.Item.BackColor = bkcolor;
+                    }
+                    e.DrawBackground();
+                }
+                else
+                {
+                    e.Item.BackColor = Color.White;
+                    e.DrawDefault = true;
+                }
+            }
         }
+
 
         private void lv_Control_Watchlist_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            e.DrawDefault = true;
+             e.DrawDefault = true;
         }
 
-        private void btn_Control_Manage_Watchlist_Click(object sender, EventArgs e)
+    private void btn_Control_Manage_Watchlist_Click(object sender, EventArgs e)
         {
             WatchlistDlg Dlg = new WatchlistDlg();
             if (Dlg.ShowDialog() == DialogResult.OK)
@@ -4356,7 +4820,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -4373,7 +4837,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -4439,7 +4903,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -4481,9 +4945,6 @@ namespace AirScout
 
         private void tc_Main_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // restore splitter distance
-            if (tc_Main.SelectedTab != tp_News)
-                sc_Map.SplitterDistance = CurrentMapSplitterDistance;
         }
 
         private void tc_Main_DrawItem(object sender, DrawItemEventArgs e)
@@ -4500,24 +4961,10 @@ namespace AirScout
 
         }
 
-        #region Tab Page News
-
-        private void tp_News_Enter(object sender, EventArgs e)
-        {
-            CurrentMapSplitterDistance = sc_Map.SplitterDistance;
-            // adjust splitter to maximum if not running under Linux/Mono
-            if (!SupportFunctions.IsMono)
-                sc_Map.SplitterDistance = 200;
-        }
-
-        #endregion
-
         #region Tab Page Spectrum
 
         private void tp_Spectrum_Enter(object sender, EventArgs e)
         {
-            // adjust splitter back to normal
-            sc_Map.SplitterDistance = CurrentMapSplitterDistance;
         }
 
         private void tp_Spectrum_Resize(object sender, EventArgs e)
@@ -4540,8 +4987,6 @@ namespace AirScout
 
         private void tp_Elevation_Enter(object sender, EventArgs e)
         {
-            // adjust splitter back to normal
-            sc_Map.SplitterDistance = CurrentMapSplitterDistance;
         }
 
         private void tp_Elevation_Resize(object sender, EventArgs e)
@@ -4676,7 +5121,7 @@ namespace AirScout
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -4703,7 +5148,7 @@ namespace AirScout
             catch (Exception ex)
             {
                 Say(ex.Message);
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -4842,7 +5287,7 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage("Error while saving path to file [" + Dlg.FileName + "]:" + ex.ToString());
+                    Log.WriteMessage("Error while saving path to file [" + Dlg.FileName + "]:" + ex.ToString(), LogLevel.Error);
                 }
             }
         }
@@ -4974,6 +5419,23 @@ namespace AirScout
 
         #endregion
 
+        #region Map Tab Control
+
+        private void tp_Map_Enter(object sender, EventArgs e)
+        {
+            if (PathMode == AIRSCOUTPATHMODE.SINGLE)
+                sc_Map.Panel2Collapsed = false;
+            else if (PathMode == AIRSCOUTPATHMODE.MULTI)
+                sc_Map.Panel2Collapsed = true;
+        }
+
+        private void tp_News_Enter(object sender, EventArgs e)
+        {
+            sc_Map.Panel2Collapsed = true;
+        }
+
+        #endregion
+
         #endregion
 
         #region Background Workers
@@ -4982,7 +5444,13 @@ namespace AirScout
 
         private void bw_PlaneFeed_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage == (int)PROGRESS.STATUS)
+            if (e.ProgressPercentage == (int)PROGRESS.ERROR)
+            {
+                if (e.UserState == null)
+                    return;
+                Say((string)e.UserState);
+            }
+            else if (e.ProgressPercentage == (int)PROGRESS.STATUS)
             {
                 if (e.UserState == null)
                     return;
@@ -5023,7 +5491,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             // initialize UDP socket
             IPEndPoint ep = new IPEndPoint(IPAddress.Any, Properties.Settings.Default.Server_Port);
@@ -5036,7 +5504,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
 
             // receive Win-Test messages in a loop
@@ -5061,7 +5529,7 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             Log.WriteMessage("Finished.");
@@ -5180,7 +5648,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
 
         }
@@ -5304,7 +5772,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -5374,7 +5842,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -5521,7 +5989,7 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                     bw_SpecLab_Receive.ReportProgress(-1, ex.Message);
                 }
             }
@@ -5622,7 +6090,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.Message);
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -5860,7 +6328,7 @@ namespace AirScout
                     }
                     catch (Exception ex)
                     {
-                        Log.WriteMessage(ex.Message);
+                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
                         //report error
                         bw_Track.ReportProgress(-1, ex.Message);
                         // increment error counters and switch off in case of subsequent errors
@@ -5919,7 +6387,7 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
             while (!bw_Track.CancellationPending);
@@ -6022,7 +6490,7 @@ namespace AirScout
                 }
                 catch (Exception ex)
                 {
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                     // do nothing
                 }
                 int ii = 0;
@@ -6067,7 +6535,7 @@ namespace AirScout
                 catch (Exception ex)
                 {
                     // report error
-                    Log.WriteMessage(ex.Message);
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                     bw_NewsFeed.ReportProgress(-1, DateTime.UtcNow.ToString("[" + "HH:mm:ss") + "] Error while reading the website " + uri.ToString() + ": " + ex.Message);
                 }
                 int i = 0;
@@ -6099,7 +6567,7 @@ namespace AirScout
                         {
                             if (wb_News != null)
                                 wb_News.Refresh();
-                            tc_Main.SelectedTab = tp_News;
+                            tc_Map.SelectedTab = tp_News;
                             // save time to settings
                             Properties.Settings.Default.News_LastUpdate = dt;
                         }
@@ -6325,7 +6793,7 @@ namespace AirScout
                                                 }
                                                 catch (Exception ex)
                                                 {
-                                                    Log.WriteMessage(ex.Message);
+                                                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
                                                 }
                                             }
                                         }
@@ -6417,7 +6885,7 @@ namespace AirScout
                 {
                     // error message received
                     string msg = (string)e.UserState;
-                    Log.WriteMessage(msg);
+                    Log.WriteMessage(msg, LogLevel.Error);
                 }
                 else if (e.ProgressPercentage == 0)
                 {
@@ -6466,11 +6934,12 @@ namespace AirScout
                             tsl_Database_LED_SRTM1.ToolTipText = text;
                     }
                 }
-                ss_Main.Update();
+                if (!this.Disposing && (ss_Main != null))
+                    ss_Main.Update();   
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -6498,7 +6967,7 @@ namespace AirScout
                 {
                     // error message received
                     string msg = (string)e.UserState;
-                    Log.WriteMessage(msg);
+                    Log.WriteMessage(msg, LogLevel.Error);
                 }
                 else if (e.ProgressPercentage == 0)
                 {
@@ -6523,11 +6992,12 @@ namespace AirScout
                     if (tsl_Database_LED_Stations.ToolTipText != text)
                         tsl_Database_LED_Stations.ToolTipText = text;
                 }
-                ss_Main.Update();
+                if (!this.Disposing && (ss_Main != null))
+                    ss_Main.Update();
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -6537,7 +7007,7 @@ namespace AirScout
             if (!this.IsDisposed)
             {
                 UpdateAirports();
-                gm_Main.Refresh();
+//                gm_Main.Refresh();
             }
         }
 
@@ -6553,7 +7023,7 @@ namespace AirScout
                 {
                     // error message received
                     string msg = (string)e.UserState;
-                    Log.WriteMessage(msg);
+                    Log.WriteMessage(msg, LogLevel.Error);
                 }
                 else if (e.ProgressPercentage == 0)
                 {
@@ -6580,11 +7050,12 @@ namespace AirScout
                     if (tsl_Database_LED_Aircraft.ToolTipText != text)
                         tsl_Database_LED_Aircraft.ToolTipText = text;
                 }
-                ss_Main.Update();
+                if (!this.Disposing && (ss_Main != null))
+                    ss_Main.Update();
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -6596,8 +7067,7 @@ namespace AirScout
                 // refresh all dictionnariees
                 //                ScoutData.Database.UpdateFromDataTables(false);
                 // refresh airports and map
-                UpdateAirports();
-                gm_Main.Refresh();
+//                UpdateAirports();
             }
         }
 
@@ -6613,7 +7083,7 @@ namespace AirScout
                 {
                     // error message received
                     string msg = (string)e.UserState;
-                    Log.WriteMessage(msg);
+                    Log.WriteMessage(msg, LogLevel.Error);
                 }
                 else if (e.ProgressPercentage == 0)
                 {
@@ -6628,11 +7098,12 @@ namespace AirScout
                         SayDatabase(msg);
                     }
                 }
-                ss_Main.Update();
+                if (!this.Disposing && (ss_Main != null))
+                    ss_Main.Update();
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -6830,7 +7301,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 bw_Analysis_FileSaver.ReportProgress(-1, ex.Message);
             }
             if (bw_Analysis_FileSaver.CancellationPending)
@@ -6985,7 +7456,7 @@ namespace AirScout
             }
             catch (Exception ex)
             {
-                Log.WriteMessage(ex.ToString());
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 bw_Analysis_FileLoader.ReportProgress(-1, ex.Message);
             }
             if (bw_Analysis_FileLoader.CancellationPending)
@@ -7019,8 +7490,8 @@ namespace AirScout
             bw_AirportMapper.ReportProgress(0, "Getting airports from database...");
             Stopwatch st = new Stopwatch();
             st.Start();
-            // clear airports if any
-            gmo_Airports.Clear();
+            // clear aiports overlay
+            bw_AirportMapper.ReportProgress(0, null);
             // fill the airports layer of maps
             // return if switched off
             if (!Properties.Settings.Default.Airports_Activate)
@@ -7035,14 +7506,21 @@ namespace AirScout
 
         private void bw_AirportMapper_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage <= 0)
+            if (e.ProgressPercentage < 0)
             {
+                // log error message
                 string msg = (string)e.UserState;
                 Say(msg);
-                Log.WriteMessage(msg);
+                Log.WriteMessage(msg, LogLevel.Error);
+            }
+            else if (e.ProgressPercentage == 0)
+            {
+                // clear airports overlay
+                gmo_Airports.Clear();
             }
             else if (e.ProgressPercentage == 100)
             {
+                // add aiports to overlay
                 lock (Airports)
                 {
                     Airports = (List<AirportDesignator>)e.UserState;
@@ -7062,7 +7540,6 @@ namespace AirScout
         {
 
         }
-
     }
 
 

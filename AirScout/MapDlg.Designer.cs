@@ -30,15 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapDlg));
-            ScoutBase.Core.LatLon.GPoint gPoint5 = new ScoutBase.Core.LatLon.GPoint();
-            ScoutBase.Core.LatLon.GPoint gPoint6 = new ScoutBase.Core.LatLon.GPoint();
+            ScoutBase.Core.LatLon.GPoint gPoint1 = new ScoutBase.Core.LatLon.GPoint();
+            ScoutBase.Core.LatLon.GPoint gPoint2 = new ScoutBase.Core.LatLon.GPoint();
             this.il_Main = new System.Windows.Forms.ImageList(this.components);
             this.ti_Progress = new System.Windows.Forms.Timer(this.components);
             this.sc_Map = new System.Windows.Forms.SplitContainer();
-            this.gb_Map = new System.Windows.Forms.GroupBox();
+            this.tc_Map = new System.Windows.Forms.TabControl();
+            this.tp_Map = new System.Windows.Forms.TabPage();
             this.ag_Azimuth = new AquaControls.AquaGauge();
             this.ag_Elevation = new AquaControls.AquaGauge();
             this.gm_Main = new GMap.NET.WindowsForms.GMapControl();
+            this.tp_News = new System.Windows.Forms.TabPage();
             this.tc_Main = new System.Windows.Forms.TabControl();
             this.tp_Elevation = new System.Windows.Forms.TabPage();
             this.tp_Spectrum = new System.Windows.Forms.TabPage();
@@ -92,7 +94,6 @@
             this.label14 = new System.Windows.Forms.Label();
             this.tb_Analysis_Stepwidth = new System.Windows.Forms.TextBox();
             this.tb_Analysis_Time = new System.Windows.Forms.TextBox();
-            this.tp_News = new System.Windows.Forms.TabPage();
             this.ss_Main = new System.Windows.Forms.StatusStrip();
             this.tsl_Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Dummy = new System.Windows.Forms.ToolStripStatusLabel();
@@ -177,7 +178,8 @@
             this.sc_Map.Panel1.SuspendLayout();
             this.sc_Map.Panel2.SuspendLayout();
             this.sc_Map.SuspendLayout();
-            this.gb_Map.SuspendLayout();
+            this.tc_Map.SuspendLayout();
+            this.tp_Map.SuspendLayout();
             this.tc_Main.SuspendLayout();
             this.tp_Spectrum.SuspendLayout();
             this.gb_Spectrum_NearestInfo.SuspendLayout();
@@ -234,32 +236,44 @@
             // 
             // sc_Map.Panel1
             // 
-            this.sc_Map.Panel1.Controls.Add(this.gb_Map);
+            this.sc_Map.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.sc_Map.Panel1.Controls.Add(this.tc_Map);
             // 
             // sc_Map.Panel2
             // 
             this.sc_Map.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.sc_Map.Panel2.Controls.Add(this.tc_Main);
             this.sc_Map.Size = new System.Drawing.Size(852, 706);
-            this.sc_Map.SplitterDistance = 476;
+            this.sc_Map.SplitterDistance = 341;
             this.sc_Map.SplitterWidth = 5;
             this.sc_Map.TabIndex = 20;
             this.sc_Map.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sc_Map_SplitterMoved);
             // 
-            // gb_Map
+            // tc_Map
             // 
-            this.gb_Map.BackColor = System.Drawing.SystemColors.Control;
-            this.gb_Map.Controls.Add(this.ag_Azimuth);
-            this.gb_Map.Controls.Add(this.ag_Elevation);
-            this.gb_Map.Controls.Add(this.gm_Main);
-            this.gb_Map.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gb_Map.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gb_Map.Location = new System.Drawing.Point(0, 0);
-            this.gb_Map.Name = "gb_Map";
-            this.gb_Map.Size = new System.Drawing.Size(852, 476);
-            this.gb_Map.TabIndex = 13;
-            this.gb_Map.TabStop = false;
-            this.gb_Map.Text = "Map";
+            this.tc_Map.Controls.Add(this.tp_Map);
+            this.tc_Map.Controls.Add(this.tp_News);
+            this.tc_Map.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tc_Map.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tc_Map.Location = new System.Drawing.Point(0, 0);
+            this.tc_Map.Name = "tc_Map";
+            this.tc_Map.SelectedIndex = 0;
+            this.tc_Map.Size = new System.Drawing.Size(852, 341);
+            this.tc_Map.TabIndex = 14;
+            // 
+            // tp_Map
+            // 
+            this.tp_Map.Controls.Add(this.ag_Azimuth);
+            this.tp_Map.Controls.Add(this.ag_Elevation);
+            this.tp_Map.Controls.Add(this.gm_Main);
+            this.tp_Map.Location = new System.Drawing.Point(4, 22);
+            this.tp_Map.Name = "tp_Map";
+            this.tp_Map.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_Map.Size = new System.Drawing.Size(844, 315);
+            this.tp_Map.TabIndex = 0;
+            this.tp_Map.Text = "Map";
+            this.tp_Map.UseVisualStyleBackColor = true;
+            this.tp_Map.Enter += new System.EventHandler(this.tp_Map_Enter);
             // 
             // ag_Azimuth
             // 
@@ -269,14 +283,14 @@
             this.ag_Azimuth.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ag_Azimuth.ForeColor = System.Drawing.Color.Black;
             this.ag_Azimuth.Glossiness = 50F;
-            this.ag_Azimuth.Location = new System.Drawing.Point(493, 305);
+            this.ag_Azimuth.Location = new System.Drawing.Point(489, 272);
             this.ag_Azimuth.MaxValue = 360F;
             this.ag_Azimuth.MinValue = 0F;
             this.ag_Azimuth.Name = "ag_Azimuth";
             this.ag_Azimuth.NoOfDivisions = 12;
             this.ag_Azimuth.RecommendedValue = 0F;
             this.ag_Azimuth.Size = new System.Drawing.Size(175, 175);
-            this.ag_Azimuth.TabIndex = 25;
+            this.ag_Azimuth.TabIndex = 27;
             this.ag_Azimuth.ThresholdPercent = 0F;
             this.ag_Azimuth.Value = 0F;
             this.ag_Azimuth.Visible = false;
@@ -289,14 +303,14 @@
             this.ag_Elevation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ag_Elevation.ForeColor = System.Drawing.Color.Black;
             this.ag_Elevation.Glossiness = 50F;
-            this.ag_Elevation.Location = new System.Drawing.Point(674, 306);
+            this.ag_Elevation.Location = new System.Drawing.Point(670, 273);
             this.ag_Elevation.MaxValue = 90F;
             this.ag_Elevation.MinValue = 0F;
             this.ag_Elevation.Name = "ag_Elevation";
             this.ag_Elevation.NoOfDivisions = 4;
             this.ag_Elevation.RecommendedValue = 0F;
             this.ag_Elevation.Size = new System.Drawing.Size(175, 175);
-            this.ag_Elevation.TabIndex = 26;
+            this.ag_Elevation.TabIndex = 28;
             this.ag_Elevation.ThresholdPercent = 0F;
             this.ag_Elevation.Value = 0F;
             this.ag_Elevation.Visible = false;
@@ -310,7 +324,7 @@
             this.gm_Main.GrayScaleMode = false;
             this.gm_Main.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
             this.gm_Main.LevelsKeepInMemmory = 5;
-            this.gm_Main.Location = new System.Drawing.Point(3, 16);
+            this.gm_Main.Location = new System.Drawing.Point(3, 3);
             this.gm_Main.MarkersEnabled = true;
             this.gm_Main.MaxZoom = 2;
             this.gm_Main.MinZoom = 2;
@@ -322,26 +336,34 @@
             this.gm_Main.RoutesEnabled = true;
             this.gm_Main.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gm_Main.ShowTileGridLines = false;
-            this.gm_Main.Size = new System.Drawing.Size(846, 457);
-            this.gm_Main.TabIndex = 3;
+            this.gm_Main.Size = new System.Drawing.Size(838, 309);
+            this.gm_Main.TabIndex = 4;
             this.gm_Main.Zoom = 0D;
             this.gm_Main.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gm_Main_OnMarkerClick);
             this.gm_Main.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.gm_Main_OnMarkerEnter);
             this.gm_Main.OnMarkerLeave += new GMap.NET.WindowsForms.MarkerLeave(this.gm_Main_OnMarkerLeave);
             this.gm_Main.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.gm_Main_OnMapZoomChanged);
-            this.gm_Main.Load += new System.EventHandler(this.gm_Main_Load);
             this.gm_Main.SizeChanged += new System.EventHandler(this.gm_Main_SizeChanged);
             this.gm_Main.Paint += new System.Windows.Forms.PaintEventHandler(this.gm_Main_Paint);
             this.gm_Main.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gm_Main_MouseDown);
             this.gm_Main.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gm_Main_MouseMove);
             this.gm_Main.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gm_Main_MouseUp);
             // 
+            // tp_News
+            // 
+            this.tp_News.Location = new System.Drawing.Point(4, 22);
+            this.tp_News.Name = "tp_News";
+            this.tp_News.Size = new System.Drawing.Size(844, 315);
+            this.tp_News.TabIndex = 3;
+            this.tp_News.Text = "Latest News";
+            this.tp_News.UseVisualStyleBackColor = true;
+            this.tp_News.Enter += new System.EventHandler(this.tp_News_Enter);
+            // 
             // tc_Main
             // 
             this.tc_Main.Controls.Add(this.tp_Elevation);
             this.tc_Main.Controls.Add(this.tp_Spectrum);
             this.tc_Main.Controls.Add(this.tp_Analysis);
-            this.tc_Main.Controls.Add(this.tp_News);
             this.tc_Main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tc_Main.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tc_Main.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -349,7 +371,7 @@
             this.tc_Main.MinimumSize = new System.Drawing.Size(0, 200);
             this.tc_Main.Name = "tc_Main";
             this.tc_Main.SelectedIndex = 0;
-            this.tc_Main.Size = new System.Drawing.Size(852, 225);
+            this.tc_Main.Size = new System.Drawing.Size(852, 360);
             this.tc_Main.TabIndex = 0;
             this.tc_Main.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tc_Main_DrawItem);
             this.tc_Main.SelectedIndexChanged += new System.EventHandler(this.tc_Main_SelectedIndexChanged);
@@ -360,7 +382,7 @@
             this.tp_Elevation.Location = new System.Drawing.Point(4, 22);
             this.tp_Elevation.Name = "tp_Elevation";
             this.tp_Elevation.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Elevation.Size = new System.Drawing.Size(844, 199);
+            this.tp_Elevation.Size = new System.Drawing.Size(844, 334);
             this.tp_Elevation.TabIndex = 0;
             this.tp_Elevation.Text = "Path Profile";
             this.tp_Elevation.Enter += new System.EventHandler(this.tp_Elevation_Enter);
@@ -376,7 +398,7 @@
             this.tp_Spectrum.Location = new System.Drawing.Point(4, 22);
             this.tp_Spectrum.Name = "tp_Spectrum";
             this.tp_Spectrum.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Spectrum.Size = new System.Drawing.Size(844, 199);
+            this.tp_Spectrum.Size = new System.Drawing.Size(844, 334);
             this.tp_Spectrum.TabIndex = 1;
             this.tp_Spectrum.Text = "Spectrum";
             this.tp_Spectrum.Enter += new System.EventHandler(this.tp_Spectrum_Enter);
@@ -400,7 +422,7 @@
             this.gb_Spectrum_NearestInfo.Controls.Add(this.label2);
             this.gb_Spectrum_NearestInfo.Location = new System.Drawing.Point(489, 54);
             this.gb_Spectrum_NearestInfo.Name = "gb_Spectrum_NearestInfo";
-            this.gb_Spectrum_NearestInfo.Size = new System.Drawing.Size(175, 136);
+            this.gb_Spectrum_NearestInfo.Size = new System.Drawing.Size(175, 271);
             this.gb_Spectrum_NearestInfo.TabIndex = 8;
             this.gb_Spectrum_NearestInfo.TabStop = false;
             this.gb_Spectrum_NearestInfo.Text = "Nearest Plane Info";
@@ -552,7 +574,7 @@
             this.gb_NearestPlaneMap.Controls.Add(this.gm_Nearest);
             this.gb_NearestPlaneMap.Location = new System.Drawing.Point(670, 54);
             this.gb_NearestPlaneMap.Name = "gb_NearestPlaneMap";
-            this.gb_NearestPlaneMap.Size = new System.Drawing.Size(168, 139);
+            this.gb_NearestPlaneMap.Size = new System.Drawing.Size(168, 274);
             this.gb_NearestPlaneMap.TabIndex = 6;
             this.gb_NearestPlaneMap.TabStop = false;
             this.gb_NearestPlaneMap.Text = "Nearest Plane Map";
@@ -578,7 +600,7 @@
             this.gm_Nearest.RoutesEnabled = true;
             this.gm_Nearest.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gm_Nearest.ShowTileGridLines = false;
-            this.gm_Nearest.Size = new System.Drawing.Size(162, 120);
+            this.gm_Nearest.Size = new System.Drawing.Size(162, 255);
             this.gm_Nearest.TabIndex = 0;
             this.gm_Nearest.Zoom = 0D;
             // 
@@ -589,7 +611,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gb_Spectrum.Location = new System.Drawing.Point(8, 54);
             this.gb_Spectrum.Name = "gb_Spectrum";
-            this.gb_Spectrum.Size = new System.Drawing.Size(475, 139);
+            this.gb_Spectrum.Size = new System.Drawing.Size(475, 274);
             this.gb_Spectrum.TabIndex = 5;
             this.gb_Spectrum.TabStop = false;
             this.gb_Spectrum.Text = "Spectrum";
@@ -601,7 +623,7 @@
             this.tp_Analysis.Controls.Add(this.panel1);
             this.tp_Analysis.Location = new System.Drawing.Point(4, 22);
             this.tp_Analysis.Name = "tp_Analysis";
-            this.tp_Analysis.Size = new System.Drawing.Size(844, 199);
+            this.tp_Analysis.Size = new System.Drawing.Size(844, 334);
             this.tp_Analysis.TabIndex = 3;
             this.tp_Analysis.Text = "Analysis";
             this.tp_Analysis.Enter += new System.EventHandler(this.tp_Analysis_Enter);
@@ -614,7 +636,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 137);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(844, 62);
+            this.panel2.Size = new System.Drawing.Size(844, 197);
             this.panel2.TabIndex = 1;
             // 
             // gb_Analysis_Player
@@ -626,7 +648,7 @@
             this.gb_Analysis_Player.Location = new System.Drawing.Point(0, 0);
             this.gb_Analysis_Player.MinimumSize = new System.Drawing.Size(565, 58);
             this.gb_Analysis_Player.Name = "gb_Analysis_Player";
-            this.gb_Analysis_Player.Size = new System.Drawing.Size(591, 62);
+            this.gb_Analysis_Player.Size = new System.Drawing.Size(591, 197);
             this.gb_Analysis_Player.TabIndex = 4;
             this.gb_Analysis_Player.TabStop = false;
             this.gb_Analysis_Player.Text = "Player";
@@ -639,7 +661,7 @@
             this.dtp_Analysis_MaxValue.Enabled = false;
             this.dtp_Analysis_MaxValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtp_Analysis_MaxValue.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_Analysis_MaxValue.Location = new System.Drawing.Point(463, 26);
+            this.dtp_Analysis_MaxValue.Location = new System.Drawing.Point(463, 161);
             this.dtp_Analysis_MaxValue.Name = "dtp_Analysis_MaxValue";
             this.dtp_Analysis_MaxValue.Size = new System.Drawing.Size(122, 20);
             this.dtp_Analysis_MaxValue.TabIndex = 25;
@@ -652,7 +674,7 @@
             this.dtp_Analysis_MinValue.Enabled = false;
             this.dtp_Analysis_MinValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtp_Analysis_MinValue.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_Analysis_MinValue.Location = new System.Drawing.Point(6, 26);
+            this.dtp_Analysis_MinValue.Location = new System.Drawing.Point(6, 161);
             this.dtp_Analysis_MinValue.Name = "dtp_Analysis_MinValue";
             this.dtp_Analysis_MinValue.Size = new System.Drawing.Size(123, 20);
             this.dtp_Analysis_MinValue.TabIndex = 24;
@@ -661,7 +683,7 @@
             // sb_Analysis_Play
             // 
             this.sb_Analysis_Play.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.sb_Analysis_Play.Location = new System.Drawing.Point(146, 26);
+            this.sb_Analysis_Play.Location = new System.Drawing.Point(146, 161);
             this.sb_Analysis_Play.Maximum = 1000000;
             this.sb_Analysis_Play.Name = "sb_Analysis_Play";
             this.sb_Analysis_Play.Orientation = CustomScrollBar.ScrollBarOrientation.Horizontal;
@@ -680,7 +702,7 @@
             this.gb_Analysis_Controls.Dock = System.Windows.Forms.DockStyle.Right;
             this.gb_Analysis_Controls.Location = new System.Drawing.Point(591, 0);
             this.gb_Analysis_Controls.Name = "gb_Analysis_Controls";
-            this.gb_Analysis_Controls.Size = new System.Drawing.Size(253, 62);
+            this.gb_Analysis_Controls.Size = new System.Drawing.Size(253, 197);
             this.gb_Analysis_Controls.TabIndex = 2;
             this.gb_Analysis_Controls.TabStop = false;
             this.gb_Analysis_Controls.Text = "Controls";
@@ -691,7 +713,7 @@
             this.btn_Analysis_FastForward.Enabled = false;
             this.btn_Analysis_FastForward.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_FastForward.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_FastForward.Image")));
-            this.btn_Analysis_FastForward.Location = new System.Drawing.Point(202, 19);
+            this.btn_Analysis_FastForward.Location = new System.Drawing.Point(202, 154);
             this.btn_Analysis_FastForward.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_FastForward.Name = "btn_Analysis_FastForward";
             this.btn_Analysis_FastForward.Size = new System.Drawing.Size(47, 29);
@@ -707,7 +729,7 @@
             this.btn_Analysis_Forward.Enabled = false;
             this.btn_Analysis_Forward.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_Forward.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_Forward.Image")));
-            this.btn_Analysis_Forward.Location = new System.Drawing.Point(153, 19);
+            this.btn_Analysis_Forward.Location = new System.Drawing.Point(153, 154);
             this.btn_Analysis_Forward.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_Forward.Name = "btn_Analysis_Forward";
             this.btn_Analysis_Forward.Size = new System.Drawing.Size(47, 29);
@@ -723,7 +745,7 @@
             this.btn_Analysis_Pause.Enabled = false;
             this.btn_Analysis_Pause.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_Pause.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_Pause.Image")));
-            this.btn_Analysis_Pause.Location = new System.Drawing.Point(104, 19);
+            this.btn_Analysis_Pause.Location = new System.Drawing.Point(104, 154);
             this.btn_Analysis_Pause.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_Pause.Name = "btn_Analysis_Pause";
             this.btn_Analysis_Pause.Size = new System.Drawing.Size(47, 29);
@@ -739,7 +761,7 @@
             this.btn_Analysis_Back.Enabled = false;
             this.btn_Analysis_Back.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_Back.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_Back.Image")));
-            this.btn_Analysis_Back.Location = new System.Drawing.Point(55, 19);
+            this.btn_Analysis_Back.Location = new System.Drawing.Point(55, 154);
             this.btn_Analysis_Back.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_Back.Name = "btn_Analysis_Back";
             this.btn_Analysis_Back.Size = new System.Drawing.Size(47, 29);
@@ -755,7 +777,7 @@
             this.btn_Analysis_Rewind.Enabled = false;
             this.btn_Analysis_Rewind.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_Rewind.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_Rewind.Image")));
-            this.btn_Analysis_Rewind.Location = new System.Drawing.Point(6, 19);
+            this.btn_Analysis_Rewind.Location = new System.Drawing.Point(6, 154);
             this.btn_Analysis_Rewind.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_Rewind.Name = "btn_Analysis_Rewind";
             this.btn_Analysis_Rewind.Size = new System.Drawing.Size(47, 29);
@@ -1004,16 +1026,6 @@
             this.tb_Analysis_Time.TabIndex = 0;
             this.tb_Analysis_Time.Text = "0000-00-00 00:00:00";
             this.tb_Analysis_Time.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // tp_News
-            // 
-            this.tp_News.Location = new System.Drawing.Point(4, 22);
-            this.tp_News.Name = "tp_News";
-            this.tp_News.Size = new System.Drawing.Size(844, 199);
-            this.tp_News.TabIndex = 2;
-            this.tp_News.Text = "Latest News";
-            this.tp_News.UseVisualStyleBackColor = true;
-            this.tp_News.Enter += new System.EventHandler(this.tp_News_Enter);
             // 
             // ss_Main
             // 
@@ -1538,6 +1550,7 @@
             this.gb_Map_Info.Dock = System.Windows.Forms.DockStyle.Top;
             this.gb_Map_Info.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gb_Map_Info.Location = new System.Drawing.Point(3, 3);
+            this.gb_Map_Info.MinimumSize = new System.Drawing.Size(137, 0);
             this.gb_Map_Info.Name = "gb_Map_Info";
             this.gb_Map_Info.Size = new System.Drawing.Size(138, 275);
             this.gb_Map_Info.TabIndex = 58;
@@ -1573,7 +1586,7 @@
             this.cb_DXLoc.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cb_DXLoc.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cb_DXLoc.FormattingEnabled = true;
-            this.cb_DXLoc.GeoLocation = gPoint5;
+            this.cb_DXLoc.GeoLocation = gPoint1;
             this.cb_DXLoc.Location = new System.Drawing.Point(3, 154);
             this.cb_DXLoc.Name = "cb_DXLoc";
             this.cb_DXLoc.Precision = 3;
@@ -1597,7 +1610,7 @@
             this.cb_MyLoc.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cb_MyLoc.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cb_MyLoc.FormattingEnabled = true;
-            this.cb_MyLoc.GeoLocation = gPoint6;
+            this.cb_MyLoc.GeoLocation = gPoint2;
             this.cb_MyLoc.Location = new System.Drawing.Point(3, 71);
             this.cb_MyLoc.Name = "cb_MyLoc";
             this.cb_MyLoc.Precision = 3;
@@ -1696,7 +1709,7 @@
             this.tp_Control_Multi.Location = new System.Drawing.Point(4, 22);
             this.tp_Control_Multi.Name = "tp_Control_Multi";
             this.tp_Control_Multi.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Control_Multi.Size = new System.Drawing.Size(143, 378);
+            this.tp_Control_Multi.Size = new System.Drawing.Size(144, 378);
             this.tp_Control_Multi.TabIndex = 1;
             this.tp_Control_Multi.Text = "Multi";
             this.tp_Control_Multi.Enter += new System.EventHandler(this.tp_Control_Multi_Enter);
@@ -1711,11 +1724,11 @@
             this.lv_Control_Watchlist.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lv_Control_Watchlist.FullRowSelect = true;
             this.lv_Control_Watchlist.GridLines = true;
+            this.lv_Control_Watchlist.HideSelection = false;
             this.lv_Control_Watchlist.Location = new System.Drawing.Point(3, 3);
             this.lv_Control_Watchlist.Name = "lv_Control_Watchlist";
             this.lv_Control_Watchlist.OwnerDraw = true;
-            this.lv_Control_Watchlist.Size = new System.Drawing.Size(137, 349);
-            this.lv_Control_Watchlist.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.lv_Control_Watchlist.Size = new System.Drawing.Size(138, 349);
             this.lv_Control_Watchlist.TabIndex = 1;
             this.tt_Control_Watchlist.SetToolTip(this.lv_Control_Watchlist, "Watchlist");
             this.lv_Control_Watchlist.UseCompatibleStateImageBehavior = false;
@@ -1745,7 +1758,7 @@
             this.btn_Control_Manage_Watchlist.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.btn_Control_Manage_Watchlist.Location = new System.Drawing.Point(3, 352);
             this.btn_Control_Manage_Watchlist.Name = "btn_Control_Manage_Watchlist";
-            this.btn_Control_Manage_Watchlist.Size = new System.Drawing.Size(137, 23);
+            this.btn_Control_Manage_Watchlist.Size = new System.Drawing.Size(138, 23);
             this.btn_Control_Manage_Watchlist.TabIndex = 0;
             this.btn_Control_Manage_Watchlist.Text = "Manage Watchlist";
             this.btn_Control_Manage_Watchlist.UseVisualStyleBackColor = true;
@@ -1945,7 +1958,8 @@
             this.sc_Map.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.sc_Map)).EndInit();
             this.sc_Map.ResumeLayout(false);
-            this.gb_Map.ResumeLayout(false);
+            this.tc_Map.ResumeLayout(false);
+            this.tp_Map.ResumeLayout(false);
             this.tc_Main.ResumeLayout(false);
             this.tp_Spectrum.ResumeLayout(false);
             this.gb_Spectrum_NearestInfo.ResumeLayout(false);
@@ -1997,7 +2011,6 @@
         private System.Windows.Forms.Timer ti_Progress;
         private System.Windows.Forms.ImageList il_Main;
         private System.Windows.Forms.SplitContainer sc_Map;
-        private System.Windows.Forms.GroupBox gb_Map;
         private System.Windows.Forms.StatusStrip ss_Main;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Status;
         private System.Windows.Forms.ToolTip tt_Main;
@@ -2014,9 +2027,6 @@
         private System.Windows.Forms.Button btn_Map_PlayPause;
         private System.Windows.Forms.Button btn_Map_Save;
         private System.Windows.Forms.Button btn_Options;
-        private GMap.NET.WindowsForms.GMapControl gm_Main;
-        private AquaControls.AquaGauge ag_Azimuth;
-        private AquaControls.AquaGauge ag_Elevation;
         private System.ComponentModel.BackgroundWorker bw_Track;
         public System.Windows.Forms.ImageList il_Planes_H;
         public System.Windows.Forms.ImageList il_Planes_L;
@@ -2024,7 +2034,6 @@
         private System.ComponentModel.BackgroundWorker bw_Webserver;
         private System.ComponentModel.BackgroundWorker bw_JSONWriter;
         private System.ComponentModel.BackgroundWorker bw_NewsFeed;
-        private System.Windows.Forms.TabPage tp_News;
         public System.Windows.Forms.ImageList il_Airports;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Dummy;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Database;
@@ -2135,6 +2144,12 @@
         private System.ComponentModel.BackgroundWorker bw_Analysis_FileSaver;
         private System.ComponentModel.BackgroundWorker bw_Analysis_FileLoader;
         private System.ComponentModel.BackgroundWorker bw_AirportMapper;
+        private System.Windows.Forms.TabControl tc_Map;
+        private System.Windows.Forms.TabPage tp_Map;
+        private AquaControls.AquaGauge ag_Azimuth;
+        private AquaControls.AquaGauge ag_Elevation;
+        private GMap.NET.WindowsForms.GMapControl gm_Main;
+        private System.Windows.Forms.TabPage tp_News;
     }
 }
 
