@@ -77,7 +77,7 @@
     <Error Condition="!Exists('..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>copy Z:\CSharp\AirScout\AirScout\AirScout.PlaneFeeds.Plugin.VirtualRadarServer\bin\Debug\ILMerge\*.dll Z:\CSharp\AirScout\AirScout\AirScout\bin\Debug\ /Y</PostBuildEvent>
+    <PostBuildEvent>copy $(OutDir)\ILMerge\*.$(TargetExt) $(OutDir) /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets" Condition="Exists('..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets')" />
 </Project>
