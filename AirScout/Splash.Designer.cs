@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Splash));
             this.pb_Main = new System.Windows.Forms.PictureBox();
+            this.ti_Close = new System.Windows.Forms.Timer(this.components);
+            this.ti_Animation = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pb_Main)).BeginInit();
             this.SuspendLayout();
             // 
@@ -43,6 +46,19 @@
             this.pb_Main.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pb_Main.TabIndex = 0;
             this.pb_Main.TabStop = false;
+            this.pb_Main.Paint += new System.Windows.Forms.PaintEventHandler(this.pb_Main_Paint);
+            // 
+            // ti_Close
+            // 
+            this.ti_Close.Enabled = true;
+            this.ti_Close.Interval = 60000;
+            this.ti_Close.Tick += new System.EventHandler(this.ti_Close_Tick);
+            // 
+            // ti_Animation
+            // 
+            this.ti_Animation.Enabled = true;
+            this.ti_Animation.Interval = 20;
+            this.ti_Animation.Tick += new System.EventHandler(this.ti_Animation_Tick);
             // 
             // Splash
             // 
@@ -59,6 +75,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Splash";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Splash_FormClosing);
             this.Load += new System.EventHandler(this.Splash_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pb_Main)).EndInit();
@@ -69,5 +86,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox pb_Main;
+        private System.Windows.Forms.Timer ti_Close;
+        private System.Windows.Forms.Timer ti_Animation;
     }
 }

@@ -260,6 +260,7 @@
             this.tc_Map.SelectedIndex = 0;
             this.tc_Map.Size = new System.Drawing.Size(852, 341);
             this.tc_Map.TabIndex = 14;
+            this.tc_Map.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tc_Map_Selecting);
             // 
             // tp_Map
             // 
@@ -375,6 +376,7 @@
             this.tc_Main.TabIndex = 0;
             this.tc_Main.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tc_Main_DrawItem);
             this.tc_Main.SelectedIndexChanged += new System.EventHandler(this.tc_Main_SelectedIndexChanged);
+            this.tc_Main.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tc_Main_Selecting);
             // 
             // tp_Elevation
             // 
@@ -1408,11 +1410,6 @@
             this.cb_Planes_Filter_Min_Cat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_Planes_Filter_Min_Cat.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cb_Planes_Filter_Min_Cat.FormattingEnabled = true;
-            this.cb_Planes_Filter_Min_Cat.Items.AddRange(new object[] {
-            "Light",
-            "Medium",
-            "Heavy",
-            "Super"});
             this.cb_Planes_Filter_Min_Cat.Location = new System.Drawing.Point(59, 60);
             this.cb_Planes_Filter_Min_Cat.Name = "cb_Planes_Filter_Min_Cat";
             this.cb_Planes_Filter_Min_Cat.Size = new System.Drawing.Size(77, 24);
@@ -1519,6 +1516,7 @@
             this.tc_Control.Size = new System.Drawing.Size(152, 404);
             this.tc_Control.TabIndex = 60;
             this.tc_Control.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tc_Control_DrawItem);
+            this.tc_Control.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tc_Control_Selecting);
             // 
             // tp_Control_Single
             // 
@@ -1738,8 +1736,10 @@
             this.lv_Control_Watchlist.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.lv_Control_Watchlist_DrawColumnHeader);
             this.lv_Control_Watchlist.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.lv_Control_Watchlist_DrawItem);
             this.lv_Control_Watchlist.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.lv_Control_Watchlist_DrawSubItem);
+            this.lv_Control_Watchlist.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.lv_Control_Watchlist_ItemCheck);
             this.lv_Control_Watchlist.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.lv_Control_Watchlist_ItemChecked);
             this.lv_Control_Watchlist.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.lv_Control_Watchlist_ItemMouseHover);
+            this.lv_Control_Watchlist.SelectedIndexChanged += new System.EventHandler(this.lv_Control_Watchlist_SelectedIndexChanged);
             this.lv_Control_Watchlist.MouseMove += new System.Windows.Forms.MouseEventHandler(this.lv_Control_Watchlist_MouseMove);
             this.lv_Control_Watchlist.Resize += new System.EventHandler(this.lv_Control_Watchlist_Resize);
             // 

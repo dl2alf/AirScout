@@ -559,7 +559,7 @@ namespace ScoutBase.Stations
                     if (caller.WorkerSupportsCancellation && caller.CancellationPending)
                         return new List<LocationDesignator>();
                     if (caller.WorkerReportsProgress && (i % 1000 == 0))
-                        caller.ReportProgress(0, "Getting location " + i.ToString() + " of");
+                        caller.ReportProgress(0, "Getting location " + i.ToString());
                 }
             }
             reader.Close();
@@ -612,7 +612,7 @@ namespace ScoutBase.Stations
                     if (caller.WorkerSupportsCancellation && caller.CancellationPending)
                         return new List<LocationDesignator>();
                     if (caller.WorkerReportsProgress && (i % 1000 == 0))
-                        caller.ReportProgress(0, "Getting location " + i.ToString() + " of");
+                        caller.ReportProgress(0, "Getting location " + i.ToString());
                 }
             }
             reader.Close();

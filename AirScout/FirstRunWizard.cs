@@ -49,6 +49,7 @@ namespace AirScout
 
         private void FirstRunWizard_Load(object sender, EventArgs e)
         {
+            this.Text = "Welcome to AirScout - Aircraft Scatter Prediction V" + Application.ProductVersion + " (c) 2013-2020 DL2ALF";
             Log.WriteMessage("Loading.");
             // set initial settings for CoverageMap
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
@@ -341,16 +342,19 @@ namespace AirScout
                     // estimate disk space needed = tilecount * tilesize * 150%
                     long spaceneeded = (long)tilecount * (long)(250 * 3 / 2);
                     string rootdrive = Path.GetPathRoot(ElevationData.Database.DefaultDatabaseDirectory(ELEVATIONMODEL.GLOBE));
-                    if (SupportFunctions.GetDriveAvailableFreeSpace(rootdrive) < spaceneeded)
+                    long spaceavailable = SupportFunctions.GetDriveAvailableFreeSpace(rootdrive);
+                    // check for available disk space, skip on zero (cannot determine)
+                    if ((spaceavailable > 0) && (spaceavailable < spaceneeded))
                     {
                         // show message box
-                        MessageBox.Show("Not enough disk space for elevation database.\n\nAvailable: " + SupportFunctions.GetDriveAvailableFreeSpace(rootdrive) + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or try to enlarge free space on disk.", "Not enough disk space");
+                        MessageBox.Show("Not enough disk space for elevation database.\n\nAvailable: " + spaceavailable + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or try to enlarge free space on disk.", "Not enough disk space");
                         wp_GLOBE.AllowNext = false;
                     }
-                    if (SupportFunctions.GetDriveMaxFileSize(rootdrive) < spaceneeded)
+                    long maxfilesize = SupportFunctions.GetDriveMaxFileSize(rootdrive);
+                    if ((maxfilesize > 0) && (maxfilesize < spaceneeded))
                     {
                         // show message box
-                        MessageBox.Show("The elevation database will exceed maximum allowed filesize for this file system.\n\nAllowed: " + SupportFunctions.GetDriveMaxFileSize(rootdrive) + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or change file system on disk.", "File size exceeded");
+                        MessageBox.Show("The elevation database will exceed maximum allowed filesize for this file system.\n\nAllowed: " + maxfilesize + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or change file system on disk.", "File size exceeded");
                         wp_GLOBE.AllowNext = false;
                     }
                 }
@@ -491,16 +495,19 @@ namespace AirScout
                     // estimate disk space needed = tilecount * tilesize * 150%
                     long spaceneeded = (long)tilecount * (long)(10000 * 3 / 2);
                     string rootdrive = Path.GetPathRoot(ElevationData.Database.DefaultDatabaseDirectory(ELEVATIONMODEL.SRTM3));
-                    if (SupportFunctions.GetDriveAvailableFreeSpace(rootdrive) < spaceneeded)
+                    long spaceavailable = SupportFunctions.GetDriveAvailableFreeSpace(rootdrive);
+                    // check for available disk space, skip on zero (cannot determine)
+                    if ((spaceavailable > 0) && (spaceavailable < spaceneeded))
                     {
                         // show message box
-                        MessageBox.Show("Not enough disk space for elevation database.\n\nAvailable: " + SupportFunctions.GetDriveAvailableFreeSpace(rootdrive) + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or try to enlarge free space on disk.", "Not enough disk space");
+                        MessageBox.Show("Not enough disk space for elevation database.\n\nAvailable: " + spaceavailable + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or try to enlarge free space on disk.", "Not enough disk space");
                         wp_SRTM3.AllowNext = false;
                     }
-                    if (SupportFunctions.GetDriveMaxFileSize(rootdrive) < spaceneeded)
+                    long maxfilesize = SupportFunctions.GetDriveMaxFileSize(rootdrive);
+                    if ((maxfilesize > 0) && (maxfilesize < spaceneeded))
                     {
                         // show message box
-                        MessageBox.Show("The elevation database will exceed maximum allowed filesize for this file system.\n\nAllowed: " + SupportFunctions.GetDriveMaxFileSize(rootdrive) + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or change file system on disk.", "File size exceeded");
+                        MessageBox.Show("The elevation database will exceed maximum allowed filesize for this file system.\n\nAllowed: " + maxfilesize + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or change file system on disk.", "File size exceeded");
                         wp_SRTM3.AllowNext = false;
                     }
                 }
@@ -636,16 +643,19 @@ namespace AirScout
                     // estimate disk space needed = tilecount * tilesize * 150%
                     long spaceneeded = (long)tilecount * (long)(100000 * 3 / 2);
                     string rootdrive = Path.GetPathRoot(ElevationData.Database.DefaultDatabaseDirectory(ELEVATIONMODEL.SRTM1));
-                    if (SupportFunctions.GetDriveAvailableFreeSpace(rootdrive) < spaceneeded)
+                    long spaceavailable = SupportFunctions.GetDriveAvailableFreeSpace(rootdrive); 
+                    // check for available disk space, skip on zero (cannot determine)
+                    if ((spaceavailable > 0) && (spaceavailable < spaceneeded))
                     {
                         // show message box
-                        MessageBox.Show("Not enough disk space for elevation database.\n\nAvailable: " + SupportFunctions.GetDriveAvailableFreeSpace(rootdrive) + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or try to enlarge free space on disk.", "Not enough disk space");
+                        MessageBox.Show("Not enough disk space for elevation database.\n\nAvailable: " + spaceavailable + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or try to enlarge free space on disk.", "Not enough disk space");
                         wp_SRTM1.AllowNext = false;
                     }
-                    if (SupportFunctions.GetDriveMaxFileSize(rootdrive) < spaceneeded)
+                    long maxfilesize = SupportFunctions.GetDriveMaxFileSize(rootdrive);
+                    if ((maxfilesize > 0) && (maxfilesize < spaceneeded))
                     {
                         // show message box
-                        MessageBox.Show("The elevation database will exceed maximum allowed filesize for this file system.\n\nAllowed: " + SupportFunctions.GetDriveMaxFileSize(rootdrive) + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or change file system on disk.", "File size exceeded");
+                        MessageBox.Show("The elevation database will exceed maximum allowed filesize for this file system.\n\nAllowed: " + maxfilesize + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or change file system on disk.", "File size exceeded");
                         wp_SRTM1.AllowNext = false;
                     }
                 }
@@ -770,7 +780,7 @@ namespace AirScout
             }
             if (GeographicalPoint.Check(tb_Latitude.Value, tb_Longitude.Value))
             {
-                // update locator text if not focusd
+                // update locator text if not focused
                 if (!tb_Locator.Focused)
                 {
                     tb_Locator.SilentText = MaidenheadLocator.LocFromLatLon(tb_Latitude.Value, tb_Longitude.Value, Properties.Settings.Default.Locator_SmallLettersForSubsquares, (int)Properties.Settings.Default.Locator_MaxLength / 2, true);
@@ -813,12 +823,15 @@ namespace AirScout
                 }
             }
             // check all values and enable/disable next button
-            if (Callsign.Check(tb_Callsign.Text) && MaidenheadLocator.Check(tb_Locator.Text) && !double.IsNaN(tb_Latitude.Value) && !double.IsNaN(tb_Longitude.Value))
-            {
-                // save settings
+            // save settings
+            if (Callsign.Check(tb_Callsign.Text))
                 Properties.Settings.Default.MyCall = tb_Callsign.Text;
+            if (!double.IsNaN(tb_Latitude.Value))
                 Properties.Settings.Default.MyLat = tb_Latitude.Value;
+            if (!double.IsNaN(tb_Longitude.Value))
                 Properties.Settings.Default.MyLon = tb_Longitude.Value;
+            if (Callsign.Check(tb_Callsign.Text) && MaidenheadLocator.Check(tb_Locator.Text) && !double.IsNaN(tb_Longitude.Value) && !double.IsNaN(tb_Longitude.Value))
+            {
                 // StationData.Database.LocationInsertOrUpdateIfNewer(new LocationDesignator(tb_Callsign.Text, tb_Latitude.Value, tb_Longitude.Value, (MaidenheadLocator.IsPrecise(tb_Latitude.Value, tb_Longitude.Value, 3) ? GEOSOURCE.FROMUSER : GEOSOURCE.FROMLOC)));
                 wp_UserDetails.AllowNext = true;
                 return true;
@@ -844,6 +857,10 @@ namespace AirScout
                 }
                 else
                 {
+                    // clear properties
+                    Properties.Settings.Default.MyLat = double.NaN;
+                    Properties.Settings.Default.MyLon = double.NaN;
+
                     tb_Latitude.SilentValue = double.NaN;
                     tb_Longitude.SilentValue = double.NaN;
                     tb_Locator.SilentText = "";

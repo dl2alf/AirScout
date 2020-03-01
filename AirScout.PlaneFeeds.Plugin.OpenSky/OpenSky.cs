@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,14 +11,33 @@ using System.Diagnostics;
 using System.Net;
 using System.IO;
 using System.Web.Script.Serialization;
-using System.Collections;
-using System.Xml.Serialization;
 using System.Xml.Linq;
+using System.Xml.Serialization;
+using System.Collections;
 
-namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
+//TODO: Rename namespace to a name of your choice
+namespace AirScout.PlaneFeeds.Plugin.OpenSky
 {
 
-    public class PlanefinderSettings
+    //TODO: Rename settings class to a name of your choice
+    //      Add any persistant setting here
+    //      Use [Browsable(true/false)] to present the setting to the user and allow changes or not
+    //      Use [CategoryAttribute("<description")] to group settings to categories
+    //      Use [DescriptionAttribute("<description")] to add a description to this setting
+    //      Use [DefaultValue(<value>)] to set a default value for this setting
+    //      Use [XmlIgnore] if you don't want this setting to be ex-/imported, but stiil stored in settings file
+    //      Example:
+    //              [CategoryAttribute("Web Feed")]
+    //              [DescriptionAttribute("Timeout for loading the site.")]
+    //              [DefaultValue(30)]
+    //              [XmlIgnore]
+    //              public int Timeout { get; set; }
+
+
+    /// <summary>
+    /// Keeps all persistant settings of plugin
+    /// </summary>
+    public class OpenSkySettings
     {
         [Browsable(false)]
         [DefaultValue("")]
@@ -35,22 +54,27 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
         [DescriptionAttribute("Base URL for website.")]
-        [DefaultValue("http://droidapp.pinkfroot.com/APPAPIDROID/v7/planeUpdateFAA.php?routetype=IATA&FAA=1&bounds=%MAXLAT%,%MINLAT%,%MINLON%,%MAXLON%")]
+        [DefaultValue("http://opensky-network.org/api/states/all?lamin=%MINLAT%&lomin=%MINLON%&lamax=%MAXLAT%&lomax=%MAXLON%")]
         public string URL { get; set; }
 
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
         [DescriptionAttribute("Timeout for loading the site.")]
-        [DefaultValue(30)]
+        [DefaultValue(60)]
         [XmlIgnore]
         public int Timeout { get; set; }
 
 
-        public PlanefinderSettings()
+        public OpenSkySettings()
         {
             Default();
             Load(true);
+            // TODO:
         }
+
+        // Methods für Load/Dave/Default, don't change!
+
+        #region Load/Save/Default
 
         /// <summary>
         /// Sets all properties to their default value according to the [DefaultValue=] attribute
@@ -170,30 +194,32 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
 
     }
 
+    #endregion
+
+
+    //TODO: Rename plugin class to a name of yout choice
+
+    /// <summary>
+    /// Holds the plane feed plugin class
+    /// </summary>
     [Export(typeof(IPlaneFeedPlugin))]
     [ExportMetadata("Name", "PlaneFeedPlugin")]
-    public class PlaneFinderPlugin : IPlaneFeedPlugin
+    public class OpenSkyPlugin : IPlaneFeedPlugin
     {
-        private PlanefinderSettings Settings = new PlanefinderSettings();
+        private OpenSkySettings Settings = new OpenSkySettings();
+
+        // start of interface
+
+        //TODO: Change return values so that they represent plugin's functionality
+        #region Interface
 
         public string Name
         {
             get
             {
-                return "[WebFeed]           www.planefinder.net";
+                return "[WebFeed]           OpenSky";
             }
         }
-
-        public string Info
-        {
-            get
-            {
-                return "Web feed from www.planefinder.net\n" +
-                        "See https://planefinder.net/\n\n" +
-                        "(c)AirScout(www.airscout.eu)";
-            }
-        }
-
         public string Version
         {
             get
@@ -202,6 +228,17 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
             }
         }
 
+        public string Info
+        {
+            get
+            {
+                return "Web feed from the OpenSky Network.\n" +
+                    "For details see https://opensky-network.org.\n\n" +
+                    "As this is a community network, please consider to run a personal ADSB-receiver and to contribute your data to this network.\n\n" +
+                    "This webfeed forces TLS1.2 transport layer security. Though this plugin is compiled for .NET4.0 it needs .NET4.5 or higher installed on this machine to work.\n\n" +
+                    "This webfeed will probably not work on early Windows XP and Linux/Mono systems";
+            }
+        }
         public bool HasSettings
         {
             get
@@ -230,13 +267,7 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
         {
             get
             {
-                return "This plane feed might fetch data from an Internet server via Deep Link\n" +
-                        "technology(see http://en.wikipedia.org/wiki/Deep_link)\n." +
-                        "The use is probably not intended by the website owners and could be changed in URL and data format frequently and without further notice.\n" +
-                        "Furthermore, it might cause legal issues in some countries.\n" +
-                        "By clicking on \"Accept\" you understand that you are\n\n" +
-                        "DOING THAT ON YOUR OWN RISK\n\n" +
-                        "The auhor of this software will not be responsible in any case.";
+                return "";
             }
         }
 
@@ -284,7 +315,7 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
 
         public void Start(PlaneFeedPluginArgs args)
         {
-            // nothing to do
+            // add code for startup here
         }
 
         public PlaneFeedPluginPlaneInfoList GetPlanes(PlaneFeedPluginArgs args)
@@ -309,9 +340,12 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
             // calculate url and get json
             String url = VC.ReplaceAllVars(Settings.URL);
             Console.WriteLine("[" + this.GetType().Name + "]: Creating web request: " + url);
+            // this will only run on .NET 4.0 if you have installed .NET 4.5 or later frameworks on your machine!
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
             HttpWebRequest webrequest = (HttpWebRequest)HttpWebRequest.Create(url);
             webrequest.Timeout = Settings.Timeout * 1000;
             webrequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0";
+            webrequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
             Console.WriteLine("[" + this.GetType().Name + "]: Getting web response");
             HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
             Console.WriteLine("[" + this.GetType().Name + "]: Reading stream");
@@ -334,7 +368,7 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
             {
                 // analyze json string for planes data
                 // get the planes position list
-                var aclist = root["planes"];
+                var aclist = root["states"];
                 foreach (var ac in aclist)
                 {
                     try
@@ -342,36 +376,36 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
                         // different handling of reading JSON between Windows (Array) & Linux (ArrayList)
                         // access to data values itself is the same
                         int len = 0;
-                        if ( ac.Value.GetType() == typeof(ArrayList))
+                        if (ac.GetType() == typeof(ArrayList))
                         {
-                            len = ac.Value.Count;
+                            len = ac.Count;
                         }
-                        else if (ac.Value.GetType() == typeof(Object[]))
+                        else if (ac.GetType() == typeof(Object[]))
                         {
-                            len = ac.Value.Length;
+                            len = ac.Length;
                         }
                         // skip if too few fields in record
-                        if (len < 13)
-                        continue;
+                        if (len < 17)
+                            continue;
                         PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
                         // get hex first
-                        plane.Hex = ac.Key.ToString().Trim().Replace("\"","");
-                        // get position
-                        plane.Lat = ReadPropertyDouble(ac, 4);
-                        plane.Lon = ReadPropertyDouble(ac, 5);
-                        // get altitude
-                        plane.Alt = ReadPropertyDouble(ac, 6);
+                        plane.Hex = ReadPropertyString(ac, 0).ToUpper();
                         // get callsign
-                        plane.Call = ReadPropertyString(ac, 5);
-                        // get registration
-                        plane.Reg = ReadPropertyString(ac, 2);
+                        plane.Call = ReadPropertyString(ac, 1);
+                        // get position
+                        plane.Lon = ReadPropertyDouble(ac, 5);
+                        plane.Lat = ReadPropertyDouble(ac, 6);
+                        // get altitude (provided in m --> convert to ft)
+                        plane.Alt = UnitConverter.m_ft(ReadPropertyDouble(ac, 13));
                         // get track
-                        plane.Track = ReadPropertyDouble(ac, 7);
-                        // get speed
-                        plane.Speed = ReadPropertyDouble(ac, 8);
-                        // get position timestamp
-                        long l = ReadPropertyLong(ac,9);
-                        if (l != long.MinValue)
+                        plane.Track = ReadPropertyDouble(ac, 10);
+                        // get speed (provided in m/s --> convert to kts)
+                        plane.Speed = UnitConverter.ms_kts(ReadPropertyDouble(ac, 9));
+                        // registration is not provided
+                        plane.Reg = "";
+                        // get position timestamp in sec
+                        int l = ReadPropertyInt(ac, 3);
+                        if (l != int.MinValue)
                         {
                             DateTime timestamp = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
                             timestamp = timestamp.AddSeconds(l);
@@ -383,7 +417,7 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
                             continue;
                         }
                         // get type info
-                        plane.Type = ReadPropertyString(ac, 0);
+                        plane.Type = ReadPropertyString(ac, 5);
                         planes.Add(plane);
                     }
                     catch (Exception ex)
@@ -402,11 +436,15 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
 
         public void Stop(PlaneFeedPluginArgs args)
         {
-            Settings.Save(true);
+            // add code for stopping here
         }
 
-        // end of Interface
+        #endregion
 
+        // End of interface
+
+
+        // ************************************* Helpers ****************************************************
 
         [System.Diagnostics.DebuggerNonUserCode]
         private string ReadPropertyString(dynamic o, int propertyindex)
@@ -414,7 +452,7 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
             string s = null;
             try
             {
-                s = o.Value[propertyindex];
+                s = o[propertyindex];
             }
             catch
             {
@@ -439,7 +477,7 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
             double d = double.MinValue;
             try
             {
-                string s = o.Value[propertyindex].ToString(CultureInfo.InvariantCulture);
+                string s = o[propertyindex].ToString(CultureInfo.InvariantCulture);
                 d = double.Parse(s, CultureInfo.InvariantCulture);
             }
             catch
@@ -455,7 +493,7 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
             long l = long.MinValue;
             try
             {
-                l = long.Parse(o.Value[propertyindex].ToString());
+                l = long.Parse(o[propertyindex].ToString());
             }
             catch
             {
@@ -470,7 +508,7 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
             bool b = false;
             try
             {
-                string s = o.Value[propertyindex].ToString();
+                string s = o[propertyindex].ToString();
                 b = s.ToLower() == "true";
             }
             catch
@@ -481,11 +519,6 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
         }
 
     }
-
-
-    /// <summary>
-    /// //////////////////////////////////////////// Helpers ////////////////////////////////////////////
-    /// </summary>
 
     public static class UnitConverter
     {
@@ -507,6 +540,11 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
         public static double kmh_kts(double kmh)
         {
             return kmh / 1.852;
+        }
+
+        public static double ms_kts(double ms)
+        {
+            return ms * 3.6 / 1.852;
         }
 
         public static double km_mi(double km)

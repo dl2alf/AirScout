@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{50093159-6446-48CD-B8CD-6FA58EB88CBB}</ProjectGuid>
+    <ProjectGuid>{23F584DB-EB5E-452D-B49F-7C1CABB713FF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AirScout.PlaneFeeds.Plugin.VirtualRadarServer</RootNamespace>
-    <AssemblyName>AirScout.PlaneFeeds.Plugin.VirtualRadarServer</AssemblyName>
+    <RootNamespace>AirScout.PlaneFeeds.Plugin.OpenSky</RootNamespace>
+    <AssemblyName>AirScout.PlaneFeeds.Plugin.OpenSky</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -45,13 +45,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="OpenSky.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="VirtualRadarServer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AirScout.PlaneFeeds.Plugin\AirScout.PlaneFeeds.Plugin.csproj">
@@ -76,8 +76,8 @@
     <Error Condition="!Exists('..\packages\ILMerge.3.0.29\build\ILMerge.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.3.0.29\build\ILMerge.props'))" />
     <Error Condition="!Exists('..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets'))" />
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent>copy $(ProjectDir)\$(OutDir)\ILMerge\*$(TargetExt)  $(SolutionDir)\Airscout\$(OutDir) /y</PostBuildEvent>
-  </PropertyGroup>
   <Import Project="..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets" Condition="Exists('..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>copy Z:\CSharp\AirScout\AirScout\AirScout.PlaneFeeds.Plugin.OpenSky\bin\Debug\ILMerge\*.dll Z:\CSharp\AirScout\AirScout\AirScout\bin\Debug\ /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

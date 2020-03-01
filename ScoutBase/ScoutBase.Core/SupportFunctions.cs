@@ -300,7 +300,14 @@ namespace ScoutBase.Core
             string[] files = Directory.GetFiles(dir, filter);
             foreach (string file in files)
             {
-                File.Delete(file);
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("DeleteFilesFromDirectory: " + ex.ToString());
+                }
             }
         }
 
@@ -315,7 +322,14 @@ namespace ScoutBase.Core
             string[] files = filters.SelectMany(f => Directory.GetFiles(dir, f)).ToArray();
             foreach (string file in files)
             {
-                File.Delete(file);
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("DeleteFilesFromDirectory: " + ex.ToString());
+                }
             }
         }
 

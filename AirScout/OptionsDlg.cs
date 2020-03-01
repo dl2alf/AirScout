@@ -235,32 +235,41 @@ namespace AirScout
 
         private void btn_Options_Watchlist_Manage_Click(object sender, EventArgs e)
         {
+            // sync watchlist, try to keep previously checked calls
+            // you can have a call only once in the watch list
+            List<string> checkedcalls = new List<string>();
+            foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
+            {
+                if (item.Checked)
+                    checkedcalls.Add(item.Call);
+            }
             WatchlistDlg Dlg = new WatchlistDlg();
             if (Dlg.ShowDialog() == DialogResult.OK)
             {
-                // sync watchlist
-                foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
-                    item.Remove = true;
-                foreach (ListViewItem lvi in Dlg.lv_Watchlist_Selected.Items)
+                // clear watch list
+                Properties.Settings.Default.Watchlist.Clear();
+                foreach (DataGridViewRow row in Dlg.dgv_Watchlist_Selected.Rows)
                 {
-                    // search item in watchlist
-                    int index = Properties.Settings.Default.Watchlist.IndexOf(lvi.Text);
-                    // reset remove flag if found, create and add new entry if not
-                    if (index >= 0)
-                        Properties.Settings.Default.Watchlist[index].Remove = false;
-                    else
+                    string call = row.Cells[0].Value.ToString();
+                    string loc = row.Cells[1].Value.ToString();
+                    bool oor = true;
+                    // try to get the location from database
+                    LocationDesignator dxloc = StationData.Database.LocationFind(call, loc);
+                    if (dxloc != null)
                     {
-                        // try to find last recent locator from database and add to watchlist
-                        LocationDesignator dxcall = StationData.Database.LocationFindLastRecent(lvi.Text);
-                        if (dxcall != null)
-                        {
-                            double qrb = LatLon.Distance(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, dxcall.Lat, dxcall.Lon);
-                            Properties.Settings.Default.Watchlist.Add(new WatchlistItem(dxcall.Call, dxcall.Loc, qrb > Properties.Settings.Default.Path_MaxLength));
-                        }
+                        oor = LatLon.Distance(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, dxloc.Lat, dxloc.Lon) > Properties.Settings.Default.Path_MaxLength;
                     }
+                    // add call to watch list
+                    WatchlistItem item = new WatchlistItem(call, loc, oor);
+                    Properties.Settings.Default.Watchlist.Add(item);
                 }
-                // remove the rest of items
-                Properties.Settings.Default.Watchlist.RemoveAll(item => item.Remove);
+                // reselect previously selected
+                foreach (string checkedcall in checkedcalls)
+                {
+                    int index = Properties.Settings.Default.Watchlist.IndexOf(checkedcall);
+                    if (index >= 0)
+                        Properties.Settings.Default.Watchlist[index].Checked = true;
+                }
             }
         }
 
@@ -2058,19 +2067,32 @@ namespace AirScout
 
         private void tab_Options_Info_Enter(object sender, EventArgs e)
         {
-            // populate link labels
-            lbl_Options_Version.Text = "Version: " + Application.ProductVersion;
-            lbl_Options_Map.Text = "GMap.NET Copyright (c) 2008 - 2011 Universe";
-            lbl_Options_Map.Links.Add(0, 8, "http://greatmaps.codeplex.com/");
-            lbl_Options_Spherical.Text = "http://www.movable-type.co.uk/scripts/latlong.html";
-            lbl_Options_Spherical.Links.Add(0, lbl_Options_Spherical.Text.Length - 1, "http://www.movable-type.co.uk/scripts/latlong.html");
-            lbl_Options_Elevation_GLOBE.Text = "1km based Elevation Data from GLOBE - Project";
-            lbl_Options_Elevation_GLOBE.Links.Add(30, 5, "http://www.ngdc.noaa.gov/mgg/topo/globe.html");
-            lbl_Options_Elevation_SRTM3.Text = "3arsec (90m x 90m) Elevation Data from  SRTM - Project";
-            lbl_Options_Elevation_SRTM3.Links.Add(40, 14, "http://srtm.usgs.gov/");
-            lbl_Options_Elevation_SRTM1.Text = "1arsec (30m x 30m) Elevation Data from  SRTM - Project and ASTER";
-            lbl_Options_Elevation_SRTM1.Links.Add(40, 14, "http://srtm.usgs.gov");
-            lbl_Options_Elevation_SRTM1.Links.Add(58, 6, "http://asterweb.jpl.nasa.gov/index.asp");
+            try
+            {
+                // clear links first
+                lbl_Options_Map.Links.Clear();
+                lbl_Options_Spherical.Links.Clear();
+                lbl_Options_Elevation_GLOBE.Links.Clear();
+                lbl_Options_Elevation_SRTM3.Links.Clear();
+                lbl_Options_Elevation_SRTM1.Links.Clear();
+                // populate link labels
+                lbl_Options_Version.Text = "Version: " + Application.ProductVersion;
+                lbl_Options_Map.Text = "GMap.NET Copyright (c) 2008 - 2011 Universe";
+                lbl_Options_Map.Links.Add(0, 8, "http://greatmaps.codeplex.com/");
+                lbl_Options_Spherical.Text = "http://www.movable-type.co.uk/scripts/latlong.html";
+                lbl_Options_Spherical.Links.Add(0, lbl_Options_Spherical.Text.Length - 1, "http://www.movable-type.co.uk/scripts/latlong.html");
+                lbl_Options_Elevation_GLOBE.Text = "1km based Elevation Data from GLOBE - Project";
+                lbl_Options_Elevation_GLOBE.Links.Add(30, 5, "http://www.ngdc.noaa.gov/mgg/topo/globe.html");
+                lbl_Options_Elevation_SRTM3.Text = "3arsec (90m x 90m) Elevation Data from  SRTM - Project";
+                lbl_Options_Elevation_SRTM3.Links.Add(40, 14, "http://srtm.usgs.gov/");
+                lbl_Options_Elevation_SRTM1.Text = "1arsec (30m x 30m) Elevation Data from  SRTM - Project and ASTER";
+                lbl_Options_Elevation_SRTM1.Links.Add(40, 14, "http://srtm.usgs.gov");
+                lbl_Options_Elevation_SRTM1.Links.Add(58, 6, "http://asterweb.jpl.nasa.gov/index.asp");
+            }
+            catch (Exception ex)
+            {
+                Log.WriteMessage(ex.ToString());
+            }
         }
 
 

@@ -277,6 +277,7 @@
     <Compile Include="Splash.Designer.cs">
       <DependentUpon>Splash.cs</DependentUpon>
     </Compile>
+    <Compile Include="TooltipDataPoint.cs" />
     <Compile Include="TrafficDlg.cs">
       <SubType>Form</SubType>
     </Compile>

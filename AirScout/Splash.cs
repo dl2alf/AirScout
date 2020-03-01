@@ -13,6 +13,7 @@ namespace AirScout
 {
     public partial class Splash : Form
     {
+        Label version;
         Label status;
 
         // Define the CS_DROPSHADOW constant
@@ -26,8 +27,10 @@ namespace AirScout
                 CreateParams cp = base.CreateParams;
                 // change window style to dropshadow
                 // does not work under Linux/Mono
+                /*
                 if (!SupportFunctions.IsMono)
                     cp.ClassStyle |= CS_DROPSHADOW;
+                */
                 return cp;
             }
         }
@@ -41,6 +44,7 @@ namespace AirScout
                 FormBorderStyle = FormBorderStyle.None;
             else
                 FormBorderStyle = FormBorderStyle.FixedSingle;
+            // initialize status label
             status = new Label();
             status.Parent = pb_Main;
             status.BackColor = Color.Transparent;
@@ -50,6 +54,8 @@ namespace AirScout
             status.Width = 350;
             status.Font = new System.Drawing.Font(this.Font, FontStyle.Italic);
             status.TextAlign = ContentAlignment.MiddleCenter;
+            // set to full transparent view at first;
+            Opacity = 0;
         }
 
         public void Status(string s)
@@ -67,10 +73,43 @@ namespace AirScout
 
         private void Splash_Load(object sender, EventArgs e)
         {
+            // start close timer
+            ti_Close.Start();
+            // start animation timer
+            ti_Animation.Start();
         }
 
         private void Splash_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // stop timers
+            ti_Animation.Stop();
+            ti_Close.Stop();
+        }
+
+        private void ti_Close_Tick(object sender, EventArgs e)
+        {
+            // close form immediately if not closed by main form
+            this.Close();
+        }
+
+        private void ti_Animation_Tick(object sender, EventArgs e)
+        {
+            if (this.Opacity < 1)
+            {
+                this.Opacity += 0.01;
+                ti_Animation.Start();
+            }
+        }
+
+        private void pb_Main_Paint(object sender, PaintEventArgs e)
+        {
+            // show Version
+            string text = "Version " + Application.ProductVersion;
+            using (Font myFont = new System.Drawing.Font(this.Font.FontFamily, 24, FontStyle.Bold | FontStyle.Italic))
+            {
+                e.Graphics.DrawString(text, myFont, Brushes.DimGray, new Point(140, 10));
+                e.Graphics.DrawString(text, myFont, Brushes.White, new Point(140-2, 10-2));
+            }
         }
     }
 }

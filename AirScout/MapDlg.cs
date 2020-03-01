@@ -71,6 +71,7 @@ using OxyPlot.Series;
 using OxyPlot.Axes;
 using System.Data.SQLite;
 using DeviceId;
+using AirScout.Properties;
 using AirScout.Core;
 using AirScout.Aircrafts;
 using AirScout.PlaneFeeds;
@@ -276,6 +277,7 @@ namespace AirScout
                     sc_Main.SplitterDistance = value;
                 else
                     sc_Main.SplitterDistance = this.Width - gb_Map_Info_DefaultWidth;
+                Console.WriteLine("Setting MainSplitterDistance: " + this.Width + "--->" + sc_Main.SplitterDistance);
             }
         }
 
@@ -294,6 +296,7 @@ namespace AirScout
                     sc_Map.SplitterDistance = value;
                 else
                     sc_Map.SplitterDistance = this.Height - tc_Main_DefaultHeight;
+                Console.WriteLine("Setting MapSplitterDistance: " + this.Height + "--->" + sc_Map.SplitterDistance);
             }
         }
 
@@ -309,9 +312,6 @@ namespace AirScout
         private int cntdn = 0;
 
         DateTime CurrentTime = DateTime.UtcNow;
-
-        public bool ForceClose = false;
-
 
         // FlightRadar
         PlaneInfoCache Planes = new PlaneInfoCache();
@@ -993,7 +993,13 @@ namespace AirScout
                 SplashDlg.Show();
                 // bring window to front
                 SplashDlg.BringToFront();
-                Application.DoEvents();
+                // wait for splash window is fully visible
+                while (SplashDlg.Opacity < 1)
+                {
+                    Application.DoEvents();
+                }
+                // show AirScout main window
+                this.BringToFront();
                 // Check directories, complete it and create, if not exist
                 SplashDlg.Status("Checking directories...");
                 CheckDirectories();
@@ -1322,15 +1328,6 @@ namespace AirScout
                 MessageBox.Show("An error occured during startup: " + ex.ToString() + "\n\nPress >OK< to close the application.", "AirScout", MessageBoxButtons.OK);
                 this.Close();
             }
-        }
-
-        private void FinishStartup()
-        {
-            // finish startup
-            // close splash window
-            // set window layout
-            if (SplashDlg != null)
-                SplashDlg.Close();
             // restore window size, state and location
             try
             {
@@ -1356,6 +1353,15 @@ namespace AirScout
                 Properties.Settings.Default.MainSplitter_Distance = -1;
                 Properties.Settings.Default.MapSplitter_Distance = -1;
             }
+        }
+
+        private void FinishStartup()
+        {
+            // finish startup
+            // close splash window
+            // set window layout
+            if (SplashDlg != null)
+                SplashDlg.Close();
             // restore splitter positions
             try
             {
@@ -1367,8 +1373,8 @@ namespace AirScout
                 else
                 {
                     // ignore window settings under Linux/Mono and always use default values
-                    sc_Map.SplitterDistance = -1;
-                    sc_Main.SplitterDistance = -1;
+                    MapSplitterDistance = -1;
+                    MainSplitterDistance = -1;
                 }
             }
             catch (Exception ex)
@@ -1990,7 +1996,6 @@ namespace AirScout
 
         private void UpdateAirports()
         {
-            /*
             if (!Properties.Settings.Default.Airports_Activate)
                 return;
             if ((Airports == null) || (Airports.Count == 0))
@@ -2011,8 +2016,7 @@ namespace AirScout
                     Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
             }
-//            gm_Main.Refresh();
-            */
+            gm_Main.Refresh();
         }
 
         private void ti_Startup_Tick(object sender, EventArgs e)
@@ -2193,11 +2197,6 @@ namespace AirScout
 
         private void OnIdle(object sender, EventArgs args)
         {
-            // close window if disagreed
-            if (ForceClose)
-            {
-                Application.Exit();
-            }
             // enable/disable watchlist button
             if (btn_Control_Manage_Watchlist.Enabled == Properties.Settings.Default.Watchlist_SyncWithKST)
                 btn_Control_Manage_Watchlist.Enabled = !Properties.Settings.Default.Watchlist_SyncWithKST;
@@ -2900,7 +2899,7 @@ namespace AirScout
         #region Play & Pause
 
         private void Play()
-        {
+        {       
             PlayMode = AIRSCOUTPLAYMODE.FORWARD;
             // switch tab control according to path mode
             if (PathMode == AIRSCOUTPATHMODE.SINGLE)
@@ -2909,6 +2908,8 @@ namespace AirScout
                 tc_Control.SelectedTab = tp_Control_Multi;
             // update tab control
             tc_Control.Refresh();
+            // refresh watch list
+            RefreshWatchlistView();
             // update all current paths
             UpdatePaths();
             // clear spectrum
@@ -2932,13 +2933,11 @@ namespace AirScout
             cb_MyLoc.Enabled = false;
             cb_DXCall.Enabled = false;
             cb_DXLoc.Enabled = false;
-            tc_Control.Enabled = false;
+//            tc_Control.Enabled = false;
             pa_Planes_Filter.Enabled = false;
             gb_Analysis_Controls.Enabled = false;
             gb_Analysis_Database.Enabled = false;
             gb_Analysis_Player.Enabled = false;
-            tc_Main.Enabled = false;
-//            tc_Map.Enabled = false;
             //referesh main window
             this.Refresh();
         }
@@ -3686,6 +3685,8 @@ namespace AirScout
             if ((ActivePlanes == null) || (ActivePlanes.Count == 0))
                 return;
             bool anyselected = false;
+            List<TooltipDataPoint> planes_hi = new List<TooltipDataPoint>();
+            List<TooltipDataPoint> planes_lo = new List<TooltipDataPoint>();
             // draw all planes
             foreach (PlaneInfo plane in ActivePlanes.Values)
             {
@@ -3725,8 +3726,10 @@ namespace AirScout
                                 break;
                         }
 
-                        // count the planes drawed and update caption
-                        tp_Map.Text = "Map [" + gmo_Planes.Markers.Count.ToString() + " plane(s)]";
+                        // count the planes drawed and update caption, if not under Linux
+                        // Linux/Mono is drawing the whole control again --> performance issue!
+                        if (!SupportFunctions.IsMono)
+                            tp_Map.Text = "Map [" + gmo_Planes.Markers.Count.ToString() + " plane(s)]";
                         // if selected: draw the thin path to crossing point if one
                         if (isselected)
                         {
@@ -3767,6 +3770,7 @@ namespace AirScout
                                 // calculate distance from mylat/mylon
                                 double dist = LatLon.Distance(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, plane.IntPoint.Lat, plane.IntPoint.Lon);
                                 // add new data points
+                                /*
                                 if (plane.AltDiff > 0)
                                 {
                                     Planes_Hi.Points.Add(new DataPoint(dist, plane.Alt_m));
@@ -3775,9 +3779,28 @@ namespace AirScout
                                 {
                                     Planes_Lo.Points.Add(new DataPoint(dist, plane.Alt_m));
                                 }
+                                */
+                                
+                                TooltipDataPoint p = new TooltipDataPoint(dist, plane.Alt_m,plane.Call);
+                                if (plane.AltDiff > 0)
+                                {
+                                    planes_hi.Add(p);
+                                }
+                                else
+                                {
+                                    planes_lo.Add(p);
+                                }
                             }
                         }
                     }
+
+                    // add planes to chart
+                    Planes_Hi.ItemsSource = planes_hi;
+                    Planes_Lo.ItemsSource = planes_lo;
+
+                    // change tracker display
+                    Planes_Hi.TrackerFormatString = "{Tooltip}";
+                    Planes_Lo.TrackerFormatString = "{Tooltip}";
 
                     // invalidate chart
                     pm_Path.InvalidatePlot(true);
@@ -3919,6 +3942,7 @@ namespace AirScout
             // clear data points in chart
             Planes_Hi.Points.Clear();
             Planes_Lo.Points.Clear();
+            pm_Path.Annotations.Clear();
 
             // draw planes
             DrawPlanes();
@@ -3994,7 +4018,10 @@ namespace AirScout
             int topItemIndex = 0;
             try
             {
-                topItemIndex = lv_Control_Watchlist.TopItem.Index;
+                if (PlayMode != AIRSCOUTPLAYMODE.FORWARD)
+                {
+                    topItemIndex = lv_Control_Watchlist.TopItem.Index;
+                }
             }
             catch (Exception ex)
             { 
@@ -4049,6 +4076,9 @@ namespace AirScout
 
         private void ti_Progress_Tick(object sender, EventArgs e)
         {
+            // prevent timer tick from overflow when heavy loaded
+            // stop timer --> do update procedure --> start timer again
+            ti_Progress.Stop();
             if (LifeMode == AIRSCOUTLIFEMODE.LIFE)
             {
                 if (PlayMode == AIRSCOUTPLAYMODE.FORWARD)
@@ -4078,6 +4108,8 @@ namespace AirScout
                     UpdatePlanes();
                 }
             }
+            // restart timer
+            ti_Progress.Start();
         }
 
         private void sc_Main_SplitterMoved(object sender, SplitterEventArgs e)
@@ -4321,6 +4353,8 @@ namespace AirScout
                 PathMode = AIRSCOUTPATHMODE.SINGLE;
                 tc_Map.SelectedTab = tp_Map;
             }
+            // update all info
+            UpdateStatus();
         }
 
         private void gb_Map_Info_MouseClick(object sender, MouseEventArgs e)
@@ -4606,13 +4640,21 @@ namespace AirScout
                 PathMode = AIRSCOUTPATHMODE.MULTI;
                 tc_Map.SelectedTab = tp_Map;
             }
+            tp_Control_Multi.Refresh();
         }
 
         private void lv_Control_Watchlist_Resize(object sender, EventArgs e)
         {
             // list view resized
             // resize locator column to fit the client size
-            lv_Control_Watchlist.Columns[1].Width = lv_Control_Watchlist.ClientSize.Width - lv_Control_Watchlist.Columns[0].Width;
+            try
+            {
+                lv_Control_Watchlist.Columns[1].Width = lv_Control_Watchlist.ClientSize.Width - lv_Control_Watchlist.Columns[0].Width;
+            }
+            catch
+            {
+                // do nothing, if resize fails
+            }
         }
 
         private void lv_Control_Watchlist_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
@@ -4622,8 +4664,22 @@ namespace AirScout
             {
                 // call sign column changed
                 // resize locator column to fit the client size
-                lv_Control_Watchlist.Columns[1].Width = lv_Control_Watchlist.ClientSize.Width - lv_Control_Watchlist.Columns[0].Width;
+                try
+                {
+                    lv_Control_Watchlist.Columns[1].Width = lv_Control_Watchlist.ClientSize.Width - lv_Control_Watchlist.Columns[0].Width;
+                }
+                catch
+                {
+                    // do nothing, if resize fails
+                }
             }
+        }
+
+        private void lv_Control_Watchlist_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            // ignore when in PLAY mode
+            if (!WatchlistUpdating && (PlayMode == AIRSCOUTPLAYMODE.FORWARD))
+                e.NewValue = e.CurrentValue;
         }
 
         private void lv_Control_Watchlist_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -4659,6 +4715,9 @@ namespace AirScout
 
         private void lv_Control_Watchlist_ColumnClick(object sender, ColumnClickEventArgs e)
         {
+            // ignore when in PLAY mode
+            if (PlayMode == AIRSCOUTPLAYMODE.FORWARD)
+                return;
             WatchlistAllCheckedChanging = true;
             if (!WatchlistAllChecked)
             {
@@ -4720,14 +4779,13 @@ namespace AirScout
                     {
                         e.Item.BackColor = bkcolor;
                     }
-                    e.DrawBackground();
                 }
                 else
                 {
                     e.Item.BackColor = Color.White;
-                    e.DrawDefault = true;
                 }
             }
+            e.DrawDefault = true;
         }
 
 
@@ -4736,40 +4794,73 @@ namespace AirScout
              e.DrawDefault = true;
         }
 
-    private void btn_Control_Manage_Watchlist_Click(object sender, EventArgs e)
+        private void lv_Control_Watchlist_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // synchronize station in SINGLE mode when selection changed in MULTI mode
+            try
+            {
+                if ((lv_Control_Watchlist.SelectedItems != null) && (lv_Control_Watchlist.SelectedItems.Count == 1))
+                {
+                    string call = lv_Control_Watchlist.SelectedItems[0].Text;
+                    string loc = lv_Control_Watchlist.SelectedItems[0].SubItems[1].Text;
+                    double lat = MaidenheadLocator.LatFromLoc(loc);
+                    double lon = MaidenheadLocator.LonFromLoc(loc);
+                    LocationDesignator ld = StationData.Database.LocationFind(call, loc);
+                    if (ld != null)
+                    {
+                        // update lat/lon from database if found
+                        lat = ld.Lat;
+                        lon = ld.Lon;
+                    }
+                    Properties.Settings.Default.DXCall = call;
+                    Properties.Settings.Default.DXLat = lat;
+                    Properties.Settings.Default.DXLon = lon;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.WriteMessage(ex.ToString());
+            }
+        }
+
+        private void btn_Control_Manage_Watchlist_Click(object sender, EventArgs e)
+        {
+            // sync watchlist, try to keep previously checked calls
+            // you can have a call only once in the watch list
+            List<string> checkedcalls = new List<string>();
+            foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
+            {
+                if (item.Checked)
+                    checkedcalls.Add(item.Call);
+            }
             WatchlistDlg Dlg = new WatchlistDlg();
             if (Dlg.ShowDialog() == DialogResult.OK)
             {
-                // sync watchlist
-                foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
+                // clear watch list
+                Properties.Settings.Default.Watchlist.Clear();
+                foreach (DataGridViewRow row in Dlg.dgv_Watchlist_Selected.Rows)
                 {
-                    // nasty!! Should never be null!
-                    if (item == null)
-                        continue;
-                    item.Remove = true;
-                }
-                foreach (ListViewItem lvi in Dlg.lv_Watchlist_Selected.Items)
-                {
-                    // search item in watchlist
-                    int index = Properties.Settings.Default.Watchlist.IndexOf(lvi.Text);
-                    // reset remove flag if found, create and add new entry if not
-                    if (index >= 0)
-                        Properties.Settings.Default.Watchlist[index].Remove = false;
-                    else
+                    string call = row.Cells[0].Value.ToString();
+                    string loc = row.Cells[1].Value.ToString();
+                    bool oor = true;
+                    // try to get the location from database
+                    LocationDesignator dxloc = StationData.Database.LocationFind(call, loc);
+                    if (dxloc != null)
                     {
-                        // try to find last recent locator from database and add to watchlist
-                        LocationDesignator dxcall = StationData.Database.LocationFindLastRecent(lvi.Text);
-                        if (dxcall != null)
-                        {
-                            double qrb = LatLon.Distance(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, dxcall.Lat, dxcall.Lon);
-                            Properties.Settings.Default.Watchlist.Add(new WatchlistItem(dxcall.Call, dxcall.Loc, qrb > Properties.Settings.Default.Path_MaxLength));
-                        }
+                        oor = LatLon.Distance(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, dxloc.Lat, dxloc.Lon) > Properties.Settings.Default.Path_MaxLength;
                     }
+                    // add call to watch list
+                    WatchlistItem item = new WatchlistItem(call, loc, oor);
+                    Properties.Settings.Default.Watchlist.Add(item);
                 }
-                // remove the rest of items
-                Properties.Settings.Default.Watchlist.RemoveAll(item => item.Remove);
-                // refersh watchlist view
+                // reselect previously selected
+                foreach (string checkedcall in checkedcalls)
+                {
+                    int index = Properties.Settings.Default.Watchlist.IndexOf(checkedcall);
+                    if (index >= 0)
+                        Properties.Settings.Default.Watchlist[index].Checked = true;
+                }
+                // refresh watchlist view
                 RefreshWatchlistView();
             }
         }
@@ -5749,7 +5840,7 @@ namespace AirScout
                             int mins = 0;
                             if (planeinfo.Speed > 0)
                                 mins = (int)(planeinfo.IntQRB / (double)planeinfo.Speed / 1.852 * 60.0);
-                            planes = planes + planeinfo.Call + "," + planeinfo.Category + "," + ((int)planeinfo.IntQRB).ToString() + "," + planeinfo.Potential.ToString() + "," + mins.ToString() + ",";
+                            planes = planes + planeinfo.Call + "," + PlaneCategories.GetShortStringValue(planeinfo.Category) + "," + ((int)planeinfo.IntQRB).ToString() + "," + planeinfo.Potential.ToString() + "," + mins.ToString() + ",";
                             count++;
                         }
                     }
@@ -6557,6 +6648,8 @@ namespace AirScout
             }
             else
             {
+                // stop background thread
+                bw_NewsFeed.CancelAsync();
                 // report website changes
                 DateTime dt = (DateTime)e.UserState;
                 if (!SupportFunctions.IsMono)
@@ -6568,31 +6661,24 @@ namespace AirScout
                             if (wb_News != null)
                                 wb_News.Refresh();
                             tc_Map.SelectedTab = tp_News;
-                            // save time to settings
-                            Properties.Settings.Default.News_LastUpdate = dt;
                         }
                         catch (Exception ex)
                         {
                             // do nothing if wb_News fails to refresh
                         }
                     }
+                    // save time to settings
+                    Properties.Settings.Default.News_LastUpdate = dt;
                 }
                 else
                 {
-                    if (MessageBox.Show("There are news on the website. Latest update: " + dt.ToString() + "\n Do you want to read it now?\n\n Under Linux/Mono open web browser of your choice and goto: \n" + Properties.Settings.Default.News_URL + "\n\n", "Website News", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        try
-                        {
-                            // save time to settings
-                            Properties.Settings.Default.News_LastUpdate = dt;
-                        }
-                        catch (Exception ex)
-                        {
-                            // do nothing if wb_News fails to refresh
-                        }
-                    }
+                    MessageBox.Show("There are news on the website. Latest update: " + dt.ToString() + "\n Do you want to read it now?\n\n Under Linux/Mono open web browser of your choice and goto: \n" + Properties.Settings.Default.News_URL + "\n\n", "Website News", MessageBoxButtons.YesNo);
+                    // save time to settings
+                    Properties.Settings.Default.News_LastUpdate = dt;
 
                 }
+                // restart background thread
+                bw_NewsFeed.RunWorkerAsync();
             }
         }
 
@@ -7540,6 +7626,28 @@ namespace AirScout
         {
 
         }
+
+        private void tc_Main_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            // cancel tab change when in PLAY mode
+            if (PlayMode == AIRSCOUTPLAYMODE.FORWARD)
+                e.Cancel = true;
+        }
+
+        private void tc_Map_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            // cancel tab change when in PLAY mode
+            if (PlayMode == AIRSCOUTPLAYMODE.FORWARD)
+                e.Cancel = true;
+        }
+
+        private void tc_Control_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            // cancel tab change when in PLAY mode
+            if (PlayMode == AIRSCOUTPLAYMODE.FORWARD)
+                e.Cancel = true;
+        }
+
     }
 
 

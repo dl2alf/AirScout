@@ -170,7 +170,7 @@ Initial Version
 - Bugfix:	Users cannot click on a single plane to show info permanently when in PLAY mode, also no tracking of a single plane is possible --> fixed (tnx IN3UPQ)
 - Bugfix:   Calculation of elevation angle is wrong, always showing abt. 0°, tracking not working --> fixed (tnx IN3UPQ)
 
-2020-xx-xx: V1.3.0.7
+2020-02-12: V1.3.0.7
 ====================
 
 - Bugfix:	The AirScout_clean.cmd does not work properly when trying to cleanup files (database files are locked) --> fixed
@@ -178,11 +178,34 @@ Initial Version
 - Bugfix:	Watchlist in multi-path mode always scrolls back to top position after watchlist is updated, watchlist is getting inoperable on large amounts of calls --> fixed
 - Bugfix:	Sometimes a MemoryCounter could not created by the system, Exception will occur and AirScout will not start --> fixed
 - Feature:	Create a progress indicator while creating elevation tile catalogue --> number of tiles processed is displayed now (tnx DL8AAU)
-- Feature:	colour checked items in watch list according to their AS potential (tnx DF9IC)
+- Feature:	colour checked items in watch list according to their AS potential (tnx DF5HS)
 - Feature:	Sort selected items to the top of watch list to better view all selected items at once
-- Feature:	label checked items from watch list in map premantently when in Multi-Path Mode (call sign only) (tnx DF9IC)
+- Feature:	label checked items from watch list in map premantently when in Multi-Path Mode (call sign only) (tnx DF5HS)
 - Bugfix:	several minor bugs when managing watch list (calls not sorted, multiple adding adding possible) --> fixed (tnx DL8AAU)
 
+2020-xx-xx: V1.3.0.8 (not published)
+====================
 
+- Bugfix:	The calculation of free disk space does not work on some Linux configurations, unable to load elevation tiles --> fixed with workaround (tnx G8JVM)
+- Bugfix:	Somtimes unable to set own callsign in First Run Wizard on Linux (when own callsign is not in database) --> fixed (tnx (G8JVM)
+- Bugfix:	Window splitter position not set properly when starting up after First Run Wizard or when starting on Linux
+- Feature:	Manage watch list dialog is slow, filling the list boxes is taking ages (especially on Linux/Mono)--> create a background worker and show progress while loading (tnx G8JVM)
+- Feature:	Watch list is now sorted on selected calls first when in Play mode, coloured checkboxes are showing AS potential (tnx DH5FS)
+- Bugfix:	Multiple dialog boxes "There are news on the website..." are showing if no user reaaction happend after some minutes --> fixed
+- Bugfix:	Planes Minimal Category Filter Boxes are showing all categories twice --> fixed (tnx S51ML)
+- Bugfix:	UDP-Server (for wtKST or similar) delivers full plane category string (e.g. "MEDIUM") in ASNEAREST message instead of one character (e.g. "M") --> fixed (tnx S51ML)
 
+2020-03-01: V1.3.1.0
+====================
+
+- Bugfix:	AirportMapper does not work, Airports were not shown on the map anymore --> fixed (tnx OZ9GE)
+- Feature:	complete rework of watchlist dialog, now changed from ListView to DataGridView (which is much faster), additionally show locator (tnx G8JVM, DH5FS, OZ9GE)
+- Bugfix:	Aircraft labels were not shown on the elevation tab anymore (tab was disabled while in PLAY mode) --> fixed, now showing again on Left+Click (tnx OZ9GE)
+- Bugfix:	ProgressTimer overflow under heavy load (especially when too many planes or paths are to display on slow systems) --> fixed (timer is stopped now and restarted not until update is performed)
+- Bugfix:	do not disable whole tab controls while in PLAY mode, allow some user action and display changes --> fixed (change of tabs in tab control is now blocked by other means)
+- Feature:	Rework of watch list in main window, showing potential now in full color, last selected call in MULTI mode is automatically transferred as selected call for SINGLE mode (tnx GM3SEK)
+- Feature:	rework of splash window at startup, showing software version now
+- Bugfix:	Planefinder web feed stopped working --> fixed (tnx F8AIH)
+- Feature:	New web feed from OpenSky Network implenented (a free community)
+- Bugfix:	AirScout crashed when the "Info" tab in the "Options" dialog box is opened twice after doing some other stuff --> fixed (tnx G0LGS)
 

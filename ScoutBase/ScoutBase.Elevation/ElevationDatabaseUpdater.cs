@@ -288,6 +288,7 @@ namespace ScoutBase.Elevation
                         try
                         {
                             SupportFunctions.DeleteFilesFromDirectory(TmpDirectory, new string[] { "*.tmp", "*.PendingOverwrite" });
+                            SupportFunctions.DeleteFilesFromDirectory(ElevationData.Database.DefaultDatabaseDirectory(StartOptions.Model), new string[] { "*.tmp", "*.PendingOverwrite" });
                         }
                         catch (Exception ex)
                         {

@@ -41,6 +41,8 @@ To get ist running on your system, please follow the steps below
 - Settings upgrade from previous versions do not work, always use default settings when upgrading
 - database view for maintenance does not work --> SQLite-DataAdapter issues
 - Program sometimes does not close properly, stops working while saving settings to disk
+- dropdowns for callsigns and locators disappear on startup on some configurations (seems to be a graphics issue) --> try to resize window to get them back
+- filling the watch list ith calsigns is taking ages. 
 
 
 
