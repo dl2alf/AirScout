@@ -422,6 +422,9 @@
             this.bw_SRTM1_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_GLOBE_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_StationDataUpdater = new System.ComponentModel.BackgroundWorker();
+            this.groupBox37 = new System.Windows.Forms.GroupBox();
+            this.ud_Options_Charts_FontSize = new System.Windows.Forms.NumericUpDown();
+            this.label34 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).BeginInit();
             this.tab_Options_Planes.SuspendLayout();
             this.groupBox48.SuspendLayout();
@@ -492,6 +495,8 @@
             this.groupBox28.SuspendLayout();
             this.tab_Options_Info.SuspendLayout();
             this.ss_Options.SuspendLayout();
+            this.groupBox37.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Charts_FontSize)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_Options_OK
@@ -1802,6 +1807,7 @@
             // tab_Options_Map
             // 
             this.tab_Options_Map.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Options_Map.Controls.Add(this.groupBox37);
             this.tab_Options_Map.Controls.Add(this.groupBox39);
             this.tab_Options_Map.Controls.Add(this.groupBox23);
             this.tab_Options_Map.Controls.Add(this.groupBox30);
@@ -1945,9 +1951,9 @@
             this.groupBox30.Controls.Add(this.label81);
             this.groupBox30.Controls.Add(this.label80);
             this.groupBox30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox30.Location = new System.Drawing.Point(446, 301);
+            this.groupBox30.Location = new System.Drawing.Point(424, 301);
             this.groupBox30.Name = "groupBox30";
-            this.groupBox30.Size = new System.Drawing.Size(211, 154);
+            this.groupBox30.Size = new System.Drawing.Size(233, 154);
             this.groupBox30.TabIndex = 6;
             this.groupBox30.TabStop = false;
             this.groupBox30.Text = "Plane Icon Sizes per Category";
@@ -2074,7 +2080,7 @@
             this.groupBox7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox7.Location = new System.Drawing.Point(14, 301);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(415, 154);
+            this.groupBox7.Size = new System.Drawing.Size(394, 154);
             this.groupBox7.TabIndex = 5;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Info Window Elements";
@@ -2086,7 +2092,7 @@
             this.groupBox29.Controls.Add(this.label75);
             this.groupBox29.Location = new System.Drawing.Point(256, 19);
             this.groupBox29.Name = "groupBox29";
-            this.groupBox29.Size = new System.Drawing.Size(139, 123);
+            this.groupBox29.Size = new System.Drawing.Size(129, 123);
             this.groupBox29.TabIndex = 19;
             this.groupBox29.TabStop = false;
             // 
@@ -2277,7 +2283,7 @@
             this.groupBox22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox22.Location = new System.Drawing.Point(13, 226);
             this.groupBox22.Name = "groupBox22";
-            this.groupBox22.Size = new System.Drawing.Size(644, 69);
+            this.groupBox22.Size = new System.Drawing.Size(395, 69);
             this.groupBox22.TabIndex = 4;
             this.groupBox22.TabStop = false;
             this.groupBox22.Text = "Info Window Options";
@@ -2324,7 +2330,7 @@
             // btn_Options_SelectFont
             // 
             this.btn_Options_SelectFont.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_Options_SelectFont.Location = new System.Drawing.Point(514, 37);
+            this.btn_Options_SelectFont.Location = new System.Drawing.Point(280, 37);
             this.btn_Options_SelectFont.Name = "btn_Options_SelectFont";
             this.btn_Options_SelectFont.Size = new System.Drawing.Size(106, 23);
             this.btn_Options_SelectFont.TabIndex = 2;
@@ -2349,7 +2355,7 @@
             this.tb_Options_Map_ToolTipFont.Location = new System.Drawing.Point(72, 39);
             this.tb_Options_Map_ToolTipFont.Name = "tb_Options_Map_ToolTipFont";
             this.tb_Options_Map_ToolTipFont.ReadOnly = true;
-            this.tb_Options_Map_ToolTipFont.Size = new System.Drawing.Size(417, 20);
+            this.tb_Options_Map_ToolTipFont.Size = new System.Drawing.Size(179, 20);
             this.tb_Options_Map_ToolTipFont.TabIndex = 0;
             this.tb_Options_Map_ToolTipFont.Text = global::AirScout.Properties.Settings.Default.Map_ToolTipFont;
             // 
@@ -5339,6 +5345,48 @@
             this.bw_StationDataUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_StationDataUpdater_ProgressChanged);
             this.bw_StationDataUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_StationDataUpdater_RunWorkerCompleted);
             // 
+            // groupBox37
+            // 
+            this.groupBox37.Controls.Add(this.label34);
+            this.groupBox37.Controls.Add(this.ud_Options_Charts_FontSize);
+            this.groupBox37.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox37.Location = new System.Drawing.Point(415, 227);
+            this.groupBox37.Name = "groupBox37";
+            this.groupBox37.Size = new System.Drawing.Size(242, 68);
+            this.groupBox37.TabIndex = 9;
+            this.groupBox37.TabStop = false;
+            this.groupBox37.Text = "Chart Window Options";
+            // 
+            // ud_Options_Charts_FontSize
+            // 
+            this.ud_Options_Charts_FontSize.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Charts_FontSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ud_Options_Charts_FontSize.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_Charts_FontSize.Location = new System.Drawing.Point(184, 39);
+            this.ud_Options_Charts_FontSize.Maximum = new decimal(new int[] {
+            16,
+            0,
+            0,
+            0});
+            this.ud_Options_Charts_FontSize.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.ud_Options_Charts_FontSize.Name = "ud_Options_Charts_FontSize";
+            this.ud_Options_Charts_FontSize.Size = new System.Drawing.Size(45, 22);
+            this.ud_Options_Charts_FontSize.TabIndex = 0;
+            this.ud_Options_Charts_FontSize.Value = global::AirScout.Properties.Settings.Default.Charts_FontSize;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label34.Location = new System.Drawing.Point(7, 41);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(174, 13);
+            this.label34.TabIndex = 2;
+            this.label34.Text = "Font Size for Axes in Diagrams etc.:";
+            // 
             // OptionsDlg
             // 
             this.AcceptButton = this.btn_Options_OK;
@@ -5470,6 +5518,9 @@
             this.tab_Options_Info.PerformLayout();
             this.ss_Options.ResumeLayout(false);
             this.ss_Options.PerformLayout();
+            this.groupBox37.ResumeLayout(false);
+            this.groupBox37.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Charts_FontSize)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5869,5 +5920,8 @@
         private System.Windows.Forms.Button btn_Options_PlaneFeed2_Default;
         private System.Windows.Forms.Button btn_Options_PlaneFeed1_Default;
         private System.Windows.Forms.CheckBox cb_Options_Map_LabelCalls;
+        private System.Windows.Forms.GroupBox groupBox37;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.NumericUpDown ud_Options_Charts_FontSize;
     }
 }

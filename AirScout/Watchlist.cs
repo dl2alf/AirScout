@@ -8,7 +8,7 @@ namespace AirScout
     /// <summary>
     /// Holds the watchlist item
     /// </summary>
-    public class WatchlistItem
+    public class WatchlistItem : IComparable<WatchlistItem>
     {
         public string Call { get; set; }
         public string Loc { get; set; }
@@ -28,7 +28,7 @@ namespace AirScout
         }
 
         public WatchlistItem(string call, string loc, bool oor) : this(call, loc, oor, false, false) { }
-        public WatchlistItem(string call, string loc, bool oor, bool check, bool selected )
+        public WatchlistItem(string call, string loc, bool oor, bool check, bool selected)
         {
             Call = call;
             Loc = loc;
@@ -38,13 +38,25 @@ namespace AirScout
             Remove = false;
         }
 
-    }
+        public int CompareTo(WatchlistItem other)
+        {
+            // If other is not a valid object reference, this instance is greater.
+            if (other == null) return 1;
 
-    /// <summary>
-    /// Holds the watchlist, e.g. a list of watchlist items
-    /// </summary>
-    public class Watchlist : List<WatchlistItem>
-    {
+            // compare call signs first
+            int i = String.Compare(this.Call, other.Call);
+            if (i != 0)
+                return i;
+            // then compare locs when calls are equal
+            return String.Compare(this.Loc, other.Loc);
+        }
+
+    }
+        /// <summary>
+        /// Holds the watchlist, e.g. a list of watchlist items
+        /// </summary>
+        public class Watchlist : List<WatchlistItem>
+        {
         public Watchlist()
         {
 

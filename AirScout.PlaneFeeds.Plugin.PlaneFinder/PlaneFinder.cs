@@ -158,12 +158,13 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
             {
                 using (StreamWriter sw = new StreamWriter(File.Create(filename)))
                 {
-                    XmlSerializer s = new XmlSerializer(this.GetType(), overrides);
+                    XmlSerializer s = new XmlSerializer(this.GetType(), overrides,null,new XmlRootAttribute(),"");
                     s.Serialize(sw, this);
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine("[" + this.GetType().Name + "]: Cannot save settings to " + filename + ", " + ex.ToString());
                 throw new InvalidOperationException("[" + this.GetType().Name + "]: Cannot save settings to " + filename + ", " + ex.Message);
             }
         }

@@ -1536,7 +1536,7 @@ namespace AirScout.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Watchlist_SyncWithKST {
             get {
                 return ((bool)(this["Watchlist_SyncWithKST"]));
@@ -2230,6 +2230,18 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
             }
             set {
                 this["Map_LabelCalls"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public decimal Charts_FontSize {
+            get {
+                return ((decimal)(this["Charts_FontSize"]));
+            }
+            set {
+                this["Charts_FontSize"] = value;
             }
         }
     }

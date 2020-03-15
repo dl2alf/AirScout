@@ -1694,7 +1694,14 @@ namespace AirScout
                     ID = ID + "," + DateTime.UtcNow.ToString("u");
                     ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                     feed.DisclaimerAccepted = ID;
-                    feed.SaveSettings();
+                    try
+                    {
+                        feed.SaveSettings();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.WriteMessage(ex.ToString());
+                    }
                 }
                 else
                 {
@@ -1740,7 +1747,14 @@ namespace AirScout
                     ID = ID + "," + DateTime.UtcNow.ToString("u");
                     ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                     feed.DisclaimerAccepted = ID;
-                    feed.SaveSettings();
+                    try
+                    {
+                        feed.SaveSettings();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.WriteMessage(ex.ToString());
+                    }
                 }
                 else
                 {
@@ -1786,7 +1800,14 @@ namespace AirScout
                     ID = ID + "," + DateTime.UtcNow.ToString("u");
                     ID = ID + "," + System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                     feed.DisclaimerAccepted = ID;
-                    feed.SaveSettings();
+                    try
+                    {
+                        feed.SaveSettings();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.WriteMessage(ex.ToString());
+                    }
                 }
                 else
                 {

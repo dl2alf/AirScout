@@ -149,7 +149,7 @@ namespace AirScout
             // elevation polar chart
             pm_Elevation_Polar.PlotType = PlotType.Polar;
             pm_Elevation_Polar.Title = String.Empty;
-            pm_Elevation_Polar.DefaultFontSize = 6F;
+            pm_Elevation_Polar.DefaultFontSize = (double)Properties.Settings.Default.Charts_FontSize;
             pv_Elevation_Polar.BackColor = Color.White;
             pv_Elevation_Polar.Dock = DockStyle.Fill;
             pv_Elevation_Polar.Model = pm_Elevation_Polar;
@@ -187,7 +187,7 @@ namespace AirScout
             pv_Elevation_Cartesian.Dock = DockStyle.Fill;
             pv_Elevation_Cartesian.Model = pm_Elevation_Cartesian;
             pm_Elevation_Cartesian.Title = String.Empty;
-            pm_Elevation_Cartesian.DefaultFontSize = 6F;
+            pm_Elevation_Cartesian.DefaultFontSize = (double)Properties.Settings.Default.Charts_FontSize;
             // add axes
             pm_Elevation_Cartesian.Axes.Clear();
             // add x-axis
@@ -215,7 +215,7 @@ namespace AirScout
             // distance polar chart
             pm_Distance_Polar.PlotType = PlotType.Polar;
             pm_Distance_Polar.Title = String.Empty;
-            pm_Distance_Polar.DefaultFontSize = 6F;
+            pm_Distance_Polar.DefaultFontSize = (double)Properties.Settings.Default.Charts_FontSize;
             pv_Distance_Polar.BackColor = Color.White;
             pv_Distance_Polar.Dock = DockStyle.Fill;
             pv_Distance_Polar.Model = pm_Distance_Polar;
@@ -253,7 +253,7 @@ namespace AirScout
             pv_Distance_Cartesian.Dock = DockStyle.Fill;
             pv_Distance_Cartesian.Model = pm_Distance_Cartesian;
             pm_Distance_Cartesian.Title = String.Empty;
-            pm_Distance_Cartesian.DefaultFontSize = 6F;
+            pm_Distance_Cartesian.DefaultFontSize = (double)Properties.Settings.Default.Charts_FontSize;
             // add axes
             pm_Distance_Cartesian.Axes.Clear();
             // add x-axis
@@ -359,15 +359,17 @@ namespace AirScout
             horizon.Clear();
         }
 
-        private void DrawHorizonPoint(int azimuth, HorizonPoint hp)
+        private void DrawHorizonPoint(int azimuth, HorizonPoint hp, bool closing = false)
         {
             Elevation_Polar_Series.Points.Add(new DataPoint(hp.Epsmin / Math.PI * 180.0, azimuth));
             pm_Elevation_Polar.InvalidatePlot(true);
-            Elevation_Cartesian_Series.Points.Add(new DataPoint(azimuth, hp.Epsmin / Math.PI * 180.0));
+            if (!closing) 
+                Elevation_Cartesian_Series.Points.Add(new DataPoint(azimuth, hp.Epsmin / Math.PI * 180.0));
             pm_Elevation_Cartesian.InvalidatePlot(true);
             Distance_Polar_Series.Points.Add(new DataPoint(hp.Dist, azimuth));
             pm_Distance_Polar.InvalidatePlot(true);
-            Distance_Cartesian_Series.Points.Add(new DataPoint(azimuth, hp.Dist));
+            if (!closing)
+                Distance_Cartesian_Series.Points.Add(new DataPoint(azimuth, hp.Dist));
             pm_Distance_Cartesian.InvalidatePlot(true);
             LatLon.GPoint gp = LatLon.DestinationPoint(Location.Lat, Location.Lon, azimuth, hp.Dist);
             PointLatLng p = new PointLatLng(gp.Lat, gp.Lon);
@@ -451,8 +453,8 @@ namespace AirScout
                 {
                     DrawHorizonPoint(j, Horizon.Horizon[j]);
                 }
-                // draw first point again to close the circle
-                DrawHorizonPoint(0, Horizon.Horizon[0]);
+                // draw first point again to close the circle in polar modes
+                DrawHorizonPoint(0, Horizon.Horizon[0],true);
             }
             // enable radio buttons
             btn_Horizon_Calculate.Enabled = true;

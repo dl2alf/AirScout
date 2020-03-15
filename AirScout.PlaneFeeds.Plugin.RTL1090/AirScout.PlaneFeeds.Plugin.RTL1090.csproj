@@ -84,6 +84,7 @@
   </Target>
   <Import Project="..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets" Condition="Exists('..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(ProjectDir)\$(OutDir)\ILMerge\*$(TargetExt)  $(SolutionDir)\Airscout\$(OutDir) /y</PostBuildEvent>
+    <PostBuildEvent>mkdir $(SolutionDir)\Airscout\$(OutDir)\Plugin\
+copy $(ProjectDir)\$(OutDir)\ILMerge\*$(TargetExt)  $(SolutionDir)\Airscout\$(OutDir)\Plugin\ /y</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -81,8 +81,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.RB24", "AirScout.PlaneFeeds.Plugin.RB24\AirScout.PlaneFeeds.Plugin.RB24.csproj", "{D953C82D-5881-4F5C-8335-1C54114BE28B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout_Cleanup", "AirScout_Cleanup\AirScout_Cleanup.csproj", "{4DDDB65C-0E40-4A69-8775-5B4152C3196D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.OpenSky", "AirScout.PlaneFeeds.Plugin.OpenSky\AirScout.PlaneFeeds.Plugin.OpenSky.csproj", "{23F584DB-EB5E-452D-B49F-7C1CABB713FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.PlaneFinder", "AirScout.PlaneFeeds.Plugin.PlaneFinder\AirScout.PlaneFeeds.Plugin.PlaneFinder.csproj", "{DB85E98A-E209-49D0-B6CF-6CDD5B8E20E3}"
@@ -537,18 +535,6 @@ Global
 		{D953C82D-5881-4F5C-8335-1C54114BE28B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D953C82D-5881-4F5C-8335-1C54114BE28B}.Release|x86.ActiveCfg = Release|Any CPU
 		{D953C82D-5881-4F5C-8335-1C54114BE28B}.Release|x86.Build.0 = Release|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Debug|x86.Build.0 = Debug|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Release|x86.ActiveCfg = Release|Any CPU
-		{4DDDB65C-0E40-4A69-8775-5B4152C3196D}.Release|x86.Build.0 = Release|Any CPU
 		{23F584DB-EB5E-452D-B49F-7C1CABB713FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{23F584DB-EB5E-452D-B49F-7C1CABB713FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23F584DB-EB5E-452D-B49F-7C1CABB713FF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

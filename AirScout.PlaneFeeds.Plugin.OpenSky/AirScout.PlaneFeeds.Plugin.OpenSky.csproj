@@ -78,6 +78,7 @@
   </Target>
   <Import Project="..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets" Condition="Exists('..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>copy Z:\CSharp\AirScout\AirScout\AirScout.PlaneFeeds.Plugin.OpenSky\bin\Debug\ILMerge\*.dll Z:\CSharp\AirScout\AirScout\AirScout\bin\Debug\ /Y</PostBuildEvent>
+    <PostBuildEvent>mkdir $(SolutionDir)\Airscout\$(OutDir)\Plugin\
+copy $(ProjectDir)\$(OutDir)\ILMerge\*$(TargetExt)  $(SolutionDir)\Airscout\$(OutDir)\Plugin\ /y</PostBuildEvent>
   </PropertyGroup>
 </Project>

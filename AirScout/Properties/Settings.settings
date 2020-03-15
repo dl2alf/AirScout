@@ -381,7 +381,7 @@
       <Value Profile="(Default)">http://www.airscout.eu</Value>
     </Setting>
     <Setting Name="Watchlist_SyncWithKST" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Watchlist_Activated" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -585,6 +585,9 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
     </Setting>
     <Setting Name="Map_LabelCalls" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Charts_FontSize" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">6</Value>
     </Setting>
   </Settings>
 </SettingsFile>

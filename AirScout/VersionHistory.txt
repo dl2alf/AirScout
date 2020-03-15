@@ -209,3 +209,14 @@ Initial Version
 - Feature:	New web feed from OpenSky Network implenented (a free community)
 - Bugfix:	AirScout crashed when the "Info" tab in the "Options" dialog box is opened twice after doing some other stuff --> fixed (tnx G0LGS)
 
+2020-xx-xx: V1.3.2.0
+====================
+
+- Bugfix:	Several limitations on Windows XP, program crashes while opening Options Dialog, users cannot save plane feed settings --> fixed (tnx OK1TEH)
+- Feature:	Users can click on the watchlist markers on the map to change path immediately in SINGLE mode (tnx GM4JTJ)
+- Feature:	Change font size in charts via "Options/Map" (tnx LZ2ZP)
+- Bugfix:	Radio Horizon shows an unwanted strike through in Cartesian diagram --> fixed (tnx LZ2ZP)
+- Feature:	Redirect console output, users can run AirScout from a command line and see all console output for debugging (like on Linux)
+- Bugfix:	Watchlist was not properly sorted when synchronized with wtKST --> fixed
+- Bugfix:	"Orphan paths" when watchlist synchronized with wtKST and user leaves the chat  --> fixed, call is kept on watchlist now as long as it is selected
+

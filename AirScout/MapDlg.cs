@@ -731,7 +731,7 @@ namespace AirScout
             string filespec = "AirScout.PlaneFeeds.Plugin.*.dll";
 
             // first copy plugins from application directory to plugin directory if they not exist or newer
-            CopyPlugins(AppDirectory, PluginDirectory, filespec);
+            CopyPlugins(Path.Combine(AppDirectory,"Plugin"), PluginDirectory, filespec);
 
             // check for new plugins on the web resource
             try
@@ -1158,8 +1158,6 @@ namespace AirScout
                         CheckSettings();
                         // reset topmost state
                         SplashDlg.TopMost = false;
-                        // must have internet connection on FirstRun
-                        CheckInternet();
                         /*
                         // run database updater once for basic information
                         bw_DatabaseUpdater.RunWorkerAsync(UPDATERSTARTOPTIONS.FIRSTRUN);
@@ -1168,6 +1166,8 @@ namespace AirScout
                             Application.DoEvents();
                         */
                         SplashDlg.Close();
+                        // must have internet connection on FirstRun
+                        CheckInternet();
                         // show FirstRunWizard
                         try
                         {
@@ -1826,7 +1826,7 @@ namespace AirScout
         {
             // propagation path chart
             pm_Path.Title = String.Empty;
-            pm_Path.DefaultFontSize = 6F;
+            pm_Path.DefaultFontSize = (double)Properties.Settings.Default.Charts_FontSize;
             pm_Path.IsLegendVisible = false;
             pv_Path.BackColor = Color.White;
             pv_Path.Model = pm_Path;
@@ -1894,7 +1894,7 @@ namespace AirScout
 
             // zoomed elevation chart
             pm_Elevation.Title = String.Empty;
-            pm_Elevation.DefaultFontSize = 6F;
+            pm_Elevation.DefaultFontSize = (double)Properties.Settings.Default.Charts_FontSize;
             pm_Elevation.IsLegendVisible = false;
             pv_Elevation.BackColor = Color.White;
             pv_Elevation.Model = pm_Elevation;
@@ -1936,7 +1936,7 @@ namespace AirScout
 
             // spectrum chart
             pm_Spectrum.Title = String.Empty;
-            pm_Spectrum.DefaultFontSize = 6F;
+            pm_Spectrum.DefaultFontSize = (double)Properties.Settings.Default.Charts_FontSize;
             pv_Spectrum.BackColor = Color.White;
             pv_Spectrum.Model = pm_Spectrum;
             // add Spectrum series
@@ -2063,132 +2063,139 @@ namespace AirScout
 
         private void SaveUserSettings()
         {
-            Log.WriteMessage("Saving configuration...");
-            Properties.Settings.Default.Save();
-            if (!SupportFunctions.IsMono)
-                return;
-            Console.WriteLine("Creating XML document...");
-            XmlDocument doc = new XmlDocument();
-            XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
-            XmlElement root = doc.DocumentElement;
-            doc.InsertBefore(xmlDeclaration, root);
-            XmlElement configuration = doc.CreateElement(string.Empty, "configuration", string.Empty);
-            doc.AppendChild(configuration);
-            XmlElement configsections = doc.CreateElement(string.Empty, "configSections", string.Empty);
-            configuration.AppendChild(configsections);
-            XmlElement usersettingsgroup = doc.CreateElement(string.Empty, "sectionGroup", string.Empty);
-            XmlAttribute usersettingsname = doc.CreateAttribute(string.Empty, "name", string.Empty);
-            usersettingsname.Value = "userSettings";
-            usersettingsgroup.Attributes.Append(usersettingsname);
-            XmlElement usersection = doc.CreateElement(string.Empty, "section", string.Empty);
-            XmlAttribute sectionname = doc.CreateAttribute(string.Empty, "name", string.Empty);
-            sectionname.Value = "AirScout.PlaneFeeds.Properties.Settings";
-            usersection.Attributes.Append(sectionname);
-            XmlAttribute sectiontype = doc.CreateAttribute(string.Empty, "type", string.Empty);
-            sectiontype.Value = "System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
-            usersection.Attributes.Append(sectiontype);
-            XmlAttribute sectionallowexedefinition = doc.CreateAttribute(string.Empty, "allowExeDefinition", string.Empty);
-            sectionallowexedefinition.Value = "MachineToLocalUser";
-            usersection.Attributes.Append(sectionallowexedefinition);
-            XmlAttribute sectionrequirepermission = doc.CreateAttribute(string.Empty, "requirePermission", string.Empty);
-            sectionrequirepermission.Value = "false";
-            usersection.Attributes.Append(sectionrequirepermission);
-            usersettingsgroup.AppendChild(usersection);
-            configsections.AppendChild(usersettingsgroup);
-            XmlElement usersettings = doc.CreateElement(string.Empty, "userSettings", string.Empty);
-            configuration.AppendChild(usersettings);
-            Console.WriteLine("Writing user settings...");
-            // append AirScout.PlaneFeeds properties
-            Console.WriteLine("Appending AirScout.PlaneFeeds.Properties.Settings.Default node...");
-            XmlElement planefeedproperties = doc.CreateElement(string.Empty, AirScout.PlaneFeeds.Properties.Settings.Default.ToString(), string.Empty);
-            usersettings.AppendChild(planefeedproperties);
-            foreach (SettingsPropertyValue p in AirScout.PlaneFeeds.Properties.Settings.Default.PropertyValues)
+            try
             {
-                if ((p != null) && (p.Name != null) && (p.PropertyValue != null) && !p.UsingDefaultValue)
+                Log.WriteMessage("Saving configuration...");
+                Properties.Settings.Default.Save();
+                if (!SupportFunctions.IsMono)
+                    return;
+                Console.WriteLine("Creating XML document...");
+                XmlDocument doc = new XmlDocument();
+                XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+                XmlElement root = doc.DocumentElement;
+                doc.InsertBefore(xmlDeclaration, root);
+                XmlElement configuration = doc.CreateElement(string.Empty, "configuration", string.Empty);
+                doc.AppendChild(configuration);
+                XmlElement configsections = doc.CreateElement(string.Empty, "configSections", string.Empty);
+                configuration.AppendChild(configsections);
+                XmlElement usersettingsgroup = doc.CreateElement(string.Empty, "sectionGroup", string.Empty);
+                XmlAttribute usersettingsname = doc.CreateAttribute(string.Empty, "name", string.Empty);
+                usersettingsname.Value = "userSettings";
+                usersettingsgroup.Attributes.Append(usersettingsname);
+                XmlElement usersection = doc.CreateElement(string.Empty, "section", string.Empty);
+                XmlAttribute sectionname = doc.CreateAttribute(string.Empty, "name", string.Empty);
+                sectionname.Value = "AirScout.PlaneFeeds.Properties.Settings";
+                usersection.Attributes.Append(sectionname);
+                XmlAttribute sectiontype = doc.CreateAttribute(string.Empty, "type", string.Empty);
+                sectiontype.Value = "System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
+                usersection.Attributes.Append(sectiontype);
+                XmlAttribute sectionallowexedefinition = doc.CreateAttribute(string.Empty, "allowExeDefinition", string.Empty);
+                sectionallowexedefinition.Value = "MachineToLocalUser";
+                usersection.Attributes.Append(sectionallowexedefinition);
+                XmlAttribute sectionrequirepermission = doc.CreateAttribute(string.Empty, "requirePermission", string.Empty);
+                sectionrequirepermission.Value = "false";
+                usersection.Attributes.Append(sectionrequirepermission);
+                usersettingsgroup.AppendChild(usersection);
+                configsections.AppendChild(usersettingsgroup);
+                XmlElement usersettings = doc.CreateElement(string.Empty, "userSettings", string.Empty);
+                configuration.AppendChild(usersettings);
+                Console.WriteLine("Writing user settings...");
+                // append AirScout.PlaneFeeds properties
+                Console.WriteLine("Appending AirScout.PlaneFeeds.Properties.Settings.Default node...");
+                XmlElement planefeedproperties = doc.CreateElement(string.Empty, AirScout.PlaneFeeds.Properties.Settings.Default.ToString(), string.Empty);
+                usersettings.AppendChild(planefeedproperties);
+                foreach (SettingsPropertyValue p in AirScout.PlaneFeeds.Properties.Settings.Default.PropertyValues)
                 {
-                    //                    Console.WriteLine("Appending " + p.Name + " = " + p.PropertyValue.ToString());
-                    XmlElement setting = doc.CreateElement(string.Empty, "setting", string.Empty);
-                    XmlAttribute name = doc.CreateAttribute(string.Empty, "name", string.Empty);
-                    name.Value = p.Name.ToString();
-                    setting.Attributes.Append(name);
-                    XmlAttribute serializeas = doc.CreateAttribute(string.Empty, "serializeAs", string.Empty);
-                    serializeas.Value = p.Property.SerializeAs.ToString();
-                    setting.Attributes.Append(serializeas);
-                    XmlElement value = doc.CreateElement(string.Empty, "value", string.Empty);
-                    if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.String)
+                    if ((p != null) && (p.Name != null) && (p.PropertyValue != null) && !p.UsingDefaultValue)
                     {
-                        XmlText text = doc.CreateTextNode(p.SerializedValue.ToString());
-                        value.AppendChild(text);
-                    }
-                    else
-                    {
-                        if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.Xml)
+                        //                    Console.WriteLine("Appending " + p.Name + " = " + p.PropertyValue.ToString());
+                        XmlElement setting = doc.CreateElement(string.Empty, "setting", string.Empty);
+                        XmlAttribute name = doc.CreateAttribute(string.Empty, "name", string.Empty);
+                        name.Value = p.Name.ToString();
+                        setting.Attributes.Append(name);
+                        XmlAttribute serializeas = doc.CreateAttribute(string.Empty, "serializeAs", string.Empty);
+                        serializeas.Value = p.Property.SerializeAs.ToString();
+                        setting.Attributes.Append(serializeas);
+                        XmlElement value = doc.CreateElement(string.Empty, "value", string.Empty);
+                        if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.String)
                         {
-                            MemoryStream ms = new MemoryStream();
-                            XmlWriter writer = XmlWriter.Create(ms, new XmlWriterSettings
-                            {
-                                NewLineOnAttributes = true,
-                                OmitXmlDeclaration = true
-                            });
-                            XmlSerializer serializer = new XmlSerializer(p.PropertyValue.GetType());
-                            serializer.Serialize(writer, p.PropertyValue);
-                            byte[] text2 = new byte[ms.ToArray().Length - 3];
-                            Array.Copy(ms.ToArray(), 3, text2, 0, text2.Length);
-                            XmlText xml = doc.CreateTextNode(Encoding.UTF8.GetString(text2.ToArray<byte>()));
-                            value.AppendChild(xml);
-                            value.InnerXml = WebUtility.HtmlDecode(value.InnerXml);
+                            XmlText text = doc.CreateTextNode(p.SerializedValue.ToString());
+                            value.AppendChild(text);
                         }
+                        else
+                        {
+                            if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.Xml)
+                            {
+                                MemoryStream ms = new MemoryStream();
+                                XmlWriter writer = XmlWriter.Create(ms, new XmlWriterSettings
+                                {
+                                    NewLineOnAttributes = true,
+                                    OmitXmlDeclaration = true
+                                });
+                                XmlSerializer serializer = new XmlSerializer(p.PropertyValue.GetType());
+                                serializer.Serialize(writer, p.PropertyValue);
+                                byte[] text2 = new byte[ms.ToArray().Length - 3];
+                                Array.Copy(ms.ToArray(), 3, text2, 0, text2.Length);
+                                XmlText xml = doc.CreateTextNode(Encoding.UTF8.GetString(text2.ToArray<byte>()));
+                                value.AppendChild(xml);
+                                value.InnerXml = WebUtility.HtmlDecode(value.InnerXml);
+                            }
+                        }
+                        setting.AppendChild(value);
+                        planefeedproperties.AppendChild(setting);
                     }
-                    setting.AppendChild(value);
-                    planefeedproperties.AppendChild(setting);
                 }
+                // append AirScout properties
+                Console.WriteLine("Appending AirScout.Properties.Settings.Default node...");
+                XmlElement properties = doc.CreateElement(string.Empty, Properties.Settings.Default.ToString(), string.Empty);
+                usersettings.AppendChild(properties);
+                foreach (SettingsPropertyValue p in Properties.Settings.Default.PropertyValues)
+                {
+                    if ((p != null) && (p.Name != null) && (p.PropertyValue != null) && !p.UsingDefaultValue)
+                    {
+                        //                   Console.WriteLine("Appending " + p.Name + " = " + p.PropertyValue.ToString();
+                        XmlElement setting = doc.CreateElement(string.Empty, "setting", string.Empty);
+                        XmlAttribute name = doc.CreateAttribute(string.Empty, "name", string.Empty);
+                        name.Value = p.Name.ToString();
+                        setting.Attributes.Append(name);
+                        XmlAttribute serializeas = doc.CreateAttribute(string.Empty, "serializeAs", string.Empty);
+                        serializeas.Value = p.Property.SerializeAs.ToString();
+                        setting.Attributes.Append(serializeas);
+                        XmlElement value = doc.CreateElement(string.Empty, "value", string.Empty);
+                        if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.String)
+                        {
+                            XmlText text = doc.CreateTextNode(p.SerializedValue.ToString());
+                            value.AppendChild(text);
+                        }
+                        else
+                        {
+                            if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.Xml)
+                            {
+                                MemoryStream ms = new MemoryStream();
+                                XmlWriter writer = XmlWriter.Create(ms, new XmlWriterSettings
+                                {
+                                    NewLineOnAttributes = true,
+                                    OmitXmlDeclaration = true
+                                });
+                                XmlSerializer serializer = new XmlSerializer(p.PropertyValue.GetType());
+                                serializer.Serialize(writer, p.PropertyValue);
+                                byte[] text2 = new byte[ms.ToArray().Length - 3];
+                                Array.Copy(ms.ToArray(), 3, text2, 0, text2.Length);
+                                XmlText xml = doc.CreateTextNode(Encoding.UTF8.GetString(text2.ToArray<byte>()));
+                                value.AppendChild(xml);
+                                value.InnerXml = WebUtility.HtmlDecode(value.InnerXml);
+                            }
+                        }
+                        setting.AppendChild(value);
+                        properties.AppendChild(setting);
+                    }
+                }
+                doc.Save(GetUserSettingsPath());
             }
-            // append AirScout properties
-            Console.WriteLine("Appending AirScout.Properties.Settings.Default node...");
-            XmlElement properties = doc.CreateElement(string.Empty, Properties.Settings.Default.ToString(), string.Empty);
-            usersettings.AppendChild(properties);
-            foreach (SettingsPropertyValue p in Properties.Settings.Default.PropertyValues)
+            catch (Exception ex)
             {
-                if ((p != null) && (p.Name != null) && (p.PropertyValue != null) && !p.UsingDefaultValue)
-                {
-                    //                   Console.WriteLine("Appending " + p.Name + " = " + p.PropertyValue.ToString();
-                    XmlElement setting = doc.CreateElement(string.Empty, "setting", string.Empty);
-                    XmlAttribute name = doc.CreateAttribute(string.Empty, "name", string.Empty);
-                    name.Value = p.Name.ToString();
-                    setting.Attributes.Append(name);
-                    XmlAttribute serializeas = doc.CreateAttribute(string.Empty, "serializeAs", string.Empty);
-                    serializeas.Value = p.Property.SerializeAs.ToString();
-                    setting.Attributes.Append(serializeas);
-                    XmlElement value = doc.CreateElement(string.Empty, "value", string.Empty);
-                    if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.String)
-                    {
-                        XmlText text = doc.CreateTextNode(p.SerializedValue.ToString());
-                        value.AppendChild(text);
-                    }
-                    else
-                    {
-                        if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.Xml)
-                        {
-                            MemoryStream ms = new MemoryStream();
-                            XmlWriter writer = XmlWriter.Create(ms, new XmlWriterSettings
-                            {
-                                NewLineOnAttributes = true,
-                                OmitXmlDeclaration = true
-                            });
-                            XmlSerializer serializer = new XmlSerializer(p.PropertyValue.GetType());
-                            serializer.Serialize(writer, p.PropertyValue);
-                            byte[] text2 = new byte[ms.ToArray().Length - 3];
-                            Array.Copy(ms.ToArray(), 3, text2, 0, text2.Length);
-                            XmlText xml = doc.CreateTextNode(Encoding.UTF8.GetString(text2.ToArray<byte>()));
-                            value.AppendChild(xml);
-                            value.InnerXml = WebUtility.HtmlDecode(value.InnerXml);
-                        }
-                    }
-                    setting.AppendChild(value);
-                    properties.AppendChild(setting);
-                }
+                Console.WriteLine("Unable to save settings: " + ex.ToString());
             }
-            doc.Save(GetUserSettingsPath());
         }
 
         #endregion
@@ -2197,9 +2204,6 @@ namespace AirScout
 
         private void OnIdle(object sender, EventArgs args)
         {
-            // enable/disable watchlist button
-            if (btn_Control_Manage_Watchlist.Enabled == Properties.Settings.Default.Watchlist_SyncWithKST)
-                btn_Control_Manage_Watchlist.Enabled = !Properties.Settings.Default.Watchlist_SyncWithKST;
         }
 
         #endregion
@@ -2813,6 +2817,10 @@ namespace AirScout
             Say("Options");
             if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                // enbale/disable manage watchlist button
+                btn_Control_Manage_Watchlist.Enabled = !Properties.Settings.Default.Watchlist_SyncWithKST;
+                // Re-initialze charts
+                InitializeCharts();
                 // clear paths cache assuming that new options were set
                 ElevationPaths.Clear();
                 PropagationPaths.Clear();
@@ -2837,18 +2845,6 @@ namespace AirScout
                 bw_PlaneFeed2 = null;
                 bw_PlaneFeed3 = null;
 
-                /*
-                foreach (PlaneFeed feed in PlaneFeeds)
-                {
-                    if (Properties.Settings.Default.Planes_PlaneFeed1 == feed.Name)
-                        bw_PlaneFeed1 = feed;
-                    if (Properties.Settings.Default.Planes_PlaneFeed2 == feed.Name)
-                        bw_PlaneFeed2 = feed;
-                    if (Properties.Settings.Default.Planes_PlaneFeed3 == feed.Name)
-                        bw_PlaneFeed3 = feed;
-                }
-
-            */
                 if (PlaneFeedPlugins != null)
                 {
                     foreach (IPlaneFeedPlugin plugin in PlaneFeedPlugins)
@@ -4030,6 +4026,7 @@ namespace AirScout
             // update listview
             lv_Control_Watchlist.BeginUpdate();
             lv_Control_Watchlist.Items.Clear();
+            Properties.Settings.Default.Watchlist.Sort();
             // run twice, add checked items first, then all others
             foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
             {
@@ -4143,6 +4140,7 @@ namespace AirScout
                     if (item.Overlay == gmo_Callsigns)
                     {
                         string call = (string)item.Tag;
+                        // check if callsign clicked and not own callsign
                         if (Callsign.Check(call) && (call != Properties.Settings.Default.MyCall))
                         {
                             if (PathMode == AIRSCOUTPATHMODE.MULTI)
@@ -4155,6 +4153,24 @@ namespace AirScout
                                     Properties.Settings.Default.Watchlist.ElementAt(index).Checked = !Properties.Settings.Default.Watchlist.ElementAt(index).Checked;
                                     // refresh watchlist view
                                     RefreshWatchlistView();
+                                    // update paths if running
+                                    if (PlayMode == AIRSCOUTPLAYMODE.FORWARD)
+                                        UpdatePaths();
+                                }
+                            }
+                            else if (PathMode == AIRSCOUTPATHMODE.SINGLE)
+                            {
+                                // search call on watchlist
+                                int index = Properties.Settings.Default.Watchlist.IndexOf(call);
+                                if (index >= 0)
+                                {
+                                    string loc = Properties.Settings.Default.Watchlist.ElementAt(index).Loc;
+                                    // get location info from database
+                                    LocationDesignator ld = LocationFindOrCreate(call, loc);
+                                    Properties.Settings.Default.DXCall = ld.Call;
+                                    Properties.Settings.Default.DXLat = ld.Lat;
+                                    Properties.Settings.Default.DXLon = ld.Lon;
+                                    UpdateStatus();
                                     // update paths if running
                                     if (PlayMode == AIRSCOUTPLAYMODE.FORWARD)
                                         UpdatePaths();
@@ -4635,6 +4651,9 @@ namespace AirScout
 
         private void tp_Control_Multi_Enter(object sender, EventArgs e)
         {
+            // enbale/disable manage watchlist button
+            btn_Control_Manage_Watchlist.Enabled = !Properties.Settings.Default.Watchlist_SyncWithKST;
+
             if (PathMode != AIRSCOUTPATHMODE.MULTI)
             {
                 PathMode = AIRSCOUTPATHMODE.MULTI;
@@ -5876,13 +5895,14 @@ namespace AirScout
             {
                 Stopwatch st = new Stopwatch();
                 st.Start();
-                // mark all watchlist items to remove
+                // mark all watchlist items to remove wich are not currently tracked
                 foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
                 {
                     // nasty!! Should never be null!
                     if (item == null)
                         continue;
-                    item.Remove = true;
+                    if (!item.Checked)
+                        item.Remove = true;
                 }
                 // split message
                 string[] a = msg.Data.Split(',');

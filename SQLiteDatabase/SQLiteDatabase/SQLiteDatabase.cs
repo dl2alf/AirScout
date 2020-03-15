@@ -373,33 +373,47 @@ namespace System.Data.SQLite
         public DataTable Select (string sql)
         {
             DataTable dt = new DataTable();
-            lock (DBCommand)
+            try
             {
-                DBCommand.CommandText = sql;
-                DBCommand.Parameters.Clear();
-                SQLiteDataAdapter da = new SQLiteDataAdapter(DBCommand);
-                da.Fill(dt);
+                lock (DBCommand)
+                {
+                    DBCommand.CommandText = sql;
+                    DBCommand.Parameters.Clear();
+                    SQLiteDataAdapter da = new SQLiteDataAdapter(DBCommand);
+                    da.Fill(dt);
+                }
+                // Linux/Mono hack --> cut column names to its right length
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    int j = 0;
+                    while ((j < dt.Columns[i].ColumnName.Length) && (Char.IsLetter(dt.Columns[i].ColumnName[j]) || Char.IsDigit(dt.Columns[i].ColumnName[j])))
+                        j++;
+                    dt.Columns[i].ColumnName = dt.Columns[i].ColumnName.Substring(0, j);
+                    Console.Write("'" + dt.Columns[i].ColumnName + "[" + dt.Columns[i].ColumnName.Length + "]', ");
+                }
+                Console.WriteLine();
             }
-            // Linux/Mono hack --> cut column names to its right length
-            for (int i = 0; i < dt.Columns.Count; i++)
+            catch (Exception ex)
             {
-                int j = 0;
-                while ((j < dt.Columns[i].ColumnName.Length) && (Char.IsLetter(dt.Columns[i].ColumnName[j]) || Char.IsDigit(dt.Columns[i].ColumnName[j])))
-                    j++;
-                dt.Columns[i].ColumnName = dt.Columns[i].ColumnName.Substring(0, j);
-                Console.Write("'" + dt.Columns[i].ColumnName + "[" + dt.Columns[i].ColumnName.Length + "]', ");
+                Console.WriteLine("SQLiteDatabase.Select: fatal error while executing command <" + sql + ">\n\n" + ex.ToString());
             }
-            Console.WriteLine();
             return dt;
         }
 
         public DataTable Select (SQLiteCommand cmd)
         {
             DataTable dt = new DataTable();
-            lock (cmd)
+            try
             {
-                SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
-                da.Fill(dt);
+                lock (cmd)
+                {
+                    SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SQLiteDatabase.Select: fatal error while executing command <" + cmd.CommandText + ">\n\n" + ex.ToString());
             }
             return dt;
         }
