@@ -94,7 +94,7 @@ namespace GMap.NET.CacheProviders
          return null;
       }
 
-      internal void AddTileToMemoryCache(RawTile tile, byte[] data)
+      public void AddTileToMemoryCache(RawTile tile, byte[] data)
       {
          if(data != null)
          {

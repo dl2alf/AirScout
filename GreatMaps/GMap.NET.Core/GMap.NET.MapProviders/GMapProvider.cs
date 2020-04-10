@@ -394,7 +394,7 @@ namespace GMap.NET.MapProviders
             {
                MemoryStream responseStream = Stuff.CopyStream(response.GetResponseStream(), false);
                {
-                  Debug.WriteLine("Response[" + responseStream.Length + " bytes]: " + url);
+                  Console.WriteLine("Response[" + responseStream.Length + " bytes]: " + url);
 
                   if(responseStream.Length > 0)
                   {

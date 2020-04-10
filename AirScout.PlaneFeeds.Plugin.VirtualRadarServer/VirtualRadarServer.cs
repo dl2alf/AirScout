@@ -14,6 +14,7 @@ using System.Web.Script.Serialization;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
 using System.Xml.Linq;
+using Newtonsoft.Json;
 
 namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
 {
@@ -200,7 +201,9 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
                 return "Web feed from Virtual Radar Server\n\n" +
                        "(c) AirScout(www.airscout.eu)\n\n" +
                        "This feed requires an API-key, either personal or AirScout internal.\n" +
-                       "See https://www.adsbexchange.com/ for details.\n";
+                       "See https://www.adsbexchange.com/ for details.\n\n" +
+                        "This webfeed forces TLS1.2 transport layer security. Though this plugin is compiled for .NET4.0 it needs .NET4.5 or higher installed on this machine to work.\n\n" +
+                        "This webfeed will probably not work on Windows XP and Linux/Mono systems";
             }
         }
 
@@ -337,20 +340,23 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
             // calculate url and get json
             String url = VC.ReplaceAllVars(Settings.URL);
             Console.WriteLine("[" + this.GetType().Name + "]: Creating web request: " + url);
-            HttpWebRequest webrequest = (HttpWebRequest)HttpWebRequest.Create(url);
-            webrequest.Referer = "http://www.vrs-world.com/";
-            webrequest.Timeout = Settings.Timeout * 1000;
-            webrequest.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0";
-            webrequest.Accept = "application/json, text/javascript, */*;q=0.01";
-            webrequest.AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip;
-            webrequest.Headers.Add("api-auth:" + APIKey);
-            Console.WriteLine("[" + this.GetType().Name + "]: Getting web response");
-            HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
-            Console.WriteLine("[" + this.GetType().Name + "]: Reading stream");
-            using (StreamReader sr = new StreamReader(webresponse.GetResponseStream()))
-            {
-                json = sr.ReadToEnd();
-            }
+            //            HttpWebRequest webrequest = (HttpWebRequest)HttpWebRequest.Create(url);
+            //            webrequest.Referer = "http://www.vrs-world.com/";
+            //            webrequest.Timeout = Settings.Timeout * 1000;
+            //            webrequest.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0";
+            //            webrequest.Accept = "application/json, text/javascript, */*;q=0.01";
+            //            webrequest.AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip;
+            //            webrequest.Headers.Add("api-auth:" + APIKey);
+            //            Console.WriteLine("[" + this.GetType().Name + "]: Getting web response");
+            //            HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
+            //            Console.WriteLine("[" + this.GetType().Name + "]: Reading stream");
+            //            
+            //            using (StreamReader sr = new StreamReader(webresponse.GetResponseStream()))
+            //            {
+            //                json = sr.ReadToEnd();
+            //            }
+            //           */
+            json = VRSTlsClient.DownloadFile(url, Settings.Timeout * 1000, APIKey);
             // save raw data to file if enabled
             if (Settings.SaveToFile)
             {
@@ -360,8 +366,9 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
                 }
             }
             Console.WriteLine("[" + this.GetType().Name + "]: Analyzing data");
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            dynamic root = js.Deserialize<dynamic>(json);
+            //            JavaScriptSerializer js = new JavaScriptSerializer();
+            //            dynamic root = js.Deserialize<dynamic>(json);
+            dynamic root = JsonConvert.DeserializeObject(json);
             // 2017-07-23: workaround for "jumping planes" due to incorrect time stamps
             // try to get the server time to adjust the time stamps in plane positions
             // --> compare server time with local time and calculate offset

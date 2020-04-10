@@ -41,5 +41,44 @@
     <Setting Name="Database_BackgroundUpdate_ThreadWait" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="Elevation_GLOBE_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_Status" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_Status" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_Status" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_Update_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_Update_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_Update_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="MaxLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MinLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MaxLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MinLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

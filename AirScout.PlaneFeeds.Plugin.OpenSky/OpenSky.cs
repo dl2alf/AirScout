@@ -14,6 +14,7 @@ using System.Web.Script.Serialization;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Collections;
+using Newtonsoft.Json;
 
 //TODO: Rename namespace to a name of your choice
 namespace AirScout.PlaneFeeds.Plugin.OpenSky
@@ -54,7 +55,7 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
         [DescriptionAttribute("Base URL for website.")]
-        [DefaultValue("http://opensky-network.org/api/states/all?lamin=%MINLAT%&lomin=%MINLON%&lamax=%MAXLAT%&lomax=%MAXLON%")]
+        [DefaultValue("https://opensky-network.org/api/states/all?lamin=%MINLAT%&lomin=%MINLON%&lamax=%MAXLAT%&lomax=%MAXLON%")]
         public string URL { get; set; }
 
         [Browsable(true)]
@@ -236,7 +237,7 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                     "For details see https://opensky-network.org.\n\n" +
                     "As this is a community network, please consider to run a personal ADSB-receiver and to contribute your data to this network.\n\n" +
                     "This webfeed forces TLS1.2 transport layer security. Though this plugin is compiled for .NET4.0 it needs .NET4.5 or higher installed on this machine to work.\n\n" +
-                    "This webfeed will probably not work on early Windows XP and Linux/Mono systems";
+                    "This webfeed will probably not work on Windows XP and Linux/Mono systems";
             }
         }
         public bool HasSettings
@@ -341,18 +342,19 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
             String url = VC.ReplaceAllVars(Settings.URL);
             Console.WriteLine("[" + this.GetType().Name + "]: Creating web request: " + url);
             // this will only run on .NET 4.0 if you have installed .NET 4.5 or later frameworks on your machine!
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-            HttpWebRequest webrequest = (HttpWebRequest)HttpWebRequest.Create(url);
-            webrequest.Timeout = Settings.Timeout * 1000;
-            webrequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0";
-            webrequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-            Console.WriteLine("[" + this.GetType().Name + "]: Getting web response");
-            HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
-            Console.WriteLine("[" + this.GetType().Name + "]: Reading stream");
-            using (StreamReader sr = new StreamReader(webresponse.GetResponseStream()))
-            {
-                json = sr.ReadToEnd();
-            }
+            //            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+            //            HttpWebRequest webrequest = (HttpWebRequest)HttpWebRequest.Create(url);
+            //            webrequest.Timeout = Settings.Timeout * 1000;
+            //            webrequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0";
+            //            webrequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+            //            Console.WriteLine("[" + this.GetType().Name + "]: Getting web response");
+            //            HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
+            //            Console.WriteLine("[" + this.GetType().Name + "]: Reading stream");
+            //            using (StreamReader sr = new StreamReader(webresponse.GetResponseStream()))
+            //           {
+            //                json = sr.ReadToEnd();
+            //            }
+            json = OSNTlsClient.DownloadFile(url, Settings.Timeout * 1000);
             // save raw data to file if enabled
             if (Settings.SaveToFile)
             {
@@ -362,8 +364,9 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                 }
             }
             Console.WriteLine("[" + this.GetType().Name + "]: Analyzing data");
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            dynamic root = js.Deserialize<dynamic>(json);
+            //            JavaScriptSerializer js = new JavaScriptSerializer();
+            //            dynamic root = js.Deserialize<dynamic>(json);
+            dynamic root = JsonConvert.DeserializeObject(json);
             try
             {
                 // analyze json string for planes data
@@ -376,14 +379,7 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                         // different handling of reading JSON between Windows (Array) & Linux (ArrayList)
                         // access to data values itself is the same
                         int len = 0;
-                        if (ac.GetType() == typeof(ArrayList))
-                        {
-                            len = ac.Count;
-                        }
-                        else if (ac.GetType() == typeof(Object[]))
-                        {
-                            len = ac.Length;
-                        }
+                        len = ac.Count;
                         // skip if too few fields in record
                         if (len < 17)
                             continue;
@@ -428,7 +424,7 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
             }
             catch (Exception ex)
             {
-                // do nothing if property is not found
+                Console.WriteLine("[" + System.Reflection.MethodBase.GetCurrentMethod().Name + "]" + ex.Message);
             }
             Console.WriteLine("[" + this.GetType().Name + "]: Returning " + planes.Count + " planes");
             return planes;

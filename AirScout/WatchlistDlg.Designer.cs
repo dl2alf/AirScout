@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.ss_Watchlist_Main = new System.Windows.Forms.StatusStrip();
             this.tsl_Watchlist_Main = new System.Windows.Forms.ToolStripStatusLabel();
             this.btn_Watchlist_Add = new System.Windows.Forms.Button();
@@ -109,7 +109,7 @@
             // btn_Watchlist_Cancel
             // 
             this.btn_Watchlist_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Watchlist_Cancel.Location = new System.Drawing.Point(147, 402);
+            this.btn_Watchlist_Cancel.Location = new System.Drawing.Point(245, 402);
             this.btn_Watchlist_Cancel.Name = "btn_Watchlist_Cancel";
             this.btn_Watchlist_Cancel.Size = new System.Drawing.Size(75, 23);
             this.btn_Watchlist_Cancel.TabIndex = 8;
@@ -120,7 +120,7 @@
             // 
             this.btn_Watchlist_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btn_Watchlist_OK.Enabled = false;
-            this.btn_Watchlist_OK.Location = new System.Drawing.Point(237, 402);
+            this.btn_Watchlist_OK.Location = new System.Drawing.Point(153, 402);
             this.btn_Watchlist_OK.Name = "btn_Watchlist_OK";
             this.btn_Watchlist_OK.Size = new System.Drawing.Size(75, 23);
             this.btn_Watchlist_OK.TabIndex = 9;
@@ -174,17 +174,18 @@
             this.dgv_Watchlist_Callsigns.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_Watchlist_Callsigns.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.dgv_Watchlist_Callsigns.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgv_Watchlist_Callsigns.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgv_Watchlist_Callsigns.DefaultCellStyle = dataGridViewCellStyle1;
             this.dgv_Watchlist_Callsigns.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgv_Watchlist_Callsigns.Location = new System.Drawing.Point(15, 101);
             this.dgv_Watchlist_Callsigns.Name = "dgv_Watchlist_Callsigns";
+            this.dgv_Watchlist_Callsigns.ReadOnly = true;
             this.dgv_Watchlist_Callsigns.RowHeadersVisible = false;
             this.dgv_Watchlist_Callsigns.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgv_Watchlist_Callsigns.Size = new System.Drawing.Size(180, 280);
@@ -201,14 +202,14 @@
             this.dgv_Watchlist_Selected.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv_Watchlist_Selected.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.dgv_Watchlist_Selected.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgv_Watchlist_Selected.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgv_Watchlist_Selected.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgv_Watchlist_Selected.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgv_Watchlist_Selected.Location = new System.Drawing.Point(288, 101);
             this.dgv_Watchlist_Selected.Name = "dgv_Watchlist_Selected";
@@ -261,6 +262,9 @@
             this.Controls.Add(this.btn_Watchlist_Remove);
             this.Controls.Add(this.btn_Watchlist_Add);
             this.Controls.Add(this.ss_Watchlist_Main);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "WatchlistDlg";
             this.Text = "Manage Watchlist";
             this.Load += new System.EventHandler(this.WatchlistDlg_Load);

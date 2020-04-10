@@ -42,10 +42,16 @@ namespace ScoutBase.Elevation
     {
         ElevationDatabaseUpdaterStartOptions StartOptions;
 
+        // Temp directory to save downloaded files
+        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp").TrimEnd(Path.DirectorySeparatorChar);
+
         public ElevationDatabaseUpdater() : base()
         {
             this.WorkerReportsProgress = true;
             this.WorkerSupportsCancellation = true;
+            // create temp directory if not exists
+            if (!Directory.Exists(TmpDirectory))
+                Directory.CreateDirectory(TmpDirectory);
         }
 
         // TRICKY: process a single elevation tile.
@@ -258,6 +264,148 @@ namespace ScoutBase.Elevation
             return true;
         }
 
+        private DateTime GetDatabaseTimeStamp()
+        {
+            string filename = ElevationData.Database.GetDBLocation(StartOptions.Model);
+            DateTime dt = File.GetLastWriteTimeUtc(filename).ToUniversalTime();
+            // convert to YYYY:MM:DD hh:mm:ss only as this is stored in settings
+            dt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private DATABASESTATUS GetDatabaseStatus()
+        {
+            return ElevationData.Database.GetDBStatus(StartOptions.Model);
+        }
+
+        private DateTime GetUpdateTimeStamp()
+        {
+            string filename = Path.Combine(ElevationData.Database.DefaultDatabaseDirectory(StartOptions.Model), ElevationData.Database.JSONFile(StartOptions.Model)); 
+            DateTime dt = File.GetLastWriteTimeUtc(filename).ToUniversalTime();
+            // convert to YYYY:MM:DD hh:mm:ss only as this is stored in settings
+            dt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private DateTime GetSavedTimeStamp()
+        {
+            DateTime dt = DateTime.MinValue;
+            if ((StartOptions.Model == ELEVATIONMODEL.GLOBE) && (Properties.Settings.Default.Elevation_GLOBE_TimeStamp != null))
+                dt = Properties.Settings.Default.Elevation_GLOBE_TimeStamp;
+            else if ((StartOptions.Model == ELEVATIONMODEL.SRTM3) && (Properties.Settings.Default.Elevation_SRTM3_TimeStamp != null))
+                dt = Properties.Settings.Default.Elevation_SRTM3_TimeStamp;
+            else if ((StartOptions.Model == ELEVATIONMODEL.SRTM1) && (Properties.Settings.Default.Elevation_SRTM1_TimeStamp != null))
+                dt = Properties.Settings.Default.Elevation_SRTM1_TimeStamp;
+            // change kind to UTC as it is not specified in settings
+            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private DATABASESTATUS GetSavedDatabaseStatus()
+        {
+            if (StartOptions.Model == ELEVATIONMODEL.GLOBE)
+                return Properties.Settings.Default.Elevation_GLOBE_Status;
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM3)
+                return Properties.Settings.Default.Elevation_SRTM3_Status;
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
+                return Properties.Settings.Default.Elevation_SRTM1_Status;
+            return DATABASESTATUS.UNDEFINED;
+        }
+
+        private DateTime GetSavedUpdateTimeStamp()
+        {
+            DateTime dt = DateTime.MinValue;
+            if (StartOptions.Model == ELEVATIONMODEL.GLOBE)
+                dt = Properties.Settings.Default.Elevation_GLOBE_Update_TimeStamp;
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM3)
+                dt = Properties.Settings.Default.Elevation_SRTM3_Update_TimeStamp;
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
+                dt = Properties.Settings.Default.Elevation_SRTM1_Update_TimeStamp;
+            // change kind to UTC as it is not specified in settings
+            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private void SaveDatabaseTimeStamp()
+        {
+            if (StartOptions.Model == ELEVATIONMODEL.GLOBE)
+                Properties.Settings.Default.Elevation_GLOBE_TimeStamp = GetDatabaseTimeStamp();
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM3)
+                Properties.Settings.Default.Elevation_SRTM3_TimeStamp = GetDatabaseTimeStamp();
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
+                Properties.Settings.Default.Elevation_SRTM1_TimeStamp = GetDatabaseTimeStamp();
+        }
+
+        private void SaveDatabaseStatus()
+        {
+            if (StartOptions.Model == ELEVATIONMODEL.GLOBE)
+                Properties.Settings.Default.Elevation_GLOBE_Status = GetDatabaseStatus();
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM3)
+                Properties.Settings.Default.Elevation_SRTM3_Status = GetDatabaseStatus();
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
+                Properties.Settings.Default.Elevation_SRTM1_Status = GetDatabaseStatus();
+        }
+
+        private void SaveUpdateTimeStamp()
+        {
+            if (StartOptions.Model == ELEVATIONMODEL.GLOBE)
+                Properties.Settings.Default.Elevation_GLOBE_Update_TimeStamp = GetUpdateTimeStamp();
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM3)
+                Properties.Settings.Default.Elevation_SRTM3_Update_TimeStamp = GetUpdateTimeStamp();
+            else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
+                Properties.Settings.Default.Elevation_SRTM1_Update_TimeStamp = GetUpdateTimeStamp();
+        }
+
+        private void SaveBounds()
+        {
+            Properties.Settings.Default.MaxLat = StartOptions.MaxLat;
+            Properties.Settings.Default.MinLat = StartOptions.MinLat;
+            Properties.Settings.Default.MaxLon = StartOptions.MaxLon;
+            Properties.Settings.Default.MinLon = StartOptions.MinLon;
+        }
+
+        private bool HasDatabaseChanged()
+        {
+            try
+            {
+                DateTime dt1 = GetSavedTimeStamp();
+                DateTime dt2 = GetDatabaseTimeStamp();
+                return  dt1 != dt2;
+            }
+            catch
+            {
+                // do nothing
+            }
+            return true;
+        }
+
+        private bool HasUpdateChanged()
+        {
+            try
+            {
+                DateTime dt1 = GetSavedUpdateTimeStamp();
+                DateTime dt2 = GetUpdateTimeStamp();
+                return dt1 != dt2;
+            }
+            catch
+            {
+                // do nothing
+            }
+            return true;
+        }
+
+        private bool HaveBoundsChanged()
+        {
+            if (StartOptions.MaxLat != Properties.Settings.Default.MaxLat)
+                return true;
+            if (StartOptions.MinLat != Properties.Settings.Default.MinLat)
+                return true;
+            if (StartOptions.MaxLon != Properties.Settings.Default.MaxLon)
+                return true;
+            if (StartOptions.MinLon != Properties.Settings.Default.MinLon)
+                return true;
+            return false;
+        }
 
         protected override void OnDoWork(DoWorkEventArgs e)
         {
@@ -277,10 +425,6 @@ namespace ScoutBase.Elevation
                     // check if any kind of update is enabled
                     if ((StartOptions.Options == BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE) || (StartOptions.Options == BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY))
                     { 
-                        // get temp directory
-                        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp").TrimEnd(Path.DirectorySeparatorChar);
-                        if (!Directory.Exists(TmpDirectory))
-                            Directory.CreateDirectory(TmpDirectory);
                         // reset status
                         ElevationData.Database.SetDBStatus(StartOptions.Model, DATABASESTATUS.UNDEFINED);
                         this.ReportProgress(1, ElevationData.Database.GetDBStatus(StartOptions.Model));
@@ -294,68 +438,86 @@ namespace ScoutBase.Elevation
                         {
                             this.ReportProgress(-1, ex.ToString());
                         }
-                        // check if database is complete
-                        this.ReportProgress(0, "Checking " + StartOptions.Name + "...");
                         Stopwatch st = new Stopwatch();
                         st.Start();
-                        bool b = IsDatabaseComplete();
-                        st.Stop();
-                        if (b)
+                        // check last change of database file
+                        if (HasDatabaseChanged() || HasUpdateChanged() || HaveBoundsChanged())
                         {
-                            // set status
-                            ElevationData.Database.SetDBStatusBit(StartOptions.Model, DATABASESTATUS.COMPLETE);
-                            // set bounds
-                            ElevationData.Database.MinLat = StartOptions.MinLat;
-                            ElevationData.Database.MinLon = StartOptions.MinLon;
-                            ElevationData.Database.MaxLat = StartOptions.MaxLat;
-                            ElevationData.Database.MaxLon = StartOptions.MaxLon;
+                            // database and/or update has changed --> full check necessary
+                            // check if database is complete
+                            this.ReportProgress(0, "Checking " + StartOptions.Name + "...");
+                            bool b = IsDatabaseComplete();
+                            st.Stop();
+                            if (b)
+                            {
+                                // set status
+                                ElevationData.Database.SetDBStatusBit(StartOptions.Model, DATABASESTATUS.COMPLETE);
+                                // set bounds
+                                ElevationData.Database.MinLat = StartOptions.MinLat;
+                                ElevationData.Database.MinLon = StartOptions.MinLon;
+                                ElevationData.Database.MaxLat = StartOptions.MaxLat;
+                                ElevationData.Database.MaxLon = StartOptions.MaxLon;
 
-                            this.ReportProgress(0, StartOptions.Name + " complete: " + st.ElapsedMilliseconds / 1000 + "sec.");
-                        }
-                        else
-                        {
-                            ElevationData.Database.ResetDBStatusBit(StartOptions.Model, DATABASESTATUS.COMPLETE);
-                        }
-                        this.ReportProgress(1, ElevationData.Database.GetDBStatus(StartOptions.Model));
-                        if (this.CancellationPending)
-                            break;
-                        st.Restart();
-                        // update elevation database if necessary
-                        this.ReportProgress(0, "Updating " + StartOptions.Name + "...");
-                        // reset database status
-                        ElevationData.Database.ResetDBStatusBit(StartOptions.Model, DATABASESTATUS.UPTODATE);
-                        ElevationData.Database.ResetDBStatusBit(StartOptions.Model, DATABASESTATUS.ERROR);
-                        ElevationData.Database.SetDBStatusBit(StartOptions.Model, DATABASESTATUS.UPDATING);
-                        this.ReportProgress(1, ElevationData.Database.GetDBStatus(StartOptions.Model));
-                        // start update
-                        int er = -UpdateDatabase();
-                        // set database status
-                        ElevationData.Database.ResetDBStatusBit(StartOptions.Model, DATABASESTATUS.UPDATING);
-                        if (er > 0)
-                        {
-                            ElevationData.Database.SetDBStatusBit(StartOptions.Model, DATABASESTATUS.ERROR);
-                        }
-                        else
-                        {
+                                this.ReportProgress(0, StartOptions.Name + " complete: " + st.ElapsedMilliseconds / 1000 + "sec.");
+                            }
+                            else
+                            {
+                                ElevationData.Database.ResetDBStatusBit(StartOptions.Model, DATABASESTATUS.COMPLETE);
+                            }
+                            this.ReportProgress(1, ElevationData.Database.GetDBStatus(StartOptions.Model));
+                            if (this.CancellationPending)
+                                break;
+                            st.Restart();
+                            // update elevation database if necessary
+                            this.ReportProgress(0, "Updating " + StartOptions.Name + "...");
+                            // reset database status
+                            ElevationData.Database.ResetDBStatusBit(StartOptions.Model, DATABASESTATUS.UPTODATE);
                             ElevationData.Database.ResetDBStatusBit(StartOptions.Model, DATABASESTATUS.ERROR);
-                            ElevationData.Database.SetDBStatusBit(StartOptions.Model, DATABASESTATUS.UPTODATE);
-                        }
-                        this.ReportProgress(1, ElevationData.Database.GetDBStatus(StartOptions.Model));
-                        st.Stop();
-                        if (this.CancellationPending)
-                            break;
+                            ElevationData.Database.SetDBStatusBit(StartOptions.Model, DATABASESTATUS.UPDATING);
+                            this.ReportProgress(1, ElevationData.Database.GetDBStatus(StartOptions.Model));
+                            // start update
+                            int er = -UpdateDatabase();
+                            // set database status
+                            ElevationData.Database.ResetDBStatusBit(StartOptions.Model, DATABASESTATUS.UPDATING);
+                            if (er > 0)
+                            {
+                                ElevationData.Database.SetDBStatusBit(StartOptions.Model, DATABASESTATUS.ERROR);
+                            }
+                            else
+                            {
+                                ElevationData.Database.ResetDBStatusBit(StartOptions.Model, DATABASESTATUS.ERROR);
+                                ElevationData.Database.SetDBStatusBit(StartOptions.Model, DATABASESTATUS.UPTODATE);
+                            }
+                            this.ReportProgress(1, ElevationData.Database.GetDBStatus(StartOptions.Model));
+                            st.Stop();
+                            if (this.CancellationPending)
+                                break;
 
-                        // display status
-                        if (errors == 0)
+                            // display status
+                            if (errors == 0)
+                            {
+                                this.ReportProgress(0, StartOptions.Name + " update completed: " + st.Elapsed.ToString(@"hh\:mm\:ss"));
+                            }
+                            else
+                            {
+                                this.ReportProgress(0, StartOptions.Name + " update completed with errors[" + errors.ToString() + "]: " + st.Elapsed.ToString(@"hh\:mm\:ss"));
+                            }
+                            // store database timestamp & status in settings
+                            SaveDatabaseTimeStamp();
+                            SaveDatabaseStatus();
+                            SaveUpdateTimeStamp();
+                            SaveBounds();
+                            // sleep once to get all messages to main thread
+                            Thread.Sleep(1000);
+                        }
+                        else
                         {
+                            // database and update not changed -> nothing to do
+                            // restore database status
+                            ElevationData.Database.SetDBStatus(StartOptions.Model, GetSavedDatabaseStatus());
+                            this.ReportProgress(1, ElevationData.Database.GetDBStatus(StartOptions.Model));
                             this.ReportProgress(0, StartOptions.Name + " update completed: " + st.Elapsed.ToString(@"hh\:mm\:ss"));
                         }
-                        else
-                        {
-                            this.ReportProgress(0, StartOptions.Name + " update completed with errors[" + errors.ToString() + "]: " + st.Elapsed.ToString(@"hh\:mm\:ss"));
-                        }
-                        // sleep once to get all messages to main thread
-                        Thread.Sleep(1000);
 
                         // sleep when running periodically
                         if (StartOptions.Options == BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY)

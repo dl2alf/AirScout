@@ -45,6 +45,44 @@ namespace AirScout
                 this.Model = model;
             }
 
+            private DateTime GetDatabaseTimeStamp()
+            {
+                string filename = StationData.Database.GetDBLocation();
+                DateTime dt = File.GetLastWriteTimeUtc(filename).ToUniversalTime();
+                // convert to YYYY:MM:DD hh:mm:ss only as this is stored in settings
+                dt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, DateTimeKind.Utc);
+                return dt;
+            }
+
+            private DateTime GetSavedDatabaseTimeStamp()
+            {
+                DateTime dt = DateTime.MinValue;
+                dt = Properties.Settings.Default.StationsDatabase_TimeStamp;
+                // change kind to UTC as it is not specified in settings
+                dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                return dt;
+            }
+
+            private void SaveDatabaseTimeStamp()
+            {
+                Properties.Settings.Default.StationsDatabase_TimeStamp = GetDatabaseTimeStamp();
+            }
+
+            private bool HasDatabaseChanged()
+            {
+                try
+                {
+                    DateTime dt1 = GetSavedDatabaseTimeStamp();
+                    DateTime dt2 = GetDatabaseTimeStamp();
+                    return dt1 != dt2;
+                }
+                catch
+                {
+                    // do nothing
+                }
+                return true;
+            }
+
             protected override void OnDoWork(DoWorkEventArgs e)
             {
                 // get all parameters
@@ -75,23 +113,27 @@ namespace AirScout
                         // name the thread for debugging
                         if (String.IsNullOrEmpty(Thread.CurrentThread.Name))
                             Thread.CurrentThread.Name = Name + "_" + this.GetType().Name;
+                        this.ReportProgress(0, Name + " started.");
                         try
                         {
                             // iterate through all locations in the database and calculate the propagation path
-                            // chek if database is ready first
-                            while (ElevationData.Database.GetDBStatusBit(Model, DATABASESTATUS.ERROR) || (!ElevationData.Database.GetDBStatusBit(Model, DATABASESTATUS.COMPLETE) && !ElevationData.Database.GetDBStatusBit(Model, DATABASESTATUS.UPTODATE)))
+                            // chek if databases are ready and changes reported first
+                            while (!ElevationData.Database.GetDBStatusBit(Model, DATABASESTATUS.UPTODATE) || !StationData.Database.GetDBStatusBit(DATABASESTATUS.UPTODATE) || !HasDatabaseChanged())
                             {
-                                this.ReportProgress(0, Name + " waiting for database is complete...");
                                 // sleep 10 sec
                                 int i = 0;
                                 while (!this.CancellationPending && (i < 10))
                                 {
                                     Thread.Sleep(1000);
                                     i++;
+                                    if (this.CancellationPending)
+                                        break;
                                 }
                                 if (this.CancellationPending)
                                     break;
                             }
+                            if (this.CancellationPending)
+                                break;
                             this.ReportProgress(0, Name + " getting locations...");
                             // get all locations in covered area but don't report progress
                             this.WorkerReportsProgress = false;
@@ -103,6 +145,7 @@ namespace AirScout
                             // iterate through locations
                             QRVDesignator myqrv = null;
                             QRVDesignator dxqrv = null;
+                            this.ReportProgress(0, Name + " checking locations...");
                             foreach (LocationDesignator ld in lds)
                             {
                                 Stopwatch st = new Stopwatch();
@@ -212,6 +255,8 @@ namespace AirScout
                                         if (this.CancellationPending)
                                             break;
                                     }
+                                    if (this.CancellationPending)
+                                        break;
                                 }
                                 catch (Exception ex)
                                 {
@@ -220,6 +265,8 @@ namespace AirScout
                                 // keep cpu load low --> TODO: find better solution here
                                 Thread.Sleep(10);
                             }
+                            // save station database timestamp
+                            SaveDatabaseTimeStamp();
                             // wait to keep cpu load low
                             Thread.Sleep(Properties.Settings.Default.Background_Calculations_ThreadWait);
                             this.ReportProgress(0, Name + " finished.");
@@ -248,7 +295,7 @@ namespace AirScout
                 }
                 else
                 {
-                    this.ReportProgress(0, Name + "finished.");
+                    this.ReportProgress(0, Name + " finished.");
                     Log.WriteMessage(Name + " finished.");
                 }
             }

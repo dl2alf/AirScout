@@ -399,7 +399,13 @@ namespace Vanara.Interop.DesktopWindowManager
 				{
 					lock (_lock)
 					{
-						try { ((EventHandler)eventHandlerList[keys[idx]]).Invoke(null, EventArgs.Empty); }
+						try 
+						{
+							if (((EventHandler)eventHandlerList[keys[idx]]) != null)
+							{
+								((EventHandler)eventHandlerList[keys[idx]]).Invoke(null, EventArgs.Empty);
+							}
+						}
 						catch { };
 					}
 				}

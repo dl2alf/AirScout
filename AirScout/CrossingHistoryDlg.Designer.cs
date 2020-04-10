@@ -170,7 +170,7 @@
             this.ud_Analysis_AmbiguousGap.Name = "ud_Analysis_AmbiguousGap";
             this.ud_Analysis_AmbiguousGap.Size = new System.Drawing.Size(60, 20);
             this.ud_Analysis_AmbiguousGap.TabIndex = 4;
-            this.ud_Analysis_AmbiguousGap.Value = global::AirScout.Properties.Settings.Default.Analysis_CrossingHistory_AmbiguousGap;
+            this.ud_Analysis_AmbiguousGap.Value = global::AirScout.Properties.Settings.Default.Analysis_CrossingHistory_AmbigousGap;
             // 
             // label1
             // 

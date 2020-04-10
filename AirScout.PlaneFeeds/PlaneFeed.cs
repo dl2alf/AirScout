@@ -38,6 +38,7 @@ namespace AirScout.PlaneFeeds
         OK = 0
     }
 
+    [System.ComponentModel.DesignerCategory("")]
     [DefaultPropertyAttribute("Name")]
     public class PlaneFeed : BackgroundWorker
     { 
@@ -416,6 +417,7 @@ namespace AirScout.PlaneFeeds
                             Status = STATUS.ERROR;
                             this.ReportProgress((int)PROGRESS.ERROR, "Plane Feed Execption: " + ex.Message);
                             Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                            Console.WriteLine("Plane Feed Execption: " + ex.ToString(), LogLevel.Error);
                         }
                     }
                     while (!this.CancellationPending);

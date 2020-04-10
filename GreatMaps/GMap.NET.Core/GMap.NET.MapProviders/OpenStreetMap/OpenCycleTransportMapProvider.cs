@@ -12,7 +12,7 @@ namespace GMap.NET.MapProviders
 
       OpenCycleTransportMapProvider()
       {
-         RefererUrl = "http://www.opencyclemap.org/";
+         RefererUrl = "";
       }
 
       static OpenCycleTransportMapProvider()
@@ -69,5 +69,5 @@ namespace GMap.NET.MapProviders
       }
 
       static readonly string UrlFormat = "http://{0}.tile2.opencyclemap.org/transport/{1}/{2}/{3}.png";
-   }
+    }
 }

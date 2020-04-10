@@ -944,7 +944,13 @@ namespace ScoutBase.Stations
         {
             lock (db.DBCommand)
             {
-                db.DBCommand.CommandText = "DELETE FROM " + QRVDesignator.TableName + " WHERE Call = @Call AND Loc = @Loc AND Band = @Band";
+                // Handle delete of all bands
+                string bandwhere = "";
+                if (qrv.Band != BAND.BALL)
+                    bandwhere = " AND Band = @Band";
+                else
+                    bandwhere = "";
+                db.DBCommand.CommandText = "DELETE FROM " + QRVDesignator.TableName + " WHERE Call = @Call AND Loc = @Loc" + bandwhere;
                 db.DBCommand.Parameters.Clear();
                 db.DBCommand.Parameters.Add(qrv.AsString("Call"));
                 db.DBCommand.Parameters.Add(qrv.AsString("Loc"));

@@ -99,6 +99,11 @@ namespace AirScout
                 this.Opacity += 0.01;
                 ti_Animation.Start();
             }
+            else
+            {
+                // rest topmost style
+                this.TopMost = false;
+            }
         }
 
         private void pb_Main_Paint(object sender, PaintEventArgs e)

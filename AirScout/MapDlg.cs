@@ -55,6 +55,7 @@ using ScoutBase.Database;
 using ScoutBase.Elevation;
 using ScoutBase.Stations;
 using ScoutBase.Propagation;
+using ScoutBase.Maps;
 using SerializableGenerics;
 using Ionic.Zip;
 using Newtonsoft.Json;
@@ -381,7 +382,7 @@ namespace AirScout
         private bool FirstRun = true;
         private bool CleanRun = false;
 
-        private Splash SplashDlg = new Splash();
+        private Splash SplashDlg;
 
         // Background workers
         public ElevationDatabaseUpdater bw_GLOBEUpdater = new ElevationDatabaseUpdater();
@@ -396,6 +397,8 @@ namespace AirScout
         public PathCalculator bw_GLOBEPathCalculator = new PathCalculator(ELEVATIONMODEL.GLOBE);
         public PathCalculator bw_SRTM3PathCalculator = new PathCalculator(ELEVATIONMODEL.SRTM3);
         public PathCalculator bw_SRTM1PathCalculator = new PathCalculator(ELEVATIONMODEL.SRTM1);
+
+        public MapPreloader bw_MapPreloader = new MapPreloader();
 
         // Operating modes
         AIRSCOUTPATHMODE PathMode = AIRSCOUTPATHMODE.NONE;
@@ -502,7 +505,12 @@ namespace AirScout
                     if (result == DialogResult.Abort)
                         System.Environment.Exit(-1);
                     if (result == DialogResult.OK)
+                    {
+                        // re-initialize settings as they can be lost during clean-up
+                        InitializeSettings();
+                        // set a clean run flag
                         CleanRun = true;
+                    }
                 }
             }
             // set elevation database update event handler
@@ -526,6 +534,9 @@ namespace AirScout
             bw_GLOBEPathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
             bw_SRTM3PathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
             bw_SRTM1PathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
+
+            // set map preloader event handler
+            bw_MapPreloader.ProgressChanged += new ProgressChangedEventHandler(bw_MapPreloader_ProgressChanged);
 
             // save FirstRun property before trying to upgrade user settings
             FirstRun = Properties.Settings.Default.FirstRun;
@@ -900,6 +911,20 @@ namespace AirScout
             }
             if (Properties.Settings.Default.MyCalls.Count == 0)
                 Properties.Settings.Default.MyCalls.Add("DL2ALF");
+            // checking window size & location
+            Rectangle bounds = Screen.FromControl(this).Bounds;
+            if ((Properties.Settings.Default.General_WindowLocation.X < bounds.Left) ||
+                (Properties.Settings.Default.General_WindowLocation.Y < bounds.Top) ||
+                (Properties.Settings.Default.General_WindowLocation.X > bounds.Right) ||
+                (Properties.Settings.Default.General_WindowLocation.Y > bounds.Bottom))
+            { 
+                Properties.Settings.Default.General_WindowLocation = new System.Drawing.Point(bounds.Left, bounds.Top);
+            }
+            if ((Properties.Settings.Default.General_WindowSize.Width > bounds.Width) ||
+                (Properties.Settings.Default.General_WindowSize.Height > bounds.Height))
+            {
+                Properties.Settings.Default.General_WindowSize = new System.Drawing.Size(bounds.Width, bounds.Height);
+            }
             // list all properties in log
             foreach (SettingsPropertyValue p in Properties.Settings.Default.PropertyValues)
             {
@@ -920,6 +945,40 @@ namespace AirScout
             if (!Properties.Settings.Default.StationDatabase_Update_URL.EndsWith("/"))
                 Properties.Settings.Default.StationDatabase_Update_URL = Properties.Settings.Default.StationDatabase_Update_URL + "/";
             */
+            // check for last saved stations not in database and revert to at least DL2ALF and GB3MHZ if necessary
+            // first check for saved stations
+            string mycall = GetPropertyDefaultValue(nameof(Properties.Settings.Default.MyCall));
+            double mylat = GetPropertyDefaultValue(nameof(Properties.Settings.Default.MyLat));
+            double mylon = GetPropertyDefaultValue(nameof(Properties.Settings.Default.MyLon));
+            string myloc = MaidenheadLocator.LocFromLatLon(mylat, mylon, Properties.Settings.Default.Locator_SmallLettersForSubsquares, 3);
+            LocationDesignator ld = StationData.Database.LocationFind(mycall, myloc);
+            if (ld == null)
+            {
+                mycall = GetPropertyDefaultValue(nameof(Properties.Settings.Default.MyCall));
+                mylat = GetPropertyDefaultValue(nameof(Properties.Settings.Default.MyLat));
+                mylon = GetPropertyDefaultValue(nameof(Properties.Settings.Default.MyLon));
+                myloc = MaidenheadLocator.LocFromLatLon(mylat, mylon, Properties.Settings.Default.Locator_SmallLettersForSubsquares, 3);
+                UpdateLocation(mycall, mylat, mylon, GEOSOURCE.FROMUSER);
+                Properties.Settings.Default.MyCall = mycall;
+                Properties.Settings.Default.MyLat = mylat;
+                Properties.Settings.Default.MyLon = mylon;
+            }
+            string dxcall = GetPropertyDefaultValue(nameof(Properties.Settings.Default.DXCall));
+            double dxlat = GetPropertyDefaultValue(nameof(Properties.Settings.Default.DXLat));
+            double dxlon = GetPropertyDefaultValue(nameof(Properties.Settings.Default.DXLon));
+            string dxloc = MaidenheadLocator.LocFromLatLon(dxlat, dxlon, Properties.Settings.Default.Locator_SmallLettersForSubsquares, 3);
+            ld = StationData.Database.LocationFind(dxcall, dxloc);
+            if (ld == null)
+            {
+                dxcall = GetPropertyDefaultValue(nameof(Properties.Settings.Default.DXCall));
+                dxlat = GetPropertyDefaultValue(nameof(Properties.Settings.Default.DXLat));
+                dxlon = GetPropertyDefaultValue(nameof(Properties.Settings.Default.DXLon));
+                dxloc = MaidenheadLocator.LocFromLatLon(dxlat, dxlon, Properties.Settings.Default.Locator_SmallLettersForSubsquares, 3);
+                UpdateLocation(dxcall, dxlat, dxlon, GEOSOURCE.FROMUSER);
+                Properties.Settings.Default.DXCall = dxcall;
+                Properties.Settings.Default.DXLat = dxlat;
+                Properties.Settings.Default.DXLon = dxlon;
+            }
             Log.WriteMessage("Checking properties finished...");
         }
 
@@ -955,6 +1014,8 @@ namespace AirScout
             Log.WriteMessage(Application.ProductName + " is starting up.", 0, false);
             Log.WriteMessage("-------------------------------------------------------------------------------------");
             Log.WriteMessage("Operating system          : " + Environment.OSVersion.Platform);
+            Log.WriteMessage("OS Major version          : " + Environment.OSVersion.Version.Major);
+            Log.WriteMessage("OS Minor version          : " + Environment.OSVersion.Version.Minor);
             Log.WriteMessage("Application directory     : " + AppDirectory);
             Log.WriteMessage("Application data directory: " + AppDataDirectory);
             Log.WriteMessage("Log directory             : " + LogDirectory);
@@ -982,7 +1043,22 @@ namespace AirScout
             Properties.Settings.Default.StationsDatabase_Directory = StationData.Database.DefaultDatabaseDirectory();
             Properties.Settings.Default.ElevationDatabase_Directory = ElevationData.Database.DefaultDatabaseDirectory();
             Properties.Settings.Default.PropagationDatabase_Directory = PropagationData.Database.DefaultDatabaseDirectory();
+            MapData.Database.DefaultDatabaseDirectory();
             Log.WriteMessage("Finished.");
+        }
+
+        private void Splash(string text)
+        {
+            Splash(text, Color.White);
+        }
+
+        private void Splash(string text, Color color)
+        {
+            // show message in splash window
+            if (SplashDlg != null)
+            {
+                SplashDlg.Status(text, color);
+            }
         }
 
         private void MapDlg_Load(object sender, EventArgs e)
@@ -990,6 +1066,7 @@ namespace AirScout
             try
             {
                 // Show splash screen
+                SplashDlg = new Splash();
                 SplashDlg.Show();
                 // bring window to front
                 SplashDlg.BringToFront();
@@ -1001,25 +1078,25 @@ namespace AirScout
                 // show AirScout main window
                 this.BringToFront();
                 // Check directories, complete it and create, if not exist
-                SplashDlg.Status("Checking directories...");
+                Splash("Checking directories...");
                 CheckDirectories();
                 // start a log, specify format of logfile and entries
-                SplashDlg.Status("Initializing logfile...");
+                Splash("Initializing logfile...");
                 InitializeLogfile();
                 // Check properties
-                SplashDlg.Status("Checking settings...");
+                Splash("Checking settings...");
                 CheckSettings();
                 // check, copy and load plugins
-                SplashDlg.Status("Loading plugins...");
+                Splash("Loading plugins...");
                 LoadPlugins();
                 // Initialize database
-                SplashDlg.Status("Initializing database...");
+                Splash("Initializing database...");
                 InitializeDatabase();
                 // initialize icons
-                SplashDlg.Status("Creating icons...");
+                Splash("Creating icons...");
                 InitializeIcons();
                 ToolTipFont = CreateFontFromString(Properties.Settings.Default.Map_ToolTipFont);
-                SplashDlg.Status("Loading Map...");
+                Splash("Loading Map...");
 
                 // initialize map
                 // setting User Agent to fix Open Street Map issue 2016-09-20
@@ -1046,7 +1123,7 @@ namespace AirScout
                 // setting User Agent to fix Open Street Map issue 2016-09-20
                 GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
                 // clearing referrer URL issue 2019-12-14
-                gm_Main.MapProvider.RefererUrl = "";
+                gm_Nearest.MapProvider.RefererUrl = "";
                 // set initial settings for main map
                 gm_Nearest.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
                 gm_Main.MapProvider.RefererUrl = "";
@@ -1061,6 +1138,13 @@ namespace AirScout
                 gm_Nearest.Overlays.Add(gmo_NearestPaths);
                 gm_Nearest.Overlays.Add(gmo_NearestPlanes);
                 gm_Nearest.Position = new PointLatLng(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon);
+
+                // setting User Agent to fix Open Street Map issue 2016-09-20
+                GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+                // clearing referrer URL issue 2019-12-14
+                gm_Cache.MapProvider.RefererUrl = "";
+                // set initial settings for main map
+                gm_Cache.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
 
                 cntdn = Properties.Settings.Default.Planes_Update;
                 btn_Map_PlayPause.Select();
@@ -1157,7 +1241,8 @@ namespace AirScout
                         CheckDirectories();
                         CheckSettings();
                         // reset topmost state
-                        SplashDlg.TopMost = false;
+                        if (SplashDlg != null)
+                            SplashDlg.TopMost = false;
                         /*
                         // run database updater once for basic information
                         bw_DatabaseUpdater.RunWorkerAsync(UPDATERSTARTOPTIONS.FIRSTRUN);
@@ -1165,7 +1250,8 @@ namespace AirScout
                         while (bw_DatabaseUpdater.IsBusy)
                             Application.DoEvents();
                         */
-                        SplashDlg.Close();
+                        if (SplashDlg != null)
+                            SplashDlg.Close();
                         // must have internet connection on FirstRun
                         CheckInternet();
                         // show FirstRunWizard
@@ -1299,6 +1385,10 @@ namespace AirScout
                 cb_DXLoc.AutoLength = Properties.Settings.Default.Locator_AutoLength;
                 // populate watchlist
                 RefreshWatchlistView();
+                // Linux/Mon Hack: cycle control tab view to ensure that all elements are drawn
+                tc_Control.SelectedTab = tp_Control_Options;
+                tc_Control.SelectedTab = tp_Control_Multi;
+                tc_Control.SelectedTab = tp_Control_Single;
                 // set players bounds
                 sb_Analysis_Play.Minimum = 0;
                 sb_Analysis_Play.Maximum = int.MaxValue;
@@ -1454,6 +1544,11 @@ namespace AirScout
                 {
                     StationDatabaseUpdaterStartOptions startoptions = new StationDatabaseUpdaterStartOptions();
                     startoptions.Name = "Stations";
+                    startoptions.RestrictToAreaOfInterest = Properties.Settings.Default.Location_RestrictToAreaOfInterest;
+                    startoptions.MinLat = Properties.Settings.Default.MinLat;
+                    startoptions.MinLon = Properties.Settings.Default.MinLon;
+                    startoptions.MaxLat = Properties.Settings.Default.MaxLat;
+                    startoptions.MaxLon = Properties.Settings.Default.MaxLon;
                     startoptions.InstanceID = Properties.Settings.Default.AirScout_Instance_ID;
                     startoptions.SessionKey = SessionKey;
                     startoptions.GetKeyURL = Properties.Settings.Default.AirScout_GetKey_URL;
@@ -1515,6 +1610,8 @@ namespace AirScout
                     bw_SRTM3PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE);
                 if (Properties.Settings.Default.Elevation_SRTM1_Enabled && (bw_SRTM1PathCalculator != null) && !bw_SRTM1PathCalculator.IsBusy)
                     bw_SRTM1PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE);
+                if (Properties.Settings.Default.Map_Preloader_Enabled && (bw_MapPreloader != null) && !bw_MapPreloader.IsBusy)
+                    bw_MapPreloader.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE);
             }
             else if (Properties.Settings.Default.Background_Update_Periodically)
             {
@@ -1522,6 +1619,11 @@ namespace AirScout
                 {
                     StationDatabaseUpdaterStartOptions startoptions = new StationDatabaseUpdaterStartOptions();
                     startoptions.Name = "Stations";
+                    startoptions.MinLat = Properties.Settings.Default.MinLat;
+                    startoptions.MinLon = Properties.Settings.Default.MinLon;
+                    startoptions.MaxLat = Properties.Settings.Default.MaxLat;
+                    startoptions.MaxLon = Properties.Settings.Default.MaxLon;
+                    startoptions.RestrictToAreaOfInterest = Properties.Settings.Default.Location_RestrictToAreaOfInterest;
                     startoptions.InstanceID = Properties.Settings.Default.AirScout_Instance_ID;
                     startoptions.SessionKey = SessionKey;
                     startoptions.GetKeyURL = Properties.Settings.Default.AirScout_GetKey_URL;
@@ -1583,6 +1685,8 @@ namespace AirScout
                     bw_SRTM3PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
                 if (Properties.Settings.Default.Elevation_SRTM1_Enabled && (bw_SRTM1PathCalculator != null) && !bw_SRTM1PathCalculator.IsBusy)
                     bw_SRTM1PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
+                if (Properties.Settings.Default.Map_Preloader_Enabled && (bw_MapPreloader != null) && !bw_MapPreloader.IsBusy)
+                    bw_MapPreloader.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
             }
             if ((bw_PlaneFeed1 != null) && (!bw_PlaneFeed1.IsBusy))
                 bw_PlaneFeed1.RunWorkerAsync(CreatePlaneFeedWorkEventArgs(Properties.Settings.Default.Planes_PlaneFeed1));
@@ -1631,7 +1735,7 @@ namespace AirScout
         {
             Say("Stopping background threads...");
             // cancel permanent background workers, wait for finish
-            int bcount = 13;
+            int bcount = 14;
             int i = 1;
             // cancel all threads
             StopBackgroundworker(bw_WinTestReceive, nameof(bw_WinTestReceive), i, bcount); i++;
@@ -1647,6 +1751,7 @@ namespace AirScout
             StopBackgroundworker(bw_SRTM1PathCalculator, nameof(bw_SRTM1PathCalculator), i, bcount); i++;
             StopBackgroundworker(bw_AircraftDatabaseUpdater, nameof(bw_AircraftDatabaseUpdater), i, bcount); i++;
             StopBackgroundworker(bw_StationDatabaseUpdater, nameof(bw_StationDatabaseUpdater), i, bcount); i++;
+            StopBackgroundworker(bw_MapPreloader, nameof(bw_MapPreloader), i, bcount); i++;
             Say("Background threads stopped.");
         }
 
@@ -1996,6 +2101,8 @@ namespace AirScout
 
         private void UpdateAirports()
         {
+            // clear airports first
+            gmo_Airports.Clear();
             if (!Properties.Settings.Default.Airports_Activate)
                 return;
             if ((Airports == null) || (Airports.Count == 0))
@@ -2061,14 +2168,87 @@ namespace AirScout
             return usersettingspath;
         }
 
+        private XmlElement CreateUserSection(XmlDocument doc, SettingsBase settings)
+        {
+            XmlElement usersection = doc.CreateElement(string.Empty, "section", string.Empty);
+            XmlAttribute sectionname = doc.CreateAttribute(string.Empty, "name", string.Empty);
+            sectionname.Value = settings.GetType().FullName;
+            usersection.Attributes.Append(sectionname);
+            XmlAttribute sectiontype = doc.CreateAttribute(string.Empty, "type", string.Empty);
+            Assembly assembly = Assembly.GetAssembly(typeof(System.Configuration.ClientSettingsSection));
+            //            sectiontype.Value = "System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
+            sectiontype.Value = typeof(System.Configuration.ClientSettingsSection).FullName + ", " + assembly.FullName;
+            usersection.Attributes.Append(sectiontype);
+            XmlAttribute sectionallowexedefinition = doc.CreateAttribute(string.Empty, "allowExeDefinition", string.Empty);
+            sectionallowexedefinition.Value = "MachineToLocalUser";
+            usersection.Attributes.Append(sectionallowexedefinition);
+            XmlAttribute sectionrequirepermission = doc.CreateAttribute(string.Empty, "requirePermission", string.Empty);
+            sectionrequirepermission.Value = "false";
+            usersection.Attributes.Append(sectionrequirepermission);
+            return usersection;
+        }
+
+        private XmlElement SerializeSettings(XmlDocument doc, SettingsBase settings)
+        {
+            XmlElement properties = doc.CreateElement(string.Empty, settings.ToString(), string.Empty);
+            foreach (SettingsPropertyValue p in settings.PropertyValues)
+            {
+                if ((p != null) && (p.Name != null) && (p.PropertyValue != null) && !p.UsingDefaultValue)
+                {
+                    //                    Console.WriteLine("Appending " + p.Name + " = " + p.PropertyValue.ToString());
+                    XmlElement setting = doc.CreateElement(string.Empty, "setting", string.Empty);
+                    XmlAttribute name = doc.CreateAttribute(string.Empty, "name", string.Empty);
+                    name.Value = p.Name.ToString();
+                    setting.Attributes.Append(name);
+                    XmlAttribute serializeas = doc.CreateAttribute(string.Empty, "serializeAs", string.Empty);
+                    serializeas.Value = p.Property.SerializeAs.ToString();
+                    setting.Attributes.Append(serializeas);
+                    XmlElement value = doc.CreateElement(string.Empty, "value", string.Empty);
+                    if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.String)
+                    {
+                        XmlText text = doc.CreateTextNode(p.SerializedValue.ToString());
+                        value.AppendChild(text);
+                    }
+                    else
+                    {
+                        if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.Xml)
+                        {
+                            MemoryStream ms = new MemoryStream();
+                            XmlWriter writer = XmlWriter.Create(ms, new XmlWriterSettings
+                            {
+                                NewLineOnAttributes = true,
+                                OmitXmlDeclaration = true
+                            });
+                            XmlSerializer serializer = new XmlSerializer(p.PropertyValue.GetType());
+                            serializer.Serialize(writer, p.PropertyValue);
+                            byte[] text2 = new byte[ms.ToArray().Length - 3];
+                            Array.Copy(ms.ToArray(), 3, text2, 0, text2.Length);
+                            XmlText xml = doc.CreateTextNode(Encoding.UTF8.GetString(text2.ToArray<byte>()));
+                            value.AppendChild(xml);
+                            value.InnerXml = WebUtility.HtmlDecode(value.InnerXml);
+                        }
+                    }
+                    setting.AppendChild(value);
+                    properties.AppendChild(setting);
+                }
+            }
+            return properties;
+        }
+
         private void SaveUserSettings()
         {
             try
             {
                 Log.WriteMessage("Saving configuration...");
+                // save all settings
+                ScoutBase.Elevation.Properties.Settings.Default.Save();
+                ScoutBase.Stations.Properties.Settings.Default.Save();
+                ScoutBase.Propagation.Properties.Settings.Default.Save();
+                AirScout.Aircrafts.Properties.Settings.Default.Save();
                 Properties.Settings.Default.Save();
                 if (!SupportFunctions.IsMono)
                     return;
+                // Linux/Mono hack to save all properties in a correct manner
                 Console.WriteLine("Creating XML document...");
                 XmlDocument doc = new XmlDocument();
                 XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
@@ -2082,114 +2262,31 @@ namespace AirScout
                 XmlAttribute usersettingsname = doc.CreateAttribute(string.Empty, "name", string.Empty);
                 usersettingsname.Value = "userSettings";
                 usersettingsgroup.Attributes.Append(usersettingsname);
-                XmlElement usersection = doc.CreateElement(string.Empty, "section", string.Empty);
-                XmlAttribute sectionname = doc.CreateAttribute(string.Empty, "name", string.Empty);
-                sectionname.Value = "AirScout.PlaneFeeds.Properties.Settings";
-                usersection.Attributes.Append(sectionname);
-                XmlAttribute sectiontype = doc.CreateAttribute(string.Empty, "type", string.Empty);
-                sectiontype.Value = "System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
-                usersection.Attributes.Append(sectiontype);
-                XmlAttribute sectionallowexedefinition = doc.CreateAttribute(string.Empty, "allowExeDefinition", string.Empty);
-                sectionallowexedefinition.Value = "MachineToLocalUser";
-                usersection.Attributes.Append(sectionallowexedefinition);
-                XmlAttribute sectionrequirepermission = doc.CreateAttribute(string.Empty, "requirePermission", string.Empty);
-                sectionrequirepermission.Value = "false";
-                usersection.Attributes.Append(sectionrequirepermission);
-                usersettingsgroup.AppendChild(usersection);
+                usersettingsgroup.AppendChild(CreateUserSection(doc, AirScout.PlaneFeeds.Properties.Settings.Default));
+                usersettingsgroup.AppendChild(CreateUserSection(doc, ScoutBase.Elevation.Properties.Settings.Default));
+                usersettingsgroup.AppendChild(CreateUserSection(doc, ScoutBase.Stations.Properties.Settings.Default));
+                usersettingsgroup.AppendChild(CreateUserSection(doc, ScoutBase.Propagation.Properties.Settings.Default));
+                usersettingsgroup.AppendChild(CreateUserSection(doc, AirScout.Aircrafts.Properties.Settings.Default));
                 configsections.AppendChild(usersettingsgroup);
                 XmlElement usersettings = doc.CreateElement(string.Empty, "userSettings", string.Empty);
                 configuration.AppendChild(usersettings);
                 Console.WriteLine("Writing user settings...");
                 // append AirScout.PlaneFeeds properties
                 Console.WriteLine("Appending AirScout.PlaneFeeds.Properties.Settings.Default node...");
-                XmlElement planefeedproperties = doc.CreateElement(string.Empty, AirScout.PlaneFeeds.Properties.Settings.Default.ToString(), string.Empty);
-                usersettings.AppendChild(planefeedproperties);
-                foreach (SettingsPropertyValue p in AirScout.PlaneFeeds.Properties.Settings.Default.PropertyValues)
-                {
-                    if ((p != null) && (p.Name != null) && (p.PropertyValue != null) && !p.UsingDefaultValue)
-                    {
-                        //                    Console.WriteLine("Appending " + p.Name + " = " + p.PropertyValue.ToString());
-                        XmlElement setting = doc.CreateElement(string.Empty, "setting", string.Empty);
-                        XmlAttribute name = doc.CreateAttribute(string.Empty, "name", string.Empty);
-                        name.Value = p.Name.ToString();
-                        setting.Attributes.Append(name);
-                        XmlAttribute serializeas = doc.CreateAttribute(string.Empty, "serializeAs", string.Empty);
-                        serializeas.Value = p.Property.SerializeAs.ToString();
-                        setting.Attributes.Append(serializeas);
-                        XmlElement value = doc.CreateElement(string.Empty, "value", string.Empty);
-                        if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.String)
-                        {
-                            XmlText text = doc.CreateTextNode(p.SerializedValue.ToString());
-                            value.AppendChild(text);
-                        }
-                        else
-                        {
-                            if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.Xml)
-                            {
-                                MemoryStream ms = new MemoryStream();
-                                XmlWriter writer = XmlWriter.Create(ms, new XmlWriterSettings
-                                {
-                                    NewLineOnAttributes = true,
-                                    OmitXmlDeclaration = true
-                                });
-                                XmlSerializer serializer = new XmlSerializer(p.PropertyValue.GetType());
-                                serializer.Serialize(writer, p.PropertyValue);
-                                byte[] text2 = new byte[ms.ToArray().Length - 3];
-                                Array.Copy(ms.ToArray(), 3, text2, 0, text2.Length);
-                                XmlText xml = doc.CreateTextNode(Encoding.UTF8.GetString(text2.ToArray<byte>()));
-                                value.AppendChild(xml);
-                                value.InnerXml = WebUtility.HtmlDecode(value.InnerXml);
-                            }
-                        }
-                        setting.AppendChild(value);
-                        planefeedproperties.AppendChild(setting);
-                    }
-                }
+                usersettings.AppendChild(SerializeSettings(doc, AirScout.PlaneFeeds.Properties.Settings.Default));
+                // append ScoutBase properties
+                Console.WriteLine("Appending ScoutBase.Elevation.Properties.Settings.Default node...");
+                usersettings.AppendChild(SerializeSettings(doc, ScoutBase.Elevation.Properties.Settings.Default));
+                Console.WriteLine("Appending ScoutBase.Stations.Properties.Settings.Default node...");
+                usersettings.AppendChild(SerializeSettings(doc, ScoutBase.Stations.Properties.Settings.Default));
+                Console.WriteLine("Appending ScoutBase.Propagation.Properties.Settings.Default node...");
+                // append AirScout.Aircrafts properties
+                usersettings.AppendChild(SerializeSettings(doc, ScoutBase.Propagation.Properties.Settings.Default));
+                Console.WriteLine("Appending AirScout.Aircrafts.Settings.Default node...");
+                usersettings.AppendChild(SerializeSettings(doc, AirScout.Aircrafts.Properties.Settings.Default));
                 // append AirScout properties
                 Console.WriteLine("Appending AirScout.Properties.Settings.Default node...");
-                XmlElement properties = doc.CreateElement(string.Empty, Properties.Settings.Default.ToString(), string.Empty);
-                usersettings.AppendChild(properties);
-                foreach (SettingsPropertyValue p in Properties.Settings.Default.PropertyValues)
-                {
-                    if ((p != null) && (p.Name != null) && (p.PropertyValue != null) && !p.UsingDefaultValue)
-                    {
-                        //                   Console.WriteLine("Appending " + p.Name + " = " + p.PropertyValue.ToString();
-                        XmlElement setting = doc.CreateElement(string.Empty, "setting", string.Empty);
-                        XmlAttribute name = doc.CreateAttribute(string.Empty, "name", string.Empty);
-                        name.Value = p.Name.ToString();
-                        setting.Attributes.Append(name);
-                        XmlAttribute serializeas = doc.CreateAttribute(string.Empty, "serializeAs", string.Empty);
-                        serializeas.Value = p.Property.SerializeAs.ToString();
-                        setting.Attributes.Append(serializeas);
-                        XmlElement value = doc.CreateElement(string.Empty, "value", string.Empty);
-                        if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.String)
-                        {
-                            XmlText text = doc.CreateTextNode(p.SerializedValue.ToString());
-                            value.AppendChild(text);
-                        }
-                        else
-                        {
-                            if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.Xml)
-                            {
-                                MemoryStream ms = new MemoryStream();
-                                XmlWriter writer = XmlWriter.Create(ms, new XmlWriterSettings
-                                {
-                                    NewLineOnAttributes = true,
-                                    OmitXmlDeclaration = true
-                                });
-                                XmlSerializer serializer = new XmlSerializer(p.PropertyValue.GetType());
-                                serializer.Serialize(writer, p.PropertyValue);
-                                byte[] text2 = new byte[ms.ToArray().Length - 3];
-                                Array.Copy(ms.ToArray(), 3, text2, 0, text2.Length);
-                                XmlText xml = doc.CreateTextNode(Encoding.UTF8.GetString(text2.ToArray<byte>()));
-                                value.AppendChild(xml);
-                                value.InnerXml = WebUtility.HtmlDecode(value.InnerXml);
-                            }
-                        }
-                        setting.AppendChild(value);
-                        properties.AppendChild(setting);
-                    }
-                }
+                usersettings.AppendChild(SerializeSettings(doc, Properties.Settings.Default));
                 doc.Save(GetUserSettingsPath());
             }
             catch (Exception ex)
@@ -2219,11 +2316,16 @@ namespace AirScout
                 Log.FlushLog();
             }
             //save window size, state and location
-            Properties.Settings.Default.General_WindowLocation = this.Location;
             if (this.WindowState == FormWindowState.Normal)
+            {
                 Properties.Settings.Default.General_WindowSize = this.Size;
+                Properties.Settings.Default.General_WindowLocation = this.Location;
+            }
             else
+            {
                 Properties.Settings.Default.General_WindowSize = this.RestoreBounds.Size;
+                Properties.Settings.Default.General_WindowLocation = this.RestoreBounds.Location;
+            }
             Properties.Settings.Default.General_WindowState = this.WindowState;
             Say("Waiting for background threads to close...");
             // close background threads, save database and settings
@@ -2824,16 +2926,23 @@ namespace AirScout
                 // clear paths cache assuming that new options were set
                 ElevationPaths.Clear();
                 PropagationPaths.Clear();
-                // update station infos
-                UpdateLocation(Properties.Settings.Default.MyCall,
-                    Properties.Settings.Default.MyLat,
-                    Properties.Settings.Default.MyLon,
-                    MaidenheadLocator.IsPrecise(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, 3) ? GEOSOURCE.FROMUSER : GEOSOURCE.FROMLOC);
-                UpdateLocation(Properties.Settings.Default.DXCall,
-                    Properties.Settings.Default.DXLat,
-                    Properties.Settings.Default.DXLon,
-                    MaidenheadLocator.IsPrecise(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, 3) ? GEOSOURCE.FROMUSER : GEOSOURCE.FROMLOC);
-
+                // check and update station infos
+                LocationDesignator ld = StationData.Database.LocationFind(Properties.Settings.Default.MyCall, MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, false,3));
+                if ((ld == null) || (ld.Lat != Properties.Settings.Default.MyLat) || (ld.Lon != Properties.Settings.Default.MyLon))
+                {
+                    UpdateLocation(Properties.Settings.Default.MyCall,
+                        Properties.Settings.Default.MyLat,
+                        Properties.Settings.Default.MyLon,
+                        MaidenheadLocator.IsPrecise(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, 3) ? GEOSOURCE.FROMUSER : GEOSOURCE.FROMLOC);
+                }
+                ld = StationData.Database.LocationFind(Properties.Settings.Default.DXCall, MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3));
+                if ((ld == null) || (ld.Lat != Properties.Settings.Default.DXLat) || (ld.Lon != Properties.Settings.Default.DXLon))
+                {
+                    UpdateLocation(Properties.Settings.Default.DXCall,
+                        Properties.Settings.Default.DXLat,
+                        Properties.Settings.Default.DXLon,
+                        MaidenheadLocator.IsPrecise(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, 3) ? GEOSOURCE.FROMUSER : GEOSOURCE.FROMLOC);
+                }
                 // update map provider
                 gm_Main.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
 
@@ -4014,7 +4123,7 @@ namespace AirScout
             int topItemIndex = 0;
             try
             {
-                if (PlayMode != AIRSCOUTPLAYMODE.FORWARD)
+                if ((PlayMode != AIRSCOUTPLAYMODE.FORWARD) && (lv_Control_Watchlist.TopItem != null))
                 {
                     topItemIndex = lv_Control_Watchlist.TopItem.Index;
                 }
@@ -4783,6 +4892,8 @@ namespace AirScout
                     try
                     {
                         double potential = double.Parse(e.Item.ToolTipText);
+                        // set default color
+                        bkcolor = Color.White;
                         if (potential > 0)
                             bkcolor = Color.Orange;
                         if (potential > 50)
@@ -6999,7 +7110,7 @@ namespace AirScout
                     string msg = (string)e.UserState;
                     // redirect output to splash screen on first run
                     if (FirstRun && SplashDlg != null)
-                        SplashDlg.Status("Preparing database for first run: " + msg + " (please wait)", Color.Yellow);
+                        Splash("Preparing database for first run: " + msg + " (please wait)", Color.Yellow);
                     else
                     {
                         SayDatabase(msg);
@@ -7082,7 +7193,7 @@ namespace AirScout
                     Log.WriteMessage(msg);
                     // redirect output to splash screen on first run
                     if (FirstRun && SplashDlg != null)
-                        SplashDlg.Status("Preparing database for first run: " + msg + " (please wait)", Color.Yellow);
+                        Splash("Preparing database for first run: " + msg + " (please wait)", Color.Yellow);
                     else
                     {
                         SayDatabase(msg);
@@ -7113,7 +7224,6 @@ namespace AirScout
             if (!this.IsDisposed)
             {
                 UpdateAirports();
-//                gm_Main.Refresh();
             }
         }
 
@@ -7138,7 +7248,7 @@ namespace AirScout
                     Log.WriteMessage(msg);
                     // redirect output to splash screen on first run
                     if (FirstRun && SplashDlg != null)
-                        SplashDlg.Status("Preparing database for first run: " + msg + " (please wait)", Color.Yellow);
+                        Splash("Preparing database for first run: " + msg + " (please wait)", Color.Yellow);
                     else
                     {
                         SayDatabase(msg);
@@ -7198,7 +7308,7 @@ namespace AirScout
                     Log.WriteMessage(msg);
                     // redirect output to splash screen on first run
                     if (FirstRun && SplashDlg != null)
-                        SplashDlg.Status("Preparing database for first run: " + msg + " (please wait)", Color.Yellow);
+                        Splash("Preparing database for first run: " + msg + " (please wait)", Color.Yellow);
                     else
                     {
                         SayDatabase(msg);
@@ -7216,6 +7326,25 @@ namespace AirScout
         private void bw_AircraftDatabaseMaintainer_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
         }
+
+        #endregion
+
+        #region MapPreloader
+
+        private void bw_MapPreloader_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 0)
+                SayCalculations((string)e.UserState);
+            else
+             { 
+                PointLatLng p = (PointLatLng)e.UserState;
+                SayCalculations("Preloading map tile: " + MaidenheadLocator.LocFromLatLon(p.Lat, p.Lng, false, 2) + ", level " + e.ProgressPercentage);
+                gm_Cache.Zoom = e.ProgressPercentage;
+                gm_Cache.Position = p;
+                gm_Cache.ReloadMap();
+            }
+        }
+
 
         #endregion
 
@@ -7596,8 +7725,6 @@ namespace AirScout
             bw_AirportMapper.ReportProgress(0, "Getting airports from database...");
             Stopwatch st = new Stopwatch();
             st.Start();
-            // clear aiports overlay
-            bw_AirportMapper.ReportProgress(0, null);
             // fill the airports layer of maps
             // return if switched off
             if (!Properties.Settings.Default.Airports_Activate)
@@ -7612,17 +7739,12 @@ namespace AirScout
 
         private void bw_AirportMapper_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage < 0)
+            if (e.ProgressPercentage == 0)
             {
                 // log error message
                 string msg = (string)e.UserState;
                 Say(msg);
                 Log.WriteMessage(msg, LogLevel.Error);
-            }
-            else if (e.ProgressPercentage == 0)
-            {
-                // clear airports overlay
-                gmo_Airports.Clear();
             }
             else if (e.ProgressPercentage == 100)
             {

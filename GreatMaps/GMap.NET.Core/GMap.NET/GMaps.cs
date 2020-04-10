@@ -105,7 +105,7 @@ namespace GMap.NET
       /// <summary>
       /// tile queue to cache
       /// </summary>
-      readonly Queue<CacheQueueItem> tileCacheQueue = new Queue<CacheQueueItem>();
+      public readonly Queue<CacheQueueItem> tileCacheQueue = new Queue<CacheQueueItem>();
 
       bool? isRunningOnMono;
 
@@ -249,7 +249,7 @@ namespace GMap.NET
       /// enqueueens tile to cache
       /// </summary>
       /// <param name="task"></param>
-      void EnqueueCacheTask(CacheQueueItem task)
+      public void EnqueueCacheTask(CacheQueueItem task)
       {
          lock(tileCacheQueue)
          {

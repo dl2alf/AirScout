@@ -359,9 +359,9 @@ namespace AirScout.Aircrafts
             }
             while (!this.CancellationPending && (StartOptions.Options == BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY));
             if (this.CancellationPending)
-                this.ReportProgress(0, "Cancelled.");
+                this.ReportProgress(0, StartOptions.Name + " cancelled.");
             else
-                this.ReportProgress(0, "Finished.");
+                this.ReportProgress(0, StartOptions.Name + " finished.");
         }
 
         #endregion

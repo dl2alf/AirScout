@@ -287,7 +287,7 @@ namespace AirScout
                 PlaneInfo pl = null;
                 if (!p.TryGetValue(Crossings[i].Hex, out pl))
                     p.Add(Crossings[i].Hex, Crossings[i]);
-                if (((Crossings[i].Time - Crossings[i - 1].Time).TotalSeconds > (double)Properties.Settings.Default.Analysis_CrossingHistory_AmbiguousGap) || (i >= Crossings.Count - 1))
+                if (((Crossings[i].Time - Crossings[i - 1].Time).TotalSeconds > (double)Properties.Settings.Default.Analysis_CrossingHistory_AmbigousGap) || (i >= Crossings.Count - 1))
                 {
                     // gap detected
                     if (p.Count > 1)

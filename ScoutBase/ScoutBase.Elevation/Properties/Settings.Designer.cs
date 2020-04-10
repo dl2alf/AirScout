@@ -12,7 +12,7 @@ namespace ScoutBase.Elevation.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.5.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -176,6 +176,162 @@ namespace ScoutBase.Elevation.Properties {
             }
             set {
                 this["Database_BackgroundUpdate_ThreadWait"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_GLOBE_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_GLOBE_TimeStamp"]));
+            }
+            set {
+                this["Elevation_GLOBE_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_SRTM3_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_SRTM3_TimeStamp"]));
+            }
+            set {
+                this["Elevation_SRTM3_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_SRTM1_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_SRTM1_TimeStamp"]));
+            }
+            set {
+                this["Elevation_SRTM1_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UNDEFINED")]
+        public global::System.Data.SQLite.DATABASESTATUS Elevation_GLOBE_Status {
+            get {
+                return ((global::System.Data.SQLite.DATABASESTATUS)(this["Elevation_GLOBE_Status"]));
+            }
+            set {
+                this["Elevation_GLOBE_Status"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UNDEFINED")]
+        public global::System.Data.SQLite.DATABASESTATUS Elevation_SRTM3_Status {
+            get {
+                return ((global::System.Data.SQLite.DATABASESTATUS)(this["Elevation_SRTM3_Status"]));
+            }
+            set {
+                this["Elevation_SRTM3_Status"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UNDEFINED")]
+        public global::System.Data.SQLite.DATABASESTATUS Elevation_SRTM1_Status {
+            get {
+                return ((global::System.Data.SQLite.DATABASESTATUS)(this["Elevation_SRTM1_Status"]));
+            }
+            set {
+                this["Elevation_SRTM1_Status"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_GLOBE_Update_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_GLOBE_Update_TimeStamp"]));
+            }
+            set {
+                this["Elevation_GLOBE_Update_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_SRTM3_Update_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_SRTM3_Update_TimeStamp"]));
+            }
+            set {
+                this["Elevation_SRTM3_Update_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_SRTM1_Update_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_SRTM1_Update_TimeStamp"]));
+            }
+            set {
+                this["Elevation_SRTM1_Update_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MaxLat {
+            get {
+                return ((double)(this["MaxLat"]));
+            }
+            set {
+                this["MaxLat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MinLat {
+            get {
+                return ((double)(this["MinLat"]));
+            }
+            set {
+                this["MinLat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MaxLon {
+            get {
+                return ((double)(this["MaxLon"]));
+            }
+            set {
+                this["MaxLon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MinLon {
+            get {
+                return ((double)(this["MinLon"]));
+            }
+            set {
+                this["MinLon"] = value;
             }
         }
     }

@@ -7,7 +7,7 @@ namespace GMap.NET.Internals
    /// <summary>
    /// cache queue item
    /// </summary>
-   internal struct CacheQueueItem
+   public struct CacheQueueItem
    {
       public RawTile Tile;
       public byte[] Img;
@@ -31,7 +31,7 @@ namespace GMap.NET.Internals
       }
    }
 
-   internal enum CacheUsage
+   public enum CacheUsage
    {
       First = 2,
       Second = 4,

@@ -28,6 +28,11 @@ namespace ScoutBase.Stations
     public class StationDatabaseUpdaterStartOptions
     {
         public string Name;
+        public bool RestrictToAreaOfInterest;
+        public double MinLat;
+        public double MinLon;
+        public double MaxLat;
+        public double MaxLon;
         public string InstanceID;
         public string SessionKey;
         public string GetKeyURL;
@@ -42,18 +47,30 @@ namespace ScoutBase.Stations
         string Password = "";
         StationDatabaseUpdaterStartOptions StartOptions;
 
+        // Temp directory to save downloaded files
+        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp").TrimEnd(Path.DirectorySeparatorChar);
+
         public StationDatabaseUpdater() : base()
         {
             this.WorkerReportsProgress = true;
             this.WorkerSupportsCancellation = true;
+            // create temp directory if not exists
+            if (!Directory.Exists(TmpDirectory))
+                Directory.CreateDirectory(TmpDirectory);
+        }
+
+        private DOWNLOADFILESTATUS GetUpdateFromURL(string url, string zipfilename, string filename)
+        {
+            AutoDecompressionWebClient cl = new AutoDecompressionWebClient();
+            DOWNLOADFILESTATUS status = cl.DownloadFileIfNewer(url, zipfilename, true, true, Password);
+            return status;
         }
 
         private bool ReadLocationsFromURL(string url, string zipfilename, string filename)
         {
             try
             {
-                AutoDecompressionWebClient cl = new AutoDecompressionWebClient();
-                DOWNLOADFILESTATUS status = cl.DownloadFileIfNewer(url, zipfilename, true, true, Password);
+                DOWNLOADFILESTATUS status = GetUpdateFromURL(url, zipfilename, filename);
                 if (((status & DOWNLOADFILESTATUS.ERROR) > 0) && ((status & DOWNLOADFILESTATUS.NOTFOUND) > 0))
                 {
                     this.ReportProgress(-1, "Error while downloading and extracting " + filename);
@@ -64,7 +81,19 @@ namespace ScoutBase.Stations
                     string json = "";
                     using (StreamReader sr = new StreamReader(filename))
                         json = sr.ReadToEnd();
-                    List<LocationDesignator> lds = StationData.Database.LocationFromJSON(json);
+                    List<LocationDesignator> tmp = StationData.Database.LocationFromJSON(json);
+                    List<LocationDesignator> lds = new List<LocationDesignator>();
+                    foreach (LocationDesignator ld in tmp)
+                    {
+                        // skip locations outsid area of interest if option set
+                        if (StartOptions.RestrictToAreaOfInterest && ((ld.Lat < StartOptions.MinLat) || (ld.Lat > StartOptions.MaxLat) || (ld.Lon < StartOptions.MinLon) || (ld.Lon > StartOptions.MaxLon)))
+                            continue;
+                        lds.Add(ld);
+                        if (this.CancellationPending)
+                            return false;
+                        // reduce CPU load
+                        Thread.Sleep(1);
+                    }
                     // check for empty database
                     if (StationData.Database.LocationCount() == 0)
                     {
@@ -91,8 +120,7 @@ namespace ScoutBase.Stations
         {
             try
             {
-                AutoDecompressionWebClient cl = new AutoDecompressionWebClient();
-                DOWNLOADFILESTATUS status = cl.DownloadFileIfNewer(url, zipfilename, true, true, Password);
+                DOWNLOADFILESTATUS status = GetUpdateFromURL(url, zipfilename, filename);
                 if (((status & DOWNLOADFILESTATUS.ERROR) > 0) && ((status & DOWNLOADFILESTATUS.NOTFOUND) > 0))
                 {
                     this.ReportProgress(-1, "Error while downloading and extracting " + filename);
@@ -103,7 +131,25 @@ namespace ScoutBase.Stations
                     string json = "";
                     using (StreamReader sr = new StreamReader(filename))
                         json = sr.ReadToEnd();
-                    List<QRVDesignator> qrvs = StationData.Database.QRVFromJSON(json);
+                    List<QRVDesignator> tmp = StationData.Database.QRVFromJSON(json);
+                    List<QRVDesignator> qrvs = new List<QRVDesignator>();
+                    foreach (QRVDesignator qrv in tmp)
+                    {
+                        // skip locations outsid area of interest if option set
+                        if (StartOptions.RestrictToAreaOfInterest)
+                        {
+                            LocationDesignator ld = StationData.Database.LocationFind(qrv.Call, qrv.Loc);
+                            if ((ld == null) || ((ld.Lat < StartOptions.MinLat) || (ld.Lat > StartOptions.MaxLat) || (ld.Lon < StartOptions.MinLon) || (ld.Lon > StartOptions.MaxLon)))
+                                continue;
+                            qrvs.Add(qrv);
+                        }
+                        else
+                            qrvs.Add(qrv);
+                        if (this.CancellationPending)
+                            return false;
+                        // reduce CPU load
+                        Thread.Sleep(1);
+                    }
                     // chek for empty database
                     if (StationData.Database.QRVCount() == 0)
                     {
@@ -128,7 +174,15 @@ namespace ScoutBase.Stations
 
         private bool ReadLocationsFromV1_2 (string filename)
         {
-            List<LocationDesignator> lds = StationData.Database.LocationFromV1_2(filename);
+            List<LocationDesignator> tmp = StationData.Database.LocationFromV1_2(filename);
+            List<LocationDesignator> lds = new List<LocationDesignator>();
+            foreach (LocationDesignator ld in tmp)
+            {
+                // skip locations outsid area of interest if option set
+                if (StartOptions.RestrictToAreaOfInterest && ((ld.Lat < StartOptions.MinLat) || (ld.Lat > StartOptions.MaxLat) || (ld.Lon < StartOptions.MinLon) || (ld.Lon > StartOptions.MaxLon)))
+                    continue;
+                lds.Add(ld);
+            }
             try
             {
                 foreach (LocationDesignator ld in lds)
@@ -137,6 +191,8 @@ namespace ScoutBase.Stations
                         this.ReportProgress(0, "Importing locations from V1.2 database: " + ld.Call + ", " + ld.Loc + ", " + ld.Source.ToString());
                     if (this.CancellationPending)
                         return false;
+                    // reduce CPU load
+                    Thread.Sleep(1);
                 }
                 return true;
             }
@@ -146,6 +202,136 @@ namespace ScoutBase.Stations
             }
             return false;
         }
+
+        private DateTime GetDatabaseTimeStamp()
+        {
+            string filename = StationData.Database.GetDBLocation();
+            DateTime dt = File.GetLastWriteTimeUtc(filename).ToUniversalTime();
+            // convert to YYYY:MM:DD hh:mm:ss only as this is stored in settings
+            dt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private DATABASESTATUS GetDatabaseStatus()
+        {
+            return StationData.Database.GetDBStatus();
+        }
+
+        private DateTime GetLocationtUpdateTimeStamp()
+        {
+            string filename = Path.Combine(TmpDirectory, "locations.json");
+            DateTime dt = File.GetLastWriteTimeUtc(filename).ToUniversalTime();
+            // convert to YYYY:MM:DD hh:mm:ss only as this is stored in settings
+            dt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private DateTime GetQRVUpdateTimeStamp()
+        {
+            string filename = Path.Combine(TmpDirectory, "qrv.json");
+            DateTime dt = File.GetLastWriteTimeUtc(filename).ToUniversalTime();
+            // convert to YYYY:MM:DD hh:mm:ss only as this is stored in settings
+            dt = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private DateTime GetSavedDatabaseTimeStamp()
+        {
+            DateTime dt = DateTime.MinValue;
+            dt = Properties.Settings.Default.Stations_TimeStamp;
+            // change kind to UTC as it is not specified in settings
+            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private DateTime GetSavedLocationUpdateTimeStamp()
+        {
+            DateTime dt = DateTime.MinValue;
+            dt = Properties.Settings.Default.Locations_Update_TimeStamp;
+            // change kind to UTC as it is not specified in settings
+            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private DateTime GetSavedQRVUpdateTimeStamp()
+        {
+            DateTime dt = DateTime.MinValue;
+            dt = Properties.Settings.Default.QRV_Update_TimeStamp;
+            // change kind to UTC as it is not specified in settings
+            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+            return dt;
+        }
+
+        private DATABASESTATUS GetSavedDatabaseStatus()
+        {
+            return Properties.Settings.Default.Stations_Status;
+        }
+
+        private void SaveDatabaseTimeStamp()
+        {
+            Properties.Settings.Default.Stations_TimeStamp = GetDatabaseTimeStamp();
+        }
+
+        private void SaveDatabaseStatus()
+        {
+            Properties.Settings.Default.Stations_Status = GetDatabaseStatus();
+        }
+
+        private void SaveLocationUpdateTimeStamp()
+        {
+            Properties.Settings.Default.Locations_Update_TimeStamp = GetLocationtUpdateTimeStamp();
+        }
+
+        private void SaveQRVUpdateTimeStamp()
+        {
+            Properties.Settings.Default.QRV_Update_TimeStamp = GetQRVUpdateTimeStamp();
+        }
+
+        private bool HasDatabaseChanged()
+        {
+            try
+            {
+                DateTime dt1 = GetSavedDatabaseTimeStamp();
+                DateTime dt2 = GetDatabaseTimeStamp();
+                return dt1 != dt2;
+            }
+            catch
+            {
+                // do nothing
+            }
+            return true;
+        }
+
+        private bool HasLocationUpdateChanged()
+        {
+            try
+            {
+                DateTime dt1 = GetSavedLocationUpdateTimeStamp();
+                DateTime dt2 = GetLocationtUpdateTimeStamp();
+                return dt1 != dt2;
+            }
+            catch
+            {
+                // do nothing
+            }
+            return true;
+        }
+
+        private bool HasQRVUpdateChanged()
+        {
+            try
+            {
+                DateTime dt1 = GetSavedQRVUpdateTimeStamp();
+                DateTime dt2 = GetQRVUpdateTimeStamp();
+                return dt1 != dt2;
+            }
+            catch
+            {
+                // do nothing
+            }
+            return true;
+        }
+
 
         protected override void OnDoWork(DoWorkEventArgs e)
         {
@@ -183,10 +369,6 @@ namespace ScoutBase.Stations
                     // check if any kind of update is enabled
                     if ((StartOptions.Options == BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE) || (StartOptions.Options == BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY))
                     {
-                        // get temp directory
-                        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp").TrimEnd(Path.DirectorySeparatorChar);
-                        if (!Directory.Exists(TmpDirectory))
-                            Directory.CreateDirectory(TmpDirectory);
                         // reset database status
                         StationData.Database.SetDBStatus(DATABASESTATUS.UNDEFINED);
                         this.ReportProgress(1, StationData.Database.GetDBStatus());
@@ -204,14 +386,78 @@ namespace ScoutBase.Stations
                         // set status to updating
                         StationData.Database.SetDBStatus(DATABASESTATUS.UPDATING);
                         this.ReportProgress(1, StationData.Database.GetDBStatus());
-                        // update callsign database
-                        this.ReportProgress(0, "Updating callsigns from web database...");
-                        if (!ReadLocationsFromURL(Properties.Settings.Default.Stations_UpdateURL + "locations.zip", Path.Combine(TmpDirectory, "locations.zip"), Path.Combine(TmpDirectory, "locations.json")))
-                            errors++;
+                        if (StartOptions.RestrictToAreaOfInterest)
+                        {
+                            this.ReportProgress(0, "Removing callsigns otside are of interest...");
+                            if (HasDatabaseChanged())
+                            {
+                                // database changed --> do full check
+                                List<LocationDesignator> locations = StationData.Database.LocationGetAll(this);
+                                foreach (LocationDesignator ld in locations)
+                                {
+                                    if ((ld.Lat < StartOptions.MinLat) || (ld.Lat > StartOptions.MaxLat) || (ld.Lon < StartOptions.MinLon) || (ld.Lon > StartOptions.MaxLon))
+                                    {
+                                        // remove from location database & QRV database
+                                        StationData.Database.LocationDelete(ld);
+                                        StationData.Database.QRVDelete(ld.Call, ld.Loc, BAND.BALL);
+                                    }
+                                    if (this.CancellationPending)
+                                        return;
+                                    // reduce CPU load
+                                    Thread.Sleep(1);
+                                }
+                                // save status & timestamps
+                                SaveDatabaseTimeStamp();
+                                SaveDatabaseStatus();
+                            }
+                            else
+                            {
+                                // dabase not changed --> nothing to do
+                                // restore database status
+                                StationData.Database.SetDBStatus(GetDatabaseStatus());
+                            }
+                        }
+                        // update location database
+                        this.ReportProgress(0, "Updating locations from web database...");
+                        // get update from url
+                        GetUpdateFromURL(Properties.Settings.Default.Stations_UpdateURL + "locations.zip", Path.Combine(TmpDirectory, "locations.zip"), Path.Combine(TmpDirectory, "locations.json"));
+                        if (HasDatabaseChanged() || HasLocationUpdateChanged())
+                        {
+                            // database and/or update changed --> do full check
+                            if (!ReadLocationsFromURL(Properties.Settings.Default.Stations_UpdateURL + "locations.zip", Path.Combine(TmpDirectory, "locations.zip"), Path.Combine(TmpDirectory, "locations.json")))
+                                errors++;
+                            // save status & timestamps
+                            SaveDatabaseTimeStamp();
+                            SaveDatabaseStatus();
+                            SaveLocationUpdateTimeStamp();
+                        }
+                        else
+                        {
+                            // dabase and update not changed --> nothing to do
+                            // restore database status
+                            StationData.Database.SetDBStatus(GetDatabaseStatus());
+                        }
                         if (this.CancellationPending)
                             break;
-                        if (!ReadQRVFromURL(Properties.Settings.Default.Stations_UpdateURL + "qrv.zip", Path.Combine(TmpDirectory, "qrv.zip"), Path.Combine(TmpDirectory, "qrv.json")))
-                            errors++;
+                        // update qrv database
+                        this.ReportProgress(0, "Updating qrv info from web database...");
+                        // get update from url
+                        GetUpdateFromURL(Properties.Settings.Default.Stations_UpdateURL + "qrv.zip", Path.Combine(TmpDirectory, "qrv.zip"), Path.Combine(TmpDirectory, "qrv.json"));
+                        if (HasDatabaseChanged() || HasQRVUpdateChanged())
+                        {
+                            if (!ReadQRVFromURL(Properties.Settings.Default.Stations_UpdateURL + "qrv.zip", Path.Combine(TmpDirectory, "qrv.zip"), Path.Combine(TmpDirectory, "qrv.json")))
+                                errors++;
+                            // save status & timestamps
+                            SaveDatabaseTimeStamp();
+                            SaveDatabaseStatus();
+                            SaveQRVUpdateTimeStamp();
+                        }
+                        else
+                        {
+                            // dabase and update not changed --> nothing to do
+                            // restore database status
+                            StationData.Database.SetDBStatus(GetDatabaseStatus());
+                        }
                         // silently update locations from V1.2 database if found
                         string appdatadir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName).TrimEnd(Path.DirectorySeparatorChar);
                         string oldfile = Path.Combine(appdatadir.Replace("AirScout", "ScoutBase"), "Database", "ScoutBase.db3");
@@ -237,7 +483,6 @@ namespace ScoutBase.Stations
                         }
                         // sleep once to get all messages to main thread
                         Thread.Sleep(1000);
-
                         // sleep when running periodically
                         if (StartOptions.Options == BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY)
                         {

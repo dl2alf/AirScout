@@ -82,5 +82,53 @@ namespace ScoutBase.Stations.Properties {
                 this["Database_BackgroundUpdate_Period"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Stations_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Stations_TimeStamp"]));
+            }
+            set {
+                this["Stations_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UNDEFINED")]
+        public global::System.Data.SQLite.DATABASESTATUS Stations_Status {
+            get {
+                return ((global::System.Data.SQLite.DATABASESTATUS)(this["Stations_Status"]));
+            }
+            set {
+                this["Stations_Status"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Locations_Update_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Locations_Update_TimeStamp"]));
+            }
+            set {
+                this["Locations_Update_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime QRV_Update_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["QRV_Update_TimeStamp"]));
+            }
+            set {
+                this["QRV_Update_TimeStamp"] = value;
+            }
+        }
     }
 }

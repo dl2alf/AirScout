@@ -26,6 +26,7 @@ using ScoutBase.Core;
 using ScoutBase.Stations;
 using ScoutBase.Elevation;
 using ScoutBase.Propagation;
+using ScoutBase.Maps;
 using ScoutBase;
 using Newtonsoft.Json;
 using static ScoutBase.Core.ZIP;
@@ -233,46 +234,6 @@ namespace AirScout
             gm_Options_Coverage.SetZoomToFitRect(RectLatLng.FromLTRB(tb_Coverage_MinLon.Value - 1, tb_Coverage_MaxLat.Value + 1, tb_Coverage_MaxLon.Value + 1, tb_Coverage_MinLat.Value - 1));
         }
 
-        private void btn_Options_Watchlist_Manage_Click(object sender, EventArgs e)
-        {
-            // sync watchlist, try to keep previously checked calls
-            // you can have a call only once in the watch list
-            List<string> checkedcalls = new List<string>();
-            foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
-            {
-                if (item.Checked)
-                    checkedcalls.Add(item.Call);
-            }
-            WatchlistDlg Dlg = new WatchlistDlg();
-            if (Dlg.ShowDialog() == DialogResult.OK)
-            {
-                // clear watch list
-                Properties.Settings.Default.Watchlist.Clear();
-                foreach (DataGridViewRow row in Dlg.dgv_Watchlist_Selected.Rows)
-                {
-                    string call = row.Cells[0].Value.ToString();
-                    string loc = row.Cells[1].Value.ToString();
-                    bool oor = true;
-                    // try to get the location from database
-                    LocationDesignator dxloc = StationData.Database.LocationFind(call, loc);
-                    if (dxloc != null)
-                    {
-                        oor = LatLon.Distance(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, dxloc.Lat, dxloc.Lon) > Properties.Settings.Default.Path_MaxLength;
-                    }
-                    // add call to watch list
-                    WatchlistItem item = new WatchlistItem(call, loc, oor);
-                    Properties.Settings.Default.Watchlist.Add(item);
-                }
-                // reselect previously selected
-                foreach (string checkedcall in checkedcalls)
-                {
-                    int index = Properties.Settings.Default.Watchlist.IndexOf(checkedcall);
-                    if (index >= 0)
-                        Properties.Settings.Default.Watchlist[index].Checked = true;
-                }
-            }
-        }
-
         #endregion
 
         #region tab_Options_Database
@@ -295,22 +256,33 @@ namespace AirScout
 
         private void tab_Options_Database_Enter(object sender, EventArgs e)
         {
-            tb_Options_ScoutBase_Database_FileName.Text = GetDatabaseDir(StationData.Database.GetDBLocation());
+            lbl_Options_ScoutBase_Database_FileName.Text = GetDatabaseDir(StationData.Database.GetDBLocation());
             tb_Options_ScoutBase_Database_FileSize.Text = StationData.Database.GetDBSize().ToString("F0");
-            tb_Options_AirScout_Database_FileName.Text = GetDatabaseDir(AircraftData.Database.GetDBLocation());
+            lbl_Options_AirScout_Database_FileName.Text = GetDatabaseDir(AircraftData.Database.GetDBLocation());
             tb_Options_AirScout_Database_FileSize.Text = AircraftData.Database.GetDBSize().ToString("F0");
-            tb_Options_Propagation_GLOBE_Database_FileName.Text = GetDatabaseDir(PropagationData.Database.GetDBLocation(ELEVATIONMODEL.GLOBE));
+            lbl_Options_Propagation_GLOBE_Database_FileName.Text = GetDatabaseDir(PropagationData.Database.GetDBLocation(ELEVATIONMODEL.GLOBE));
             tb_Options_Propagation_GLOBE_Database_FileSize.Text = PropagationData.Database.GetDBSize(ELEVATIONMODEL.GLOBE).ToString("F0");
-            tb_Options_Propagation_SRTM3_Database_FileName.Text = GetDatabaseDir(PropagationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM3));
+            lbl_Options_Propagation_SRTM3_Database_FileName.Text = GetDatabaseDir(PropagationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM3));
             tb_Options_Propagation_SRTM3_Database_FileSize.Text = PropagationData.Database.GetDBSize(ELEVATIONMODEL.SRTM3).ToString("F0");
-            tb_Options_Propagation_SRTM1_Database_FileName.Text = GetDatabaseDir(PropagationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1));
+            lbl_Options_Propagation_SRTM1_Database_FileName.Text = GetDatabaseDir(PropagationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1));
             tb_Options_Propagation_SRTM1_Database_FileSize.Text = PropagationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1).ToString("F0");
-            tb_Options_Elevation_GLOBE_Database_FileName.Text = GetDatabaseDir(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.GLOBE));
+            lbl_Options_Elevation_GLOBE_Database_FileName.Text = GetDatabaseDir(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.GLOBE));
             tb_Options_Elevation_GLOBE_Database_FileSize.Text = ElevationData.Database.GetDBSize(ELEVATIONMODEL.GLOBE).ToString("F0");
-            tb_Options_Elevation_SRTM3_Database_FileName.Text = GetDatabaseDir(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM3));
+            lbl_Options_Elevation_SRTM3_Database_FileName.Text = GetDatabaseDir(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM3));
             tb_Options_Elevation_SRTM3_Database_FileSize.Text = ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM3).ToString("F0");
-            tb_Options_Elevation_SRTM1_Database_FileName.Text = GetDatabaseDir(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1));
+            lbl_Options_Elevation_SRTM1_Database_FileName.Text = GetDatabaseDir(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1));
             tb_Options_Elevation_SRTM1_Database_FileSize.Text = ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1).ToString("F0");
+            lbl_Options_Map_Database_FileName.Text = GetDatabaseDir(MapData.Database.GetDBLocation());
+            tb_Options_Map_Database_FileSize.Text = MapData.Database.GetDBSize().ToString("F0");
+            tt_Options.SetToolTip(lbl_Options_ScoutBase_Database_FileName, StationData.Database.GetDBLocation() + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_AirScout_Database_FileName, AircraftData.Database.GetDBLocation() + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_Propagation_GLOBE_Database_FileName, PropagationData.Database.GetDBLocation(ELEVATIONMODEL.GLOBE) + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_Propagation_SRTM3_Database_FileName, PropagationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM3) + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_Propagation_SRTM1_Database_FileName, PropagationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1) + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_Elevation_GLOBE_Database_FileName, ElevationData.Database.GetDBLocation(ELEVATIONMODEL.GLOBE) + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_Elevation_SRTM3_Database_FileName, ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM3) + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_Elevation_SRTM1_Database_FileName, ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1) + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_Map_Database_FileName, MapData.Database.GetDBLocation() + "\n\n" + "Click here to open database location in Explorer window.");
             double total = StationData.Database.GetDBSize() +
                 AircraftData.Database.GetDBSize() +
                 PropagationData.Database.GetDBSize(ELEVATIONMODEL.GLOBE) +
@@ -318,7 +290,8 @@ namespace AirScout
                 PropagationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1) +
                 ElevationData.Database.GetDBSize(ELEVATIONMODEL.GLOBE) +
                 ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM3) +
-                ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1);
+                ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1) + 
+                MapData.Database.GetDBSize();
             lbl_Options_Database_TotalSize.Text = total.ToString("F0");
             rb_Options_Database_Update_Never.Checked = !Properties.Settings.Default.Background_Update_OnStartup && !Properties.Settings.Default.Background_Update_Periodically;
             rb_Options_Database_Update_OnStartup.Checked = Properties.Settings.Default.Background_Update_OnStartup;
@@ -361,21 +334,6 @@ namespace AirScout
                 Properties.Settings.Default.Background_Update_Periodically = false;
         }
 
-        private void btn_Open_LogDirectory_Click(object sender, EventArgs e)
-        {
-            Process.Start(ParentDlg.LogDirectory);
-        }
-
-        private void btn_Open_TmpDirectory_Click(object sender, EventArgs e)
-        {
-            Process.Start(ParentDlg.TmpDirectory);
-        }
-
-        private void cb_Options_Watchlist_SyncWithKST_CheckedChanged(object sender, EventArgs e)
-        {
-            btn_Options_Watchlist_Manage.Enabled = !cb_Options_Watchlist_SyncWithKST.Checked;
-        }
-
         private void btn_Options_DeleteAllElevationPaths_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are you sure to delete all precalculated elevation paths from database?", "Delete all elevation paths", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -394,6 +352,11 @@ namespace AirScout
                 PropagationData.Database.PropagationPathDeleteAll(ELEVATIONMODEL.SRTM3);
                 PropagationData.Database.PropagationPathDeleteAll(ELEVATIONMODEL.SRTM1);
             }
+        }
+
+        private void btn_DeleteAllMapTiles_Click(object sender, EventArgs e)
+        {
+            MapData.Database.TileDeleteAll();
         }
 
         private void btn_Options_ScoutBase_Database_Maintenance_Click(object sender, EventArgs e)
@@ -442,6 +405,51 @@ namespace AirScout
         {
             DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(ElevationData.Database, ELEVATIONMODEL.SRTM1);
             Dlg.ShowDialog();
+        }
+
+        private void lbl_Options_ScoutBase_Database_FileName_Click(object sender, EventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(StationData.Database.GetDBLocation()));
+        }
+
+        private void lbl_Options_AirScout_Database_FileName_Click(object sender, EventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(AircraftData.Database.GetDBLocation()));
+        }
+
+        private void lbl_Options_Propagation_GLOBE_Database_FileName_Click(object sender, EventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(PropagationData.Database.GetDBLocation(ELEVATIONMODEL.GLOBE)));
+        }
+
+        private void lbl_Options_Propagation_SRTM3_Database_FileName_Click(object sender, EventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(PropagationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM3)));
+        }
+
+        private void lbl_Options_Propagation_SRTM1_Database_FileName_Click(object sender, EventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(PropagationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1)));
+        }
+
+        private void lbl_Options_Elevation_GLOBE_Database_FileName_Click(object sender, EventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.GLOBE)));
+        }
+
+        private void lbl_Options_Elevation_SRTM3_Database_FileName_Click(object sender, EventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM3)));
+        }
+
+        private void lbl_Options_Elevation_SRTM1_Database_FileName_Click(object sender, EventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1)));
+        }
+
+        private void lbl_Options_Map_Database_FileName_Click(object sender, EventArgs e)
+        {
+            Process.Start(Path.GetDirectoryName(MapData.Database.GetDBLocation()));
         }
 
         #endregion
@@ -2156,6 +2164,92 @@ namespace AirScout
         }
 
 
+        #endregion
+
+        #region tab_Options_Watchlist
+
+        private void tab_Options_Watchlist_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cb_Options_Watchlist_SyncWithKST_CheckedChanged(object sender, EventArgs e)
+        {
+            // disable manage buttons when synced with KST
+            btn_Options_Watchlist_Manage.Enabled = !cb_Options_Watchlist_SyncWithKST.Checked;
+            btn_Options_Watchlist_Clear.Enabled = !cb_Options_Watchlist_SyncWithKST.Checked;
+        }
+
+        private void btn_Options_Watchlist_Manage_Click(object sender, EventArgs e)
+        {
+            // sync watchlist, try to keep previously checked calls
+            // you can have a call only once in the watch list
+            List<string> checkedcalls = new List<string>();
+            foreach (WatchlistItem item in Properties.Settings.Default.Watchlist)
+            {
+                if (item.Checked)
+                    checkedcalls.Add(item.Call);
+            }
+            WatchlistDlg Dlg = new WatchlistDlg();
+            if (Dlg.ShowDialog() == DialogResult.OK)
+            {
+                // clear watch list
+                Properties.Settings.Default.Watchlist.Clear();
+                foreach (DataGridViewRow row in Dlg.dgv_Watchlist_Selected.Rows)
+                {
+                    string call = row.Cells[0].Value.ToString();
+                    string loc = row.Cells[1].Value.ToString();
+                    bool oor = true;
+                    // try to get the location from database
+                    LocationDesignator dxloc = StationData.Database.LocationFind(call, loc);
+                    if (dxloc != null)
+                    {
+                        oor = LatLon.Distance(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, dxloc.Lat, dxloc.Lon) > Properties.Settings.Default.Path_MaxLength;
+                    }
+                    // add call to watch list
+                    WatchlistItem item = new WatchlistItem(call, loc, oor);
+                    Properties.Settings.Default.Watchlist.Add(item);
+                }
+                // reselect previously selected
+                foreach (string checkedcall in checkedcalls)
+                {
+                    int index = Properties.Settings.Default.Watchlist.IndexOf(checkedcall);
+                    if (index >= 0)
+                        Properties.Settings.Default.Watchlist[index].Checked = true;
+                }
+            }
+        }
+
+        private void btn_Options_Watchlist_Clear_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Watchlist.Clear();
+        }
+
+
+        #endregion
+
+        #region tab_Options_Misc
+
+        private void btn_Options_Open_AirScoutDirectory_Click(object sender, EventArgs e)
+        {
+            Process.Start(ParentDlg.AppDirectory);
+        }
+
+        private void btn_Options_Open_LogDirectory_Click(object sender, EventArgs e)
+        {
+            Process.Start(ParentDlg.LogDirectory);
+        }
+
+        private void btn_Options_Open_TmpDirectory_Click(object sender, EventArgs e)
+        {
+            Process.Start(ParentDlg.TmpDirectory);
+        }
+
+        private void btn_Options_Open_PluginDirectory_Click(object sender, EventArgs e)
+        {
+            Process.Start(ParentDlg.PluginDirectory);
+        }
+
         private void pb_Donate_Click(object sender, EventArgs e)
         {
             try
@@ -2165,11 +2259,9 @@ namespace AirScout
             catch
             {
             }
-
         }
 
         #endregion
-
 
         private void OptionsDlg_FormClosing(object sender, FormClosingEventArgs e)
         {

@@ -24,6 +24,9 @@ namespace ElevationTileGenerator
     {
         DataTableSRTM3 srtm3 = new DataTableSRTM3();
 
+        List<string> Files1 = new List<string>();
+        List<string> Files2 = new List<string>();
+
         ElevationCatalogue Tiles = new ElevationCatalogue();
 
         public MainDlg()
@@ -33,7 +36,32 @@ namespace ElevationTileGenerator
 
         private void MainDlg_Load(object sender, EventArgs e)
         {
-//            string[] a = ElevationModel.Database.GetLocsFromRect(50, 0, 51, 2);
+            //            string[] a = ElevationModel.Database.GetLocsFromRect(50, 0, 51, 2);
+            // fill compare files catalogues
+            if (!String.IsNullOrEmpty(tb_Tile1.Text))
+            {
+                // check for multiple files
+                if (tb_Tile1.Text.Contains(";"))
+                {
+                    string[] a = tb_Tile1.Text.Split(';');
+                    foreach (string file in a)
+                        Files1.Add(file);
+                }
+                else
+                    Files1.Add(tb_Tile1.Text);
+            }
+            if (!String.IsNullOrEmpty(tb_Tile2.Text))
+            {
+                // check for multiple files
+                if (tb_Tile2.Text.Contains(";"))
+                {
+                    string[] a = tb_Tile2.Text.Split(';');
+                    foreach (string file in a)
+                        Files2.Add(file);
+                }
+                else
+                    Files2.Add(tb_Tile2.Text);
+            }
         }
 
         private void btn_Start_Click(object sender, EventArgs e)
@@ -780,6 +808,41 @@ namespace ElevationTileGenerator
             CATFromZIP();
         }
 
+        private void PictureFromTiles(string[] files, bool createTIFFromTiles = false)
+        {
+            Bitmap bm = null;
+            foreach (string file in files)
+            {
+                tsl_Status.Text = "Processing " + Path.GetFileName(file) + "...";
+                Application.DoEvents();
+                using (StreamReader sr = new StreamReader(File.OpenRead(file)))
+                {
+                    string json = sr.ReadToEnd();
+                    ElevationTileDesignator tile = ElevationTileDesignator.FromJSON<ElevationTileDesignator>(json);
+                    // create bitmap if not created
+                    if (bm == null)
+                    {
+                        bm = new Bitmap(tile.Columns * 24, tile.Rows * 24);
+                    }
+                    Bitmap bt = tile.ToBitmap();
+                    if (createTIFFromTiles)
+                        bt.Save(file.Replace(".loc",".tif"), System.Drawing.Imaging.ImageFormat.Tiff);
+                    int col = (int)(tile.TileIndex[4] - 'A') * tile.Columns;
+                    int row = (int)(tile.TileIndex[5] - 'A') * tile.Rows;
+                    for (int i = 0; i < tile.Columns; i++)
+                    {
+                        for (int j = 0; j < tile.Rows; j++)
+                        {
+                            bm.SetPixel(col + i, bm.Height - row - bt.Height + j, bt.GetPixel(i, j));
+                        }
+                    }
+                    pb_Picture.Image = bm;
+                }
+            }
+            if (bm != null)
+                bm.Save("ElevationTiles.tif", System.Drawing.Imaging.ImageFormat.Tiff);
+        }
+    
         private void btn_PictureFromTiles_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog Dlg = new FolderBrowserDialog();
@@ -787,38 +850,6 @@ namespace ElevationTileGenerator
             if (Dlg.ShowDialog() == DialogResult.OK)
             {
                 string[] files = Directory.GetFiles(Dlg.SelectedPath, "*.loc");
-                Bitmap bm = null;
-                double baselat, baselon;
-                string dir = Directory.GetParent(Dlg.SelectedPath).Name + Dlg.SelectedPath.Substring(Dlg.SelectedPath.LastIndexOf('\\')).Replace("\\", "");
-                MaidenheadLocator.LatLonFromLoc(dir, PositionInRectangle.BottomLeft, out baselat, out baselon);
-                foreach (string file in files)
-                {
-                    tsl_Status.Text = "Processing " + Path.GetFileName(file) + "...";
-                    Application.DoEvents();
-                    using (StreamReader sr = new StreamReader(File.OpenRead(file)))
-                    {
-                        string json = sr.ReadToEnd();
-                        ElevationTileDesignator tile = ElevationTileDesignator.FromJSON<ElevationTileDesignator>(json);
-                        // create bitmap if not created
-                        if (bm == null)
-                        {
-                            bm = new Bitmap(tile.Columns * 24, tile.Rows * 24);
-                        }
-                        Bitmap bt = tile.ToBitmap();
-                        // bt.Save(Path.Combine(Dlg.SelectedPath, tile.TileIndex) + ".tif", System.Drawing.Imaging.ImageFormat.Tiff);
-                        int col = (int)(tile.TileIndex[4] - 'A') * tile.Columns;
-                        int row = (int)(tile.TileIndex[5] - 'A') * tile.Rows;
-                        for (int i = 0; i < tile.Columns; i++)
-                        {
-                            for (int j = 0; j < tile.Rows; j++)
-                            {
-                                bm.SetPixel(col + i, bm.Height - row - bt.Height + j, bt.GetPixel(i, j));
-                            }
-                        }
-                    }
-                }
-                if (bm != null)
-                    bm.Save("ElevationTiles.tif", System.Drawing.Imaging.ImageFormat.Tiff);
             }
         }
 
@@ -856,6 +887,429 @@ namespace ElevationTileGenerator
         private void btn_Delete_Click(object sender, EventArgs e)
         {
             Delete();    
+        }
+
+        private void Say(string txt)
+        {
+            if (tsl_Status.Text != txt)
+            {
+                tsl_Status.Text = txt;
+                this.Refresh();
+                Application.DoEvents();
+            }
+        }
+
+        private void btn_Compare_Tile1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog Dlg = new OpenFileDialog();
+            Dlg.CheckFileExists = true;
+            Dlg.Multiselect = true;
+            Dlg.Filter = "Elevation Files (*.hgt)|*.hgt|Zipped Elevation Files (*.zip)|*.zip";
+            if (Dlg.ShowDialog() == DialogResult.OK)
+            {
+                Files1.Clear();
+                if (Dlg.FileNames.Length > 1)
+                {
+                    // multiple files selected
+                    tb_Tile1.Text = string.Join(";", Dlg.FileNames);
+                }
+                else
+                {
+                    // unzip if zip file selected
+                    if (Path.GetExtension(Dlg.FileName) == ".zip")
+                    {
+                        // create ZIP file and add all loc files
+                        ZipFile zip = new ZipFile(Dlg.FileName);
+                        foreach (string filename in zip.EntryFileNames)
+                        {
+                            Files1.Add(Path.Combine(Path.GetTempPath(), "Files1", filename));
+                        }
+                        zip.ExtractAll(Path.Combine(Path.GetTempPath(), "Files1"), ExtractExistingFileAction.OverwriteSilently);
+                        bool filemissing;
+                        do
+                        {
+                            filemissing = false;
+                            foreach (String filename in Files1)
+                            {
+                                if (!File.Exists(filename))
+                                {
+                                    Application.DoEvents();
+                                    filemissing = true;
+                                    break;
+                                }
+                            }
+                            Thread.Sleep(1000);
+                        }
+                        while (filemissing);
+                    }
+                    else
+                    {
+                        tb_Tile1.Text = Dlg.FileName;
+                        Files1.Add(Dlg.FileName);
+                    }
+                }
+            }
+            Properties.Settings.Default.Save();
+        }
+
+        private void btn_Compare_Tile2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog Dlg = new OpenFileDialog();
+            Dlg.CheckFileExists = true;
+            Dlg.Multiselect = true;
+            Dlg.Filter = "Elevation Files (*.hgt)|*.hgt|Zipped Elevation Files (*.zip)|*.zip";
+            if (Dlg.ShowDialog() == DialogResult.OK)
+            {
+                Files2.Clear();
+                if (Dlg.FileNames.Length > 1)
+                {
+                    // multiple files selected
+                    tb_Tile2.Text = string.Join(";", Dlg.FileNames);
+                }
+                else
+                {
+                    // unzip if zip file selected
+                    if (Path.GetExtension(Dlg.FileName) == ".zip")
+                    {
+                        // create ZIP file and add all loc files
+                        ZipFile zip = new ZipFile(Dlg.FileName);
+                        foreach (string filename in zip.EntryFileNames)
+                        {
+                            Files2.Add(Path.Combine(Path.GetTempPath(), "Files2", filename));
+                        }
+                        zip.ExtractAll(Path.Combine(Path.GetTempPath(), "Files2"), ExtractExistingFileAction.OverwriteSilently);
+                        bool filemissing;
+                        do
+                        {
+                            filemissing = false;
+                            foreach (String filename in Files2)
+                            {
+                                if (!File.Exists(filename))
+                                {
+                                    Application.DoEvents();
+                                    filemissing = true;
+                                    break;
+                                }
+                            }
+                            Thread.Sleep(1000);
+                        }
+                        while (filemissing);
+                    }
+                    else
+                    {
+                        tb_Tile2.Text = Dlg.FileName;
+                        Files2.Add(Dlg.FileName);
+                    }
+                }
+            }
+            Properties.Settings.Default.Save();
+        }
+
+        private string FindinFiles2(string filename1)
+        {
+            foreach(string filename2 in Files2)
+            {
+                if (Path.GetFileName(filename1) == Path.GetFileName(filename2))
+                    return filename2;
+            }
+            return "";
+        }
+
+        public Bitmap DrawElevationBitmapHGT(string filename)
+        {
+            int minelv = 0;
+            int maxelv = 0;
+            long length = new System.IO.FileInfo(filename).Length / 2;
+            // calculate bitmap dimensions
+            // get the x/y ratio first
+            int width = (int)Math.Sqrt(length);
+            int height = width;
+            short[,] elv = new short[width,height];
+            long diff = 0;
+            long voids = 0;
+            long count = 0;
+            long sum = 0;
+            using (var filestream = File.Open(filename, FileMode.Open))
+            using (var binaryStream = new BinaryReader(filestream))
+            {
+                for (int i = 0; i < width; i++)
+                {
+                    for (int j = 0; j < height; j++)
+                    {
+                        elv[i, j] = binaryStream.ReadInt16();
+                        if (elv[i, j] != 0)
+                            diff++;
+                        if (elv[i, j] == -512)
+                            voids++;
+                        if (elv[i, j] < minelv)
+                            minelv = elv[i, j];
+                        if (elv[i, j] > maxelv)
+                            maxelv = elv[i, j];
+                        count++;
+                        if (count % 100000 == 0)
+                            Say("Processing " + count.ToString() + " of " + length.ToString() + " points");
+                    }
+                }
+            }
+            long[] d = new long[maxelv - minelv + 1];
+            for (int i = 0; i < d.Length; i++)
+                d[i] = 0;
+            DEMColorPalette palette = new DEMColorPalette();
+            Bitmap bm = new Bitmap(width, height);
+            for (int i = 0; i < width; i++)
+            {
+                // System.Console.WriteLine(i);
+                for (int j = 0; j < height; j++)
+                {
+                    double e = (double)(elv[i,j] - minelv) / (double)(maxelv - minelv) * 100.0;
+                    if (e < 0)
+                        e = 0;
+                    if (e > 100)
+                        e = 100;
+                    // count occurence of difference in an array
+                    d[elv[i,j] - minelv]++;
+                    sum += elv[i, j];
+                    bm.SetPixel(i, height - j - 1, palette.GetColor(e));
+                }
+            }
+            using (StreamWriter sw = new StreamWriter("ElevationDifference.csv"))
+            {
+                sw.WriteLine("Difference[m];Count");
+                for (int i = 0; i < d.Length; i++)
+                {
+                    sw.WriteLine((i + minelv).ToString() + ";" + d[i].ToString());
+                }
+            }
+            lbl_Diff_Dimensions.Text = width.ToString() + "x" + height.ToString();
+            lbl_Diff_Total.Text = diff.ToString();
+            lbl_Diff_Voids.Text = voids.ToString();
+            lbl_Diff_Min.Text = minelv.ToString();
+            lbl_Diff_Max.Text = maxelv.ToString();
+            lbl_Diff_Mean.Text = (sum / length).ToString("F2");
+            return bm;
+        }
+
+        private string CompareFilesHGT(string filename1, string filename2)
+        {
+            string difffilename = Path.Combine(Application.StartupPath, Path.GetFileName(filename1).Replace(".hgt",".hgtdiff"));
+            long length1 = new System.IO.FileInfo(filename1).Length / 2;
+            long length2 = new System.IO.FileInfo(filename2).Length / 2;
+            if (length1 != length2)
+            {
+                MessageBox.Show("Cannot compare files with different length: " + filename1 + "<>" + filename2);
+                return "";
+            }
+            long l = 0;
+            long diff = 0;
+            // delete diff file
+            try
+            {
+                File.Delete(difffilename);
+                FileStream fs1 = File.OpenRead(filename1);
+                FileStream fs2 = File.OpenRead(filename2);
+                using (BinaryReader br1 = new BinaryReader(fs1))
+                {
+                    using (BinaryReader br2 = new BinaryReader(fs2))
+                    {
+                        using (BinaryWriter bw = new BinaryWriter(File.Create(difffilename)))
+                        {
+                            while (br1.BaseStream.Position < br1.BaseStream.Length)
+                            {
+                                byte[] b1 = br1.ReadBytes(2);
+                                byte[] b2 = br2.ReadBytes(2);
+                                Array.Reverse(b1);
+                                Array.Reverse(b2);
+                                short e1 = BitConverter.ToInt16(b1, 0);
+                                short e2 = BitConverter.ToInt16(b2, 0);
+                                short e = ElevationData.Database.ElvMissingFlag;
+                                if ((e1 >= -500) && (e2 >= -500))
+                                {
+                                    e = (short)(e1 - e2);
+                                    if (e > 1000)
+                                        Console.WriteLine("Error at position:" + br1.BaseStream.Position.ToString("0X"));
+                                    if (e != 0)
+                                        diff++;
+                                }
+                                bw.Write(e);
+                                if (l % 100000 == 0)
+                                {
+                                    Say("Comparing point " + l.ToString() + " of " + length1.ToString() + ": " + diff.ToString() + " differences");
+                                }
+                                l++;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+            return difffilename;
+        }
+
+        private void CompareFiles(string filename1, string filename2)
+        {
+            Stopwatch st = new Stopwatch();
+            st.Start();
+            if (Path.GetExtension(filename1) == ".hgt")
+            {
+                string difffilename = CompareFilesHGT(filename1, filename2);
+                tb_Diff.Text = difffilename;
+                Bitmap bm = DrawElevationBitmapHGT(difffilename);
+                pb_Picture.Image = bm;
+                bm.Save("ElevationDifference.tif", System.Drawing.Imaging.ImageFormat.Tiff);
+                pb_Picture.Image = bm;
+            }
+            st.Stop();
+            tsl_Status.Text = "Compare files: " + st.ElapsedMilliseconds.ToString() + "ms.";
+            this.Refresh();
+        }
+
+        private void btn_Compare_Click(object sender, EventArgs e)
+        {
+            foreach (string filename1 in Files1)
+            {
+                string filename2 = FindinFiles2(filename1);
+                if (!String.IsNullOrEmpty(filename2))
+                {
+                    CompareFiles(filename1, filename2);
+                }
+            }
+        }
+
+        private void btn_ShowDiff_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog Dlg = new OpenFileDialog();
+            Dlg.CheckFileExists = true;
+            Dlg.Multiselect = false;
+            Dlg.Filter = "Elevation Difference Files (*.hgtdiff)|*.hgtdiff";
+            if (Dlg.ShowDialog() == DialogResult.OK)
+            {
+                tb_Show_Diff.Text = Dlg.FileName;
+                Bitmap bm = DrawElevationBitmapHGT(tb_Show_Diff.Text);
+                pb_Diff.Image = bm;
+            }
+            Properties.Settings.Default.Save();
+        }
+
+        private void btn_PictureFromZIP_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog Dlg = new OpenFileDialog();
+            Dlg.CheckFileExists = true;
+            Dlg.Multiselect = false;
+            Dlg.Filter = "Zipped Elevation Files (*.zip)|*.zip";
+            if (Dlg.ShowDialog() == DialogResult.OK)
+            {
+                string[] delfiles = Directory.GetFiles(Path.GetTempPath(), "*.loc");
+                foreach (string file in delfiles)
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch
+                    {
+                        // do nothing
+                    }
+                }
+                // unzip if zip file selected
+                if (Path.GetExtension(Dlg.FileName) == ".zip")
+                {
+                    // create ZIP file and add all loc files
+                    ZipFile zip = new ZipFile(Dlg.FileName);
+                    zip.ExtractAll(Path.GetTempPath(), ExtractExistingFileAction.OverwriteSilently);
+                    bool filemissing;
+                    do
+                    {
+                        filemissing = false;
+                        foreach (String filename in Files1)
+                        {
+                            if (!File.Exists(filename))
+                            {
+                                Application.DoEvents();
+                                filemissing = true;
+                                break;
+                            }
+                        }
+                        Thread.Sleep(1000);
+                    }
+                    while (filemissing);
+                    List<string> files = new List<string>();
+                    foreach (string file in zip.EntryFileNames)
+                        files.Add(Path.Combine(Path.GetTempPath(), file));
+                    PictureFromTiles(files.ToArray());
+                }
+                else
+                {
+                    tb_Tile1.Text = Dlg.FileName;
+                    Files1.Add(Dlg.FileName);
+                }
+            }
+        }
+
+        private short GetSRTM1Elevation(BinaryReader br, int x, int y)
+        {
+            int rows = 3601;
+            int cols = 3601;
+            long l = (x * cols + y) * 2;
+            br.BaseStream.Seek(l,0);
+            byte[] b = br.ReadBytes(2);
+            Array.Reverse(b);
+            short e = BitConverter.ToInt16(b, 0);
+            return e;
+        }
+        private void ConvertSRTM1ToSRTM3File(string srtm1file, string srtm3file)
+        {
+            Say("Processing " + srtm1file);
+            using (BinaryReader br = new BinaryReader(File.OpenRead(srtm1file)))
+            {
+                using (BinaryWriter bw = new BinaryWriter(File.Create(srtm3file)))
+                {
+                    short e = 0;
+                    for (int i = 0; i < 1200; i++)
+                    {
+                        for (int j = 0; j < 1200; j++)
+                        {
+                            e = 0;
+                            for (int k = 0; k < 3; k++)
+                            {
+                                for (int l = 0; l < 3; l++)
+                                {
+                                    short elv = GetSRTM1Elevation(br, i * 3 + k, j * 3 + l);
+                                    e += elv;
+                                }
+                            }
+                            e = (short)(e / 9);
+                            bw.BaseStream.WriteByte((byte)((e >> 8) & 0xFF));
+                            bw.BaseStream.WriteByte((byte)(e & 0xFF));
+                        }
+                        // write point #1201
+                        bw.BaseStream.WriteByte((byte)((e >> 8) & 0xFF));
+                        bw.BaseStream.WriteByte((byte)(e & 0xFF));
+                    }
+                    for (int j = 0; j < 1201; j++)
+                    {
+                        e= GetSRTM1Elevation(br, 3600, j * 3);
+                        bw.BaseStream.WriteByte((byte)((e >> 8) & 0xFF));
+                        bw.BaseStream.WriteByte((byte)(e & 0xFF));
+                    }
+                }
+            }
+            Say("Ready.");
+        }
+
+        private void btn_ConvertSRTM1ToSRTM3_Click(object sender, EventArgs e)
+        {
+            string[] files = Directory.GetFiles(Properties.Settings.Default.SourceDir, "*.hgt");
+            foreach (string srtm1file in files)
+            {
+                if (!IsSRTM1File(srtm1file))
+                    continue;
+                string srtm3file = Path.Combine(Properties.Settings.Default.DestDir, Path.GetFileName(srtm1file));
+                ConvertSRTM1ToSRTM3File(srtm1file, srtm3file);
+            }
         }
     }
 

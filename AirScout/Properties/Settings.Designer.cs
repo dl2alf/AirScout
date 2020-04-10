@@ -12,7 +12,7 @@ namespace AirScout.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -1984,12 +1984,12 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public decimal Analysis_CrossingHistory_AmbiguousGap {
+        public decimal Analysis_CrossingHistory_AmbigousGap {
             get {
-                return ((decimal)(this["Analysis_CrossingHistory_AmbiguousGap"]));
+                return ((decimal)(this["Analysis_CrossingHistory_AmbigousGap"]));
             }
             set {
-                this["Analysis_CrossingHistory_AmbiguousGap"] = value;
+                this["Analysis_CrossingHistory_AmbigousGap"] = value;
             }
         }
         
@@ -2242,6 +2242,66 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
             }
             set {
                 this["Charts_FontSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Location_RestrictToAreaOfInterest {
+            get {
+                return ((bool)(this["Location_RestrictToAreaOfInterest"]));
+            }
+            set {
+                this["Location_RestrictToAreaOfInterest"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime StationsDatabase_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["StationsDatabase_TimeStamp"]));
+            }
+            set {
+                this["StationsDatabase_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Map_Preloader_Enabled {
+            get {
+                return ((bool)(this["Map_Preloader_Enabled"]));
+            }
+            set {
+                this["Map_Preloader_Enabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal Map_Preloader_MinZoom {
+            get {
+                return ((decimal)(this["Map_Preloader_MinZoom"]));
+            }
+            set {
+                this["Map_Preloader_MinZoom"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
+        public decimal Map_Preloader_MaxZoom {
+            get {
+                return ((decimal)(this["Map_Preloader_MaxZoom"]));
+            }
+            set {
+                this["Map_Preloader_MaxZoom"] = value;
             }
         }
     }

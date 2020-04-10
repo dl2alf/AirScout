@@ -174,6 +174,7 @@
             this.bw_Analysis_FileSaver = new System.ComponentModel.BackgroundWorker();
             this.bw_Analysis_FileLoader = new System.ComponentModel.BackgroundWorker();
             this.bw_AirportMapper = new System.ComponentModel.BackgroundWorker();
+            this.gm_Cache = new GMap.NET.WindowsForms.GMapControl();
             ((System.ComponentModel.ISupportInitialize)(this.sc_Map)).BeginInit();
             this.sc_Map.Panel1.SuspendLayout();
             this.sc_Map.Panel2.SuspendLayout();
@@ -267,6 +268,7 @@
             this.tp_Map.Controls.Add(this.ag_Azimuth);
             this.tp_Map.Controls.Add(this.ag_Elevation);
             this.tp_Map.Controls.Add(this.gm_Main);
+            this.tp_Map.Controls.Add(this.gm_Cache);
             this.tp_Map.Location = new System.Drawing.Point(4, 22);
             this.tp_Map.Name = "tp_Map";
             this.tp_Map.Padding = new System.Windows.Forms.Padding(3);
@@ -324,7 +326,7 @@
             this.gm_Main.EmptyTileColor = System.Drawing.Color.Navy;
             this.gm_Main.GrayScaleMode = false;
             this.gm_Main.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
-            this.gm_Main.LevelsKeepInMemmory = 5;
+            this.gm_Main.LevelsKeepInMemmory = 10;
             this.gm_Main.Location = new System.Drawing.Point(3, 3);
             this.gm_Main.MarkersEnabled = true;
             this.gm_Main.MaxZoom = 2;
@@ -1707,7 +1709,7 @@
             this.tp_Control_Multi.Location = new System.Drawing.Point(4, 22);
             this.tp_Control_Multi.Name = "tp_Control_Multi";
             this.tp_Control_Multi.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Control_Multi.Size = new System.Drawing.Size(144, 378);
+            this.tp_Control_Multi.Size = new System.Drawing.Size(143, 378);
             this.tp_Control_Multi.TabIndex = 1;
             this.tp_Control_Multi.Text = "Multi";
             this.tp_Control_Multi.Enter += new System.EventHandler(this.tp_Control_Multi_Enter);
@@ -1726,7 +1728,7 @@
             this.lv_Control_Watchlist.Location = new System.Drawing.Point(3, 3);
             this.lv_Control_Watchlist.Name = "lv_Control_Watchlist";
             this.lv_Control_Watchlist.OwnerDraw = true;
-            this.lv_Control_Watchlist.Size = new System.Drawing.Size(138, 349);
+            this.lv_Control_Watchlist.Size = new System.Drawing.Size(137, 349);
             this.lv_Control_Watchlist.TabIndex = 1;
             this.tt_Control_Watchlist.SetToolTip(this.lv_Control_Watchlist, "Watchlist");
             this.lv_Control_Watchlist.UseCompatibleStateImageBehavior = false;
@@ -1758,7 +1760,7 @@
             this.btn_Control_Manage_Watchlist.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.btn_Control_Manage_Watchlist.Location = new System.Drawing.Point(3, 352);
             this.btn_Control_Manage_Watchlist.Name = "btn_Control_Manage_Watchlist";
-            this.btn_Control_Manage_Watchlist.Size = new System.Drawing.Size(138, 23);
+            this.btn_Control_Manage_Watchlist.Size = new System.Drawing.Size(137, 23);
             this.btn_Control_Manage_Watchlist.TabIndex = 0;
             this.btn_Control_Manage_Watchlist.Text = "Manage Watchlist";
             this.btn_Control_Manage_Watchlist.UseVisualStyleBackColor = true;
@@ -1936,6 +1938,31 @@
             this.bw_AirportMapper.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_AirportMapper_DoWork);
             this.bw_AirportMapper.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_AirportMapper_ProgressChanged);
             this.bw_AirportMapper.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_AirportMapper_RunWorkerCompleted);
+            // 
+            // gm_Cache
+            // 
+            this.gm_Cache.Bearing = 0F;
+            this.gm_Cache.CanDragMap = true;
+            this.gm_Cache.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gm_Cache.EmptyTileColor = System.Drawing.Color.Navy;
+            this.gm_Cache.GrayScaleMode = false;
+            this.gm_Cache.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
+            this.gm_Cache.LevelsKeepInMemmory = 5;
+            this.gm_Cache.Location = new System.Drawing.Point(3, 3);
+            this.gm_Cache.MarkersEnabled = true;
+            this.gm_Cache.MaxZoom = 2;
+            this.gm_Cache.MinZoom = 2;
+            this.gm_Cache.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
+            this.gm_Cache.Name = "gm_Cache";
+            this.gm_Cache.NegativeMode = false;
+            this.gm_Cache.PolygonsEnabled = true;
+            this.gm_Cache.RetryLoadTile = 0;
+            this.gm_Cache.RoutesEnabled = true;
+            this.gm_Cache.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
+            this.gm_Cache.ShowTileGridLines = false;
+            this.gm_Cache.Size = new System.Drawing.Size(838, 309);
+            this.gm_Cache.TabIndex = 29;
+            this.gm_Cache.Zoom = 0D;
             // 
             // MapDlg
             // 
@@ -2150,6 +2177,7 @@
         private AquaControls.AquaGauge ag_Elevation;
         private GMap.NET.WindowsForms.GMapControl gm_Main;
         private System.Windows.Forms.TabPage tp_News;
+        private GMap.NET.WindowsForms.GMapControl gm_Cache;
     }
 }
 

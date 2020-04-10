@@ -74,7 +74,7 @@
             this.Name = "Splash";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Splash";
+            this.Text = "AirScout";
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Splash_FormClosing);
             this.Load += new System.EventHandler(this.Splash_Load);

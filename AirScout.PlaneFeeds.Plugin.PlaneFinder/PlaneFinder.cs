@@ -14,6 +14,7 @@ using System.Web.Script.Serialization;
 using System.Collections;
 using System.Xml.Serialization;
 using System.Xml.Linq;
+using Newtonsoft.Json;
 
 namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
 {
@@ -329,13 +330,19 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
                 }
             }
             Console.WriteLine("[" + this.GetType().Name + "]: Analyzing data");
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            dynamic root = js.Deserialize<dynamic>(json);
             try
             {
+                Console.WriteLine("[" + this.GetType().Name + "]: Deserializing data from JSON");
+
+                //                JavaScriptSerializer js = new JavaScriptSerializer();
+                //                dynamic root = js.Deserialize<dynamic>(json);
+                dynamic root = JsonConvert.DeserializeObject(json);
+                Console.WriteLine("[" + this.GetType().Name + "]: Created object from JSON is " + root.GetType().ToString());
                 // analyze json string for planes data
                 // get the planes position list
+                Console.WriteLine("[" + this.GetType().Name + "]: Getting root of planes list");
                 var aclist = root["planes"];
+                Console.WriteLine("[" + this.GetType().Name + "]: Created root object is " + aclist.GetType().ToString());
                 foreach (var ac in aclist)
                 {
                     try
@@ -343,20 +350,13 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
                         // different handling of reading JSON between Windows (Array) & Linux (ArrayList)
                         // access to data values itself is the same
                         int len = 0;
-                        if ( ac.Value.GetType() == typeof(ArrayList))
-                        {
-                            len = ac.Value.Count;
-                        }
-                        else if (ac.Value.GetType() == typeof(Object[]))
-                        {
-                            len = ac.Value.Length;
-                        }
+                        len = ac.Value.Count;
                         // skip if too few fields in record
                         if (len < 13)
                         continue;
                         PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
                         // get hex first
-                        plane.Hex = ac.Key.ToString().Trim().Replace("\"","");
+                        plane.Hex = ac.Name.Trim().Replace("\"","");
                         // get position
                         plane.Lat = ReadPropertyDouble(ac, 4);
                         plane.Lon = ReadPropertyDouble(ac, 5);
@@ -389,13 +389,28 @@ namespace AirScout.PlaneFeeds.Plugin.PlaneFinder
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("[" + System.Reflection.MethodBase.GetCurrentMethod().Name + "]" + ex.Message);
+                        Console.WriteLine("[" + this.GetType().Name + "]: " + ex.Message);
                     }
                 }
             }
             catch (Exception ex)
             {
-                // do nothing if property is not found
+                string filename = args.TmpDirectory + Path.DirectorySeparatorChar + this.GetType().Name + "_" + DateTime.UtcNow.ToString("yyyy-MM-dd HH_mm_ss") + ".json";
+                Console.WriteLine("[" + this.GetType().Name + "]: " + ex.Message + "\n\nJSON response saved as: " + filename);
+                // save the JSON file
+                try
+                {
+                    using (StreamWriter sw = new StreamWriter(filename))
+                    {
+                        sw.WriteLine(json);
+                    }
+                }
+                catch
+                { 
+                    // do nothing if saving fails
+                }
+                // forward exception to parent thread
+                throw new Exception(ex.Message, ex.InnerException);
             }
             Console.WriteLine("[" + this.GetType().Name + "]: Returning " + planes.Count + " planes");
             return planes;

@@ -523,7 +523,7 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
     <Setting Name="Analysis_CrossingHistory_WithSignalLevel" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Analysis_CrossingHistory_AmbiguousGap" Type="System.Decimal" Scope="User">
+    <Setting Name="Analysis_CrossingHistory_AmbigousGap" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="Planes_KeepHistory" Type="System.Boolean" Scope="User">
@@ -588,6 +588,21 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
     </Setting>
     <Setting Name="Charts_FontSize" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="Location_RestrictToAreaOfInterest" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="StationsDatabase_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Map_Preloader_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Map_Preloader_MinZoom" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Map_Preloader_MaxZoom" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">11</Value>
     </Setting>
   </Settings>
 </SettingsFile>

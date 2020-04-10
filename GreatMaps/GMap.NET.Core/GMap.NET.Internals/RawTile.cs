@@ -6,7 +6,7 @@
    /// <summary>
    /// struct for raw tile
    /// </summary>
-   internal struct RawTile
+   public struct RawTile
    {
       public int Type;
       public GPoint Pos;

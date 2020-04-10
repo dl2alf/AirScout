@@ -323,7 +323,7 @@ namespace GMap.NET.WindowsForms
       /// <summary>
       /// how many levels of tiles are staying decompresed in memory
       /// </summary>
-      [Browsable(false)]
+      [Browsable(true)]
       public int LevelsKeepInMemmory
       {
          get
@@ -1602,7 +1602,7 @@ namespace GMap.NET.WindowsForms
 #if PocketPC
          g.DrawString("debug build", CopyrightFont, CopyrightBrush, 2, CopyrightFont.Size);
 #else
-         g.DrawString("debug build", CopyrightFont, Brushes.Blue, 2, CopyrightFont.Height);
+//         g.DrawString("debug build", CopyrightFont, Brushes.Blue, 2, CopyrightFont.Height);
 #endif
 
 #endif

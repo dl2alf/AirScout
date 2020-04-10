@@ -12,7 +12,7 @@ namespace GMap.NET.MapProviders
 
       OpenCycleLandscapeMapProvider()
       {
-         RefererUrl = "http://www.opencyclemap.org/";
+         RefererUrl = "";
       }
 
       static OpenCycleLandscapeMapProvider()
@@ -70,5 +70,5 @@ namespace GMap.NET.MapProviders
                                         
 
       static readonly string UrlFormat = "http://{0}.tile3.opencyclemap.org/landscape/{1}/{2}/{3}.png";
-   }
+    }
 }

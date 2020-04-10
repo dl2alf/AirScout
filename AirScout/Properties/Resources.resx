@@ -130,4 +130,16 @@
   <data name="Map2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Icons\Map2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="AirScout_Marker" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AirScout_Marker.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AirScout_Multi" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AirScout_Multi.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AirScout_Watchlist" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AirScout_Watchlist.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Settings" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Settings.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

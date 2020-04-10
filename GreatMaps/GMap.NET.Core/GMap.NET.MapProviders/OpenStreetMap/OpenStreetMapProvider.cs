@@ -14,8 +14,9 @@ namespace GMap.NET.MapProviders
       public OpenStreetMapProviderBase()
       {
          MaxZoom = null;
-         RefererUrl = "http://www.openstreetmap.org/";
-         Copyright = string.Format("© OpenStreetMap - Map data ©{0} OpenStreetMap", DateTime.Today.Year);
+//         RefererUrl = "http://www.openstreetmap.org/";
+         RefererUrl = "";
+        Copyright = string.Format("© OpenStreetMap - Map data ©{0} OpenStreetMap", DateTime.Today.Year);
       }
 
       public readonly string ServerLetters = "abc";
@@ -446,7 +447,7 @@ namespace GMap.NET.MapProviders
    {
       public static readonly OpenStreetMapProvider Instance;
 
-      OpenStreetMapProvider()
+      public OpenStreetMapProvider()
       {
       }
 
@@ -503,6 +504,6 @@ namespace GMap.NET.MapProviders
          return string.Format(UrlFormat, letter, zoom, pos.X, pos.Y);
       }
 
-      static readonly string UrlFormat = "http://{0}.tile.openstreetmap.org/{1}/{2}/{3}.png";
-   }
+        static readonly string UrlFormat = "http://{0}.tile.openstreetmap.org/{1}/{2}/{3}.png";
+    }
 }
