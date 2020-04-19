@@ -1536,7 +1536,7 @@ namespace AirScout.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool Watchlist_SyncWithKST {
             get {
                 return ((bool)(this["Watchlist_SyncWithKST"]));
