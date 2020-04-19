@@ -1,4 +1,16 @@
-﻿2020-xx-xx: V1.3.3.0
+﻿2020-04-19: V1.3.3.2
+====================
+
+- Bugfix:	Commit issues with V1.3.3.1, changes were not synchronized with web repository --> fixed
+
+2020-04-18: V1.3.3.1
+====================
+
+- Bugfix:	Manage Watchlist button should be enabled by default (also when Network Service is disabled) --> fixed (tnx OZ9GE)
+- Bugfix:	RTL1090 plane feed does not care about settings, always using default settings --> fixed (tnx G4WSZ)
+- Bugfix:	Watchlist entries in Multi-Path mode are colored regardless of a minimum plane category is set in plane filter --> fixed (tnx OZ9GE)
+
+2020-04-10: V1.3.3.0
 ====================
 
 - Feature:	Option to restrict call sign database to locations inside the area of interest (via "Option/Stations"), all others outside this area will be deleted in each update prcodedure

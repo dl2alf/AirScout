@@ -323,7 +323,7 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                     plane.Time = info.Timestamp;
                     plane.Hex = info.ICAO24;
                     // mark call with "@" if option is enabled
-                    plane.Call = (Properties.Settings.Default.MarkLocal) ? "@" + info.Call : info.Call;
+                    plane.Call = (Settings.MarkLocal) ? "@" + info.Call : info.Call;
                     plane.Lat = info.Lat;
                     plane.Lon = info.Lon;
                     plane.Alt = info.Alt;
@@ -337,7 +337,7 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                     planes.Add(plane);
                 }
                 // save raw data to file if enabled
-                if (Properties.Settings.Default.SaveToFile)
+                if (Settings.SaveToFile)
                 {
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     string json = js.Serialize(planes);
@@ -385,14 +385,14 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                 {
                     // setup TCP listener
                     client = new TcpClient();
-                    string server = Properties.Settings.Default.Server;
-                    client.Connect(server, Properties.Settings.Default.Port);
+                    string server = Settings.Server;
+                    client.Connect(server, Settings.Port);
                     sr = new StreamReader(client.GetStream());
                     // inner loop
                     // receive messages in a loop
                     do
                     {
-                        if (Properties.Settings.Default.Binary)
+                        if (Settings.Binary)
                             msg = ReceiveBinaryMsg(sr.BaseStream);
                         else
                             msg = ReceiveAVRMsg(sr);

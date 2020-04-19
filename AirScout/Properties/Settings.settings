@@ -381,7 +381,7 @@
       <Value Profile="(Default)">http://www.airscout.eu</Value>
     </Setting>
     <Setting Name="Watchlist_SyncWithKST" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Watchlist_Activated" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

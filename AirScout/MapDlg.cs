@@ -1138,6 +1138,7 @@ namespace AirScout
                 gm_Nearest.Overlays.Add(gmo_NearestPaths);
                 gm_Nearest.Overlays.Add(gmo_NearestPlanes);
                 gm_Nearest.Position = new PointLatLng(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon);
+                gm_Nearest.ShowCenter = false;
 
                 // setting User Agent to fix Open Street Map issue 2016-09-20
                 GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
@@ -1216,8 +1217,8 @@ namespace AirScout
                             }
                             Log.WriteMessage("Upgrading settings.");
                             Properties.Settings.Default.Upgrade();
-                            // handle skip to version 1.3.0.0
-                            if (String.IsNullOrEmpty(Properties.Settings.Default.Version) || (String.Compare(Properties.Settings.Default.Version, "1.3.0.0") < 0))
+                            // handle skip to version 1.3.3.1
+                            if (String.IsNullOrEmpty(Properties.Settings.Default.Version) || (String.Compare(Properties.Settings.Default.Version, "1.3.3.0") < 0))
                             {
                                 /*
                                 // reset elevation data url to new default values
@@ -1231,6 +1232,9 @@ namespace AirScout
                                 // reset stations data url to its default value
                                 Properties.Settings.Default.StationDatabase_Update_URL = GetPropertyDefaultValue(nameof(Properties.Settings.Default.StationDatabase_Update_URL));
                                 */
+
+                                // reset Sync with KST option 
+                                Properties.Settings.Default.Watchlist_SyncWithKST = GetPropertyDefaultValue(nameof(Properties.Settings.Default.Watchlist_SyncWithKST));
 
                                 Properties.Settings.Default.Version = Application.ProductVersion;
 
@@ -2920,7 +2924,7 @@ namespace AirScout
             if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 // enbale/disable manage watchlist button
-                btn_Control_Manage_Watchlist.Enabled = !Properties.Settings.Default.Watchlist_SyncWithKST;
+                btn_Control_Manage_Watchlist.Enabled = !Properties.Settings.Default.Watchlist_SyncWithKST || !Properties.Settings.Default.Server_Activate;
                 // Re-initialze charts
                 InitializeCharts();
                 // clear paths cache assuming that new options were set
@@ -3972,7 +3976,7 @@ namespace AirScout
                 foreach (PlaneInfo plane in nearestplanes)
                 {
                     // maintain highest potential
-                    if (plane.Potential > highestpotential)
+                    if ((plane.Category >= Properties.Settings.Default.Planes_Filter_Min_Category) && (plane.Potential > highestpotential))
                         highestpotential = plane.Potential;
                     // add or update plane in active planes list
                     PlaneInfo activeplane;
@@ -4761,7 +4765,7 @@ namespace AirScout
         private void tp_Control_Multi_Enter(object sender, EventArgs e)
         {
             // enbale/disable manage watchlist button
-            btn_Control_Manage_Watchlist.Enabled = !Properties.Settings.Default.Watchlist_SyncWithKST;
+            btn_Control_Manage_Watchlist.Enabled = !Properties.Settings.Default.Watchlist_SyncWithKST || !Properties.Settings.Default.Server_Activate;
 
             if (PathMode != AIRSCOUTPATHMODE.MULTI)
             {
