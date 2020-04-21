@@ -46,6 +46,7 @@
             this.btn_DeleteAllMapTiles = new System.Windows.Forms.Button();
             this.btn_Options_Open_PluginDirectory = new System.Windows.Forms.Button();
             this.btn_Options_Open_AirScoutDirectory = new System.Windows.Forms.Button();
+            this.pb_Donate = new System.Windows.Forms.PictureBox();
             this.tab_Options_Planes = new System.Windows.Forms.TabPage();
             this.groupBox48 = new System.Windows.Forms.GroupBox();
             this.int32TextBox1 = new ScoutBase.Core.Int32TextBox();
@@ -100,6 +101,8 @@
             this.cb_Options_PlaneFeed1 = new System.Windows.Forms.ComboBox();
             this.tab_Options_Path = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label145 = new System.Windows.Forms.Label();
+            this.btn_Options_Path_Export = new System.Windows.Forms.Button();
             this.tb_Options_Path_MaxLength = new ScoutBase.Core.DoubleTextBox();
             this.label131 = new System.Windows.Forms.Label();
             this.label130 = new System.Windows.Forms.Label();
@@ -423,6 +426,7 @@
             this.label143 = new System.Windows.Forms.Label();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.tab_Options_Info = new System.Windows.Forms.TabPage();
+            this.label105 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.label45 = new System.Windows.Forms.Label();
             this.lbl_Options_Elevation_SRTM1 = new System.Windows.Forms.LinkLabel();
@@ -447,8 +451,7 @@
             this.bw_SRTM1_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_GLOBE_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_StationDataUpdater = new System.ComponentModel.BackgroundWorker();
-            this.pb_Donate = new System.Windows.Forms.PictureBox();
-            this.label105 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).BeginInit();
             this.tab_Options_Planes.SuspendLayout();
             this.groupBox48.SuspendLayout();
             this.groupBox40.SuspendLayout();
@@ -529,7 +532,6 @@
             this.groupBox15.SuspendLayout();
             this.tab_Options_Info.SuspendLayout();
             this.ss_Options.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_Options_OK
@@ -724,6 +726,19 @@
             this.tt_Options.SetToolTip(this.btn_Options_Open_AirScoutDirectory, "Click to open AirScout\'s program directory in Explorer window.");
             this.btn_Options_Open_AirScoutDirectory.UseVisualStyleBackColor = true;
             this.btn_Options_Open_AirScoutDirectory.Click += new System.EventHandler(this.btn_Options_Open_AirScoutDirectory_Click);
+            // 
+            // pb_Donate
+            // 
+            this.pb_Donate.Image = ((System.Drawing.Image)(resources.GetObject("pb_Donate.Image")));
+            this.pb_Donate.InitialImage = ((System.Drawing.Image)(resources.GetObject("pb_Donate.InitialImage")));
+            this.pb_Donate.Location = new System.Drawing.Point(18, 272);
+            this.pb_Donate.Name = "pb_Donate";
+            this.pb_Donate.Size = new System.Drawing.Size(306, 113);
+            this.pb_Donate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pb_Donate.TabIndex = 38;
+            this.pb_Donate.TabStop = false;
+            this.tt_Options.SetToolTip(this.pb_Donate, "Click here to open a browser window with link.");
+            this.pb_Donate.Click += new System.EventHandler(this.pb_Donate_Click);
             // 
             // tab_Options_Planes
             // 
@@ -1377,6 +1392,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label145);
+            this.groupBox1.Controls.Add(this.btn_Options_Path_Export);
             this.groupBox1.Controls.Add(this.tb_Options_Path_MaxLength);
             this.groupBox1.Controls.Add(this.label131);
             this.groupBox1.Controls.Add(this.label130);
@@ -1388,10 +1405,32 @@
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(14, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(581, 440);
+            this.groupBox1.Size = new System.Drawing.Size(581, 467);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Path Options";
+            // 
+            // label145
+            // 
+            this.label145.AutoSize = true;
+            this.label145.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label145.Location = new System.Drawing.Point(6, 438);
+            this.label145.Name = "label145";
+            this.label145.Size = new System.Drawing.Size(430, 13);
+            this.label145.TabIndex = 41;
+            this.label145.Text = "Export elevation path to CSV (do not change settings before as they may not have " +
+    "effect):";
+            // 
+            // btn_Options_Path_Export
+            // 
+            this.btn_Options_Path_Export.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Options_Path_Export.Location = new System.Drawing.Point(500, 433);
+            this.btn_Options_Path_Export.Name = "btn_Options_Path_Export";
+            this.btn_Options_Path_Export.Size = new System.Drawing.Size(75, 23);
+            this.btn_Options_Path_Export.TabIndex = 40;
+            this.btn_Options_Path_Export.Text = "Export";
+            this.btn_Options_Path_Export.UseVisualStyleBackColor = true;
+            this.btn_Options_Path_Export.Click += new System.EventHandler(this.btn_Options_Path_Export_Click);
             // 
             // tb_Options_Path_MaxLength
             // 
@@ -5475,6 +5514,16 @@
             this.tab_Options_Info.Text = "Info";
             this.tab_Options_Info.Enter += new System.EventHandler(this.tab_Options_Info_Enter);
             // 
+            // label105
+            // 
+            this.label105.AutoSize = true;
+            this.label105.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label105.Location = new System.Drawing.Point(181, 282);
+            this.label105.Name = "label105";
+            this.label105.Size = new System.Drawing.Size(230, 13);
+            this.label105.TabIndex = 44;
+            this.label105.Text = "ASTER GDEM is a product of METI and NASA";
+            // 
             // label30
             // 
             this.label30.AutoSize = true;
@@ -5708,29 +5757,6 @@
             this.bw_StationDataUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_StationDataUpdater_ProgressChanged);
             this.bw_StationDataUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_StationDataUpdater_RunWorkerCompleted);
             // 
-            // pb_Donate
-            // 
-            this.pb_Donate.Image = ((System.Drawing.Image)(resources.GetObject("pb_Donate.Image")));
-            this.pb_Donate.InitialImage = ((System.Drawing.Image)(resources.GetObject("pb_Donate.InitialImage")));
-            this.pb_Donate.Location = new System.Drawing.Point(18, 272);
-            this.pb_Donate.Name = "pb_Donate";
-            this.pb_Donate.Size = new System.Drawing.Size(306, 113);
-            this.pb_Donate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pb_Donate.TabIndex = 38;
-            this.pb_Donate.TabStop = false;
-            this.tt_Options.SetToolTip(this.pb_Donate, "Click here to open a browser window with link.");
-            this.pb_Donate.Click += new System.EventHandler(this.pb_Donate_Click);
-            // 
-            // label105
-            // 
-            this.label105.AutoSize = true;
-            this.label105.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label105.Location = new System.Drawing.Point(181, 282);
-            this.label105.Name = "label105";
-            this.label105.Size = new System.Drawing.Size(230, 13);
-            this.label105.TabIndex = 44;
-            this.label105.Text = "ASTER GDEM is a product of METI and NASA";
-            // 
             // OptionsDlg
             // 
             this.AcceptButton = this.btn_Options_OK;
@@ -5748,6 +5774,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionsDlg_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OptionsDlg_FormClosed);
             this.Load += new System.EventHandler(this.OptionsDlg_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).EndInit();
             this.tab_Options_Planes.ResumeLayout(false);
             this.groupBox48.ResumeLayout(false);
             this.groupBox48.PerformLayout();
@@ -5874,7 +5901,6 @@
             this.tab_Options_Info.PerformLayout();
             this.ss_Options.ResumeLayout(false);
             this.ss_Options.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -6301,5 +6327,7 @@
         private System.Windows.Forms.Button btn_Options_Open_AirScoutDirectory;
         private System.Windows.Forms.PictureBox pb_Donate;
         private System.Windows.Forms.Label label105;
+        private System.Windows.Forms.Label label145;
+        private System.Windows.Forms.Button btn_Options_Path_Export;
     }
 }

@@ -420,7 +420,12 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                     // report error
                     Console.WriteLine("Error reading from TCP connection: " + ex.Message);
                     // wait 10 sec
-                    Thread.Sleep(10000);
+                    int i = 0;
+                    while ((i < 10) && !bw_Receciver.CancellationPending)
+                    {
+                        Thread.Sleep(1000);
+                        i++;
+                    }
                 }
                 finally
                 {

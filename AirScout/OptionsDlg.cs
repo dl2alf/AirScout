@@ -1610,6 +1610,197 @@ namespace AirScout
 
         }
 
+        public short GetElevation(double lat, double lon)
+        {
+            if (!GeographicalPoint.Check(lat, lon))
+                return 0;
+            short elv = ElevationData.Database.ElvMissingFlag;
+            // try to get elevation data from distinct elevation model
+            // start with detailed one
+            if (Properties.Settings.Default.Elevation_SRTM1_Enabled && (elv == ElevationData.Database.ElvMissingFlag))
+                elv = ElevationData.Database[lat, lon, ELEVATIONMODEL.SRTM1, false];
+            if (Properties.Settings.Default.Elevation_SRTM3_Enabled && (elv == ElevationData.Database.ElvMissingFlag))
+                elv = ElevationData.Database[lat, lon, ELEVATIONMODEL.SRTM3, false];
+            if (Properties.Settings.Default.Elevation_GLOBE_Enabled && (elv == ElevationData.Database.ElvMissingFlag))
+                elv = ElevationData.Database[lat, lon, ELEVATIONMODEL.GLOBE, false];
+            // set it to zero if still invalid
+            if (elv <= ElevationData.Database.TileMissingFlag)
+                elv = 0;
+            return elv;
+        }
+
+        public ElvMinMaxInfo GetMinMaxElevationLoc(string loc)
+        {
+            ElvMinMaxInfo elv = new ElvMinMaxInfo();
+            // try to get elevation data from distinct elevation model
+            // start with detailed one
+            if (Properties.Settings.Default.Elevation_SRTM1_Enabled && (elv.MaxElv == ElevationData.Database.ElvMissingFlag))
+            {
+                ElvMinMaxInfo info = ElevationData.Database.GetMaxElvLoc(loc, ELEVATIONMODEL.SRTM1, false);
+                if (info != null)
+                {
+                    elv.MaxLat = info.MaxLat;
+                    elv.MaxLon = info.MaxLon;
+                    elv.MaxElv = info.MaxElv;
+                    elv.MinLat = info.MinLat;
+                    elv.MinLon = info.MinLon;
+                    elv.MinElv = info.MinElv;
+                }
+            }
+            if (Properties.Settings.Default.Elevation_SRTM3_Enabled && (elv.MaxElv == ElevationData.Database.ElvMissingFlag))
+            {
+                ElvMinMaxInfo info = ElevationData.Database.GetMaxElvLoc(loc, ELEVATIONMODEL.SRTM3, false);
+                if (info != null)
+                {
+                    elv.MaxLat = info.MaxLat;
+                    elv.MaxLon = info.MaxLon;
+                    elv.MaxElv = info.MaxElv;
+                    elv.MinLat = info.MinLat;
+                    elv.MinLon = info.MinLon;
+                    elv.MinElv = info.MinElv;
+                }
+            }
+            if (Properties.Settings.Default.Elevation_GLOBE_Enabled && (elv.MaxElv == ElevationData.Database.ElvMissingFlag))
+            {
+                ElvMinMaxInfo info = ElevationData.Database.GetMaxElvLoc(loc, ELEVATIONMODEL.GLOBE, false);
+                if (info != null)
+                {
+                    elv.MaxLat = info.MaxLat;
+                    elv.MaxLon = info.MaxLon;
+                    elv.MaxElv = info.MaxElv;
+                    elv.MinLat = info.MinLat;
+                    elv.MinLon = info.MinLon;
+                    elv.MinElv = info.MinElv;
+                }
+            }
+            /*
+            // set it to zero if still invalid
+            if (elv.MaxElv == ElevationData.Database.ElvMissingFlag)
+                elv.MaxElv = 0;
+            if (elv.MinElv == ElevationData.Database.ElvMissingFlag)
+                elv.MinElv = 0;
+            */
+            return elv;
+        }
+
+        public LocationDesignator LocationFindOrUpdateOrCreate(string call, double lat, double lon)
+        {
+            // check all parameters
+            if (!Callsign.Check(call))
+                return null;
+            if (!GeographicalPoint.Check(lat, lon))
+                return null;
+            // get location info
+            LocationDesignator ld = StationData.Database.LocationFindOrUpdateOrCreate(call, lat, lon);
+            // get elevation
+            ld.Elevation = GetElevation(ld.Lat, ld.Lon);
+            ld.BestCaseElevation = false;
+            // modify location in case of best case elevation is selected --> but do not store in database or settings!
+            if (Properties.Settings.Default.Path_BestCaseElevation)
+            {
+                if (!MaidenheadLocator.IsPrecise(ld.Lat, ld.Lon, 3))
+                {
+                    ElvMinMaxInfo maxinfo = GetMinMaxElevationLoc(ld.Loc);
+                    if (maxinfo.MaxElv != ElevationData.Database.ElvMissingFlag)
+                    {
+                        ld.Lat = maxinfo.MaxLat;
+                        ld.Lon = maxinfo.MaxLon;
+                        ld.Elevation = maxinfo.MaxElv;
+                        ld.BestCaseElevation = true;
+                    }
+                }
+            }
+            return ld;
+        }
+
+        private void btn_Options_Path_Export_Click(object sender, EventArgs e)
+        {
+            // check and update station database
+            LocationDesignator myloc = LocationFindOrUpdateOrCreate(Properties.Settings.Default.MyCall, Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon);
+            Properties.Settings.Default.MyElevation = myloc.Elevation;
+
+            // get qrv info or create default
+            QRVDesignator myqrv = StationData.Database.QRVFindOrCreateDefault(myloc.Call, myloc.Loc, Properties.Settings.Default.Band);
+            // set qrv defaults if zero
+            if (myqrv.AntennaHeight == 0)
+                myqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(Properties.Settings.Default.Band);
+            if (myqrv.AntennaGain == 0)
+                myqrv.AntennaGain = StationData.Database.QRVGetDefaultAntennaGain(Properties.Settings.Default.Band);
+            if (myqrv.Power == 0)
+            myqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
+            // check if there are a valid DX settings
+            if (!Callsign.Check(Properties.Settings.Default.DXCall) ||
+                !GeographicalPoint.Check(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon))
+                return;
+
+            // OK valid, lets continue
+            // check and update station database
+            LocationDesignator dxloc = LocationFindOrUpdateOrCreate(Properties.Settings.Default.DXCall, Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon);
+            Properties.Settings.Default.DXElevation = dxloc.Elevation;
+
+            // get qrv info or create default
+            QRVDesignator dxqrv = StationData.Database.QRVFindOrCreateDefault(dxloc.Call, dxloc.Loc, Properties.Settings.Default.Band);
+            // set qrv defaults if zero
+            if (dxqrv.AntennaHeight == 0)
+                dxqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(Properties.Settings.Default.Band);
+            if (dxqrv.AntennaGain == 0)
+                dxqrv.AntennaGain = StationData.Database.QRVGetDefaultAntennaGain(Properties.Settings.Default.Band);
+            if (dxqrv.Power == 0)
+                dxqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
+
+            // find local obstruction, if any
+            LocalObstructionDesignator o = ElevationData.Database.LocalObstructionFind(myloc.Lat, myloc.Lon, Properties.Settings.Default.ElevationModel);
+            double mybearing = LatLon.Bearing(myloc.Lat, myloc.Lon, dxloc.Lat, dxloc.Lon);
+            double myobstr = (o != null) ? o.GetObstruction(myqrv.AntennaHeight, mybearing) : double.MinValue;
+
+            // try to find elevation path in database or create new one and store
+            ElevationPathDesignator epath = ElevationData.Database.ElevationPathFindOrCreateFromLatLon(
+                null,
+                myloc.Lat,
+                myloc.Lon,
+                dxloc.Lat,
+                dxloc.Lon,
+                ElevationData.Database.GetDefaultStepWidth(Properties.Settings.Default.ElevationModel),
+                Properties.Settings.Default.ElevationModel);
+            // add additional info to ppath
+            epath.Location1 = myloc;
+            epath.Location2 = dxloc;
+            epath.QRV1 = myqrv;
+            epath.QRV2 = dxqrv;
+
+            // export path to csv
+            SaveFileDialog Dlg = new SaveFileDialog();
+            Dlg.AddExtension = true;
+            Dlg.DefaultExt = "csv";
+            Dlg.Filter = "Comma Separated Values *.csv |csv";
+            Dlg.FileName = "Path Information " + Properties.Settings.Default.MyCall.Replace("/", "_") + " to " + Properties.Settings.Default.DXCall.Replace("/", "_");
+            Dlg.InitialDirectory = Application.StartupPath;
+            Dlg.OverwritePrompt = true;
+            if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                try
+                {
+                    using (StreamWriter sw = new StreamWriter(Dlg.FileName))
+                    {
+                        sw.WriteLine("Distance[km];Lat[deg];Lon[deg];Elevation[m]");
+                        for (int i = 0; i < epath.Path.Length; i++)
+                        {
+                            double distance = (double)i * epath.StepWidth / 1000.0;
+                            LatLon.GPoint p = LatLon.DestinationPoint(myloc.Lat, myloc.Lon, epath.Bearing12, distance);
+                            sw.WriteLine(distance.ToString("F8") + ";" +
+                                p.Lat.ToString("F8") + ";" +
+                                p.Lon.ToString("F8") + ";" +
+                                epath.Path[i].ToString());
+                        }
+                    }
+                }
+                catch
+                {
+                    // do nothing, if export is going wrong
+                }
+            }
+        }
+
         #endregion
 
         #region tab_Options_Planes

@@ -1,4 +1,10 @@
-﻿2020-04-19: V1.3.3.2
+﻿2020-xx-xx: V1.3.3.3
+====================
+
+- Feature:	export current path to CSV, feature was removed during change to V1.3.x
+- Bugfix:	RTL1090 plane feed is slowly returning if cancelled and no connection is established (there is a 10sc timeout), fixed 
+
+2020-04-19: V1.3.3.2
 ====================
 
 - Bugfix:	Commit issues with V1.3.3.1, changes were not synchronized with web repository --> fixed
