@@ -1,4 +1,9 @@
-﻿2020-xx-xx: V1.3.3.3
+﻿2020-04-25: V1.3.3.4
+====================
+
+- Bugfix:	AirScout always reverts to default call signs (DL2ALF <> GB3MHZ) when area of interest is set outside Europe --> fixed (tnx VK3VG)
+
+2020-04-21: V1.3.3.3
 ====================
 
 - Feature:	export current path to CSV, feature was removed during change to V1.3.x

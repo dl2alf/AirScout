@@ -947,9 +947,9 @@ namespace AirScout
             */
             // check for last saved stations not in database and revert to at least DL2ALF and GB3MHZ if necessary
             // first check for saved stations
-            string mycall = GetPropertyDefaultValue(nameof(Properties.Settings.Default.MyCall));
-            double mylat = GetPropertyDefaultValue(nameof(Properties.Settings.Default.MyLat));
-            double mylon = GetPropertyDefaultValue(nameof(Properties.Settings.Default.MyLon));
+            string mycall = Properties.Settings.Default.MyCall;
+            double mylat = Properties.Settings.Default.MyLat;
+            double mylon = Properties.Settings.Default.MyLon;
             string myloc = MaidenheadLocator.LocFromLatLon(mylat, mylon, Properties.Settings.Default.Locator_SmallLettersForSubsquares, 3);
             LocationDesignator ld = StationData.Database.LocationFind(mycall, myloc);
             if (ld == null)
@@ -963,9 +963,9 @@ namespace AirScout
                 Properties.Settings.Default.MyLat = mylat;
                 Properties.Settings.Default.MyLon = mylon;
             }
-            string dxcall = GetPropertyDefaultValue(nameof(Properties.Settings.Default.DXCall));
-            double dxlat = GetPropertyDefaultValue(nameof(Properties.Settings.Default.DXLat));
-            double dxlon = GetPropertyDefaultValue(nameof(Properties.Settings.Default.DXLon));
+            string dxcall = Properties.Settings.Default.DXCall;
+            double dxlat = Properties.Settings.Default.DXLat;
+            double dxlon = Properties.Settings.Default.DXLon;
             string dxloc = MaidenheadLocator.LocFromLatLon(dxlat, dxlon, Properties.Settings.Default.Locator_SmallLettersForSubsquares, 3);
             ld = StationData.Database.LocationFind(dxcall, dxloc);
             if (ld == null)

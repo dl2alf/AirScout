@@ -386,37 +386,6 @@ namespace ScoutBase.Stations
                         // set status to updating
                         StationData.Database.SetDBStatus(DATABASESTATUS.UPDATING);
                         this.ReportProgress(1, StationData.Database.GetDBStatus());
-                        if (StartOptions.RestrictToAreaOfInterest)
-                        {
-                            this.ReportProgress(0, "Removing callsigns otside are of interest...");
-                            if (HasDatabaseChanged())
-                            {
-                                // database changed --> do full check
-                                List<LocationDesignator> locations = StationData.Database.LocationGetAll(this);
-                                foreach (LocationDesignator ld in locations)
-                                {
-                                    if ((ld.Lat < StartOptions.MinLat) || (ld.Lat > StartOptions.MaxLat) || (ld.Lon < StartOptions.MinLon) || (ld.Lon > StartOptions.MaxLon))
-                                    {
-                                        // remove from location database & QRV database
-                                        StationData.Database.LocationDelete(ld);
-                                        StationData.Database.QRVDelete(ld.Call, ld.Loc, BAND.BALL);
-                                    }
-                                    if (this.CancellationPending)
-                                        return;
-                                    // reduce CPU load
-                                    Thread.Sleep(1);
-                                }
-                                // save status & timestamps
-                                SaveDatabaseTimeStamp();
-                                SaveDatabaseStatus();
-                            }
-                            else
-                            {
-                                // dabase not changed --> nothing to do
-                                // restore database status
-                                StationData.Database.SetDBStatus(GetDatabaseStatus());
-                            }
-                        }
                         // update location database
                         this.ReportProgress(0, "Updating locations from web database...");
                         // get update from url
