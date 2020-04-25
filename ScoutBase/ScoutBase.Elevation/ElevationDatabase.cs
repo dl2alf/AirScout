@@ -95,20 +95,30 @@ namespace ScoutBase.Elevation
         System.Data.SQLite.SQLiteDatabase globe;
         System.Data.SQLite.SQLiteDatabase srtm3;
         System.Data.SQLite.SQLiteDatabase srtm1;
+        System.Data.SQLite.SQLiteDatabase aster3;
+        System.Data.SQLite.SQLiteDatabase aster1;
 
         // tile cache
         private ElevationTileDesignator globe_tile = null;
         private ElevationTileDesignator srtm3_tile = null;
         private ElevationTileDesignator srtm1_tile = null;
+        private ElevationTileDesignator aster3_tile = null;
+        private ElevationTileDesignator aster1_tile = null;
         private OrderedDictionary globe_cache = new OrderedDictionary();
         private OrderedDictionary srtm3_cache = new OrderedDictionary();
         private OrderedDictionary srtm1_cache = new OrderedDictionary();
+        private OrderedDictionary aster3_cache = new OrderedDictionary();
+        private OrderedDictionary aster1_cache = new OrderedDictionary();
         private int globe_tile_size = 138;
         private int srtm3_tile_size = 10038;
         private int srtm1_tile_size = 90038;
+        private int aster3_tile_size = 10038;
+        private int aster1_tile_size = 90038;
         private int globe_cache_count = 0;
         private int srtm3_cache_count = 0;
         private int srtm1_cache_count = 0;
+        private int aster3_cache_count = 0;
+        private int aster1_cache_count = 0;
 
         public ElevationDatabase()
         {
@@ -118,7 +128,7 @@ namespace ScoutBase.Elevation
                 "The basic elevation information is kept unique per  6digit-Maidenhead Locator and is updated periodically from a global web resource.\n" +
                 "The path and horizon information are unique per one oder between two geographical locations.\n" +
                 "These values are (pre-)calculated and stored at runtime.\n" +
-                "All values are based on a distinct elevation model either GLOBE, SRTM3 or SRTM1.";
+                "All values are based on a distinct elevation model either GLOBE, SRTM3, SRTM1 or ASTER.";
             // add table description manually
             TableDescriptions.Add(ElevationTileDesignator.TableName, "Holds elevation information per 6digit Maidenhead Locator.");
             TableDescriptions.Add(ElevationPathDesignator.TableName, "Holds elevation path information between two locations.");
@@ -130,6 +140,8 @@ namespace ScoutBase.Elevation
             globe = OpenDatabase("globe.db3", DefaultDatabaseDirectory(), false);
             srtm3 = OpenDatabase("srtm3.db3", DefaultDatabaseDirectory(), false);
             srtm1 = OpenDatabase("srtm1.db3", DefaultDatabaseDirectory(), false);
+            aster3 = OpenDatabase("aster3.db3", DefaultDatabaseDirectory(), false);
+            aster1 = OpenDatabase("aster1.db3", DefaultDatabaseDirectory(), false);
             // create tables with schemas if not exist
             if (!ElevationTileTableExists(ELEVATIONMODEL.GLOBE))
                 ElevationTileCreateTable(ELEVATIONMODEL.GLOBE);
@@ -137,24 +149,40 @@ namespace ScoutBase.Elevation
                 ElevationTileCreateTable(ELEVATIONMODEL.SRTM3);
             if (!ElevationTileTableExists(ELEVATIONMODEL.SRTM1))
                 ElevationTileCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!ElevationTileTableExists(ELEVATIONMODEL.ASTER3))
+                ElevationTileCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!ElevationTileTableExists(ELEVATIONMODEL.ASTER1))
+                ElevationTileCreateTable(ELEVATIONMODEL.ASTER1);
             if (!ElevationPathTableExists(ELEVATIONMODEL.GLOBE))
                 ElevationPathCreateTable(ELEVATIONMODEL.GLOBE);
             if (!ElevationPathTableExists(ELEVATIONMODEL.SRTM3))
                 ElevationPathCreateTable(ELEVATIONMODEL.SRTM3);
             if (!ElevationPathTableExists(ELEVATIONMODEL.SRTM1))
                 ElevationPathCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!ElevationPathTableExists(ELEVATIONMODEL.ASTER3))
+                ElevationPathCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!ElevationPathTableExists(ELEVATIONMODEL.ASTER1))
+                ElevationPathCreateTable(ELEVATIONMODEL.ASTER1);
             if (!ElevationHorizonTableExists(ELEVATIONMODEL.GLOBE))
                 ElevationHorizonCreateTable(ELEVATIONMODEL.GLOBE);
             if (!ElevationHorizonTableExists(ELEVATIONMODEL.SRTM3))
                 ElevationHorizonCreateTable(ELEVATIONMODEL.SRTM3);
             if (!ElevationHorizonTableExists(ELEVATIONMODEL.SRTM1))
                 ElevationHorizonCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!ElevationHorizonTableExists(ELEVATIONMODEL.ASTER3))
+                ElevationHorizonCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!ElevationHorizonTableExists(ELEVATIONMODEL.ASTER1))
+                ElevationHorizonCreateTable(ELEVATIONMODEL.ASTER1);
             if (!LocalObstructionTableExists(ELEVATIONMODEL.GLOBE))
                 LocalObstructionCreateTable(ELEVATIONMODEL.GLOBE);
             if (!LocalObstructionTableExists(ELEVATIONMODEL.SRTM3))
                 LocalObstructionCreateTable(ELEVATIONMODEL.SRTM3);
             if (!LocalObstructionTableExists(ELEVATIONMODEL.SRTM1))
                 LocalObstructionCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!LocalObstructionTableExists(ELEVATIONMODEL.ASTER3))
+                LocalObstructionCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!LocalObstructionTableExists(ELEVATIONMODEL.ASTER1))
+                LocalObstructionCreateTable(ELEVATIONMODEL.ASTER1);
             // set default bounds
             MinLat = double.MinValue;
             MinLon = double.MinValue;
@@ -167,6 +195,8 @@ namespace ScoutBase.Elevation
             CloseDatabase(globe);
             CloseDatabase(srtm3);
             CloseDatabase(srtm1);
+            CloseDatabase(aster3);
+            CloseDatabase(aster1);
         }
 
         private void UpgradeToV1(System.Data.SQLite.SQLiteDatabase db)
@@ -216,6 +246,8 @@ namespace ScoutBase.Elevation
                 case ELEVATIONMODEL.GLOBE: return globe;
                 case ELEVATIONMODEL.SRTM3: return srtm3;
                 case ELEVATIONMODEL.SRTM1: return srtm1;
+                case ELEVATIONMODEL.ASTER3: return aster3;
+                case ELEVATIONMODEL.ASTER1: return aster1;
                 default: return null;
             }
         }
@@ -282,6 +314,12 @@ namespace ScoutBase.Elevation
                 case ELEVATIONMODEL.SRTM1:
                     dir = Path.Combine(dir, Properties.Settings.Default.Elevation_SRTM1_DataPath);
                     break;
+                case ELEVATIONMODEL.ASTER3:
+                    dir = Path.Combine(dir, Properties.Settings.Default.Elevation_ASTER3_DataPath);
+                    break;
+                case ELEVATIONMODEL.ASTER1:
+                    dir = Path.Combine(dir, Properties.Settings.Default.Elevation_ASTER1_DataPath);
+                    break;
             }
             // replace Windows/Linux directory spearator chars
             dir = dir.Replace('\\', Path.DirectorySeparatorChar);
@@ -303,6 +341,10 @@ namespace ScoutBase.Elevation
                     return Properties.Settings.Default.Elevation_SRTM3_UpdateURL;
                 case ELEVATIONMODEL.SRTM1:
                     return Properties.Settings.Default.Elevation_SRTM1_UpdateURL;
+                case ELEVATIONMODEL.ASTER3:
+                    return Properties.Settings.Default.Elevation_ASTER3_UpdateURL;
+                case ELEVATIONMODEL.ASTER1:
+                    return Properties.Settings.Default.Elevation_ASTER1_UpdateURL;
             }
             return "";
         }
@@ -318,6 +360,10 @@ namespace ScoutBase.Elevation
                     return Properties.Settings.Default.Elevation_SRTM3_JSONFile;
                 case ELEVATIONMODEL.SRTM1:
                     return Properties.Settings.Default.Elevation_SRTM1_JSONFile;
+                case ELEVATIONMODEL.ASTER3:
+                    return Properties.Settings.Default.Elevation_ASTER3_JSONFile;
+                case ELEVATIONMODEL.ASTER1:
+                    return Properties.Settings.Default.Elevation_ASTER1_JSONFile;
             }
             return "";
 
@@ -402,6 +448,8 @@ namespace ScoutBase.Elevation
             globe_cache_count = (int)((avmem / globe_tile_size < int.MaxValue) ? avmem / globe_tile_size : int.MaxValue);
             srtm3_cache_count = (int)((avmem / srtm3_tile_size < int.MaxValue) ? avmem / srtm3_tile_size : int.MaxValue);
             srtm1_cache_count = (int)((avmem / srtm1_tile_size < int.MaxValue) ? avmem / srtm1_tile_size : int.MaxValue);
+            aster3_cache_count = (int)((avmem / aster3_tile_size < int.MaxValue) ? avmem / aster3_tile_size : int.MaxValue);
+            aster1_cache_count = (int)((avmem / aster1_tile_size < int.MaxValue) ? avmem / aster1_tile_size : int.MaxValue);
         }
 
         /// <summary>
@@ -412,6 +460,8 @@ namespace ScoutBase.Elevation
             globe_cache.Clear();
             srtm3_cache.Clear();
             srtm1_cache.Clear();
+            aster3_cache.Clear();
+            aster1_cache.Clear();
         }
 
         private int GetCacheSize(ELEVATIONMODEL model)
@@ -425,6 +475,10 @@ namespace ScoutBase.Elevation
                     return srtm3_cache_count;
                 case ELEVATIONMODEL.SRTM1:
                     return srtm1_cache_count;
+                case ELEVATIONMODEL.ASTER3:
+                    return aster3_cache_count;
+                case ELEVATIONMODEL.ASTER1:
+                    return aster1_cache_count;
             }
             return 0;
         }
@@ -530,6 +584,10 @@ namespace ScoutBase.Elevation
                 return srtm3_cache;
             if (model == ELEVATIONMODEL.SRTM1)
                 return srtm1_cache;
+            if (model == ELEVATIONMODEL.ASTER3)
+                return aster3_cache;
+            if (model == ELEVATIONMODEL.ASTER1)
+                return aster1_cache;
             return null;
         }
 
@@ -540,7 +598,11 @@ namespace ScoutBase.Elevation
             if (model == ELEVATIONMODEL.SRTM3)
                 return srtm3_tile;
             if (model == ELEVATIONMODEL.SRTM1)
-                return srtm1_tile;
+                return aster1_tile;
+            if (model == ELEVATIONMODEL.ASTER3)
+                return aster3_tile;
+            if (model == ELEVATIONMODEL.ASTER1)
+                return aster1_tile;
             return null;
         }
 
@@ -552,6 +614,10 @@ namespace ScoutBase.Elevation
                 srtm3_tile = tile;
             if (model == ELEVATIONMODEL.SRTM1)
                 srtm1_tile = tile;
+            if (model == ELEVATIONMODEL.ASTER3)
+                aster3_tile = tile;
+            if (model == ELEVATIONMODEL.ASTER1)
+                aster1_tile = tile;
         }
 
         private ElevationTileDesignator GetElevationTile(ELEVATIONMODEL model, double lat, double lon)
@@ -652,6 +718,10 @@ namespace ScoutBase.Elevation
             if (model == ELEVATIONMODEL.SRTM1)
                 return 30;
             if (model == ELEVATIONMODEL.SRTM3)
+                return 90;
+            if (model == ELEVATIONMODEL.ASTER1)
+                return 30;
+            if (model == ELEVATIONMODEL.ASTER3)
                 return 90;
             return 1000;
         }
@@ -980,6 +1050,16 @@ namespace ScoutBase.Elevation
 
         #region ElevationPath
 
+        public int GetElevationPathAveragePeriod(ELEVATIONMODEL model)
+        {
+            if (model == ELEVATIONMODEL.ASTER1)
+                return 5;
+            if (model == ELEVATIONMODEL.ASTER3)
+                return 5;
+            return 0;
+
+        }
+
         public bool ElevationPathTableExists(ELEVATIONMODEL model, string tablename = "")
         {
             // check for table name is null or empty --> use default tablename from type instead
@@ -1159,44 +1239,113 @@ namespace ScoutBase.Elevation
             return ElevationPathCreateFromLatLon(caller, lat1, lon1, gp.Lat, gp.Lon, stepwidth, model);
         }
 
+
+
+        // simple moving average for elevation path
+        // the resulting average array is (periods - 1)  shorter than the source array
+        private short[] MovingAverage(short[] values, int periods)
+        {
+            // check for sufficient count of values
+            if (values.Length < periods)
+                return null;
+            short[] averages = new short[values.Length - periods + 1];
+            double sum = 0;
+            for (int i = 0; i < values.Length; i++)
+                if (i < periods)
+                {
+                    sum += values[i];
+                    //                    averages[i] = (short)((i == periods - 1) ? sum / (double)periods : 0);
+                    averages[0] = (short)((i == periods - 1) ? sum / (double)periods : 0);
+                }
+                else
+                {
+                    sum = sum - values[i - periods] + values[i];
+                    averages[i - periods + 1] = (short)(sum / (double)periods);
+                }
+            return averages;
+        }
+
         public ElevationPathDesignator ElevationPathCreateFromLatLon(BackgroundWorker caller, double lat1, double lon1, double lat2, double lon2, double stepwidth, ELEVATIONMODEL model, bool savetodatabase = true)
         {
             // calculate new elevation path
             // supports abort calculation if called from background worker and cancellation requested
             // report of status messages and single data points not needed so far
             ElevationPathDesignator ep = new ElevationPathDesignator(lat1, lon1, lat2, lon2, stepwidth);
-            double d = 0;
+            bool tilemissing = false;
             // convert stepwidth to [km]
             stepwidth = stepwidth / 1000.0;
-            // check if elevation database is complete before trying to retrieve elevation path
             bool complete = this.GetDBStatusBit(model, DATABASESTATUS.COMPLETE) & !this.GetDBStatusBit(model, DATABASESTATUS.ERROR);
-            bool tilemissing = false;
-            // create tile for cache
-            ElevationTileDesignator tile = new ElevationTileDesignator();
-            for (int i = 0; i < ep.Count; i++)
+            int avperiod = GetElevationPathAveragePeriod(model);
+            // check for any averaging
+            if (avperiod == 0)
             {
-                LatLon.GPoint gp = LatLon.DestinationPoint(lat1, lon1, ep.Bearing12, d);
-                // get elevation point with status
-                // tile will be cached locally for subsequent use
-                short e = GetElevation(model, gp.Lat, gp.Lon, false);
-                // set elevation point if valid, else set it to 0
-                if (e > TileMissingFlag)
-                    ep.Path[i] = e;
-                else
+                // no averaging --> create path direct into ep
+                double d = 0;
+                // check if elevation database is complete before trying to retrieve elevation path
+                for (int i = 0; i < ep.Count; i++)
                 {
-                    ep.Path[i] = 0;
-                    // set the tilemissing flag
-                    if (e == TileMissingFlag)
-                        tilemissing = true;
-                 }
-                 d += stepwidth;
-                // abort calculation if called from background worker and cancellation pending
-                if (caller != null)
-                {
-                    if (caller.CancellationPending)
-                        return null;
+                    LatLon.GPoint gp = LatLon.DestinationPoint(lat1, lon1, ep.Bearing12, d);
+                    // get elevation point with status
+                    // tile will be cached locally for subsequent use
+                    short e = GetElevation(model, gp.Lat, gp.Lon, false);
+                    // set elevation point if valid, else set it to 0
+                    if (e > TileMissingFlag)
+                    {
+                        ep.Path[i] = e;
+                    }
+                    else
+                    {
+                        ep.Path[i] = 0;
+                        // set the tilemissing flag
+                        if (e == TileMissingFlag)
+                            tilemissing = true;
+                    }
+                    d += stepwidth;
+                    // abort calculation if called from background worker and cancellation pending
+                    if (caller != null)
+                    {
+                        if (caller.CancellationPending)
+                            return null;
+                    }
                 }
             }
+            else
+            {
+                // create raw elevation buffer first and copy the average to ep
+                short[] raw = new short[ep.Path.Length + avperiod - 1];
+                // put the start value at the half of avperiod back in opposite direction
+                double d = -(avperiod / 2) * stepwidth;
+                // check if elevation database is complete before trying to retrieve elevation path
+                for (int i = 0; i < raw.Length; i++)
+                {
+                    LatLon.GPoint gp = LatLon.DestinationPoint(lat1, lon1, ep.Bearing12, d);
+                    // get elevation point with status
+                    // tile will be cached locally for subsequent use
+                    short e = GetElevation(model, gp.Lat, gp.Lon, false);
+                    // set elevation point if valid, else set it to 0
+                    if (e > TileMissingFlag)
+                    {
+                        raw[i] = e;
+                    }
+                    else
+                    {
+                        raw[i] = 0;
+                        // set the tilemissing flag
+                        if (e == TileMissingFlag)
+                            tilemissing = true;
+                    }
+                    d += stepwidth;
+                    // abort calculation if called from background worker and cancellation pending
+                    if (caller != null)
+                    {
+                        if (caller.CancellationPending)
+                            return null;
+                    }
+                }
+                // calculate average and assign it to ep.Path
+                ep.Path = MovingAverage(raw, avperiod);
+            }
+            
             // check if database is still complete, could have benn changed during background calculation
             if (complete)
                 complete = GetDBStatusBit(model, DATABASESTATUS.COMPLETE) & !GetDBStatusBit(model, DATABASESTATUS.ERROR);

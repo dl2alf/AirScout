@@ -41,6 +41,8 @@ namespace AirScout
         GMapOverlay GLOBEpolygons = new GMapOverlay("GLOBEpolygons");
         GMapOverlay SRTM3polygons = new GMapOverlay("SRTM3polygons");
         GMapOverlay SRTM1polygons = new GMapOverlay("SRTM1polygons");
+        GMapOverlay ASTER3polygons = new GMapOverlay("ASTER3polygons");
+        GMapOverlay ASTER1polygons = new GMapOverlay("ASTER1polygons");
 
         MapDlg ParentDlg;
 
@@ -145,6 +147,35 @@ namespace AirScout
             gm_Options_SRTM1.SelectionPen = null;
             gm_Options_SRTM1.MapScaleInfoEnabled = true;
             gm_Options_SRTM1.Overlays.Add(SRTM1polygons);
+
+            // set initial settings for ASTER3Map
+            gm_Options_ASTER3.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
+            gm_Options_ASTER3.IgnoreMarkerOnMouseWheel = true;
+            gm_Options_ASTER3.MinZoom = 0;
+            gm_Options_ASTER3.MaxZoom = 20;
+            gm_Options_ASTER3.Zoom = 6;
+            gm_Options_ASTER3.DragButton = System.Windows.Forms.MouseButtons.Left;
+            gm_Options_ASTER3.CanDragMap = true;
+            gm_Options_ASTER3.ScalePen = new Pen(Color.Black, 3);
+            gm_Options_ASTER3.HelperLinePen = null;
+            gm_Options_ASTER3.SelectionPen = null;
+            gm_Options_ASTER3.MapScaleInfoEnabled = true;
+            gm_Options_ASTER3.Overlays.Add(ASTER3polygons);
+
+            // set initial settings for ASTER1Map
+            gm_Options_ASTER1.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
+            gm_Options_ASTER1.IgnoreMarkerOnMouseWheel = true;
+            gm_Options_ASTER1.MinZoom = 0;
+            gm_Options_ASTER1.MaxZoom = 20;
+            gm_Options_ASTER1.Zoom = 6;
+            gm_Options_ASTER1.DragButton = System.Windows.Forms.MouseButtons.Left;
+            gm_Options_ASTER1.CanDragMap = true;
+            gm_Options_ASTER1.ScalePen = new Pen(Color.Black, 3);
+            gm_Options_ASTER1.HelperLinePen = null;
+            gm_Options_ASTER1.SelectionPen = null;
+            gm_Options_ASTER1.MapScaleInfoEnabled = true;
+            gm_Options_ASTER1.Overlays.Add(ASTER1polygons);
+
             Log.WriteMessage("Finished.");
         }
 
@@ -180,6 +211,10 @@ namespace AirScout
 
         private ELEVATIONMODEL GetElevationModel()
         {
+            if (Properties.Settings.Default.Elevation_ASTER1_Enabled)
+                return ELEVATIONMODEL.ASTER1;
+            if (Properties.Settings.Default.Elevation_ASTER3_Enabled)
+                return ELEVATIONMODEL.ASTER3;
             if (Properties.Settings.Default.Elevation_SRTM1_Enabled)
                 return ELEVATIONMODEL.SRTM1;
             if (Properties.Settings.Default.Elevation_SRTM3_Enabled)
@@ -195,7 +230,7 @@ namespace AirScout
 
         private void tab_Options_General_Enter(object sender, EventArgs e)
         {
-            tab_Options_General_Update(this,null);
+            tab_Options_General_Update(this, null);
         }
 
         private void tab_Options_General_Validating(object sender, CancelEventArgs e)
@@ -290,7 +325,7 @@ namespace AirScout
                 PropagationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1) +
                 ElevationData.Database.GetDBSize(ELEVATIONMODEL.GLOBE) +
                 ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM3) +
-                ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1) + 
+                ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1) +
                 MapData.Database.GetDBSize();
             lbl_Options_Database_TotalSize.Text = total.ToString("F0");
             rb_Options_Database_Update_Never.Checked = !Properties.Settings.Default.Background_Update_OnStartup && !Properties.Settings.Default.Background_Update_Periodically;
@@ -1418,7 +1453,7 @@ namespace AirScout
                 p.Fill = new SolidBrush(Color.FromArgb(50, Color.Red));
                 SRTM3polygons.Polygons.Add(p);
             }
-            else 
+            else
             {
                 Say((string)e.UserState);
             }
@@ -1590,6 +1625,246 @@ namespace AirScout
 
         #endregion
 
+        #region tab_Options_ASTER3
+
+        private void bw_ASTER3_MapUpdater_DoWork(object sender, DoWorkEventArgs e)
+        {
+            bw_ASTER3_MapUpdater.ReportProgress(0, "ASTER3: Creating elevation tile catalogue...");
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_ASTER3_MapUpdater, ELEVATIONMODEL.ASTER3, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            bw_ASTER3_MapUpdater.ReportProgress(0, "ASTER3: Processing tiles...");
+            int missing = 0;
+            int found = 0;
+            foreach (string tilename in availabletiles.Files.Keys)
+            {
+                if (ElevationData.Database.ElevationTileExists(tilename.Substring(0, 6), ELEVATIONMODEL.ASTER3))
+                {
+                    bw_ASTER3_MapUpdater.ReportProgress(1, tilename);
+                    found++;
+                }
+                else
+                {
+                    bw_ASTER3_MapUpdater.ReportProgress(-1, tilename);
+                    missing++;
+                }
+                if (bw_ASTER3_MapUpdater.CancellationPending)
+                {
+                    bw_ASTER3_MapUpdater.ReportProgress(0, "ASTER3: Processing cancelled...");
+                    return;
+                }
+            }
+            bw_ASTER3_MapUpdater.ReportProgress(0, "ASTER3: " + found.ToString() + " tile(s) found, " + missing.ToString() + " more tile(s) available and missing.");
+        }
+
+        private void bw_ASTER3_MapUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 1)
+            {
+                // add a tile found in database to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Green));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Green));
+                ASTER3polygons.Polygons.Add(p);
+            }
+            else if (e.ProgressPercentage == -1)
+            {
+                // add missing tile to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Red));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Red));
+                ASTER3polygons.Polygons.Add(p);
+            }
+            else
+            {
+                Say((string)e.UserState);
+            }
+        }
+
+        private void bw_ASTER3_MapUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        private void tab_Options_ASTER3_Enter(object sender, EventArgs e)
+        {
+            // clear map polygons
+            ASTER3polygons.Clear();
+            // add coverage to map polygons
+            List<PointLatLng> cl = new List<PointLatLng>();
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MinLon));
+            GMapPolygon c = new GMapPolygon(cl, "Coverage");
+            c.Stroke = new Pen(Color.FromArgb(255, Color.Magenta), 3);
+            c.Fill = new SolidBrush(Color.FromArgb(0, Color.Magenta));
+            ASTER3polygons.Polygons.Add(c);
+            // zoom the map initally
+            gm_Options_ASTER3.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon, Properties.Settings.Default.MinLat));
+            // start map updater
+            if (!bw_ASTER3_MapUpdater.IsBusy)
+                bw_ASTER3_MapUpdater.RunWorkerAsync();
+            // zoom the map
+            gm_Options_Coverage.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon - 1, Properties.Settings.Default.MaxLat + 1, Properties.Settings.Default.MaxLon + 1, Properties.Settings.Default.MinLat - 1));
+        }
+
+        private void tab_Options_ASTER3_Leave(object sender, EventArgs e)
+        {
+            // stop map updater
+            bw_ASTER3_MapUpdater.CancelAsync();
+            // clear map polygons
+            ASTER3polygons.Clear();
+            // do garbage collection
+            GC.Collect();
+            Say("");
+        }
+
+
+        private void btn_Options_ASTER3_Copyright_Click(object sender, EventArgs e)
+        {
+            ElevationCopyrightDlg Dlg = new ElevationCopyrightDlg();
+            Dlg.Text = "ASTER3 Copyright Information";
+            Dlg.rtb_Copyright.Text = Properties.Settings.Default.Elevation_ASTER3_Copyright;
+            Dlg.ShowDialog();
+        }
+
+        #endregion
+
+        #region tab_Options_ASTER1
+
+        private void bw_ASTER1_MapUpdater_DoWork(object sender, DoWorkEventArgs e)
+        {
+            bw_ASTER1_MapUpdater.ReportProgress(0, "ASTER1: Creating elevation tile catalogue...");
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_ASTER1_MapUpdater, ELEVATIONMODEL.ASTER1, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            bw_ASTER1_MapUpdater.ReportProgress(0, "ASTER1: Processing tiles...");
+            int missing = 0;
+            int found = 0;
+            foreach (string tilename in availabletiles.Files.Keys)
+            {
+                if (ElevationData.Database.ElevationTileExists(tilename.Substring(0, 6), ELEVATIONMODEL.ASTER1))
+                {
+                    bw_ASTER1_MapUpdater.ReportProgress(1, tilename);
+                    found++;
+                }
+                else
+                {
+                    bw_ASTER1_MapUpdater.ReportProgress(-1, tilename);
+                    missing++;
+                }
+                if (bw_ASTER1_MapUpdater.CancellationPending)
+                {
+                    bw_ASTER1_MapUpdater.ReportProgress(0, "ASTER1: Processing cancelled...");
+                    return;
+                }
+            }
+            bw_ASTER1_MapUpdater.ReportProgress(0, "ASTER1: " + found.ToString() + " tile(s) found, " + missing.ToString() + " more tile(s) available and missing.");
+        }
+
+        private void bw_ASTER1_MapUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 1)
+            {
+                // add a tile found in database to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Green));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Green));
+                ASTER1polygons.Polygons.Add(p);
+            }
+            else if (e.ProgressPercentage == -1)
+            {
+                // add missing tile to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Red));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Red));
+                ASTER1polygons.Polygons.Add(p);
+            }
+            else
+            {
+                Say((string)e.UserState);
+            }
+        }
+
+        private void bw_ASTER1_MapUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        private void tba_Option_ASTER1_Enter(object sender, EventArgs e)
+        {
+            // clear map polygons
+            ASTER1polygons.Clear();
+            // add coverage to map polygons
+            List<PointLatLng> cl = new List<PointLatLng>();
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MinLon));
+            GMapPolygon c = new GMapPolygon(cl, "Coverage");
+            c.Stroke = new Pen(Color.FromArgb(255, Color.Magenta), 3);
+            c.Fill = new SolidBrush(Color.FromArgb(0, Color.Magenta));
+            ASTER1polygons.Polygons.Add(c);
+            // zoom the map initally
+            gm_Options_ASTER1.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon, Properties.Settings.Default.MinLat));
+            // start map updater
+            if (!bw_ASTER1_MapUpdater.IsBusy)
+                bw_ASTER1_MapUpdater.RunWorkerAsync();
+            // zoom the map
+            gm_Options_Coverage.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon - 1, Properties.Settings.Default.MaxLat + 1, Properties.Settings.Default.MaxLon + 1, Properties.Settings.Default.MinLat - 1));
+        }
+
+        private void tba_Option_ASTER1_Leave(object sender, EventArgs e)
+        {
+            // stop map updater
+            bw_ASTER1_MapUpdater.CancelAsync();
+            // clear map polygons
+            ASTER1polygons.Clear();
+            // do garbage collection
+            GC.Collect();
+            Say("");
+        }
+
+        private void btn_Options_ASTER1_Copyright_Click(object sender, EventArgs e)
+        {
+            ElevationCopyrightDlg Dlg = new ElevationCopyrightDlg();
+            Dlg.Text = "ASTER1 Copyright Information";
+            Dlg.rtb_Copyright.Text = Properties.Settings.Default.Elevation_ASTER1_Copyright;
+            Dlg.ShowDialog();
+        }
+
+
+        #endregion
+
         #region tab_Options_Path
 
         private void tab_Options_Path_Enter(object sender, EventArgs e)
@@ -1712,7 +1987,6 @@ namespace AirScout
             }
             return ld;
         }
-
         private void btn_Options_Path_Export_Click(object sender, EventArgs e)
         {
             // check and update station database
@@ -1727,7 +2001,7 @@ namespace AirScout
             if (myqrv.AntennaGain == 0)
                 myqrv.AntennaGain = StationData.Database.QRVGetDefaultAntennaGain(Properties.Settings.Default.Band);
             if (myqrv.Power == 0)
-            myqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
+                myqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
             // check if there are a valid DX settings
             if (!Callsign.Check(Properties.Settings.Default.DXCall) ||
                 !GeographicalPoint.Check(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon))
@@ -1772,7 +2046,7 @@ namespace AirScout
             SaveFileDialog Dlg = new SaveFileDialog();
             Dlg.AddExtension = true;
             Dlg.DefaultExt = "csv";
-            Dlg.Filter = "Comma Separated Values *.csv |csv";
+            Dlg.Filter = "Comma Separated Values *.csv |*.csv";
             Dlg.FileName = "Path Information " + Properties.Settings.Default.MyCall.Replace("/", "_") + " to " + Properties.Settings.Default.DXCall.Replace("/", "_");
             Dlg.InitialDirectory = Application.StartupPath;
             Dlg.OverwritePrompt = true;
@@ -1782,21 +2056,26 @@ namespace AirScout
                 {
                     using (StreamWriter sw = new StreamWriter(Dlg.FileName))
                     {
+                        int est = 10;
                         sw.WriteLine("Distance[km];Lat[deg];Lon[deg];Elevation[m]");
                         for (int i = 0; i < epath.Path.Length; i++)
                         {
-                            double distance = (double)i * epath.StepWidth / 1000.0;
-                            LatLon.GPoint p = LatLon.DestinationPoint(myloc.Lat, myloc.Lon, epath.Bearing12, distance);
-                            sw.WriteLine(distance.ToString("F8") + ";" +
-                                p.Lat.ToString("F8") + ";" +
-                                p.Lon.ToString("F8") + ";" +
-                                epath.Path[i].ToString());
+                            for (int j = 0; j < epath.StepWidth / est; j++)
+                            {
+                                double distance = (double)(i + j * est /  epath.StepWidth) * epath.StepWidth / 1000.0;
+                                LatLon.GPoint p = LatLon.DestinationPoint(myloc.Lat, myloc.Lon, epath.Bearing12, distance);
+                                sw.WriteLine(distance.ToString("F8") + ";" +
+                                    p.Lat.ToString("F8") + ";" +
+                                    p.Lon.ToString("F8") + ";" +
+                                    epath.Path[i].ToString());
+                            }
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // do nothing, if export is going wrong
+                    MessageBox.Show("Error while exporting path: " + ex.Message, "Export Path to CSV");
+                    Log.WriteMessage(ex.ToString());
                 }
             }
         }
@@ -2203,7 +2482,7 @@ namespace AirScout
         {
             try
             {
-                Properties.Settings.Default.Planes_Filter_Min_Category = PlaneCategories.ParseStringValue((string) cb_Options_Planes_Filter_Min_Cat.SelectedItem);
+                Properties.Settings.Default.Planes_Filter_Min_Category = PlaneCategories.ParseStringValue((string)cb_Options_Planes_Filter_Min_Cat.SelectedItem);
             }
             catch (Exception ex)
             {
@@ -2548,14 +2827,13 @@ namespace AirScout
 
         #endregion
 
+
+        public class StationDataUpdaterDoWorkEventArgs
+        {
+            public LocationDesignator ld;
+            public List<QRVDesignator> qrvs;
+        }
+
     }
-
-    public class StationDataUpdaterDoWorkEventArgs
-    {
-        public LocationDesignator ld;
-        public List<QRVDesignator> qrvs;
-    }
-
-
 
 }

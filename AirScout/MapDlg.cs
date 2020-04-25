@@ -388,6 +388,8 @@ namespace AirScout
         public ElevationDatabaseUpdater bw_GLOBEUpdater = new ElevationDatabaseUpdater();
         public ElevationDatabaseUpdater bw_SRTM3Updater = new ElevationDatabaseUpdater();
         public ElevationDatabaseUpdater bw_SRTM1Updater = new ElevationDatabaseUpdater();
+        public ElevationDatabaseUpdater bw_ASTER3Updater = new ElevationDatabaseUpdater();
+        public ElevationDatabaseUpdater bw_ASTER1Updater = new ElevationDatabaseUpdater();
 
         public StationDatabaseUpdater bw_StationDatabaseUpdater = new StationDatabaseUpdater();
         public AircraftDatabaseUpdater bw_AircraftDatabaseUpdater = new AircraftDatabaseUpdater();
@@ -397,6 +399,8 @@ namespace AirScout
         public PathCalculator bw_GLOBEPathCalculator = new PathCalculator(ELEVATIONMODEL.GLOBE);
         public PathCalculator bw_SRTM3PathCalculator = new PathCalculator(ELEVATIONMODEL.SRTM3);
         public PathCalculator bw_SRTM1PathCalculator = new PathCalculator(ELEVATIONMODEL.SRTM1);
+        public PathCalculator bw_ASTER3PathCalculator = new PathCalculator(ELEVATIONMODEL.ASTER3);
+        public PathCalculator bw_ASTER1PathCalculator = new PathCalculator(ELEVATIONMODEL.ASTER1);
 
         public MapPreloader bw_MapPreloader = new MapPreloader();
 
@@ -476,6 +480,10 @@ namespace AirScout
             // force culture invariant language for GUI
             Application.CurrentCulture = CultureInfo.InvariantCulture;
 
+            // set security protocol to TLS1.2 globally
+            // this will work even on .NET 4.0 for most operating systems > Windows XP
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; //TLS 1.2
+
             InitializeComponent();
 
             // do basic initialization
@@ -517,6 +525,8 @@ namespace AirScout
             bw_GLOBEUpdater.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationDatabaseUpdater_ProgressChanged);
             bw_SRTM3Updater.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationDatabaseUpdater_ProgressChanged);
             bw_SRTM1Updater.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationDatabaseUpdater_ProgressChanged);
+            bw_ASTER3Updater.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationDatabaseUpdater_ProgressChanged);
+            bw_ASTER1Updater.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationDatabaseUpdater_ProgressChanged);
 
             // set station database updater event handler
             bw_StationDatabaseUpdater.ProgressChanged += new ProgressChangedEventHandler(bw_StationDatabaseUpdater_ProgressChanged);
@@ -534,6 +544,8 @@ namespace AirScout
             bw_GLOBEPathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
             bw_SRTM3PathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
             bw_SRTM1PathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
+            bw_ASTER3PathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
+            bw_ASTER1PathCalculator.ProgressChanged += new ProgressChangedEventHandler(bw_ElevationPathCalculator_ProgressChanged);
 
             // set map preloader event handler
             bw_MapPreloader.ProgressChanged += new ProgressChangedEventHandler(bw_MapPreloader_ProgressChanged);
@@ -1036,6 +1048,8 @@ namespace AirScout
             Properties.Settings.Default.Elevation_GLOBE_DatabaseStatus = DATABASESTATUS.UNDEFINED;
             Properties.Settings.Default.Elevation_SRTM3_DatabaseStatus = DATABASESTATUS.UNDEFINED;
             Properties.Settings.Default.Elevation_SRTM1_DatabaseStatus = DATABASESTATUS.UNDEFINED;
+            Properties.Settings.Default.Elevation_ASTER3_DatabaseStatus = DATABASESTATUS.UNDEFINED;
+            Properties.Settings.Default.Elevation_ASTER1_DatabaseStatus = DATABASESTATUS.UNDEFINED;
             // set nearfield suppression
             PropagationData.Database.NearFieldSuppression = Properties.Settings.Default.Path_NearFieldSuppression;
             // get all database directories and store it in settings
@@ -1119,6 +1133,7 @@ namespace AirScout
                 gm_Main.Overlays.Add(gmo_Objects);
                 gm_Main.Overlays.Add(gmo_Planes);
                 gm_Main.Overlays.Add(gmo_Callsigns);
+                gm_Main.Opacity = (double)Properties.Settings.Default.Map_Opacity;
 
                 // setting User Agent to fix Open Street Map issue 2016-09-20
                 GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
@@ -1608,12 +1623,42 @@ namespace AirScout
                     startoptions.FileCacheEnabled = Properties.Settings.Default.Elevation_SRTM1_EnableCache;
                     bw_SRTM1Updater.RunWorkerAsync(startoptions);
                 }
+                if (Properties.Settings.Default.Elevation_ASTER3_Enabled && (bw_ASTER3Updater != null) && !bw_ASTER3Updater.IsBusy)
+                {
+                    ElevationDatabaseUpdaterStartOptions startoptions = new ElevationDatabaseUpdaterStartOptions();
+                    startoptions.Name = "ASTER3";
+                    startoptions.Options = BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE;
+                    startoptions.Model = ELEVATIONMODEL.ASTER3;
+                    startoptions.MinLat = Properties.Settings.Default.MinLat;
+                    startoptions.MinLon = Properties.Settings.Default.MinLon;
+                    startoptions.MaxLat = Properties.Settings.Default.MaxLat;
+                    startoptions.MaxLon = Properties.Settings.Default.MaxLon;
+                    startoptions.FileCacheEnabled = Properties.Settings.Default.Elevation_ASTER3_EnableCache;
+                    bw_ASTER3Updater.RunWorkerAsync(startoptions);
+                }
+                if (Properties.Settings.Default.Elevation_ASTER1_Enabled && (bw_ASTER1Updater != null) && !bw_ASTER1Updater.IsBusy)
+                {
+                    ElevationDatabaseUpdaterStartOptions startoptions = new ElevationDatabaseUpdaterStartOptions();
+                    startoptions.Name = "ASTER1";
+                    startoptions.Options = BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE;
+                    startoptions.Model = ELEVATIONMODEL.ASTER1;
+                    startoptions.MinLat = Properties.Settings.Default.MinLat;
+                    startoptions.MinLon = Properties.Settings.Default.MinLon;
+                    startoptions.MaxLat = Properties.Settings.Default.MaxLat;
+                    startoptions.MaxLon = Properties.Settings.Default.MaxLon;
+                    startoptions.FileCacheEnabled = Properties.Settings.Default.Elevation_ASTER1_EnableCache;
+                    bw_ASTER1Updater.RunWorkerAsync(startoptions);
+                }
                 if (Properties.Settings.Default.Elevation_GLOBE_Enabled && (bw_GLOBEPathCalculator != null) && !bw_GLOBEPathCalculator.IsBusy)
                     bw_GLOBEPathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE);
                 if (Properties.Settings.Default.Elevation_SRTM3_Enabled && (bw_SRTM3PathCalculator != null) && !bw_SRTM3PathCalculator.IsBusy)
                     bw_SRTM3PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE);
                 if (Properties.Settings.Default.Elevation_SRTM1_Enabled && (bw_SRTM1PathCalculator != null) && !bw_SRTM1PathCalculator.IsBusy)
                     bw_SRTM1PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE);
+                if (Properties.Settings.Default.Elevation_ASTER3_Enabled && (bw_ASTER3PathCalculator != null) && !bw_ASTER3PathCalculator.IsBusy)
+                    bw_ASTER3PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE);
+                if (Properties.Settings.Default.Elevation_ASTER1_Enabled && (bw_ASTER1PathCalculator != null) && !bw_ASTER1PathCalculator.IsBusy)
+                    bw_ASTER1PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE);
                 if (Properties.Settings.Default.Map_Preloader_Enabled && (bw_MapPreloader != null) && !bw_MapPreloader.IsBusy)
                     bw_MapPreloader.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE);
             }
@@ -1683,12 +1728,42 @@ namespace AirScout
                     startoptions.FileCacheEnabled = Properties.Settings.Default.Elevation_SRTM1_EnableCache;
                     bw_SRTM1Updater.RunWorkerAsync(startoptions);
                 }
+                if (Properties.Settings.Default.Elevation_ASTER3_Enabled && (bw_ASTER3Updater != null) && !bw_ASTER3Updater.IsBusy)
+                {
+                    ElevationDatabaseUpdaterStartOptions startoptions = new ElevationDatabaseUpdaterStartOptions();
+                    startoptions.Name = "ASTER3";
+                    startoptions.Options = BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY;
+                    startoptions.Model = ELEVATIONMODEL.ASTER3;
+                    startoptions.MinLat = Properties.Settings.Default.MinLat;
+                    startoptions.MinLon = Properties.Settings.Default.MinLon;
+                    startoptions.MaxLat = Properties.Settings.Default.MaxLat;
+                    startoptions.MaxLon = Properties.Settings.Default.MaxLon;
+                    startoptions.FileCacheEnabled = Properties.Settings.Default.Elevation_ASTER3_EnableCache;
+                    bw_ASTER3Updater.RunWorkerAsync(startoptions);
+                }
+                if (Properties.Settings.Default.Elevation_ASTER1_Enabled && (bw_ASTER1Updater != null) && !bw_ASTER1Updater.IsBusy)
+                {
+                    ElevationDatabaseUpdaterStartOptions startoptions = new ElevationDatabaseUpdaterStartOptions();
+                    startoptions.Name = "ASTER1";
+                    startoptions.Options = BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY;
+                    startoptions.Model = ELEVATIONMODEL.ASTER1;
+                    startoptions.MinLat = Properties.Settings.Default.MinLat;
+                    startoptions.MinLon = Properties.Settings.Default.MinLon;
+                    startoptions.MaxLat = Properties.Settings.Default.MaxLat;
+                    startoptions.MaxLon = Properties.Settings.Default.MaxLon;
+                    startoptions.FileCacheEnabled = Properties.Settings.Default.Elevation_ASTER1_EnableCache;
+                    bw_ASTER1Updater.RunWorkerAsync(startoptions);
+                }
                 if (Properties.Settings.Default.Elevation_GLOBE_Enabled && (bw_GLOBEPathCalculator != null) && !bw_GLOBEPathCalculator.IsBusy)
                     bw_GLOBEPathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
                 if (Properties.Settings.Default.Elevation_SRTM3_Enabled && (bw_SRTM3PathCalculator != null) && !bw_SRTM3PathCalculator.IsBusy)
                     bw_SRTM3PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
                 if (Properties.Settings.Default.Elevation_SRTM1_Enabled && (bw_SRTM1PathCalculator != null) && !bw_SRTM1PathCalculator.IsBusy)
                     bw_SRTM1PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
+                if (Properties.Settings.Default.Elevation_ASTER3_Enabled && (bw_ASTER3PathCalculator != null) && !bw_ASTER3PathCalculator.IsBusy)
+                    bw_ASTER3PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
+                if (Properties.Settings.Default.Elevation_ASTER1_Enabled && (bw_ASTER1PathCalculator != null) && !bw_ASTER1PathCalculator.IsBusy)
+                    bw_ASTER1PathCalculator.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
                 if (Properties.Settings.Default.Map_Preloader_Enabled && (bw_MapPreloader != null) && !bw_MapPreloader.IsBusy)
                     bw_MapPreloader.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
             }
@@ -1739,7 +1814,7 @@ namespace AirScout
         {
             Say("Stopping background threads...");
             // cancel permanent background workers, wait for finish
-            int bcount = 14;
+            int bcount = 16;
             int i = 1;
             // cancel all threads
             StopBackgroundworker(bw_WinTestReceive, nameof(bw_WinTestReceive), i, bcount); i++;
@@ -1753,6 +1828,8 @@ namespace AirScout
             StopBackgroundworker(bw_GLOBEPathCalculator, nameof(bw_GLOBEPathCalculator), i, bcount); i++;
             StopBackgroundworker(bw_SRTM3PathCalculator, nameof(bw_SRTM3PathCalculator), i, bcount); i++;
             StopBackgroundworker(bw_SRTM1PathCalculator, nameof(bw_SRTM1PathCalculator), i, bcount); i++;
+            StopBackgroundworker(bw_ASTER3PathCalculator, nameof(bw_ASTER3PathCalculator), i, bcount); i++;
+            StopBackgroundworker(bw_ASTER1PathCalculator, nameof(bw_ASTER1PathCalculator), i, bcount); i++;
             StopBackgroundworker(bw_AircraftDatabaseUpdater, nameof(bw_AircraftDatabaseUpdater), i, bcount); i++;
             StopBackgroundworker(bw_StationDatabaseUpdater, nameof(bw_StationDatabaseUpdater), i, bcount); i++;
             StopBackgroundworker(bw_MapPreloader, nameof(bw_MapPreloader), i, bcount); i++;
@@ -1796,12 +1873,20 @@ namespace AirScout
                 bw_SRTM3Updater.CancelAsync();
             if (bw_SRTM1Updater != null)
                 bw_SRTM1Updater.CancelAsync();
+            if (bw_ASTER3Updater != null)
+                bw_ASTER3Updater.CancelAsync();
+            if (bw_ASTER1Updater != null)
+                bw_ASTER1Updater.CancelAsync();
             if (bw_GLOBEPathCalculator != null)
                 bw_GLOBEPathCalculator.CancelAsync();
             if (bw_SRTM3PathCalculator != null)
                 bw_SRTM3PathCalculator.CancelAsync();
             if (bw_SRTM1PathCalculator != null)
                 bw_SRTM1PathCalculator.CancelAsync();
+            if (bw_ASTER3PathCalculator != null)
+                bw_ASTER3PathCalculator.CancelAsync();
+            if (bw_ASTER1PathCalculator != null)
+                bw_ASTER1PathCalculator.CancelAsync();
         }
 
         private Bitmap CreatePlaneIcon(Color color)
@@ -2387,6 +2472,24 @@ namespace AirScout
                     st.Stop();
                     Log.WriteMessage("Propagation database SRTM1 saved, " + st.ElapsedMilliseconds.ToString() + " ms.");
                 }
+                if (PropagationData.Database.IsInMemory(ELEVATIONMODEL.ASTER3))
+                {
+                    Stopwatch st = new Stopwatch();
+                    st.Start();
+                    SayDatabase("Saving ASTER3 database...");
+                    PropagationData.Database.BackupDatabase(ELEVATIONMODEL.ASTER3);
+                    st.Stop();
+                    Log.WriteMessage("Propagation database ASTER3 saved, " + st.ElapsedMilliseconds.ToString() + " ms.");
+                }
+                if (PropagationData.Database.IsInMemory(ELEVATIONMODEL.ASTER1))
+                {
+                    Stopwatch st = new Stopwatch();
+                    st.Start();
+                    SayDatabase("Saving ASTER1 database...");
+                    PropagationData.Database.BackupDatabase(ELEVATIONMODEL.ASTER1);
+                    st.Stop();
+                    Log.WriteMessage("Propagation database ASTER1 saved, " + st.ElapsedMilliseconds.ToString() + " ms.");
+                }
                 if (AircraftData.Database.IsInMemory())
                 {
                     Stopwatch st = new Stopwatch();
@@ -2719,6 +2822,10 @@ namespace AirScout
             short elv = ElevationData.Database.ElvMissingFlag;
             // try to get elevation data from distinct elevation model
             // start with detailed one
+            if (Properties.Settings.Default.Elevation_ASTER1_Enabled && (elv == ElevationData.Database.ElvMissingFlag))
+                elv = ElevationData.Database[lat, lon, ELEVATIONMODEL.ASTER1, false];
+            if (Properties.Settings.Default.Elevation_ASTER3_Enabled && (elv == ElevationData.Database.ElvMissingFlag))
+                elv = ElevationData.Database[lat, lon, ELEVATIONMODEL.ASTER3, false];
             if (Properties.Settings.Default.Elevation_SRTM1_Enabled && (elv == ElevationData.Database.ElvMissingFlag))
                 elv = ElevationData.Database[lat, lon, ELEVATIONMODEL.SRTM1, false];
             if (Properties.Settings.Default.Elevation_SRTM3_Enabled && (elv == ElevationData.Database.ElvMissingFlag))
@@ -2736,6 +2843,32 @@ namespace AirScout
             ElvMinMaxInfo elv = new ElvMinMaxInfo();
             // try to get elevation data from distinct elevation model
             // start with detailed one
+            if (Properties.Settings.Default.Elevation_ASTER1_Enabled && (elv.MaxElv == ElevationData.Database.ElvMissingFlag))
+            {
+                ElvMinMaxInfo info = ElevationData.Database.GetMaxElvLoc(loc, ELEVATIONMODEL.ASTER1, false);
+                if (info != null)
+                {
+                    elv.MaxLat = info.MaxLat;
+                    elv.MaxLon = info.MaxLon;
+                    elv.MaxElv = info.MaxElv;
+                    elv.MinLat = info.MinLat;
+                    elv.MinLon = info.MinLon;
+                    elv.MinElv = info.MinElv;
+                }
+            }
+            if (Properties.Settings.Default.Elevation_ASTER3_Enabled && (elv.MaxElv == ElevationData.Database.ElvMissingFlag))
+            {
+                ElvMinMaxInfo info = ElevationData.Database.GetMaxElvLoc(loc, ELEVATIONMODEL.ASTER3, false);
+                if (info != null)
+                {
+                    elv.MaxLat = info.MaxLat;
+                    elv.MaxLon = info.MaxLon;
+                    elv.MaxElv = info.MaxElv;
+                    elv.MinLat = info.MinLat;
+                    elv.MinLon = info.MinLon;
+                    elv.MinElv = info.MinElv;
+                }
+            }
             if (Properties.Settings.Default.Elevation_SRTM1_Enabled && (elv.MaxElv == ElevationData.Database.ElvMissingFlag))
             {
                 ElvMinMaxInfo info = ElevationData.Database.GetMaxElvLoc(loc, ELEVATIONMODEL.SRTM1, false);
@@ -2787,7 +2920,11 @@ namespace AirScout
 
         public void SetElevationModel()
         {
-            if (Properties.Settings.Default.Elevation_SRTM1_Enabled)
+            if (Properties.Settings.Default.Elevation_ASTER1_Enabled)
+                Properties.Settings.Default.ElevationModel = ELEVATIONMODEL.ASTER1;
+            else if (Properties.Settings.Default.Elevation_ASTER3_Enabled)
+                Properties.Settings.Default.ElevationModel = ELEVATIONMODEL.ASTER3;
+            else if (Properties.Settings.Default.Elevation_SRTM1_Enabled)
                 Properties.Settings.Default.ElevationModel = ELEVATIONMODEL.SRTM1;
             else if (Properties.Settings.Default.Elevation_SRTM3_Enabled)
                 Properties.Settings.Default.ElevationModel = ELEVATIONMODEL.SRTM3;
@@ -2949,6 +3086,9 @@ namespace AirScout
                 }
                 // update map provider
                 gm_Main.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
+
+                // update map opacity
+                gm_Main.Opacity = (double)Properties.Settings.Default.Map_Opacity;
 
                 // update ToolTipFont
                 ToolTipFont = CreateFontFromString(Properties.Settings.Default.Map_ToolTipFont);
@@ -3508,7 +3648,11 @@ namespace AirScout
                 Charts_ShowLegends(5000);
                 // refresh path info
                 tp_Elevation.Text = "Pathinfo ";
-                if (Properties.Settings.Default.ElevationModel == ELEVATIONMODEL.SRTM1)
+                if (Properties.Settings.Default.ElevationModel == ELEVATIONMODEL.ASTER1)
+                    tp_Elevation.Text = tp_Elevation.Text + "[ASTER1]";
+                else if (Properties.Settings.Default.ElevationModel == ELEVATIONMODEL.ASTER3)
+                    tp_Elevation.Text = tp_Elevation.Text + "[ASTER3]";
+                else if (Properties.Settings.Default.ElevationModel == ELEVATIONMODEL.SRTM1)
                     tp_Elevation.Text = tp_Elevation.Text + "[SRTM1]";
                 else if (Properties.Settings.Default.ElevationModel == ELEVATIONMODEL.SRTM3)
                     tp_Elevation.Text = tp_Elevation.Text + "[SRTM3]";
@@ -7153,6 +7297,26 @@ namespace AirScout
                         string text = "SRTM1 Database Status\n\n" + DatabaseStatus.GetDatabaseStatusText(Properties.Settings.Default.Elevation_SRTM1_DatabaseStatus);
                         if (tsl_Database_LED_SRTM1.ToolTipText != text)
                             tsl_Database_LED_SRTM1.ToolTipText = text;
+                    }
+                    else if (sender == this.bw_ASTER3Updater)
+                    {
+                        Properties.Settings.Default.Elevation_ASTER3_DatabaseStatus = (DATABASESTATUS)e.UserState;
+                        Color color = DatabaseStatus.GetDatabaseStatusColor(Properties.Settings.Default.Elevation_ASTER3_DatabaseStatus);
+                        if (tsl_Database_LED_ASTER3.BackColor != color)
+                            tsl_Database_LED_ASTER3.BackColor = color;
+                        string text = "ASTER3 Database Status\n\n" + DatabaseStatus.GetDatabaseStatusText(Properties.Settings.Default.Elevation_ASTER3_DatabaseStatus);
+                        if (tsl_Database_LED_ASTER3.ToolTipText != text)
+                            tsl_Database_LED_ASTER3.ToolTipText = text;
+                    }
+                    else if (sender == this.bw_ASTER1Updater)
+                    {
+                        Properties.Settings.Default.Elevation_ASTER1_DatabaseStatus = (DATABASESTATUS)e.UserState;
+                        Color color = DatabaseStatus.GetDatabaseStatusColor(Properties.Settings.Default.Elevation_ASTER1_DatabaseStatus);
+                        if (tsl_Database_LED_ASTER1.BackColor != color)
+                            tsl_Database_LED_ASTER1.BackColor = color;
+                        string text = "ASTER1 Database Status\n\n" + DatabaseStatus.GetDatabaseStatusText(Properties.Settings.Default.Elevation_ASTER1_DatabaseStatus);
+                        if (tsl_Database_LED_ASTER1.ToolTipText != text)
+                            tsl_Database_LED_ASTER1.ToolTipText = text;
                     }
                 }
                 if (!this.Disposing && (ss_Main != null))

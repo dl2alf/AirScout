@@ -493,8 +493,25 @@ namespace GMap.NET.WindowsForms
       }
 #endif
 
-      // internal stuff
-      internal readonly Core Core = new Core();
+        private double _Opacity = 1.0;
+        public double Opacity
+        {
+            get
+            {
+                return _Opacity;
+            }
+            set
+            {
+                _Opacity = value;
+                if (Core.IsStarted)
+                {
+                    ReloadMap();
+                }
+            }
+        }
+
+        // internal stuff
+        internal readonly Core Core = new Core();
 
       internal readonly Font CopyrightFont = new Font(FontFamily.GenericSansSerif, 7, FontStyle.Regular);
 #if !PocketPC
@@ -530,7 +547,8 @@ namespace GMap.NET.WindowsForms
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             this.SetStyle(ControlStyles.UserPaint, true);
-            this.SetStyle(ControlStyles.Opaque, true);
+                //            this.SetStyle(ControlStyles.Opaque, true);
+            this.SetStyle(ControlStyles.Opaque, false);
             ResizeRedraw = true;
 
             TileFlipXYAttributes.SetWrapMode(WrapMode.TileFlipXY);
@@ -613,11 +631,53 @@ namespace GMap.NET.WindowsForms
          }
       }
 
-      /// <summary>
-      /// render map in GDI+
-      /// </summary>
-      /// <param name="g"></param>
-      void DrawMap(Graphics g)
+        private const int bytesPerPixel = 4;
+
+        /// <summary>  
+        /// method for changing the opacity of an image  
+        /// </summary>  
+        /// <param name="image">image to set opacity on</param>  
+        /// <param name="opacity">percentage of opacity</param>  
+        /// <returns></returns>  
+        public Image SetImageOpacity(Image image, double opacity)
+        {
+            try
+            {
+                //create a Bitmap the size of the image provided  
+                Bitmap bmp = new Bitmap(image.Width, image.Height);
+
+                //create a graphics object from the image  
+                using (Graphics gfx = Graphics.FromImage(bmp))
+                {
+
+                    //create a color matrix object  
+                    ColorMatrix matrix = new ColorMatrix();
+
+                    //set the opacity  
+                    matrix.Matrix33 = (float)opacity;
+
+                    //create image attributes  
+                    ImageAttributes attributes = new ImageAttributes();
+
+                    //set the color(opacity) of the image  
+                    attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+                    //now draw the image  
+                    gfx.DrawImage(image, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
+                }
+                return bmp;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+        }
+        /// <summary>
+        /// render map in GDI+
+        /// </summary>
+        /// <param name="g"></param>
+        void DrawMap(Graphics g)
       {
          if(Core.updatingBounds || MapProvider == EmptyProvider.Instance || MapProvider == null)
          {
@@ -665,7 +725,16 @@ namespace GMap.NET.WindowsForms
                                  if(!img.IsParent)
                                  {
 #if !PocketPC
-                                    g.DrawImage(img.Img, Core.tileRect.X, Core.tileRect.Y, Core.tileRectBearing.Width, Core.tileRectBearing.Height);
+                                    // change opacity if < 1.0
+                                    if (Opacity < 1)
+                                    {
+                                        Image im = SetImageOpacity(img.Img, Opacity);
+                                        g.DrawImage(im, Core.tileRect.X, Core.tileRect.Y, Core.tileRectBearing.Width, Core.tileRectBearing.Height);
+                                    }
+                                    else
+                                    {
+                                        g.DrawImage(img.Img, Core.tileRect.X, Core.tileRect.Y, Core.tileRectBearing.Width, Core.tileRectBearing.Height);
+                                    }
 #else
                                     g.DrawImage(img.Img, (int) Core.tileRect.X, (int) Core.tileRect.Y);
 #endif
@@ -676,8 +745,16 @@ namespace GMap.NET.WindowsForms
                                     // TODO: move calculations to loader thread
                                     System.Drawing.RectangleF srcRect = new System.Drawing.RectangleF((float)(img.Xoff * (img.Img.Width / img.Ix)), (float)(img.Yoff * (img.Img.Height / img.Ix)), (img.Img.Width / img.Ix), (img.Img.Height / img.Ix));
                                     System.Drawing.Rectangle dst = new System.Drawing.Rectangle((int)Core.tileRect.X, (int)Core.tileRect.Y, (int)Core.tileRect.Width, (int)Core.tileRect.Height);
-
-                                    g.DrawImage(img.Img, dst, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
+                                    // change opacity if < 1.0
+                                    if (Opacity < 1)
+                                    {
+                                        Image im = SetImageOpacity(img.Img, Opacity);
+                                        g.DrawImage(im, dst, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
+                                    }
+                                    else
+                                    {
+                                        g.DrawImage(img.Img, dst, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
+                                    }
                                  }
 #endif
                               }

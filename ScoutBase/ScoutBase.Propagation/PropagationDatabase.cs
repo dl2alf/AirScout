@@ -80,6 +80,8 @@ namespace ScoutBase.Propagation
         System.Data.SQLite.SQLiteDatabase globe;
         System.Data.SQLite.SQLiteDatabase srtm3;
         System.Data.SQLite.SQLiteDatabase srtm1;
+        System.Data.SQLite.SQLiteDatabase aster3;
+        System.Data.SQLite.SQLiteDatabase aster1;
 
         public PropagationDatabase()
         {
@@ -87,7 +89,7 @@ namespace ScoutBase.Propagation
             Name = "ScoutBase Propagation Database";
             Description = "The Scoutbase Propagation Database is containing propagation path and horizon information.\n" +
                 "The info is unique for one single or between two geographical locations, heights, frequency, F1-Clearance and calculation stepwidth.\n" +
-                "All calculations are based on a distinct elevation model GLOBE, SRTM3 or SRTM1.\n" +
+                "All calculations are based on a distinct elevation model GLOBE, SRTM3, SRTM1 or ASTER.\n" +
                 "All values are (pre-)calculated and stored at runtime.";
             // add table description manually
             TableDescriptions.Add(PropagationPathDesignator.TableName, "Holds propagation path information.");
@@ -95,6 +97,8 @@ namespace ScoutBase.Propagation
             globe = OpenDatabase("globe.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
             srtm3 = OpenDatabase("srtm3.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
             srtm1 = OpenDatabase("srtm1.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
+            aster3 = OpenDatabase("aster3.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
+            aster1 = OpenDatabase("aster1.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
             // create tables with schemas if not exist
             // create tables with schemas if not exist
             if (!PropagationPathTableExists(ELEVATIONMODEL.GLOBE))
@@ -103,12 +107,20 @@ namespace ScoutBase.Propagation
                 PropagationPathCreateTable(ELEVATIONMODEL.SRTM3);
             if (!PropagationPathTableExists(ELEVATIONMODEL.SRTM1))
                 PropagationPathCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!PropagationPathTableExists(ELEVATIONMODEL.ASTER3))
+                PropagationPathCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!PropagationPathTableExists(ELEVATIONMODEL.ASTER1))
+                PropagationPathCreateTable(ELEVATIONMODEL.ASTER1);
             if (!PropagationHorizonTableExists(ELEVATIONMODEL.GLOBE))
                 PropagationHorizonCreateTable(ELEVATIONMODEL.GLOBE);
             if (!PropagationHorizonTableExists(ELEVATIONMODEL.SRTM3))
                 PropagationHorizonCreateTable(ELEVATIONMODEL.SRTM3);
             if (!PropagationHorizonTableExists(ELEVATIONMODEL.SRTM1))
                 PropagationHorizonCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!PropagationHorizonTableExists(ELEVATIONMODEL.ASTER3))
+                PropagationHorizonCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!PropagationHorizonTableExists(ELEVATIONMODEL.ASTER1))
+                PropagationHorizonCreateTable(ELEVATIONMODEL.ASTER1);
             // set nearfield suppression to 0
             NearFieldSuppression = 0;
         }
@@ -118,6 +130,8 @@ namespace ScoutBase.Propagation
             CloseDatabase(globe);
             CloseDatabase(srtm3);
             CloseDatabase(srtm1);
+            CloseDatabase(aster3);
+            CloseDatabase(aster1);
         }
 
         public System.Data.SQLite.SQLiteDatabase GetPropagationDatabase(ELEVATIONMODEL model)
@@ -127,6 +141,8 @@ namespace ScoutBase.Propagation
                 case ELEVATIONMODEL.GLOBE: return globe;
                 case ELEVATIONMODEL.SRTM3: return srtm3;
                 case ELEVATIONMODEL.SRTM1: return srtm1;
+                case ELEVATIONMODEL.ASTER3: return aster3;
+                case ELEVATIONMODEL.ASTER1: return aster1;
                 default: return null;
             }
         }

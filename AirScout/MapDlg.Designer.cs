@@ -40,6 +40,7 @@
             this.ag_Azimuth = new AquaControls.AquaGauge();
             this.ag_Elevation = new AquaControls.AquaGauge();
             this.gm_Main = new GMap.NET.WindowsForms.GMapControl();
+            this.gm_Cache = new GMap.NET.WindowsForms.GMapControl();
             this.tp_News = new System.Windows.Forms.TabPage();
             this.tc_Main = new System.Windows.Forms.TabControl();
             this.tp_Elevation = new System.Windows.Forms.TabPage();
@@ -104,6 +105,8 @@
             this.tsl_Database_LED_GLOBE = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Database_LED_SRTM3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Database_LED_SRTM1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsl_Database_LED_ASTER3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsl_Database_LED_ASTER1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tt_Main = new System.Windows.Forms.ToolTip(this.components);
             this.btn_Map_PlayPause = new System.Windows.Forms.Button();
             this.btn_Map_Save = new System.Windows.Forms.Button();
@@ -174,7 +177,6 @@
             this.bw_Analysis_FileSaver = new System.ComponentModel.BackgroundWorker();
             this.bw_Analysis_FileLoader = new System.ComponentModel.BackgroundWorker();
             this.bw_AirportMapper = new System.ComponentModel.BackgroundWorker();
-            this.gm_Cache = new GMap.NET.WindowsForms.GMapControl();
             ((System.ComponentModel.ISupportInitialize)(this.sc_Map)).BeginInit();
             this.sc_Map.Panel1.SuspendLayout();
             this.sc_Map.Panel2.SuspendLayout();
@@ -334,6 +336,7 @@
             this.gm_Main.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Main.Name = "gm_Main";
             this.gm_Main.NegativeMode = false;
+            this.gm_Main.Opacity = 1D;
             this.gm_Main.PolygonsEnabled = true;
             this.gm_Main.RetryLoadTile = 0;
             this.gm_Main.RoutesEnabled = true;
@@ -351,6 +354,32 @@
             this.gm_Main.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gm_Main_MouseDown);
             this.gm_Main.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gm_Main_MouseMove);
             this.gm_Main.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gm_Main_MouseUp);
+            // 
+            // gm_Cache
+            // 
+            this.gm_Cache.Bearing = 0F;
+            this.gm_Cache.CanDragMap = true;
+            this.gm_Cache.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gm_Cache.EmptyTileColor = System.Drawing.Color.Navy;
+            this.gm_Cache.GrayScaleMode = false;
+            this.gm_Cache.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
+            this.gm_Cache.LevelsKeepInMemmory = 5;
+            this.gm_Cache.Location = new System.Drawing.Point(3, 3);
+            this.gm_Cache.MarkersEnabled = true;
+            this.gm_Cache.MaxZoom = 2;
+            this.gm_Cache.MinZoom = 2;
+            this.gm_Cache.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
+            this.gm_Cache.Name = "gm_Cache";
+            this.gm_Cache.NegativeMode = false;
+            this.gm_Cache.Opacity = 1D;
+            this.gm_Cache.PolygonsEnabled = true;
+            this.gm_Cache.RetryLoadTile = 0;
+            this.gm_Cache.RoutesEnabled = true;
+            this.gm_Cache.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
+            this.gm_Cache.ShowTileGridLines = false;
+            this.gm_Cache.Size = new System.Drawing.Size(838, 309);
+            this.gm_Cache.TabIndex = 29;
+            this.gm_Cache.Zoom = 0D;
             // 
             // tp_News
             // 
@@ -599,6 +628,7 @@
             this.gm_Nearest.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Nearest.Name = "gm_Nearest";
             this.gm_Nearest.NegativeMode = false;
+            this.gm_Nearest.Opacity = 1D;
             this.gm_Nearest.PolygonsEnabled = true;
             this.gm_Nearest.RetryLoadTile = 0;
             this.gm_Nearest.RoutesEnabled = true;
@@ -1042,7 +1072,9 @@
             this.tsl_Database_LED_Stations,
             this.tsl_Database_LED_GLOBE,
             this.tsl_Database_LED_SRTM3,
-            this.tsl_Database_LED_SRTM1});
+            this.tsl_Database_LED_SRTM1,
+            this.tsl_Database_LED_ASTER3,
+            this.tsl_Database_LED_ASTER1});
             this.ss_Main.Location = new System.Drawing.Point(0, 706);
             this.ss_Main.Name = "ss_Main";
             this.ss_Main.ShowItemToolTips = true;
@@ -1057,7 +1089,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.tsl_Status.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
             this.tsl_Status.Name = "tsl_Status";
-            this.tsl_Status.Size = new System.Drawing.Size(742, 19);
+            this.tsl_Status.Size = new System.Drawing.Size(714, 19);
             this.tsl_Status.Spring = true;
             this.tsl_Status.Text = "No Messages.";
             this.tsl_Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1153,6 +1185,32 @@
             this.tsl_Database_LED_SRTM1.Size = new System.Drawing.Size(12, 14);
             this.tsl_Database_LED_SRTM1.Text = " SRTM3 database status LED";
             this.tsl_Database_LED_SRTM1.ToolTipText = "SRTM1 database status LED";
+            // 
+            // tsl_Database_LED_ASTER3
+            // 
+            this.tsl_Database_LED_ASTER3.AutoSize = false;
+            this.tsl_Database_LED_ASTER3.BackColor = System.Drawing.Color.Plum;
+            this.tsl_Database_LED_ASTER3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
+            this.tsl_Database_LED_ASTER3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsl_Database_LED_ASTER3.Image = ((System.Drawing.Image)(resources.GetObject("tsl_Database_LED_ASTER3.Image")));
+            this.tsl_Database_LED_ASTER3.Margin = new System.Windows.Forms.Padding(1, 5, 1, 5);
+            this.tsl_Database_LED_ASTER3.Name = "tsl_Database_LED_ASTER3";
+            this.tsl_Database_LED_ASTER3.Size = new System.Drawing.Size(12, 14);
+            this.tsl_Database_LED_ASTER3.Text = " SRTM3 database status LED";
+            this.tsl_Database_LED_ASTER3.ToolTipText = "SRTM3 database status LED";
+            // 
+            // tsl_Database_LED_ASTER1
+            // 
+            this.tsl_Database_LED_ASTER1.AutoSize = false;
+            this.tsl_Database_LED_ASTER1.BackColor = System.Drawing.Color.Plum;
+            this.tsl_Database_LED_ASTER1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
+            this.tsl_Database_LED_ASTER1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsl_Database_LED_ASTER1.Image = ((System.Drawing.Image)(resources.GetObject("tsl_Database_LED_ASTER1.Image")));
+            this.tsl_Database_LED_ASTER1.Margin = new System.Windows.Forms.Padding(1, 5, 1, 5);
+            this.tsl_Database_LED_ASTER1.Name = "tsl_Database_LED_ASTER1";
+            this.tsl_Database_LED_ASTER1.Size = new System.Drawing.Size(12, 14);
+            this.tsl_Database_LED_ASTER1.Text = " SRTM3 database status LED";
+            this.tsl_Database_LED_ASTER1.ToolTipText = "SRTM3 database status LED";
             // 
             // btn_Map_PlayPause
             // 
@@ -1939,31 +1997,6 @@
             this.bw_AirportMapper.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_AirportMapper_ProgressChanged);
             this.bw_AirportMapper.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_AirportMapper_RunWorkerCompleted);
             // 
-            // gm_Cache
-            // 
-            this.gm_Cache.Bearing = 0F;
-            this.gm_Cache.CanDragMap = true;
-            this.gm_Cache.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gm_Cache.EmptyTileColor = System.Drawing.Color.Navy;
-            this.gm_Cache.GrayScaleMode = false;
-            this.gm_Cache.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
-            this.gm_Cache.LevelsKeepInMemmory = 5;
-            this.gm_Cache.Location = new System.Drawing.Point(3, 3);
-            this.gm_Cache.MarkersEnabled = true;
-            this.gm_Cache.MaxZoom = 2;
-            this.gm_Cache.MinZoom = 2;
-            this.gm_Cache.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
-            this.gm_Cache.Name = "gm_Cache";
-            this.gm_Cache.NegativeMode = false;
-            this.gm_Cache.PolygonsEnabled = true;
-            this.gm_Cache.RetryLoadTile = 0;
-            this.gm_Cache.RoutesEnabled = true;
-            this.gm_Cache.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
-            this.gm_Cache.ShowTileGridLines = false;
-            this.gm_Cache.Size = new System.Drawing.Size(838, 309);
-            this.gm_Cache.TabIndex = 29;
-            this.gm_Cache.Zoom = 0D;
-            // 
             // MapDlg
             // 
             this.AcceptButton = this.btn_Map_PlayPause;
@@ -2178,6 +2211,8 @@
         private GMap.NET.WindowsForms.GMapControl gm_Main;
         private System.Windows.Forms.TabPage tp_News;
         private GMap.NET.WindowsForms.GMapControl gm_Cache;
+        private System.Windows.Forms.ToolStripStatusLabel tsl_Database_LED_ASTER3;
+        private System.Windows.Forms.ToolStripStatusLabel tsl_Database_LED_ASTER1;
     }
 }
 

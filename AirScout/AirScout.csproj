@@ -196,6 +196,12 @@
     <Compile Include="LicenseDlg.Designer.cs">
       <DependentUpon>LicenseDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="PercentageControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PercentageControl.Designer.cs">
+      <DependentUpon>PercentageControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="PlaneFeedDisclaimerDlg.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -343,6 +349,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MapStationDlg.resx">
       <DependentUpon>MapStationDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PercentageControl.resx">
+      <DependentUpon>PercentageControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PlaneFeedDisclaimerDlg.resx">
       <DependentUpon>PlaneFeedDisclaimerDlg.cs</DependentUpon>

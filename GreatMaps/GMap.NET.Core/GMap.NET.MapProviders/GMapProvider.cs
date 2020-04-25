@@ -38,6 +38,8 @@ namespace GMap.NET.MapProviders
 
       public static readonly OpenSeaMapHybridProvider OpenSeaMapHybrid = OpenSeaMapHybridProvider.Instance;
 
+      public static readonly OpenTopoMapProvider OpenTopoMap = OpenTopoMapProvider.Instance;
+
 #if OpenStreetOsm
       public static readonly OpenStreetOsmProvider OpenStreetOsm = OpenStreetOsmProvider.Instance;
 #endif
@@ -46,7 +48,7 @@ namespace GMap.NET.MapProviders
       public static readonly OpenStreetMapSurferProvider OpenStreetMapSurfer = OpenStreetMapSurferProvider.Instance;
       public static readonly OpenStreetMapSurferTerrainProvider OpenStreetMapSurferTerrain = OpenStreetMapSurferTerrainProvider.Instance;
 #endif
-      public static readonly WikiMapiaMapProvider WikiMapiaMap = WikiMapiaMapProvider.Instance;
+        public static readonly WikiMapiaMapProvider WikiMapiaMap = WikiMapiaMapProvider.Instance;
 
       public static readonly BingMapProvider BingMap = BingMapProvider.Instance;
       public static readonly BingSatelliteMapProvider BingSatelliteMap = BingSatelliteMapProvider.Instance;

@@ -80,5 +80,41 @@
     <Setting Name="MinLon" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="Elevation_ASTER3_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ASTER3</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER3_UpdateURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">file://E:\\ElevationData\\ASTER\\V3\\ASTER3\\Locs</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER3_JSONFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">aster3.json</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER3_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER3_Update_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER1_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ASTER1</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER1_UpdateURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">file://E:\\ElevationData\\ASTER\\V3\\ASTER1\\Locs</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER1_JSONFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">aster1.json</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER1_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER1_Update_TimeStamp" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">1970-01-01</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER3_Status" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Elevation_ASTER1_Status" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

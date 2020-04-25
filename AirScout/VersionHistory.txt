@@ -1,4 +1,11 @@
-﻿2020-xx-xx: V1.3.3.3
+﻿2020-xx-xx: V1.4.0.0
+====================
+
+- Feature:	introducing ASTER Digital Elevation Model covering earth surface almost complete, but data are very raw and have to filtered, only useful when coverage > 60° needed
+- Feature:	new OpenTopoMap provider, not really suitable for surpervising aircraft travel but has very nice contour levels (based on SRTM)
+- Feature:	adjust main map opacity via "Options/Map" which is helpful in case map colors are very prominent
+
+2020-xx-xx: V1.3.3.3
 ====================
 
 - Feature:	export current path to CSV, feature was removed during change to V1.3.x

@@ -334,5 +334,149 @@ namespace ScoutBase.Elevation.Properties {
                 this["MinLon"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ASTER3")]
+        public string Elevation_ASTER3_DataPath {
+            get {
+                return ((string)(this["Elevation_ASTER3_DataPath"]));
+            }
+            set {
+                this["Elevation_ASTER3_DataPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("file://E:\\\\ElevationData\\\\ASTER\\\\V3\\\\ASTER3\\\\Locs")]
+        public string Elevation_ASTER3_UpdateURL {
+            get {
+                return ((string)(this["Elevation_ASTER3_UpdateURL"]));
+            }
+            set {
+                this["Elevation_ASTER3_UpdateURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("aster3.json")]
+        public string Elevation_ASTER3_JSONFile {
+            get {
+                return ((string)(this["Elevation_ASTER3_JSONFile"]));
+            }
+            set {
+                this["Elevation_ASTER3_JSONFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_ASTER3_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_ASTER3_TimeStamp"]));
+            }
+            set {
+                this["Elevation_ASTER3_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_ASTER3_Update_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_ASTER3_Update_TimeStamp"]));
+            }
+            set {
+                this["Elevation_ASTER3_Update_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ASTER1")]
+        public string Elevation_ASTER1_DataPath {
+            get {
+                return ((string)(this["Elevation_ASTER1_DataPath"]));
+            }
+            set {
+                this["Elevation_ASTER1_DataPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("file://E:\\\\ElevationData\\\\ASTER\\\\V3\\\\ASTER1\\\\Locs")]
+        public string Elevation_ASTER1_UpdateURL {
+            get {
+                return ((string)(this["Elevation_ASTER1_UpdateURL"]));
+            }
+            set {
+                this["Elevation_ASTER1_UpdateURL"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("aster1.json")]
+        public string Elevation_ASTER1_JSONFile {
+            get {
+                return ((string)(this["Elevation_ASTER1_JSONFile"]));
+            }
+            set {
+                this["Elevation_ASTER1_JSONFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_ASTER1_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_ASTER1_TimeStamp"]));
+            }
+            set {
+                this["Elevation_ASTER1_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
+        public global::System.DateTime Elevation_ASTER1_Update_TimeStamp {
+            get {
+                return ((global::System.DateTime)(this["Elevation_ASTER1_Update_TimeStamp"]));
+            }
+            set {
+                this["Elevation_ASTER1_Update_TimeStamp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UNDEFINED")]
+        public global::System.Data.SQLite.DATABASESTATUS Elevation_ASTER3_Status {
+            get {
+                return ((global::System.Data.SQLite.DATABASESTATUS)(this["Elevation_ASTER3_Status"]));
+            }
+            set {
+                this["Elevation_ASTER3_Status"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UNDEFINED")]
+        public global::System.Data.SQLite.DATABASESTATUS Elevation_ASTER1_Status {
+            get {
+                return ((global::System.Data.SQLite.DATABASESTATUS)(this["Elevation_ASTER1_Status"]));
+            }
+            set {
+                this["Elevation_ASTER1_Status"] = value;
+            }
+        }
     }
 }
