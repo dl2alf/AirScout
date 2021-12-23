@@ -102,13 +102,13 @@ namespace System.Data.SQLite
                     if (index < 0)
                         index = i;
                     // Console.WriteLine("[" + T.Name + ".FillFromRow] DataColumn not found: " + p.Name);
-                    if (p.PropertyType.Name.ToUpper() == "STRING")
-                        p.SetValue(this, (row[index].GetType().Name != "DBNull") ? row[index] : null, null);
-                    else if ((p.PropertyType.Name.ToUpper() == "FLOAT") || (p.PropertyType.Name.ToUpper() == "DOUBLE"))
-                        p.SetValue(this, (row[index].GetType().Name != "DBNull") ? row[index] : null, null);
-                    else if (p.PropertyType.Name.ToUpper() == "INT32")
-                        p.SetValue(this, (row[index].GetType().Name != "DBNull") ? row[index] : null, null);
-                    else if (p.PropertyType.Name.ToUpper() == "DATETIME")
+                    if (p.PropertyType == typeof(string))
+                        p.SetValue(this, (row[index].GetType() != typeof(DBNull)) ? row[index] : null, null);
+                    else if ((p.PropertyType == typeof(float)) || (p.PropertyType == typeof(double)))
+                        p.SetValue(this, (row[index].GetType() !=typeof(DBNull)) ? row[index] : null, null);
+                    else if (p.PropertyType == typeof(int))
+                        p.SetValue(this, (row[index].GetType() != typeof(DBNull)) ? row[index] : null, null);
+                    else if (p.PropertyType == typeof(DateTime))
                     {
 
                         if ((row[index].GetType() == typeof(int)) || (row[index].GetType() == typeof(long)))
@@ -118,7 +118,7 @@ namespace System.Data.SQLite
                         else
                             p.SetValue(this, row[index], null);
                     }
-                    else if (p.PropertyType.BaseType.Name.ToUpper() == "ENUM")
+                    else if (p.PropertyType.BaseType == typeof(Enum))
                         p.SetValue(this, System.Convert.ToInt32(row[index]), null);
                     else
                         p.SetValue(this, ByteArrayToObject((byte[])row[index]), null);
@@ -154,13 +154,13 @@ namespace System.Data.SQLite
                     if (index < 0)
                         index = i;
                     // Console.WriteLine("[" + T.Name + ".FillFromRow] DataColumn not found: " + p.Name);
-                    if (p.PropertyType.Name.ToUpper() == "STRING")
-                        p.SetValue(this, (record[index].GetType().Name != "DBNull") ? record[index] : null, null);
-                    else if ((p.PropertyType.Name.ToUpper() == "FLOAT") || (p.PropertyType.Name.ToUpper() == "DOUBLE"))
-                        p.SetValue(this, (record[index].GetType().Name != "DBNull") ? record[index] : null, null);
-                    else if (p.PropertyType.Name.ToUpper() == "INT32")
-                        p.SetValue(this, (record[index].GetType().Name != "DBNull") ? record[index] : null, null);
-                    else if (p.PropertyType.Name.ToUpper() == "DATETIME")
+                    if (p.PropertyType == typeof(string))
+                        p.SetValue(this, (record[index].GetType() != typeof (DBNull)) ? record[index] : null, null);
+                    else if ((p.PropertyType == typeof(float)) || (p.PropertyType == typeof(double)))
+                        p.SetValue(this, (record[index].GetType() != typeof(DBNull)) ? record[index] : null, null);
+                    else if (p.PropertyType == typeof(int))
+                        p.SetValue(this, (record[index].GetType() != typeof(DBNull)) ? record[index] : null, null);
+                    else if (p.PropertyType == typeof(DateTime))
                     {
 
                         if ((record[index].GetType() == typeof(int)) || (record[index].GetType() == typeof(long)))
@@ -170,7 +170,7 @@ namespace System.Data.SQLite
                         else
                             p.SetValue(this, record[index], null);
                     }
-                    else if (p.PropertyType.BaseType.Name.ToUpper() == "ENUM")
+                    else if (p.PropertyType.BaseType == typeof(Enum))
                         p.SetValue(this, System.Convert.ToInt32(record[index]), null);
                     else
                         p.SetValue(this, ByteArrayToObject((byte[])record[index]), null);

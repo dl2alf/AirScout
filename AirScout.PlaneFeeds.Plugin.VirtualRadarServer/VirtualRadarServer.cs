@@ -368,7 +368,6 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
             Console.WriteLine("[" + this.GetType().Name + "]: Analyzing data");
             //            JavaScriptSerializer js = new JavaScriptSerializer();
             //            dynamic root = js.Deserialize<dynamic>(json);
-            dynamic root = JsonConvert.DeserializeObject(json);
             // 2017-07-23: workaround for "jumping planes" due to incorrect time stamps
             // try to get the server time to adjust the time stamps in plane positions
             // --> compare server time with local time and calculate offset
@@ -376,6 +375,9 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
             long toffset = 0;
             try
             {
+                // deserialize JSON
+                dynamic root = JsonConvert.DeserializeObject(json);
+
                 // get local time of request in milliseconds
                 DateTime lt = DateTime.UtcNow;
                 long ltime = (long)(lt - new DateTime(1970, 1, 1)).TotalMilliseconds;

@@ -117,15 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label19.Text" xml:space="preserve">
-    <value>Update station details here. Exact lat/long values are essential for calculation of the radio horizon.
-Use the lat/lon textboxes for numeric input or enter a valid Maidenhead Locator.
-Drag the needle on the map for exact location. Use mouse wheel or +/- buttons to zoom in and out.</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Use this dialog to find and remove a single station/locator combination from the local station database. 
+CAUTION: You can only remove own entries permanently. If a station/locator combination is part of the global database it would be re-inserted on next update.</value>
   </data>
-  <metadata name="ss_Main.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="bw_Elevationgrid.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>111, 17</value>
-  </metadata>
 </root>

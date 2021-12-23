@@ -40,7 +40,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.gm_Callsign = new GMap.NET.WindowsForms.GMapControl();
             this.tb_Callsign = new ScoutBase.Core.CallsignTextBox();
-            this.tb_Locator = new ScoutBase.Core.LocatorTextBox();
             this.tb_Longitude = new ScoutBase.Core.DoubleTextBox();
             this.tb_Latitude = new ScoutBase.Core.DoubleTextBox();
             this.btn_Cancel = new System.Windows.Forms.Button();
@@ -48,6 +47,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tb_Elevation = new ScoutBase.Core.DoubleTextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.ss_Main = new System.Windows.Forms.StatusStrip();
+            this.tsl_Status = new System.Windows.Forms.ToolStripStatusLabel();
+            this.bw_Elevationgrid = new System.ComponentModel.BackgroundWorker();
+            this.tb_Locator = new ScoutBase.Core.LocatorTextBox();
+            this.cb_Options_StationsMap_OverlayElevation = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.ss_Main.SuspendLayout();
             this.SuspendLayout();
             // 
             // label19
@@ -153,7 +159,7 @@
             this.gm_Callsign.RoutesEnabled = true;
             this.gm_Callsign.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gm_Callsign.ShowTileGridLines = false;
-            this.gm_Callsign.Size = new System.Drawing.Size(760, 621);
+            this.gm_Callsign.Size = new System.Drawing.Size(760, 617);
             this.gm_Callsign.TabIndex = 29;
             this.gm_Callsign.Zoom = 0D;
             this.gm_Callsign.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.gm_Callsign_OnMarkerEnter);
@@ -176,19 +182,6 @@
             this.tb_Callsign.Size = new System.Drawing.Size(107, 21);
             this.tb_Callsign.TabIndex = 30;
             // 
-            // tb_Locator
-            // 
-            this.tb_Locator.DataBindings.Add(new System.Windows.Forms.Binding("SmallLettersForSubsquares", global::AirScout.Properties.Settings.Default, "Locator_SmallLettersForSubsquares", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Locator.ErrorBackColor = System.Drawing.Color.Red;
-            this.tb_Locator.ErrorForeColor = System.Drawing.Color.White;
-            this.tb_Locator.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Locator.Location = new System.Drawing.Point(875, 140);
-            this.tb_Locator.Name = "tb_Locator";
-            this.tb_Locator.Size = new System.Drawing.Size(107, 21);
-            this.tb_Locator.SmallLettersForSubsquares = global::AirScout.Properties.Settings.Default.Locator_SmallLettersForSubsquares;
-            this.tb_Locator.TabIndex = 35;
-            this.tb_Locator.TextChanged += new System.EventHandler(this.tb_Locator_TextChanged);
-            // 
             // tb_Longitude
             // 
             this.tb_Longitude.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -199,7 +192,7 @@
             this.tb_Longitude.Name = "tb_Longitude";
             this.tb_Longitude.Size = new System.Drawing.Size(107, 21);
             this.tb_Longitude.TabIndex = 33;
-            this.tb_Longitude.Text = "10.68327000";
+            this.tb_Longitude.Text = "10.68327";
             this.tb_Longitude.Value = 10.68327D;
             this.tb_Longitude.TextChanged += new System.EventHandler(this.tb_Longitude_TextChanged);
             // 
@@ -213,14 +206,14 @@
             this.tb_Latitude.Name = "tb_Latitude";
             this.tb_Latitude.Size = new System.Drawing.Size(107, 21);
             this.tb_Latitude.TabIndex = 32;
-            this.tb_Latitude.Text = "50.93706700";
+            this.tb_Latitude.Text = "50.937067";
             this.tb_Latitude.Value = 50.937067D;
             this.tb_Latitude.TextChanged += new System.EventHandler(this.tb_Latitude_TextChanged);
             // 
             // btn_Cancel
             // 
             this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btn_Cancel.Location = new System.Drawing.Point(806, 685);
+            this.btn_Cancel.Location = new System.Drawing.Point(804, 665);
             this.btn_Cancel.Name = "btn_Cancel";
             this.btn_Cancel.Size = new System.Drawing.Size(75, 23);
             this.btn_Cancel.TabIndex = 44;
@@ -231,7 +224,7 @@
             // btn_OK
             // 
             this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btn_OK.Location = new System.Drawing.Point(907, 685);
+            this.btn_OK.Location = new System.Drawing.Point(907, 665);
             this.btn_OK.Name = "btn_OK";
             this.btn_OK.Size = new System.Drawing.Size(75, 23);
             this.btn_OK.TabIndex = 45;
@@ -271,6 +264,63 @@
             this.label2.TabIndex = 49;
             this.label2.Text = "m asl";
             // 
+            // ss_Main
+            // 
+            this.ss_Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsl_Status});
+            this.ss_Main.Location = new System.Drawing.Point(0, 707);
+            this.ss_Main.Name = "ss_Main";
+            this.ss_Main.Size = new System.Drawing.Size(1008, 22);
+            this.ss_Main.TabIndex = 50;
+            this.ss_Main.Text = "statusStrip1";
+            // 
+            // tsl_Status
+            // 
+            this.tsl_Status.Name = "tsl_Status";
+            this.tsl_Status.Size = new System.Drawing.Size(39, 17);
+            this.tsl_Status.Text = "Status";
+            // 
+            // bw_Elevationgrid
+            // 
+            this.bw_Elevationgrid.WorkerReportsProgress = true;
+            this.bw_Elevationgrid.WorkerSupportsCancellation = true;
+            this.bw_Elevationgrid.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_Elevationgrid_DoWork);
+            this.bw_Elevationgrid.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_Elevationgrid_ProgressChanged);
+            this.bw_Elevationgrid.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_Elevationgrid_RunWorkerCompleted);
+            // 
+            // tb_Locator
+            // 
+            this.tb_Locator.DataBindings.Add(new System.Windows.Forms.Binding("SmallLettersForSubsquares", global::AirScout.Properties.Settings.Default, "Locator_SmallLettersForSubsquares", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Locator.ErrorBackColor = System.Drawing.Color.Red;
+            this.tb_Locator.ErrorForeColor = System.Drawing.Color.White;
+            this.tb_Locator.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Locator.Location = new System.Drawing.Point(875, 140);
+            this.tb_Locator.Name = "tb_Locator";
+            this.tb_Locator.Size = new System.Drawing.Size(107, 21);
+            this.tb_Locator.SmallLettersForSubsquares = global::AirScout.Properties.Settings.Default.Locator_SmallLettersForSubsquares;
+            this.tb_Locator.TabIndex = 35;
+            this.tb_Locator.TextChanged += new System.EventHandler(this.tb_Locator_TextChanged);
+            // 
+            // cb_Options_StationsMap_OverlayElevation
+            // 
+            this.cb_Options_StationsMap_OverlayElevation.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cb_Options_StationsMap_OverlayElevation.Checked = global::AirScout.Properties.Settings.Default.StationsMap_OverlayElevation;
+            this.cb_Options_StationsMap_OverlayElevation.Location = new System.Drawing.Point(804, 267);
+            this.cb_Options_StationsMap_OverlayElevation.Name = "cb_Options_StationsMap_OverlayElevation";
+            this.cb_Options_StationsMap_OverlayElevation.Size = new System.Drawing.Size(178, 46);
+            this.cb_Options_StationsMap_OverlayElevation.TabIndex = 51;
+            this.cb_Options_StationsMap_OverlayElevation.Text = "Overlay Elevation Grid \r\n(on zom levels >= 17)";
+            this.cb_Options_StationsMap_OverlayElevation.UseVisualStyleBackColor = true;
+            this.cb_Options_StationsMap_OverlayElevation.CheckedChanged += new System.EventHandler(this.cb_Options_StationsMap_OverlayElevation_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(813, 434);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(0, 13);
+            this.label3.TabIndex = 52;
+            // 
             // MapStationDlg
             // 
             this.AcceptButton = this.btn_OK;
@@ -278,6 +328,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btn_Cancel;
             this.ClientSize = new System.Drawing.Size(1008, 729);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.cb_Options_StationsMap_OverlayElevation);
+            this.Controls.Add(this.ss_Main);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tb_Elevation);
             this.Controls.Add(this.label1);
@@ -302,6 +355,9 @@
             this.MinimizeBox = false;
             this.Name = "MapStationDlg";
             this.Text = "MapStationDlg";
+            this.Load += new System.EventHandler(this.MapStationDlg_Load);
+            this.ss_Main.ResumeLayout(false);
+            this.ss_Main.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -328,5 +384,10 @@
         private System.Windows.Forms.Label label1;
         private ScoutBase.Core.DoubleTextBox tb_Elevation;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.StatusStrip ss_Main;
+        private System.Windows.Forms.ToolStripStatusLabel tsl_Status;
+        private System.ComponentModel.BackgroundWorker bw_Elevationgrid;
+        private System.Windows.Forms.CheckBox cb_Options_StationsMap_OverlayElevation;
+        private System.Windows.Forms.Label label3;
     }
 }

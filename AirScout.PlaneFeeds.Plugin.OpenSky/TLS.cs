@@ -43,7 +43,98 @@ namespace System.Net
             return clientExtensions;
         }
 
-        public static string DownloadFile (string url, int timeout)
+        private static bool ReadContent(Stream stream, int contentlength, int timeout, ref string response)
+        {
+            // set stop watch as timout
+            Stopwatch st = new Stopwatch();
+            st.Start();
+            string resp = "";
+            int count = 0;
+            // assign buffer
+            byte[] buff = new byte[1];
+            int bytesread = 0;
+            // read content bytewise
+            while (bytesread < contentlength)
+            {
+                bytesread += stream.Read(buff, 0, buff.Length);
+                // add it to response
+                resp += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                if (st.ElapsedMilliseconds > timeout)
+                    throw new TimeoutException("Connection timed out.");
+            }
+            string trailer = "";
+            // reassign buffer
+            buff = new byte[1];
+            // read stream bytewise until CRLFCRLF is detected, should be the next two bytes
+            do
+            {
+                count = stream.Read(buff, 0, buff.Length);
+                trailer += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                if (st.ElapsedMilliseconds > timeout)
+                    throw new TimeoutException("Connection timed out.");
+            }
+            while (!trailer.Contains("\r\n"));
+            Console.WriteLine("Reading content [" + contentlength.ToString() + " bytes]: " + resp);
+            response += resp;
+            return true;
+        }
+
+        private static bool ReadChunkedContent(Stream stream, int timeout, ref string response)
+        {
+            // set stop watch as timout
+            Stopwatch st = new Stopwatch();
+            st.Start();
+            string resp = "";
+            byte[] buff = new byte[1];
+            int count = 0;
+            string strcontentlength = "";
+            int contentlength = 0;
+            // chunked transfer, first line should contain content length
+            // read stream bytewise until CRLF is detected
+            do
+            {
+                count = stream.Read(buff, 0, buff.Length);
+                strcontentlength += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                if (st.ElapsedMilliseconds > timeout)
+                    throw new TimeoutException("Connection timed out.");
+            }
+            while (!strcontentlength.Contains("\r\n"));
+            strcontentlength = strcontentlength.Replace("\r\n", "");
+            contentlength = int.Parse(strcontentlength, System.Globalization.NumberStyles.HexNumber);
+            // finished reading all chunks
+            if (contentlength == 0)
+            {
+                Console.WriteLine("Reading chunked content finished");
+                return true;
+            }
+            int bytesread = 0;
+            // read content bytewise
+            while (bytesread < contentlength)
+            {
+                bytesread += stream.Read(buff, 0, buff.Length);
+                // add it to response
+                resp += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                if (st.ElapsedMilliseconds > timeout)
+                    throw new TimeoutException("Connection timed out.");
+            }
+            string trailer = "";
+            // reassign buffer
+            buff = new byte[1];
+            // read stream bytewise until CRLFCRLF is detected, should be the next two bytes
+            do
+            {
+                count = stream.Read(buff, 0, buff.Length);
+                trailer += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                if (st.ElapsedMilliseconds > timeout)
+                    throw new TimeoutException("Connection timed out.");
+            }
+            while (!trailer.Contains("\r\n"));
+            Console.WriteLine("Reading chunked content [" + contentlength.ToString() + " bytes]: " + resp);
+            response += resp;
+            return false;
+        }
+
+        public static string DownloadFile(string url, int timeout)
         {
             string response = "";
             Uri uri = null;
@@ -76,13 +167,15 @@ namespace System.Net
                     var dataToSend = Encoding.ASCII.GetBytes(hdr.ToString());
 
                     stream.Write(dataToSend, 0, dataToSend.Length);
+
+                    byte[] buff;
                     // set stop watch as timout
                     Stopwatch st = new Stopwatch();
                     st.Start();
                     //read header bytewise
                     string header = "";
                     int totalRead = 0;
-                    byte[] buff = new byte[1];
+                    buff = new byte[1];
                     do
                     {
                         totalRead = stream.Read(buff, 0, buff.Length);
@@ -91,47 +184,20 @@ namespace System.Net
                             throw new TimeoutException("Connection to " + url + " timed out.");
                     }
                     while (!header.Contains("\r\n\r\n"));
+                    Console.Write(header);
                     int contentlength = 0;
                     if (header.Contains("Transfer-Encoding: chunked"))
                     {
-                        // chunked transfer, first line should contain content length
-                        string strcontentlength = "";
-                        do
-                        {
-                            totalRead = stream.Read(buff, 0, buff.Length);
-                            strcontentlength += Encoding.ASCII.GetString(buff, 0, buff.Length);
-                            if (st.ElapsedMilliseconds > timeout)
-                                throw new TimeoutException("Connection to " + url + " timed out.");
-                        }
-                        while (!strcontentlength.Contains("\r\n"));
-                        strcontentlength = strcontentlength.Replace("\r\n", "");
-                        contentlength = int.Parse(strcontentlength, System.Globalization.NumberStyles.HexNumber);
+                        // chunked transfer, read all chunks until complete
+                        while (!ReadChunkedContent(stream, timeout, ref response))
+                        { }
                     }
                     else
                     {
                         // get content length from header
-                        Regex strcontentlength = new Regex("(?<=Content-Length:\\s)\\d+", RegexOptions.IgnoreCase);
-                        contentlength = int.Parse(strcontentlength.Match(header).Value);
-                    }
-                    // re-assign buffer
-                    // read response
-                    buff = new byte[1000];
-                    totalRead = 0;
-                    do
-                    {
-                        int bytesRead = stream.Read(buff, 0, buff.Length);
-                        string part = Encoding.UTF8.GetString(buff, 0, bytesRead);
-                        Console.WriteLine(part);
-                        response += part;
-                        totalRead += bytesRead;
-                        if (st.ElapsedMilliseconds > timeout)
-                            throw new TimeoutException("Connection to " + url + " timed out.");
-                    }
-                    while (totalRead < contentlength);
-                    // cut response at the end
-                    if (response.Contains("\r\n"))
-                    {
-                        response = response.Substring(0, response.IndexOf("\r\n"));
+                        Regex rcontentlength = new Regex("(?<=Content-Length:\\s)\\d+", RegexOptions.IgnoreCase);
+                        contentlength = int.Parse(rcontentlength.Match(header).Value);
+                        ReadContent(stream, contentlength, timeout, ref response);
                     }
                     st.Stop();
                 }

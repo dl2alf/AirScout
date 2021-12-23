@@ -1,4 +1,18 @@
-﻿2020-04-25: V1.3.3.4
+﻿2021-12-23: V1.3.3.6
+====================
+
+- Feature:  Elevation grid overlay on "Optionms/Stations/Map" to better understand elevation resolution issues and local situation (for zoom levels >= 17)
+- Bugfix:	AirScout crashes when opening Crossing History Dialog window  --> fixed (tnx PU34HAG)
+- Bugfix:	Near field suppression did not work correctly, showing strange local obstructions under some circumstances --> fixed
+- Bugfix:	No more planes visible (Exception messages shown in status bar and log file) with some language settings (at least Turkish) --> fixed (tnx TA2NC)
+
+2020-04-25: V1.3.3.5
+====================
+
+- Bugfix:	Chunked transport of web content failed while fetching plane feeds (OpenSky, Virtual Radar Server) --> fixed
+- Bugfix:	Drawing map throws an exception under some circumstances --> fixed, added some error handling (tnx SM7LCB)
+
+2020-04-25: V1.3.3.4
 ====================
 
 - Bugfix:	AirScout always reverts to default call signs (DL2ALF <> GB3MHZ) when area of interest is set outside Europe --> fixed (tnx VK3VG)
