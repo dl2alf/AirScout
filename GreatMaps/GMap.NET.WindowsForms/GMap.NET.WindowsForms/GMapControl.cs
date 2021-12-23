@@ -657,29 +657,36 @@ namespace GMap.NET.WindowsForms
                         {
                            foreach(WindowsFormsImage img in t.Overlays)
                            {
-                              if(img != null && img.Img != null)
+                              try
                               {
-                                 if(!found)
-                                    found = true;
+                                    if (img != null && img.Img != null)
+                                    {
+                                        if (!found)
+                                            found = true;
 
-                                 if(!img.IsParent)
-                                 {
+                                        if (!img.IsParent)
+                                        {
 #if !PocketPC
-                                    g.DrawImage(img.Img, Core.tileRect.X, Core.tileRect.Y, Core.tileRectBearing.Width, Core.tileRectBearing.Height);
+                                            g.DrawImage(img.Img, Core.tileRect.X, Core.tileRect.Y, Core.tileRectBearing.Width, Core.tileRectBearing.Height);
 #else
-                                    g.DrawImage(img.Img, (int) Core.tileRect.X, (int) Core.tileRect.Y);
+                                g.DrawImage(img.Img, (int) Core.tileRect.X, (int) Core.tileRect.Y);
 #endif
-                                 }
+                                        }
 #if !PocketPC
-                                 else
-                                 {
-                                    // TODO: move calculations to loader thread
-                                    System.Drawing.RectangleF srcRect = new System.Drawing.RectangleF((float)(img.Xoff * (img.Img.Width / img.Ix)), (float)(img.Yoff * (img.Img.Height / img.Ix)), (img.Img.Width / img.Ix), (img.Img.Height / img.Ix));
-                                    System.Drawing.Rectangle dst = new System.Drawing.Rectangle((int)Core.tileRect.X, (int)Core.tileRect.Y, (int)Core.tileRect.Width, (int)Core.tileRect.Height);
+                                        else
+                                        {
+                                            // TODO: move calculations to loader thread
+                                            System.Drawing.RectangleF srcRect = new System.Drawing.RectangleF((float)(img.Xoff * (img.Img.Width / img.Ix)), (float)(img.Yoff * (img.Img.Height / img.Ix)), (img.Img.Width / img.Ix), (img.Img.Height / img.Ix));
+                                            System.Drawing.Rectangle dst = new System.Drawing.Rectangle((int)Core.tileRect.X, (int)Core.tileRect.Y, (int)Core.tileRect.Width, (int)Core.tileRect.Height);
 
-                                    g.DrawImage(img.Img, dst, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
-                                 }
+                                            g.DrawImage(img.Img, dst, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
+                                        }
 #endif
+                                    }
+                              }
+                              catch (Exception ex)
+                              {
+                                   Console.WriteLine("GMapControl: Error while drwing Image: " + ex.Message);
                               }
                            }
                         }

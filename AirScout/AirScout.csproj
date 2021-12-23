@@ -136,6 +136,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeleteSingleStationDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeleteSingleStationDlg.Designer.cs">
+      <DependentUpon>DeleteSingleStationDlg.cs</DependentUpon>
+    </Compile>
     <Compile Include="MapPreloader.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -314,6 +320,7 @@
     <None Include="Resources\AirScout_Marker.png" />
     <None Include="Resources\AirScout_Watchlist.png" />
     <None Include="Resources\Settings.png" />
+    <Content Include="Requirements.txt" />
     <Content Include="VersionHistory.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -328,6 +335,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DatabaseMaintenanceDlg.resx">
       <DependentUpon>DatabaseMaintenanceDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeleteSingleStationDlg.resx">
+      <DependentUpon>DeleteSingleStationDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ElevationCopyrightDlg.resx">
       <DependentUpon>ElevationCopyrightDlg.cs</DependentUpon>

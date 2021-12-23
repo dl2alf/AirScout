@@ -470,17 +470,17 @@ namespace ScoutBase.Propagation
                 double eps1;
                 double eps2;
                 if (dist1 > nf)
+                {
                     eps1 = ScoutBase.Core.Propagation.EpsilonFromHeights(h1, dist1, ep.Path[i] + f1c1, radius);
-                else
-                    eps1 = ScoutBase.Core.Propagation.EpsilonFromHeights(h1, nf, ep.Path[i] + f1c1, radius);
-                if (eps1 > eps1_min)
-                    eps1_min = eps1;
+                    if (eps1 > eps1_min)
+                        eps1_min = eps1;
+                }
                 if (dist2 > nf)
+                {
                     eps2 = ScoutBase.Core.Propagation.EpsilonFromHeights(h2, dist2, ep.Path[i] + f1c2, radius);
-                else
-                    eps2 = ScoutBase.Core.Propagation.EpsilonFromHeights(h2, nf, ep.Path[i] + f1c2, radius);
-                if (eps2 > eps2_min)
-                    eps2_min = eps2;
+                    if (eps2 > eps2_min)
+                        eps2_min = eps2;
+                }
                 if (caller != null)
                 {
                     // abort calculation if cancellation pending

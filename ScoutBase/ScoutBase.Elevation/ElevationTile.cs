@@ -162,8 +162,8 @@ namespace ScoutBase.Elevation
         /// <returns>The elevation. ElvMissingFlag if not found.</returns>
         public short GetElevation (double lat, double lon)
         {
-            int i = (int)((lat - BaseLat) / StepWidthLat);
-            int j = (int)((lon - BaseLon) / StepWidthLon);
+            int i = (int)(((lat - BaseLat) / StepWidthLat));
+            int j = (int)(((lon - BaseLon) / StepWidthLon));
             try
             {
                 return Elv[j,i];

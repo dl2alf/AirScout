@@ -451,6 +451,7 @@
             this.bw_SRTM1_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_GLOBE_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_StationDataUpdater = new System.ComponentModel.BackgroundWorker();
+            this.btn_DeleteSingleStation = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).BeginInit();
             this.tab_Options_Planes.SuspendLayout();
             this.groupBox48.SuspendLayout();
@@ -3644,6 +3645,7 @@
             // 
             // groupBox47
             // 
+            this.groupBox47.Controls.Add(this.btn_DeleteSingleStation);
             this.groupBox47.Controls.Add(this.btn_DeleteAllMapTiles);
             this.groupBox47.Controls.Add(this.btn_Options_DeleteAllPropagationPaths);
             this.groupBox47.Controls.Add(this.btn_Options_DeleteAllElevationPaths);
@@ -5757,6 +5759,18 @@
             this.bw_StationDataUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_StationDataUpdater_ProgressChanged);
             this.bw_StationDataUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_StationDataUpdater_RunWorkerCompleted);
             // 
+            // btn_DeleteSingleStation
+            // 
+            this.btn_DeleteSingleStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_DeleteSingleStation.Location = new System.Drawing.Point(165, 48);
+            this.btn_DeleteSingleStation.Name = "btn_DeleteSingleStation";
+            this.btn_DeleteSingleStation.Size = new System.Drawing.Size(122, 23);
+            this.btn_DeleteSingleStation.TabIndex = 3;
+            this.btn_DeleteSingleStation.Text = "Delete Single Station";
+            this.tt_Options.SetToolTip(this.btn_DeleteSingleStation, "Deletes all cached map tiles from database");
+            this.btn_DeleteSingleStation.UseVisualStyleBackColor = true;
+            this.btn_DeleteSingleStation.Click += new System.EventHandler(this.btn_DeleteSingleStation_Click);
+            // 
             // OptionsDlg
             // 
             this.AcceptButton = this.btn_Options_OK;
@@ -6329,5 +6343,6 @@
         private System.Windows.Forms.Label label105;
         private System.Windows.Forms.Label label145;
         private System.Windows.Forms.Button btn_Options_Path_Export;
+        private System.Windows.Forms.Button btn_DeleteSingleStation;
     }
 }

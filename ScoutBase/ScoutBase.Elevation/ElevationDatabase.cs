@@ -428,6 +428,18 @@ namespace ScoutBase.Elevation
             }
             return 0;
         }
+
+        public Color GetElevationColor(double elv)
+        {
+            DEMColorPalette palette = new DEMColorPalette();
+            double e = (double)(elv) / 100.0;
+            if (e < 0)
+                e = 0;
+            if (e > 100)
+                e = 100;
+            return palette.GetColor(e);
+        }
+
         public Bitmap DrawElevationBitmap(double minlat, double minlon, double maxlat, double maxlon, int width, int height, ELEVATIONMODEL model)
         {
             int minelv = 0;
@@ -1714,7 +1726,7 @@ namespace ScoutBase.Elevation
                 for (int j = 0; j < bm.Height; j++)
                     bm.SetPixel(i, j, c);
             }
-            bm.Save("DEMPalette.bmp");
+            // bm.Save("DEMPalette.bmp");
         }
 
         public Color GetColor(double percentage)
