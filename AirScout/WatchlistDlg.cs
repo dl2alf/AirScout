@@ -48,6 +48,17 @@ namespace AirScout
                 dgv_Watchlist_Callsigns.DataSource = null;
                 foreach (LocationDesignator ld in AllLocations)
                 {
+                    if (Properties.Settings.Default.Location_RestrictToAreaOfInterest)
+                    {
+                        if (ld.Lat < Properties.Settings.Default.MinLat)
+                            continue;
+                        if (ld.Lat > Properties.Settings.Default.MaxLat)
+                            continue;
+                        if (ld.Lon < Properties.Settings.Default.MinLon)
+                            continue;
+                        if (ld.Lon > Properties.Settings.Default.MaxLon)
+                            continue;
+                    }
                     DataRow row = AllCallsigns.NewRow();
                     row[0] = ld.Call;
                     row[1] = ld.Loc;
