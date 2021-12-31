@@ -1,0 +1,5 @@
+***************** AirScout Requirements **************************
+
+- Snooze button for alarm on main window, clickable in PLAY mode ()
+
+

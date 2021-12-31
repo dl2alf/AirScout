@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -9,32 +10,46 @@ namespace ScoutBase.Core
     public enum BAND
     {
         [StringCustomAttribute("None")]
+        [Description("None")]
         BNONE = 0,
         [StringCustomAttribute("50M")]
+        [Description("50M")]
         B50M = 50,
         [StringCustomAttribute("70M")]
+        [Description("70M")]
         B70M = 70,
         [StringCustomAttribute("144M")]
+        [Description("144M")]
         B144M = 144,
         [StringCustomAttribute("432M")]
+        [Description("432M")]
         B432M = 432,
         [StringCustomAttribute("1.2G")]
+        [Description("1.2G")]
         B1_2G = 1296,
         [StringCustomAttribute("2.3G")]
+        [Description("2.3G")]
         B2_3G = 2320,
         [StringCustomAttribute("3.4G")]
+        [Description("3.4G")]
         B3_4G = 3400,
         [StringCustomAttribute("5.7G")]
+        [Description("5.7G")]
         B5_7G = 5760,
         [StringCustomAttribute("10G")]
+        [Description("10G")]
         B10G = 10368,
         [StringCustomAttribute("24G")]
+        [Description("24G")]
         B24G = 24048,
         [StringCustomAttribute("47G")]
+        [Description("47G")]
         B47G = 47088,
         [StringCustomAttribute("76G")]
+        [Description("76G")]
         B76G = 76032,
         [StringCustomAttribute("All")]
+        [Description("All")]
         BALL = 999999999
     }
 
@@ -151,9 +166,19 @@ namespace ScoutBase.Core
             return bands[i - 1];
         }
 
+        public static double ToHz(BAND band)
+        {
+            return (int)band * 1000000.0;
+        }
+
+        public static double To10Hz(BAND band)
+        {
+            return (int)band * 100000.0;
+        }
+
         public static double To100Hz(BAND band)
         {
-            return (int)band *10000.0;
+            return (int)band * 10000.0;
         }
 
         public static double TokHz(BAND band)

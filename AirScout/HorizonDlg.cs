@@ -311,7 +311,7 @@ namespace AirScout
                 {
                     using (StreamWriter sw = new StreamWriter(Dlg.FileName))
                     {
-                        sw.WriteLine("Bearing[deg];Distance[km];Eps_Min[deg];Elevation[m]");
+                        sw.WriteLine("Bearing[deg];Eps_Min[deg];Distance[km];Elevation[m]");
                         for (int i = 0; i < 360; i++)
                         {
                             sw.WriteLine(i.ToString() + ";" +

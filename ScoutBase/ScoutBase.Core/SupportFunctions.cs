@@ -566,7 +566,7 @@ namespace ScoutBase.Core
                 downloaddir = filename.Substring(0, filename.LastIndexOf("/"));
             // set path to calling assembly's path if not otherwise specified
             if (String.IsNullOrEmpty(downloaddir))
-                downloaddir = Assembly.GetCallingAssembly().Location;
+                downloaddir = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
             try
             {
                 Console.WriteLine("[UnzipFile: Trying to unzip file: " + filename);

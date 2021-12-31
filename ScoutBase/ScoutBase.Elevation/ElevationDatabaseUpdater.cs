@@ -43,7 +43,7 @@ namespace ScoutBase.Elevation
         ElevationDatabaseUpdaterStartOptions StartOptions;
 
         // Temp directory to save downloaded files
-        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp").TrimEnd(Path.DirectorySeparatorChar);
+        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp", "ElevationData").TrimEnd(Path.DirectorySeparatorChar);
 
         public ElevationDatabaseUpdater() : base()
         {
@@ -464,8 +464,8 @@ namespace ScoutBase.Elevation
                         }
                         Stopwatch st = new Stopwatch();
                         st.Start();
-                        // check last change of database file
-                        if (HasDatabaseChanged() || HasUpdateChanged() || HaveBoundsChanged())
+                        // check last change of database file and no errors
+                        if (HasDatabaseChanged() || HasUpdateChanged() || HaveBoundsChanged() || ((GetSavedDatabaseStatus() &  DATABASESTATUS.ERROR) > 0))
                         {
                             // database and/or update has changed --> full check necessary
                             // check if database is complete

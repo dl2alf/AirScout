@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CATCheck.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="RigDefinitionsFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RigSettings" Type="AirScout.CAT.RigSettings" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LogVerbosity" Type="AirScout.CAT.LOGLEVEL" Scope="User">
+      <Value Profile="(Default)">llAll</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

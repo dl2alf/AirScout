@@ -149,12 +149,18 @@ namespace ScoutBase.Propagation
 
         public void BackupDatabase(ELEVATIONMODEL model)
         {
-            this.BackupDatabase(GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = (GetPropagationDatabase(model));
+            if (db == null)
+                return;
+            this.BackupDatabase(db);
         }
 
         public bool IsInMemory(ELEVATIONMODEL model)
         {
-            return this.IsInMemory(GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = (GetPropagationDatabase(model));
+            if (db == null)
+                return false;
+            return this.IsInMemory(db);
         }
 
 
@@ -193,52 +199,82 @@ namespace ScoutBase.Propagation
 
         public DATABASESTATUS GetDBStatus(ELEVATIONMODEL model)
         {
-            return this.GetDBStatus(GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return DATABASESTATUS.UNDEFINED;
+            return this.GetDBStatus(db);
         }
 
         public void SetDBStatus(ELEVATIONMODEL model, DATABASESTATUS status)
         {
-            this.SetDBStatus(status, GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return;
+            this.SetDBStatus(status,db);
         }
 
         public bool GetDBStatusBit(ELEVATIONMODEL model, DATABASESTATUS statusbit)
         {
-            return this.GetDBStatusBit(statusbit, GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return false;
+            return this.GetDBStatusBit(statusbit, db);
         }
 
         public void SetDBStatusBit(ELEVATIONMODEL model, DATABASESTATUS statusbit)
         {
-            this.SetDBStatusBit(statusbit, GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return;
+            this.SetDBStatusBit(statusbit, db);
         }
 
         public void ResetDBStatusBit(ELEVATIONMODEL model, DATABASESTATUS statusbit)
         {
-            this.ResetDBStatusBit(statusbit, GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return;
+            this.ResetDBStatusBit(statusbit, db);
         }
 
         public void BeginTransaction(ELEVATIONMODEL model)
         {
-            this.BeginTransaction(GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return;
+            this.BeginTransaction(db);
         }
 
         public void Commit(ELEVATIONMODEL model)
         {
-            this.BeginTransaction(GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return;
+            this.BeginTransaction(db);
         }
 
         private DataTable Select(ELEVATIONMODEL model, string sql)
         {
-            return this.Select(sql, GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return null;
+            return this.Select(sql, db);
         }
 
         public string GetDBLocation(ELEVATIONMODEL model)
         {
-            return this.GetDBLocation(GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return "";
+            return this.GetDBLocation(db);
         }
 
         public double GetDBSize(ELEVATIONMODEL model)
         {
-            return this.GetDBSize(GetPropagationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return 0;
+            return this.GetDBSize(db);
         }
 
 
@@ -247,6 +283,8 @@ namespace ScoutBase.Propagation
         public bool PropagationPathTableExists(ELEVATIONMODEL model, string tablename = "")
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return false;
             // check for table name is null or empty --> use default tablename from type instead
             string tn = tablename;
             if (String.IsNullOrEmpty(tn))
@@ -257,6 +295,8 @@ namespace ScoutBase.Propagation
         public void PropagationPathCreateTable(ELEVATIONMODEL model, string tablename = "")
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return;
             lock (db.DBCommand)
             {
                 // check for table name is null or empty --> use default tablename from type instead
@@ -272,6 +312,8 @@ namespace ScoutBase.Propagation
         public long PropagationPathCount(ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return 0;
             long count = (long)db.ExecuteScalar("SELECT COUNT(*) FROM " + PropagationPathDesignator.TableName);
             if (count <= 0)
                 return 0;
@@ -287,6 +329,8 @@ namespace ScoutBase.Propagation
         public bool PropagationPathExists(PropagationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return false;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "SELECT EXISTS (SELECT LastUpdated FROM " + PropagationPathDesignator.TableName + " WHERE Lat1 = @Lat1 AND Lon1 = @Lon1 AND h1 = @h1 AND Lat2 = @Lat2 AND Lon2 = @Lon2 AND h2 = @h2 AND QRG = @QRG AND Radius = @Radius AND F1_Clearance = @F1_Clearance AND StepWidth = @StepWidth)";
@@ -317,6 +361,8 @@ namespace ScoutBase.Propagation
         public PropagationPathDesignator PropagationPathFind(PropagationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return null;
             // save localobstruction 
             double obstr = path.LocalObstruction;
             lock (db.DBCommand)
@@ -349,6 +395,8 @@ namespace ScoutBase.Propagation
         public DateTime PropagationPathFindLastUpdated(PropagationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return DateTime.MinValue;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "SELECT LastUpdated FROM " + PropagationPathDesignator.TableName + " WHERE Lat1 = @Lat1 AND Lon1 = @Lon1 AND h1 = @h1 AND Lat2 = @Lat2 AND Lon2 = @Lon2 AND h2 = @h2 AND QRG = @QRG AND Radius = @Radius AND F1_Clearance = @F1_Clearance AND StepWidth = @StepWidth";
@@ -373,6 +421,8 @@ namespace ScoutBase.Propagation
         public int PropagationPathInsert(PropagationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return -1;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "INSERT INTO " + PropagationPathDesignator.TableName + " (Lat1, Lon1, h1, Lat2, Lon2, h2, QRG, Radius, F1_Clearance, StepWidth, Eps1_Min, Eps2_Min, LastUpdated) VALUES (@Lat1, @Lon1, @h1, @Lat2, @Lon2, @h2, @QRG, @Radius, @F1_Clearance, @StepWidth, @Eps1_Min, @Eps2_Min, @LastUpdated)";
@@ -397,6 +447,8 @@ namespace ScoutBase.Propagation
         public int PropagationPathDelete(PropagationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return -1;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + PropagationPathDesignator.TableName + " WHERE Lat1 = @Lat1 AND Lon1 = @Lon1 AND h1 = @h1 AND Lat2 = @Lat2 AND Lon2 = @Lon2 AND h2 = @h2 AND QRG = @QRG AND Radius = @Radius AND F1_Clearance = @F1_Clearance AND StepWidth = @StepWidth";
@@ -418,6 +470,8 @@ namespace ScoutBase.Propagation
         public int PropagationPathDeleteAll(ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return -1;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + PropagationPathDesignator.TableName;
@@ -429,6 +483,8 @@ namespace ScoutBase.Propagation
         public int PropagationPathUpdate(PropagationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return -1;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "UPDATE " + PropagationPathDesignator.TableName + " SET Lat1 = @Lat1, Lon1 = @Lon1, h1 = @h1, Lat2 = @Lat2, Lon2 = @Lon2, h2 = @h2, QRG = @QRG, Radius = @Radius, F1_Clearance = @F1_Clearance, @StepWidth = @StepWidth, Eps1_Min = @Eps1_Min, Eps2_Min = @Eps2_Min, LastUpdated = @LastUpdated WHERE Lat1 = @Lat1 AND Lon1 = @Lon1 AND h1 = @h1 AND Lat2 = @Lat2 AND Lon2 = @Lon2 AND h2 = @h2 AND QRG = @QRG AND Radius = @Radius AND F1_Clearance = @F1_Clearance AND StepWidth = @StepWidth";
@@ -452,6 +508,8 @@ namespace ScoutBase.Propagation
         public void PropagationPathInsertOrUpdateIfNewer(PropagationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return;
             DateTime dt = this.PropagationPathFindLastUpdated(path, model);
             if (dt == DateTime.MinValue)
                 this.PropagationPathInsert(path, model);
@@ -476,32 +534,50 @@ namespace ScoutBase.Propagation
             // return null if elevation path is null for whatever reason
             if (ep == null)
                 return null;
-            for (int i = 0; i < ep.Count; i++)
+//            using (StreamWriter sw = new StreamWriter(File.OpenWrite("propagation.csv")))
             {
-                double dist1 = i * stepwidth / 1000.0;
-                double dist2 = (ep.Count - i - 1) * stepwidth / 1000.0;
-                double f1c1 = ScoutBase.Core.Propagation.F1Radius(qrg, dist1, dist2) * f1_clearance;
-                double f1c2 = ScoutBase.Core.Propagation.F1Radius(qrg, dist2, dist1) * f1_clearance;
-                double nf = NearFieldSuppression / 1000.0;
-                double eps1;
-                double eps2;
-                if (dist1 > nf)
-                    eps1 = ScoutBase.Core.Propagation.EpsilonFromHeights(h1, dist1, ep.Path[i] + f1c1, radius);
-                else
-                    eps1 = ScoutBase.Core.Propagation.EpsilonFromHeights(h1, nf, ep.Path[i] + f1c1, radius);
-                if (eps1 > eps1_min)
-                    eps1_min = eps1;
-                if (dist2 > nf)
-                    eps2 = ScoutBase.Core.Propagation.EpsilonFromHeights(h2, dist2, ep.Path[i] + f1c2, radius);
-                else
-                    eps2 = ScoutBase.Core.Propagation.EpsilonFromHeights(h2, nf, ep.Path[i] + f1c2, radius);
-                if (eps2 > eps2_min)
-                    eps2_min = eps2;
-                if (caller != null)
+//                sw.WriteLine("i;dist1;dist2;f1c1;f1c2;elv;eps1;eps1_min;eps2;eps2_min");
+                for (int i = 0; i < ep.Count; i++)
                 {
-                    // abort calculation if cancellation pending
-                    if (caller.WorkerSupportsCancellation && caller.CancellationPending)
-                        return null;
+                    double dist1 = i * stepwidth / 1000.0;
+                    double dist2 = (ep.Count - i - 1) * stepwidth / 1000.0;
+                    double f1c1 = ScoutBase.Core.Propagation.F1Radius(qrg, dist1, dist2) * f1_clearance;
+                    double f1c2 = ScoutBase.Core.Propagation.F1Radius(qrg, dist2, dist1) * f1_clearance;
+                    double nf = NearFieldSuppression / 1000.0;
+                    double eps1;
+                    double eps2;
+                    if (dist1 > nf)
+                        eps1 = ScoutBase.Core.Propagation.EpsilonFromHeights(h1, dist1, ep.Path[i] + f1c1, radius);
+                    else
+                        eps1 = ScoutBase.Core.Propagation.EpsilonFromHeights(h1, nf, ep.Path[i] + f1c1, radius);
+                    if (eps1 > eps1_min)
+                        eps1_min = eps1;
+                    if (dist2 > nf)
+                        eps2 = ScoutBase.Core.Propagation.EpsilonFromHeights(h2, dist2, ep.Path[i] + f1c2, radius);
+                    else
+                        eps2 = ScoutBase.Core.Propagation.EpsilonFromHeights(h2, nf, ep.Path[i] + f1c2, radius);
+                    if (eps2 > eps2_min)
+                        eps2_min = eps2;
+                    if (caller != null)
+                    {
+                        // abort calculation if cancellation pending
+                        if (caller.WorkerSupportsCancellation && caller.CancellationPending)
+                            return null;
+                    }
+                    /*
+                    sw.WriteLine(
+                        i.ToString() + ";" +
+                        dist1.ToString("F8") + ";" + 
+                        dist2.ToString("F8") + ";" +
+                        f1c1.ToString("F8") + ";" +
+                        f1c2.ToString("F8") + ";" +
+                        ep.Path[i].ToString() + ";" +
+                        eps1.ToString("F8") + ";" +
+                        eps1_min.ToString("F8") + ";" +
+                        eps2.ToString("F8") + ";" +
+                        eps2_min.ToString("F8")
+                        );
+                        */
                 }
             }
             PropagationPathDesignator pp = new PropagationPathDesignator(lat1, lon1, h1, lat2, lon2, h2, qrg, radius, f1_clearance, stepwidth, eps1_min, eps2_min, localobstruction);
@@ -534,6 +610,8 @@ namespace ScoutBase.Propagation
         public bool PropagationHorizonTableExists(ELEVATIONMODEL model, string tablename = "")
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return false;
             // check for table name is null or empty --> use default tablename from type instead
             string tn = tablename;
             if (String.IsNullOrEmpty(tn))
@@ -544,6 +622,8 @@ namespace ScoutBase.Propagation
         public void PropagationHorizonCreateTable(ELEVATIONMODEL model, string tablename = "")
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return;
             lock (db.DBCommand)
             {
                 // check for table name is null or empty --> use default tablename from type instead
@@ -559,6 +639,8 @@ namespace ScoutBase.Propagation
         public long PropagationHorizonCount(ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return 0;
             long count = (long)db.ExecuteScalar("SELECT COUNT(*) FROM " + PropagationHorizonDesignator.TableName);
             if (count <= 0)
                 return 0;
@@ -575,6 +657,8 @@ namespace ScoutBase.Propagation
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
             lock (db.DBCommand)
+                if (db == null)
+                    return false;
             {
                 db.DBCommand.CommandText = "SELECT EXISTS (SELECT LastUpdated FROM " + PropagationHorizonDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon AND h = @h AND Dist = @Dist AND QRG = @QRG AND Radius = @Radius AND F1_Clearance = @F1_Clearance AND StepWidth = @StepWidth)";
                 db.DBCommand.Parameters.Clear();
@@ -602,6 +686,8 @@ namespace ScoutBase.Propagation
         public PropagationHorizonDesignator PropagationHorizonFind(PropagationHorizonDesignator hor, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return null;
             // save localobstruction 
             LocalObstructionDesignator obstr = hor.LocalObstruction;
             lock (db.DBCommand)
@@ -632,6 +718,8 @@ namespace ScoutBase.Propagation
         public DateTime PropagationHorizonFindLastUpdated(PropagationHorizonDesignator hor, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return DateTime.MinValue;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "SELECT LastUpdated FROM " + PropagationHorizonDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon AND h = @h AND Dist = @Dist AND QRG = @QRG AND Radius = @Radius AND F1_Clearance = @F1_Clearance AND StepWidth = @StepWidth";
@@ -654,6 +742,8 @@ namespace ScoutBase.Propagation
         public int PropagationHorizonInsert(PropagationHorizonDesignator hor, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return -1;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "INSERT INTO " + PropagationHorizonDesignator.TableName + " (Lat, Lon, h, Dist, QRG, Radius, F1_Clearance, StepWidth, Horizon, LastUpdated) VALUES (@Lat, @Lon, @h, @Dist, @QRG, @Radius, @F1_Clearance, @StepWidth, @Horizon, @LastUpdated)";
@@ -675,6 +765,8 @@ namespace ScoutBase.Propagation
         public int PropagationHorizonDelete(PropagationHorizonDesignator hor, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return -1;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + PropagationHorizonDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon AND h = @h AND Dist = @Dist AND QRG = @QRG AND Radius = @Radius AND F1_Clearance = @F1_Clearance AND StepWidth = @StepWidth";
@@ -694,6 +786,8 @@ namespace ScoutBase.Propagation
         public int PropagationHorizonDeleteAll(ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return -1;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + PropagationHorizonDesignator.TableName;
@@ -705,6 +799,8 @@ namespace ScoutBase.Propagation
         public int PropagationHorizonUpdate(PropagationHorizonDesignator hor, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return -1;
             lock (db.DBCommand)
             {
                 db.DBCommand.CommandText = "UPDATE " + PropagationHorizonDesignator.TableName + " SET Lat = @Lat, Lon = @Lon, h = @h, Dist = @Dist, QRG = @QRG, Radius = @Radius, F1_Clearance = @F1_Clearance, @StepWidth = @StepWidth, Horizon = @Horizon, LastUpdated = @LastUpdated WHERE Lat = @Lat AND Lon = @Lon AND h = @h AND Dist = @Dist AND QRG = @QRG AND Radius = @Radius AND F1_Clearance = @F1_Clearance AND StepWidth = @StepWidth";
@@ -725,6 +821,8 @@ namespace ScoutBase.Propagation
         public void PropagationHorizonInsertOrUpdateIfNewer(PropagationHorizonDesignator hor, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetPropagationDatabase(model);
+            if (db == null)
+                return;
             DateTime dt = this.PropagationHorizonFindLastUpdated(hor, model);
             if (dt == DateTime.MinValue)
                 this.PropagationHorizonInsert(hor, model);
@@ -741,54 +839,69 @@ namespace ScoutBase.Propagation
             PropagationHorizonDesignator hd = new PropagationHorizonDesignator(lat, lon, h, dist, qrg, radius, f1_clearance, stepwidth, hor, localobstruction);
             for (int j = 0; j < 360; j++)
             {
-                // report progress if called from background worker
-                if (caller != null)
+                try
                 {
-                    if (caller.WorkerReportsProgress)
-                        caller.ReportProgress(-1, "Calculating horizon " + j.ToString() + "° of 360°");
-                }
-                double eps_min = double.MinValue;
-                double eps_dist = 0;
-                short eps_elv = 0;
-                // find or create elevation path
-                ElevationPathDesignator ep = ElevationData.Database.ElevationPathFindOrCreateFromBearing(caller, lat, lon, j, dist, stepwidth, model, false);
-                for (int i = 0; i < ep.Count; i++)
-                {
-                    double d = i * stepwidth / 1000.0;
-                    double nf = NearFieldSuppression / 1000.0;
-                    double eps;
-                    if (d > nf)
+                    // report progress if called from background worker
+                    if (caller != null)
                     {
-                        double f1c = ScoutBase.Core.Propagation.F1Radius(qrg, d, dist) * f1_clearance;
-                        eps = ScoutBase.Core.Propagation.EpsilonFromHeights(h, d, ep.Path[i] + f1c, radius);
+                        if (caller.WorkerReportsProgress)
+                            caller.ReportProgress(-1, "Calculating horizon " + j.ToString() + "° of 360°");
                     }
-                    else
+                    double eps_min = double.MinValue;
+                    double eps_dist = 0;
+                    short eps_elv = 0;
+                    // find or create elevation path
+                    ElevationPathDesignator ep = ElevationData.Database.ElevationPathFindOrCreateFromBearing(caller, lat, lon, j, dist, stepwidth, model, false);
+
+                    // abort calculation if called from background worker and cancellation pending
+                    if (caller != null)
                     {
-                        double f1c = ScoutBase.Core.Propagation.F1Radius(qrg, nf, dist) * f1_clearance;
-                        eps = ScoutBase.Core.Propagation.EpsilonFromHeights(h, nf, ep.Path[i] + f1c, radius);
+                        if (caller.WorkerSupportsCancellation && caller.CancellationPending)
+                            return null;
                     }
-                    if (eps > eps_min)
+
+                    for (int i = 0; i < ep.Count; i++)
                     {
-                        eps_min = eps;
-                        eps_dist = d;
-                        eps_elv = ep.Path[i];
+                        double d = i * stepwidth / 1000.0;
+                        double nf = NearFieldSuppression / 1000.0;
+                        double eps;
+                        if (d > nf)
+                        {
+                            double f1c = ScoutBase.Core.Propagation.F1Radius(qrg, d, dist) * f1_clearance;
+                            eps = ScoutBase.Core.Propagation.EpsilonFromHeights(h, d, ep.Path[i] + f1c, radius);
+                        }
+                        else
+                        {
+                            double f1c = ScoutBase.Core.Propagation.F1Radius(qrg, nf, dist) * f1_clearance;
+                            eps = ScoutBase.Core.Propagation.EpsilonFromHeights(h, nf, ep.Path[i] + f1c, radius);
+                        }
+                        if (eps > eps_min)
+                        {
+                            eps_min = eps;
+                            eps_dist = d;
+                            eps_elv = ep.Path[i];
+                        }
+                    }
+                    hor[j] = new HorizonPoint(eps_dist, eps_min, eps_elv);
+                    // report current horizon if called from background worker
+                    if (caller != null)
+                    {
+                        if (caller.WorkerReportsProgress)
+                            caller.ReportProgress(j, hor[j]);
+                    }
+                    // take status from elevation path
+                    if (!ep.Valid)
+                        valid = false;
+                    // abort calculation if called from background worker and cancellation pending
+                    if (caller != null)
+                    {
+                        if (caller.WorkerSupportsCancellation && caller.CancellationPending)
+                            return null;
                     }
                 }
-                hor[j] = new HorizonPoint(eps_dist, eps_min, eps_elv);
-                // report current horizon if called from background worker
-                if (caller != null)
+                catch (Exception ex)
                 {
-                    if (caller.WorkerReportsProgress)
-                        caller.ReportProgress(j, hor[j]);
-                }
-                // take status from elevation path
-                if (!ep.Valid)
-                    valid = false;
-                // abort calculation if called from background worker and cancellation pending
-                if (caller != null)
-                {
-                    if (caller.WorkerSupportsCancellation && caller.CancellationPending)
-                        return null;
+
                 }
             }
             // copy over the horizon and status

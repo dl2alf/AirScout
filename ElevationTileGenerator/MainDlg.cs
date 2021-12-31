@@ -1311,6 +1311,12 @@ namespace ElevationTileGenerator
                 ConvertSRTM1ToSRTM3File(srtm1file, srtm3file);
             }
         }
+
+        private void btn_Coverage_Click(object sender, EventArgs e)
+        {
+            CoverageDlg Dlg = new CoverageDlg();
+            Dlg.ShowDialog();
+        }
     }
 
     [System.ComponentModel.DesignerCategory("")]

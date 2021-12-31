@@ -43,15 +43,34 @@
             this.btn_DeleteAllMapTiles = new System.Windows.Forms.Button();
             this.btn_Options_Open_PluginDirectory = new System.Windows.Forms.Button();
             this.btn_Options_Open_AirScoutDirectory = new System.Windows.Forms.Button();
+            this.pb_Donate = new System.Windows.Forms.PictureBox();
+            this.rb_Options_Track_UDP_AirScout = new System.Windows.Forms.RadioButton();
+            this.tb_Options_Track_DialFreq = new ScoutBase.Core.LongTextBox();
+            this.cb_Options_Locations_RestrictToAreaOfInterest = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Path_BestCaseElevation = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Planes_KeepHistory = new System.Windows.Forms.CheckBox();
+            this.tb_Options_Track_Serial_Baudrate = new ScoutBase.Core.Int32TextBox();
+            this.tb_Options_Track_Serial_Port = new System.Windows.Forms.TextBox();
+            this.tb_Options_Track_Offset = new ScoutBase.Core.Int32TextBox();
+            this.int32TextBox2 = new ScoutBase.Core.Int32TextBox();
+            this.cb_Options_Track_Activate = new System.Windows.Forms.CheckBox();
             this.tab_Options_Planes = new System.Windows.Forms.TabPage();
             this.groupBox48 = new System.Windows.Forms.GroupBox();
+            this.int32TextBox1 = new ScoutBase.Core.Int32TextBox();
             this.label33 = new System.Windows.Forms.Label();
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled = new System.Windows.Forms.CheckBox();
+            this.tb_Options_Planes_Interval = new ScoutBase.Core.Int32TextBox();
             this.label22 = new System.Windows.Forms.Label();
+            this.cb_Options_Planes_LogErrors = new System.Windows.Forms.CheckBox();
             this.groupBox40 = new System.Windows.Forms.GroupBox();
             this.label55 = new System.Windows.Forms.Label();
+            this.ud_Options_Planes_Position_DatabaseLifetime = new System.Windows.Forms.NumericUpDown();
             this.label53 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.groupBox38 = new System.Windows.Forms.GroupBox();
+            this.tb_Options_Planes_Positions_TTL = new ScoutBase.Core.Int32TextBox();
+            this.tb_Options_Planes_MaxAlt = new ScoutBase.Core.Int32TextBox();
+            this.tb_Options_Planes_MinAlt = new ScoutBase.Core.Int32TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -59,6 +78,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox26 = new System.Windows.Forms.GroupBox();
+            this.tb_Options_Planes_Filter_MinAlt = new ScoutBase.Core.Int32TextBox();
+            this.tb_Options_Planes_Filter_Max_Circumcircle = new ScoutBase.Core.Int32TextBox();
             this.label96 = new System.Windows.Forms.Label();
             this.label94 = new System.Windows.Forms.Label();
             this.label95 = new System.Windows.Forms.Label();
@@ -89,6 +110,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btn_Options_Path_Export = new System.Windows.Forms.Button();
             this.label147 = new System.Windows.Forms.Label();
+            this.tb_Options_Path_MaxLength = new ScoutBase.Core.DoubleTextBox();
             this.label131 = new System.Windows.Forms.Label();
             this.label130 = new System.Windows.Forms.Label();
             this.tb_Options_Path_StepWidth = new System.Windows.Forms.TextBox();
@@ -103,6 +125,8 @@
             this.groupBox13 = new System.Windows.Forms.GroupBox();
             this.gm_Options_SRTM1 = new GMap.NET.WindowsForms.GMapControl();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Elevation_SRTM1_EnableCache = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Elevation_SRTM1 = new System.Windows.Forms.CheckBox();
             this.tab_Options_SRTM3 = new System.Windows.Forms.TabPage();
             this.groupBox42 = new System.Windows.Forms.GroupBox();
             this.label100 = new System.Windows.Forms.Label();
@@ -111,6 +135,8 @@
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.gm_Options_SRTM3 = new GMap.NET.WindowsForms.GMapControl();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Elevation_SRTM3_EnableCache = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Elevation_SRTM3 = new System.Windows.Forms.CheckBox();
             this.tab_Options_GLOBE = new System.Windows.Forms.TabPage();
             this.groupBox41 = new System.Windows.Forms.GroupBox();
             this.label99 = new System.Windows.Forms.Label();
@@ -119,16 +145,32 @@
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.gm_Options_GLOBE = new GMap.NET.WindowsForms.GMapControl();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Elevation_GLOBE_EnableCache = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Elevation_GLOBE = new System.Windows.Forms.CheckBox();
             this.tab_Options_Map = new System.Windows.Forms.TabPage();
             this.groupBox49 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Map_SmallMarkers = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Map_LabelCalls = new System.Windows.Forms.CheckBox();
             this.groupBox37 = new System.Windows.Forms.GroupBox();
             this.label34 = new System.Windows.Forms.Label();
+            this.ud_Options_Charts_FontSize = new System.Windows.Forms.NumericUpDown();
             this.groupBox39 = new System.Windows.Forms.GroupBox();
+            this.tb_Options_Map_Update_Interval = new ScoutBase.Core.Int32TextBox();
             this.label97 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.groupBox23 = new System.Windows.Forms.GroupBox();
+            this.ud_Options_Map_Opacity = new AirScout.PercentageControl();
+            this.label148 = new System.Windows.Forms.Label();
+            this.ud_Options_Map_Preloader_MaxZoom = new System.Windows.Forms.NumericUpDown();
             this.label144 = new System.Windows.Forms.Label();
+            this.cb_Options_Map_Preloader_Enabled = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Watchlist_Activate = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Airports_Activate = new System.Windows.Forms.CheckBox();
             this.groupBox30 = new System.Windows.Forms.GroupBox();
+            this.tb_Options_Planes_IconSize_S = new ScoutBase.Core.Int32TextBox();
+            this.tb_Options_Planes_IconSize_H = new ScoutBase.Core.Int32TextBox();
+            this.tb_Options_Planes_IconSize_M = new ScoutBase.Core.Int32TextBox();
+            this.tb_Options_Planes_IconSize_L = new ScoutBase.Core.Int32TextBox();
             this.label84 = new System.Windows.Forms.Label();
             this.label83 = new System.Windows.Forms.Label();
             this.label82 = new System.Windows.Forms.Label();
@@ -139,10 +181,23 @@
             this.label76 = new System.Windows.Forms.Label();
             this.label74 = new System.Windows.Forms.Label();
             this.label75 = new System.Windows.Forms.Label();
+            this.cb_Options_InfoWin_Angle = new System.Windows.Forms.CheckBox();
+            this.cb_Options_InfoWin_Speed = new System.Windows.Forms.CheckBox();
+            this.cb_Options_InfoWin_Squint = new System.Windows.Forms.CheckBox();
+            this.cb_Options_InfoWin_Epsilon = new System.Windows.Forms.CheckBox();
+            this.cb_Options_InfoWin_Dist = new System.Windows.Forms.CheckBox();
+            this.cb_Options_InfoWin_Time = new System.Windows.Forms.CheckBox();
+            this.cb_Options_InfoWin_Type = new System.Windows.Forms.CheckBox();
+            this.cb_Options_InfoWin_Track = new System.Windows.Forms.CheckBox();
+            this.cb_Options_InfoWin_Alt = new System.Windows.Forms.CheckBox();
+            this.cb_Options_InfoWin_Position = new System.Windows.Forms.CheckBox();
             this.groupBox22 = new System.Windows.Forms.GroupBox();
+            this.rb_Options_InfoWin_Imperial = new System.Windows.Forms.RadioButton();
+            this.rb_Options_InfoWin_Metric = new System.Windows.Forms.RadioButton();
             this.label72 = new System.Windows.Forms.Label();
             this.btn_Options_SelectFont = new System.Windows.Forms.Button();
             this.label62 = new System.Windows.Forms.Label();
+            this.tb_Options_Map_ToolTipFont = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label61 = new System.Windows.Forms.Label();
             this.cb_Options_Map_Provider = new System.Windows.Forms.ComboBox();
@@ -179,12 +234,17 @@
             this.label28 = new System.Windows.Forms.Label();
             this.label41 = new System.Windows.Forms.Label();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_SmallLettersForSubSquares = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Locator_AutoLength = new System.Windows.Forms.CheckBox();
             this.label48 = new System.Windows.Forms.Label();
+            this.ud_Options_Locator_MaxLength = new System.Windows.Forms.NumericUpDown();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
             this.label52 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.btn_Options_DXMap = new System.Windows.Forms.Button();
             this.tb_Options_DXLon = new ScoutBase.Core.DoubleTextBox();
             this.tb_Options_DXLat = new ScoutBase.Core.DoubleTextBox();
+            this.tb_Options_DXLoc = new ScoutBase.Core.LocatorTextBox();
             this.tb_Options_DXCall = new ScoutBase.Core.CallsignTextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.btn_Options_DXHorizon = new System.Windows.Forms.Button();
@@ -196,9 +256,11 @@
             this.label43 = new System.Windows.Forms.Label();
             this.label44 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btn_Options_MyMap = new System.Windows.Forms.Button();
             this.btn_Options_MyHorizon = new System.Windows.Forms.Button();
             this.tb_Options_MyLon = new ScoutBase.Core.DoubleTextBox();
             this.tb_Options_MyLat = new ScoutBase.Core.DoubleTextBox();
+            this.tb_Options_MyLoc = new ScoutBase.Core.LocatorTextBox();
             this.tb_Options_MyCall = new ScoutBase.Core.CallsignTextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.btn_MyCall_QRZ = new System.Windows.Forms.Button();
@@ -210,6 +272,10 @@
             this.label11 = new System.Windows.Forms.Label();
             this.tab_Options_General = new System.Windows.Forms.TabPage();
             this.groupBox25 = new System.Windows.Forms.GroupBox();
+            this.tb_Coverage_MaxLat = new ScoutBase.Core.DoubleTextBox();
+            this.tb_Coverage_MinLat = new ScoutBase.Core.DoubleTextBox();
+            this.tb_Coverage_MaxLon = new ScoutBase.Core.DoubleTextBox();
+            this.tb_Coverage_MinLon = new ScoutBase.Core.DoubleTextBox();
             this.gm_Options_Coverage = new GMap.NET.WindowsForms.GMapControl();
             this.label35 = new System.Windows.Forms.Label();
             this.label54 = new System.Windows.Forms.Label();
@@ -221,7 +287,9 @@
             this.groupBox27 = new System.Windows.Forms.GroupBox();
             this.label108 = new System.Windows.Forms.Label();
             this.gb_Options_Database_Settings = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Background_Calculations_Enable = new System.Windows.Forms.CheckBox();
             this.label47 = new System.Windows.Forms.Label();
+            this.ud_Options_Database_Update_Period = new System.Windows.Forms.NumericUpDown();
             this.rb_Options_Database_Update_Periodically = new System.Windows.Forms.RadioButton();
             this.rb_Options_Database_Update_OnStartup = new System.Windows.Forms.RadioButton();
             this.rb_Options_Database_Update_Never = new System.Windows.Forms.RadioButton();
@@ -291,6 +359,8 @@
             this.groupBox52 = new System.Windows.Forms.GroupBox();
             this.gm_Options_ASTER3 = new GMap.NET.WindowsForms.GMapControl();
             this.groupBox53 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Elevation_ASTER3_EnableCache = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Elevation_ASTER3 = new System.Windows.Forms.CheckBox();
             this.tba_Option_ASTER1 = new System.Windows.Forms.TabPage();
             this.groupBox54 = new System.Windows.Forms.GroupBox();
             this.label145 = new System.Windows.Forms.Label();
@@ -298,51 +368,161 @@
             this.groupBox55 = new System.Windows.Forms.GroupBox();
             this.gm_Options_ASTER1 = new GMap.NET.WindowsForms.GMapControl();
             this.groupBox56 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Elevation_ASTER1_EnableCache = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Elevation_ASTER1 = new System.Windows.Forms.CheckBox();
             this.tab_Options_Alarm = new System.Windows.Forms.TabPage();
             this.groupBox21 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Alarm_Activate = new System.Windows.Forms.CheckBox();
             this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Alarm_PlaySound = new System.Windows.Forms.CheckBox();
             this.cb_Options_Alarm_BringWindowToFront = new System.Windows.Forms.CheckBox();
             this.groupBox20 = new System.Windows.Forms.GroupBox();
+            this.tb_Options_Alarm_Distance = new ScoutBase.Core.DoubleTextBox();
             this.label36 = new System.Windows.Forms.Label();
             this.label56 = new System.Windows.Forms.Label();
             this.tab_Options_Network = new System.Windows.Forms.TabPage();
             this.label86 = new System.Windows.Forms.Label();
             this.groupBox32 = new System.Windows.Forms.GroupBox();
+            this.tb_Options_Webserver_Port = new ScoutBase.Core.Int32TextBox();
             this.label85 = new System.Windows.Forms.Label();
             this.groupBox31 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Server_Activate = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox24 = new System.Windows.Forms.GroupBox();
+            this.tb_Options_Server_Port = new ScoutBase.Core.Int32TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.tb_Options_Server_Name = new System.Windows.Forms.TextBox();
             this.tab_Options_SpecLab = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.tb_Options_SpecLab_UpdateInterval = new ScoutBase.Core.DoubleTextBox();
+            this.tb_Options_SpecLab_F2 = new ScoutBase.Core.Int32TextBox();
+            this.tb_Options_SpecLab_F1 = new ScoutBase.Core.Int32TextBox();
             this.label70 = new System.Windows.Forms.Label();
             this.label71 = new System.Windows.Forms.Label();
             this.label68 = new System.Windows.Forms.Label();
             this.label69 = new System.Windows.Forms.Label();
             this.label67 = new System.Windows.Forms.Label();
             this.label66 = new System.Windows.Forms.Label();
+            this.tb_SpecLab_FileName = new System.Windows.Forms.TextBox();
             this.label63 = new System.Windows.Forms.Label();
             this.label64 = new System.Windows.Forms.Label();
             this.label65 = new System.Windows.Forms.Label();
+            this.tb_SpecLab_URL = new System.Windows.Forms.TextBox();
+            this.cb_SpecLab_Enabled = new System.Windows.Forms.CheckBox();
             this.tab_Options_Track = new System.Windows.Forms.TabPage();
-            this.groupBox36 = new System.Windows.Forms.GroupBox();
-            this.groupBox35 = new System.Windows.Forms.GroupBox();
-            this.groupBox34 = new System.Windows.Forms.GroupBox();
+            this.gb_Options_Doppler = new System.Windows.Forms.GroupBox();
+            this.label150 = new System.Windows.Forms.Label();
+            this.label180 = new System.Windows.Forms.Label();
+            this.label181 = new System.Windows.Forms.Label();
+            this.label182 = new System.Windows.Forms.Label();
+            this.label183 = new System.Windows.Forms.Label();
+            this.label184 = new System.Windows.Forms.Label();
+            this.rb_Options_Doppler_Strategy_None = new System.Windows.Forms.RadioButton();
+            this.label178 = new System.Windows.Forms.Label();
+            this.label179 = new System.Windows.Forms.Label();
+            this.label176 = new System.Windows.Forms.Label();
+            this.label177 = new System.Windows.Forms.Label();
+            this.label174 = new System.Windows.Forms.Label();
+            this.label175 = new System.Windows.Forms.Label();
+            this.label172 = new System.Windows.Forms.Label();
+            this.label173 = new System.Windows.Forms.Label();
+            this.label170 = new System.Windows.Forms.Label();
+            this.label171 = new System.Windows.Forms.Label();
+            this.label168 = new System.Windows.Forms.Label();
+            this.label169 = new System.Windows.Forms.Label();
+            this.label166 = new System.Windows.Forms.Label();
+            this.label167 = new System.Windows.Forms.Label();
+            this.label165 = new System.Windows.Forms.Label();
+            this.label163 = new System.Windows.Forms.Label();
+            this.label164 = new System.Windows.Forms.Label();
+            this.label162 = new System.Windows.Forms.Label();
+            this.label161 = new System.Windows.Forms.Label();
+            this.label160 = new System.Windows.Forms.Label();
+            this.label159 = new System.Windows.Forms.Label();
+            this.label158 = new System.Windows.Forms.Label();
+            this.label157 = new System.Windows.Forms.Label();
+            this.label156 = new System.Windows.Forms.Label();
+            this.label155 = new System.Windows.Forms.Label();
+            this.rb_Options_Doppler_Strategy_D = new System.Windows.Forms.RadioButton();
+            this.rb_Options_Doppler_Strategy_C = new System.Windows.Forms.RadioButton();
+            this.rb_Options_Doppler_Strategy_B = new System.Windows.Forms.RadioButton();
+            this.rb_Options_Doppler_Strategy_A = new System.Windows.Forms.RadioButton();
+            this.label154 = new System.Windows.Forms.Label();
+            this.label153 = new System.Windows.Forms.Label();
+            this.label152 = new System.Windows.Forms.Label();
+            this.gb_Options_Track_File = new System.Windows.Forms.GroupBox();
+            this.rb_Options_Track_File_None = new System.Windows.Forms.RadioButton();
+            this.rb_Options_Track_File_WSJT = new System.Windows.Forms.RadioButton();
+            this.rb_Options_Track_File_Native = new System.Windows.Forms.RadioButton();
+            this.gb_Options_Track_DDE = new System.Windows.Forms.GroupBox();
+            this.rb_Options_Track_DDE_None = new System.Windows.Forms.RadioButton();
+            this.rb_Options_Track_DDE_HRD = new System.Windows.Forms.RadioButton();
+            this.gb_Options_Track_UDP = new System.Windows.Forms.GroupBox();
+            this.tb_Options_Track_UDP_AirScout_Port = new ScoutBase.Core.Int32TextBox();
+            this.tb_Options_Track_UDP_WinTest_Port = new ScoutBase.Core.Int32TextBox();
             this.label90 = new System.Windows.Forms.Label();
             this.label89 = new System.Windows.Forms.Label();
-            this.groupBox33 = new System.Windows.Forms.GroupBox();
+            this.rb_Options_Track_UDP_None = new System.Windows.Forms.RadioButton();
+            this.rb_Options_Track_UDP_WinTest = new System.Windows.Forms.RadioButton();
+            this.gb_Options_Track_Serial = new System.Windows.Forms.GroupBox();
+            this.rb_Options_Track_Serial_None = new System.Windows.Forms.RadioButton();
             this.label88 = new System.Windows.Forms.Label();
             this.label87 = new System.Windows.Forms.Label();
+            this.rb_Options_Track_Serial_GS232_AZEL = new System.Windows.Forms.RadioButton();
+            this.rb_Options_Track_Serial_GS232_AZ = new System.Windows.Forms.RadioButton();
             this.groupBox28 = new System.Windows.Forms.GroupBox();
+            this.label186 = new System.Windows.Forms.Label();
+            this.label187 = new System.Windows.Forms.Label();
+            this.label185 = new System.Windows.Forms.Label();
+            this.label151 = new System.Windows.Forms.Label();
+            this.tab_Options_CAT = new System.Windows.Forms.TabPage();
+            this.gb_Options_CAT_PortSettings = new System.Windows.Forms.GroupBox();
+            this.ud_Options_CAT_Timeout = new System.Windows.Forms.NumericUpDown();
+            this.label149 = new System.Windows.Forms.Label();
+            this.ud_Options_CAT_Poll = new System.Windows.Forms.NumericUpDown();
+            this.label190 = new System.Windows.Forms.Label();
+            this.label191 = new System.Windows.Forms.Label();
+            this.cb_Options_CAT_DTR = new System.Windows.Forms.ComboBox();
+            this.label192 = new System.Windows.Forms.Label();
+            this.cb_Options_CAT_RTS = new System.Windows.Forms.ComboBox();
+            this.label193 = new System.Windows.Forms.Label();
+            this.cb_Options_CAT_StopBits = new System.Windows.Forms.ComboBox();
+            this.label194 = new System.Windows.Forms.Label();
+            this.cb_Options_CAT_Parity = new System.Windows.Forms.ComboBox();
+            this.label195 = new System.Windows.Forms.Label();
+            this.cb_Options_CAT_DataBits = new System.Windows.Forms.ComboBox();
+            this.label196 = new System.Windows.Forms.Label();
+            this.cb_Options_CAT_Baudrate = new System.Windows.Forms.ComboBox();
+            this.label197 = new System.Windows.Forms.Label();
+            this.cb_Options_CAT_PortName = new System.Windows.Forms.ComboBox();
+            this.gb_Options_CAT_RigType = new System.Windows.Forms.GroupBox();
+            this.richTextBox5 = new System.Windows.Forms.RichTextBox();
+            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
+            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
+            this.label199 = new System.Windows.Forms.Label();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.cb_Options_CAT_Rig = new System.Windows.Forms.ComboBox();
+            this.gb_Options_CAT_OperatingInstructions = new System.Windows.Forms.GroupBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.groupBox57 = new System.Windows.Forms.GroupBox();
+            this.ud_Options_CAT_Update = new System.Windows.Forms.NumericUpDown();
+            this.label189 = new System.Windows.Forms.Label();
+            this.cb_Options_CAT_Activate = new System.Windows.Forms.CheckBox();
             this.tab_Options_Watchlist = new System.Windows.Forms.TabPage();
             this.groupBox50 = new System.Windows.Forms.GroupBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label37 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btn_Options_Watchlist_Clear = new System.Windows.Forms.Button();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.cb_Options_Watchlist_SyncWithKST = new System.Windows.Forms.CheckBox();
+            this.tb_Options_Watchlist_MaxCount = new ScoutBase.Core.Int32TextBox();
             this.label31 = new System.Windows.Forms.Label();
             this.btn_Options_Watchlist_Manage = new System.Windows.Forms.Button();
             this.tab_Options_Misc = new System.Windows.Forms.TabPage();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label143 = new System.Windows.Forms.Label();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.tab_Options_Info = new System.Windows.Forms.TabPage();
@@ -373,109 +553,13 @@
             this.bw_StationDataUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_ASTER3_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_ASTER1_MapUpdater = new System.ComponentModel.BackgroundWorker();
-            this.label148 = new System.Windows.Forms.Label();
-            this.tb_Coverage_MaxLat = new ScoutBase.Core.DoubleTextBox();
-            this.tb_Coverage_MinLat = new ScoutBase.Core.DoubleTextBox();
-            this.tb_Coverage_MaxLon = new ScoutBase.Core.DoubleTextBox();
-            this.tb_Coverage_MinLon = new ScoutBase.Core.DoubleTextBox();
-            this.cb_Options_Background_Calculations_Enable = new System.Windows.Forms.CheckBox();
-            this.ud_Options_Database_Update_Period = new System.Windows.Forms.NumericUpDown();
-            this.cb_Options_Locations_RestrictToAreaOfInterest = new System.Windows.Forms.CheckBox();
-            this.cb_Options_SmallLettersForSubSquares = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Locator_AutoLength = new System.Windows.Forms.CheckBox();
-            this.ud_Options_Locator_MaxLength = new System.Windows.Forms.NumericUpDown();
-            this.tb_Options_DXLoc = new ScoutBase.Core.LocatorTextBox();
-            this.tb_Options_MyLoc = new ScoutBase.Core.LocatorTextBox();
-            this.cb_Options_Map_SmallMarkers = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Map_LabelCalls = new System.Windows.Forms.CheckBox();
-            this.ud_Options_Charts_FontSize = new System.Windows.Forms.NumericUpDown();
-            this.tb_Options_Map_Update_Interval = new ScoutBase.Core.Int32TextBox();
-            this.ud_Options_Map_Preloader_MaxZoom = new System.Windows.Forms.NumericUpDown();
-            this.cb_Options_Map_Preloader_Enabled = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Watchlist_Activate = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Airports_Activate = new System.Windows.Forms.CheckBox();
-            this.tb_Options_Planes_IconSize_S = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_Planes_IconSize_H = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_Planes_IconSize_M = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_Planes_IconSize_L = new ScoutBase.Core.Int32TextBox();
-            this.cb_Options_InfoWin_Angle = new System.Windows.Forms.CheckBox();
-            this.cb_Options_InfoWin_Speed = new System.Windows.Forms.CheckBox();
-            this.cb_Options_InfoWin_Squint = new System.Windows.Forms.CheckBox();
-            this.cb_Options_InfoWin_Epsilon = new System.Windows.Forms.CheckBox();
-            this.cb_Options_InfoWin_Dist = new System.Windows.Forms.CheckBox();
-            this.cb_Options_InfoWin_Time = new System.Windows.Forms.CheckBox();
-            this.cb_Options_InfoWin_Type = new System.Windows.Forms.CheckBox();
-            this.cb_Options_InfoWin_Track = new System.Windows.Forms.CheckBox();
-            this.cb_Options_InfoWin_Alt = new System.Windows.Forms.CheckBox();
-            this.cb_Options_InfoWin_Position = new System.Windows.Forms.CheckBox();
-            this.rb_Options_InfoWin_Imperial = new System.Windows.Forms.RadioButton();
-            this.rb_Options_InfoWin_Metric = new System.Windows.Forms.RadioButton();
-            this.tb_Options_Map_ToolTipFont = new System.Windows.Forms.TextBox();
-            this.cb_Options_Elevation_GLOBE_EnableCache = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Elevation_GLOBE = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Elevation_SRTM3_EnableCache = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Elevation_SRTM3 = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Elevation_SRTM1_EnableCache = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Elevation_SRTM1 = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Elevation_ASTER3_EnableCache = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Elevation_ASTER3 = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Elevation_ASTER1_EnableCache = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Elevation_ASTER1 = new System.Windows.Forms.CheckBox();
-            this.tb_Options_Path_MaxLength = new ScoutBase.Core.DoubleTextBox();
-            this.cb_Options_Path_BestCaseElevation = new System.Windows.Forms.CheckBox();
-            this.int32TextBox1 = new ScoutBase.Core.Int32TextBox();
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled = new System.Windows.Forms.CheckBox();
-            this.tb_Options_Planes_Interval = new ScoutBase.Core.Int32TextBox();
-            this.cb_Options_Planes_LogErrors = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Planes_KeepHistory = new System.Windows.Forms.CheckBox();
-            this.ud_Options_Planes_Position_DatabaseLifetime = new System.Windows.Forms.NumericUpDown();
-            this.tb_Options_Planes_Positions_TTL = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_Planes_MaxAlt = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_Planes_MinAlt = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_Planes_Filter_MinAlt = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_Planes_Filter_Max_Circumcircle = new ScoutBase.Core.Int32TextBox();
-            this.cb_Options_Alarm_Activate = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Alarm_PlaySound = new System.Windows.Forms.CheckBox();
-            this.tb_Options_Alarm_Distance = new ScoutBase.Core.DoubleTextBox();
-            this.tb_Options_Webserver_Port = new ScoutBase.Core.Int32TextBox();
-            this.cb_Options_Server_Activate = new System.Windows.Forms.CheckBox();
-            this.tb_Options_Server_Port = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_Server_Name = new System.Windows.Forms.TextBox();
-            this.tb_Options_SpecLab_UpdateInterval = new ScoutBase.Core.DoubleTextBox();
-            this.tb_Options_SpecLab_F2 = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_SpecLab_F1 = new ScoutBase.Core.Int32TextBox();
-            this.tb_SpecLab_FileName = new System.Windows.Forms.TextBox();
-            this.tb_SpecLab_URL = new System.Windows.Forms.TextBox();
-            this.cb_SpecLab_Enabled = new System.Windows.Forms.CheckBox();
-            this.rb_Options_Track_File_None = new System.Windows.Forms.RadioButton();
-            this.rb_Options_Track_File_WSJT = new System.Windows.Forms.RadioButton();
-            this.rb_Options_Track_File_Native = new System.Windows.Forms.RadioButton();
-            this.rb_Options_Track_DDE_None = new System.Windows.Forms.RadioButton();
-            this.rb_Options_Track_DDE_HRD = new System.Windows.Forms.RadioButton();
-            this.tb_Options_Track_UDP_AirScout_Port = new ScoutBase.Core.Int32TextBox();
-            this.tb_Options_Track_UDP_WinTest_Port = new ScoutBase.Core.Int32TextBox();
-            this.rb_Options_Track_UDP_None = new System.Windows.Forms.RadioButton();
-            this.rb_Options_Track_UDP_AirScout = new System.Windows.Forms.RadioButton();
-            this.rb_Options_Track_UDP_WinTest = new System.Windows.Forms.RadioButton();
-            this.tb_Options_Track_Serial_Baudrate = new ScoutBase.Core.Int32TextBox();
-            this.rb_Options_Track_Serial_None = new System.Windows.Forms.RadioButton();
-            this.tb_Options_Track_Serial_Port = new System.Windows.Forms.TextBox();
-            this.rb_Options_Track_Serial_GS232_AZEL = new System.Windows.Forms.RadioButton();
-            this.rb_Options_Track_Serial_GS232_AZ = new System.Windows.Forms.RadioButton();
-            this.cb_Options_Track_Activate = new System.Windows.Forms.CheckBox();
-            this.cb_Options_Watchlist_SyncWithKST = new System.Windows.Forms.CheckBox();
-            this.tb_Options_Watchlist_MaxCount = new ScoutBase.Core.Int32TextBox();
-            this.btn_Options_DXMap = new System.Windows.Forms.Button();
-            this.btn_Options_MyMap = new System.Windows.Forms.Button();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pb_Donate = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.ud_Options_Map_Opacity = new AirScout.PercentageControl();
+            this.cb_Options_Locators_Activate = new System.Windows.Forms.CheckBox();
+            this.cb_Options_Distances_Activated = new System.Windows.Forms.CheckBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).BeginInit();
             this.tab_Options_Planes.SuspendLayout();
             this.groupBox48.SuspendLayout();
             this.groupBox40.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Planes_Position_DatabaseLifetime)).BeginInit();
             this.groupBox38.SuspendLayout();
             this.groupBox26.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -497,8 +581,11 @@
             this.tab_Options_Map.SuspendLayout();
             this.groupBox49.SuspendLayout();
             this.groupBox37.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Charts_FontSize)).BeginInit();
             this.groupBox39.SuspendLayout();
             this.groupBox23.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Map_Opacity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Map_Preloader_MaxZoom)).BeginInit();
             this.groupBox30.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox29.SuspendLayout();
@@ -510,6 +597,7 @@
             this.groupBox45.SuspendLayout();
             this.groupBox44.SuspendLayout();
             this.groupBox14.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Locator_MaxLength)).BeginInit();
             this.groupBox16.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -520,6 +608,7 @@
             this.groupBox47.SuspendLayout();
             this.groupBox27.SuspendLayout();
             this.gb_Options_Database_Settings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Database_Update_Period)).BeginInit();
             this.gb_Options_Database_Info.SuspendLayout();
             this.tab_Options_ASTER3.SuspendLayout();
             this.groupBox51.SuspendLayout();
@@ -540,29 +629,31 @@
             this.tab_Options_SpecLab.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tab_Options_Track.SuspendLayout();
-            this.groupBox36.SuspendLayout();
-            this.groupBox35.SuspendLayout();
-            this.groupBox34.SuspendLayout();
-            this.groupBox33.SuspendLayout();
+            this.gb_Options_Doppler.SuspendLayout();
+            this.gb_Options_Track_File.SuspendLayout();
+            this.gb_Options_Track_DDE.SuspendLayout();
+            this.gb_Options_Track_UDP.SuspendLayout();
+            this.gb_Options_Track_Serial.SuspendLayout();
             this.groupBox28.SuspendLayout();
+            this.tab_Options_CAT.SuspendLayout();
+            this.gb_Options_CAT_PortSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_CAT_Timeout)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_CAT_Poll)).BeginInit();
+            this.gb_Options_CAT_RigType.SuspendLayout();
+            this.gb_Options_CAT_OperatingInstructions.SuspendLayout();
+            this.groupBox57.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_CAT_Update)).BeginInit();
             this.tab_Options_Watchlist.SuspendLayout();
             this.groupBox50.SuspendLayout();
-            this.groupBox17.SuspendLayout();
-            this.tab_Options_Misc.SuspendLayout();
-            this.groupBox15.SuspendLayout();
-            this.tab_Options_Info.SuspendLayout();
-            this.ss_Options.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Database_Update_Period)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Locator_MaxLength)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Charts_FontSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Map_Preloader_MaxZoom)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Planes_Position_DatabaseLifetime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).BeginInit();
+            this.groupBox17.SuspendLayout();
+            this.tab_Options_Misc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Map_Opacity)).BeginInit();
+            this.groupBox15.SuspendLayout();
+            this.tab_Options_Info.SuspendLayout();
+            this.ss_Options.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_Options_OK
@@ -708,6 +799,176 @@
             this.btn_Options_Open_AirScoutDirectory.UseVisualStyleBackColor = true;
             this.btn_Options_Open_AirScoutDirectory.Click += new System.EventHandler(this.btn_Options_Open_AirScoutDirectory_Click);
             // 
+            // pb_Donate
+            // 
+            this.pb_Donate.Image = ((System.Drawing.Image)(resources.GetObject("pb_Donate.Image")));
+            this.pb_Donate.InitialImage = ((System.Drawing.Image)(resources.GetObject("pb_Donate.InitialImage")));
+            this.pb_Donate.Location = new System.Drawing.Point(18, 272);
+            this.pb_Donate.Name = "pb_Donate";
+            this.pb_Donate.Size = new System.Drawing.Size(306, 113);
+            this.pb_Donate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pb_Donate.TabIndex = 38;
+            this.pb_Donate.TabStop = false;
+            this.tt_Options.SetToolTip(this.pb_Donate, "Click here to open a browser window with link.");
+            this.pb_Donate.Click += new System.EventHandler(this.pb_Donate_Click);
+            // 
+            // rb_Options_Track_UDP_AirScout
+            // 
+            this.rb_Options_Track_UDP_AirScout.AutoSize = true;
+            this.rb_Options_Track_UDP_AirScout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_UDP_AirScout.Location = new System.Drawing.Point(17, 65);
+            this.rb_Options_Track_UDP_AirScout.Name = "rb_Options_Track_UDP_AirScout";
+            this.rb_Options_Track_UDP_AirScout.Size = new System.Drawing.Size(180, 17);
+            this.rb_Options_Track_UDP_AirScout.TabIndex = 7;
+            this.rb_Options_Track_UDP_AirScout.Tag = "";
+            this.rb_Options_Track_UDP_AirScout.Text = "UDP Broadcast (AirScout) Az/El ";
+            this.tt_Options.SetToolTip(this.rb_Options_Track_UDP_AirScout, "Not implemented yet");
+            this.rb_Options_Track_UDP_AirScout.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_UDP_AirScout.CheckedChanged += new System.EventHandler(this.gb_Options_Track_UDP_CheckedChanged);
+            // 
+            // tb_Options_Track_DialFreq
+            // 
+            this.tb_Options_Track_DialFreq.BackColor = System.Drawing.Color.Gray;
+            this.tb_Options_Track_DialFreq.Font = new System.Drawing.Font("Courier New", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Track_DialFreq.ForeColor = System.Drawing.Color.Chartreuse;
+            this.tb_Options_Track_DialFreq.FormatSpecifier = "F0";
+            this.tb_Options_Track_DialFreq.Location = new System.Drawing.Point(278, 34);
+            this.tb_Options_Track_DialFreq.MaxValue = ((long)(0));
+            this.tb_Options_Track_DialFreq.MinValue = ((long)(0));
+            this.tb_Options_Track_DialFreq.Name = "tb_Options_Track_DialFreq";
+            this.tb_Options_Track_DialFreq.Size = new System.Drawing.Size(296, 31);
+            this.tb_Options_Track_DialFreq.TabIndex = 20;
+            this.tb_Options_Track_DialFreq.Text = "0";
+            this.tt_Options.SetToolTip(this.tb_Options_Track_DialFreq, "This is the RX frequency of your rig. To change this, simply dial on your rig whe" +
+        "n not in tracking mode.");
+            this.tb_Options_Track_DialFreq.Value = ((long)(0));
+            this.tb_Options_Track_DialFreq.TextChanged += new System.EventHandler(this.tb_Options_CAT_DialFreq_TextChanged);
+            // 
+            // cb_Options_Locations_RestrictToAreaOfInterest
+            // 
+            this.cb_Options_Locations_RestrictToAreaOfInterest.AutoSize = true;
+            this.cb_Options_Locations_RestrictToAreaOfInterest.Checked = global::AirScout.Properties.Settings.Default.Location_RestrictToAreaOfInterest;
+            this.cb_Options_Locations_RestrictToAreaOfInterest.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Locations_RestrictToAreaOfInterest.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Location_RestrictToAreaOfInterest", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Locations_RestrictToAreaOfInterest.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Locations_RestrictToAreaOfInterest.Location = new System.Drawing.Point(12, 58);
+            this.cb_Options_Locations_RestrictToAreaOfInterest.Name = "cb_Options_Locations_RestrictToAreaOfInterest";
+            this.cb_Options_Locations_RestrictToAreaOfInterest.Size = new System.Drawing.Size(230, 17);
+            this.cb_Options_Locations_RestrictToAreaOfInterest.TabIndex = 12;
+            this.cb_Options_Locations_RestrictToAreaOfInterest.Text = "Restrict locations to current Area of Interest";
+            this.tt_Options.SetToolTip(this.cb_Options_Locations_RestrictToAreaOfInterest, "Restrict stations kept in the database to Area of Interest  \r\n(all other stations" +
+        "  will be removed during the update process)");
+            this.cb_Options_Locations_RestrictToAreaOfInterest.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Path_BestCaseElevation
+            // 
+            this.cb_Options_Path_BestCaseElevation.AutoSize = true;
+            this.cb_Options_Path_BestCaseElevation.Checked = global::AirScout.Properties.Settings.Default.Path_BestCaseElevation;
+            this.cb_Options_Path_BestCaseElevation.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Path_BestCaseElevation.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Path_BestCaseElevation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Path_BestCaseElevation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Path_BestCaseElevation.Location = new System.Drawing.Point(6, 411);
+            this.cb_Options_Path_BestCaseElevation.Name = "cb_Options_Path_BestCaseElevation";
+            this.cb_Options_Path_BestCaseElevation.Size = new System.Drawing.Size(438, 17);
+            this.cb_Options_Path_BestCaseElevation.TabIndex = 28;
+            this.cb_Options_Path_BestCaseElevation.Tag = "";
+            this.cb_Options_Path_BestCaseElevation.Text = "Use best case elevation from grid square for both stations if precise location is" +
+    " unknown";
+            this.tt_Options.SetToolTip(this.cb_Options_Path_BestCaseElevation, "If an exact position of a station is not available, use highest available elevati" +
+        "on within the given grid square. \r\nThis position is ONLY used for path calculati" +
+        "on and is not kept in database.");
+            this.cb_Options_Path_BestCaseElevation.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Planes_KeepHistory
+            // 
+            this.cb_Options_Planes_KeepHistory.AutoSize = true;
+            this.cb_Options_Planes_KeepHistory.Checked = global::AirScout.Properties.Settings.Default.Planes_KeepHistory;
+            this.cb_Options_Planes_KeepHistory.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Planes_KeepHistory", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Planes_KeepHistory.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Planes_KeepHistory.Location = new System.Drawing.Point(18, 81);
+            this.cb_Options_Planes_KeepHistory.Name = "cb_Options_Planes_KeepHistory";
+            this.cb_Options_Planes_KeepHistory.Size = new System.Drawing.Size(156, 17);
+            this.cb_Options_Planes_KeepHistory.TabIndex = 4;
+            this.cb_Options_Planes_KeepHistory.Text = "Keep Plane Position History";
+            this.tt_Options.SetToolTip(this.cb_Options_Planes_KeepHistory, "Check this option to keep plane positions in database for history analysis.\r\nCAUT" +
+        "ION! This will need lot of CPU performance and space on disk!");
+            this.cb_Options_Planes_KeepHistory.UseVisualStyleBackColor = true;
+            // 
+            // tb_Options_Track_Serial_Baudrate
+            // 
+            this.tb_Options_Track_Serial_Baudrate.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Track_Serial_Baudrate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Track_Serial_Baudrate.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Track_Serial_Baudrate.FormatSpecifier = "F0";
+            this.tb_Options_Track_Serial_Baudrate.Location = new System.Drawing.Point(190, 40);
+            this.tb_Options_Track_Serial_Baudrate.MaxValue = 115200;
+            this.tb_Options_Track_Serial_Baudrate.MinValue = 0;
+            this.tb_Options_Track_Serial_Baudrate.Name = "tb_Options_Track_Serial_Baudrate";
+            this.tb_Options_Track_Serial_Baudrate.Size = new System.Drawing.Size(72, 22);
+            this.tb_Options_Track_Serial_Baudrate.TabIndex = 11;
+            this.tb_Options_Track_Serial_Baudrate.Text = "4800";
+            this.tt_Options.SetToolTip(this.tb_Options_Track_Serial_Baudrate, "Set the serial port baudrate for rotator control here.\\nBe sure that the baudrate" +
+        " is supported.");
+            this.tb_Options_Track_Serial_Baudrate.Value = global::AirScout.Properties.Settings.Default.Track_Serial_Baudrate;
+            // 
+            // tb_Options_Track_Serial_Port
+            // 
+            this.tb_Options_Track_Serial_Port.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tb_Options_Track_Serial_Port.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "Track_Serial_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Track_Serial_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Track_Serial_Port.Location = new System.Drawing.Point(190, 17);
+            this.tb_Options_Track_Serial_Port.Name = "tb_Options_Track_Serial_Port";
+            this.tb_Options_Track_Serial_Port.Size = new System.Drawing.Size(54, 22);
+            this.tb_Options_Track_Serial_Port.TabIndex = 6;
+            this.tb_Options_Track_Serial_Port.Tag = "";
+            this.tb_Options_Track_Serial_Port.Text = global::AirScout.Properties.Settings.Default.Track_Serial_Port;
+            this.tt_Options.SetToolTip(this.tb_Options_Track_Serial_Port, "Set the serial port for rotator control here.\\nBe sure that the port exists on yo" +
+        "ur computer.");
+            // 
+            // tb_Options_Track_Offset
+            // 
+            this.tb_Options_Track_Offset.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Track_Offset", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Track_Offset.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Track_Offset.FormatSpecifier = "F0";
+            this.tb_Options_Track_Offset.Location = new System.Drawing.Point(569, 17);
+            this.tb_Options_Track_Offset.MaxValue = 30;
+            this.tb_Options_Track_Offset.MinValue = -30;
+            this.tb_Options_Track_Offset.Name = "tb_Options_Track_Offset";
+            this.tb_Options_Track_Offset.Size = new System.Drawing.Size(43, 22);
+            this.tb_Options_Track_Offset.TabIndex = 57;
+            this.tb_Options_Track_Offset.Text = "0";
+            this.tt_Options.SetToolTip(this.tb_Options_Track_Offset, "Allows you to set an offset in time when calculating aircraft position.\\n Use thi" +
+        "s to compensate delay in your rotator control.");
+            this.tb_Options_Track_Offset.Value = global::AirScout.Properties.Settings.Default.Track_Offset;
+            // 
+            // int32TextBox2
+            // 
+            this.int32TextBox2.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Track_Update", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.int32TextBox2.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.int32TextBox2.FormatSpecifier = "F0";
+            this.int32TextBox2.Location = new System.Drawing.Point(332, 17);
+            this.int32TextBox2.MaxValue = 10000;
+            this.int32TextBox2.MinValue = 100;
+            this.int32TextBox2.Name = "int32TextBox2";
+            this.int32TextBox2.Size = new System.Drawing.Size(48, 22);
+            this.int32TextBox2.TabIndex = 1;
+            this.int32TextBox2.Text = "1000";
+            this.tt_Options.SetToolTip(this.int32TextBox2, "Set the tracling update refresh rate.\\nBe sure that your rotator control and your" +
+        " rig can handle this rate.");
+            this.int32TextBox2.Value = global::AirScout.Properties.Settings.Default.Track_Update;
+            // 
+            // cb_Options_Track_Activate
+            // 
+            this.cb_Options_Track_Activate.Checked = global::AirScout.Properties.Settings.Default.Track_Activate;
+            this.cb_Options_Track_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Track_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Track_Activate.Location = new System.Drawing.Point(13, 15);
+            this.cb_Options_Track_Activate.Name = "cb_Options_Track_Activate";
+            this.cb_Options_Track_Activate.Size = new System.Drawing.Size(129, 24);
+            this.cb_Options_Track_Activate.TabIndex = 0;
+            this.cb_Options_Track_Activate.Text = "Activate Tracking";
+            this.tt_Options.SetToolTip(this.cb_Options_Track_Activate, "Click here to activate/deactivate tracking");
+            this.cb_Options_Track_Activate.CheckedChanged += new System.EventHandler(this.cb_Options_Track_Activate_CheckedChanged);
+            // 
             // tab_Options_Planes
             // 
             this.tab_Options_Planes.BackColor = System.Drawing.SystemColors.Control;
@@ -740,6 +1001,20 @@
             this.groupBox48.TabStop = false;
             this.groupBox48.Text = "General Plane Feed Settings";
             // 
+            // int32TextBox1
+            // 
+            this.int32TextBox1.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_ExtendedPlausibilityCheck_MaxErrorDist", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.int32TextBox1.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.int32TextBox1.FormatSpecifier = "F0";
+            this.int32TextBox1.Location = new System.Drawing.Point(199, 84);
+            this.int32TextBox1.MaxValue = 600;
+            this.int32TextBox1.MinValue = 10;
+            this.int32TextBox1.Name = "int32TextBox1";
+            this.int32TextBox1.Size = new System.Drawing.Size(52, 22);
+            this.int32TextBox1.TabIndex = 46;
+            this.int32TextBox1.Text = "10";
+            this.int32TextBox1.Value = global::AirScout.Properties.Settings.Default.Planes_ExtendedPlausibilityCheck_MaxErrorDist;
+            // 
             // label33
             // 
             this.label33.AutoSize = true;
@@ -750,6 +1025,34 @@
             this.label33.TabIndex = 45;
             this.label33.Text = "Max. allowed distance between \r\nreported and estimated position [km]:";
             // 
+            // cb_Options_Planes_ExtendedPlausibilityCheck_Enabled
+            // 
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.AutoSize = true;
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Checked = global::AirScout.Properties.Settings.Default.Planes_ExtendedPlausibilityCheck_Enabled;
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Planes_ExtendedPlausibilityCheck_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Location = new System.Drawing.Point(13, 53);
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Name = "cb_Options_Planes_ExtendedPlausibilityCheck_Enabled";
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Size = new System.Drawing.Size(256, 17);
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.TabIndex = 44;
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Text = "Enable extended plausibility check of aircraft info";
+            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.UseVisualStyleBackColor = true;
+            // 
+            // tb_Options_Planes_Interval
+            // 
+            this.tb_Options_Planes_Interval.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_Interval", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_Interval.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_Interval.FormatSpecifier = "F0";
+            this.tb_Options_Planes_Interval.Location = new System.Drawing.Point(199, 22);
+            this.tb_Options_Planes_Interval.MaxValue = 600;
+            this.tb_Options_Planes_Interval.MinValue = 10;
+            this.tb_Options_Planes_Interval.Name = "tb_Options_Planes_Interval";
+            this.tb_Options_Planes_Interval.Size = new System.Drawing.Size(52, 22);
+            this.tb_Options_Planes_Interval.TabIndex = 43;
+            this.tb_Options_Planes_Interval.Text = "60";
+            this.tb_Options_Planes_Interval.Value = global::AirScout.Properties.Settings.Default.Planes_Interval;
+            // 
             // label22
             // 
             this.label22.AutoSize = true;
@@ -759,6 +1062,19 @@
             this.label22.Size = new System.Drawing.Size(71, 13);
             this.label22.TabIndex = 35;
             this.label22.Text = "Interval [sec]:";
+            // 
+            // cb_Options_Planes_LogErrors
+            // 
+            this.cb_Options_Planes_LogErrors.AutoSize = true;
+            this.cb_Options_Planes_LogErrors.Checked = global::AirScout.Properties.Settings.Default.Planes_LogErrors;
+            this.cb_Options_Planes_LogErrors.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Planes_LogErrors", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Planes_LogErrors.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Planes_LogErrors.Location = new System.Drawing.Point(12, 118);
+            this.cb_Options_Planes_LogErrors.Name = "cb_Options_Planes_LogErrors";
+            this.cb_Options_Planes_LogErrors.Size = new System.Drawing.Size(249, 17);
+            this.cb_Options_Planes_LogErrors.TabIndex = 0;
+            this.cb_Options_Planes_LogErrors.Text = "Log errors as warnings to AirScout\'s main logfile";
+            this.cb_Options_Planes_LogErrors.UseVisualStyleBackColor = true;
             // 
             // groupBox40
             // 
@@ -784,6 +1100,26 @@
             this.label55.TabIndex = 3;
             this.label55.Text = "Aircraft positions older than above entered value will be deleted on next startup" +
     " (0 = forever).";
+            // 
+            // ud_Options_Planes_Position_DatabaseLifetime
+            // 
+            this.ud_Options_Planes_Position_DatabaseLifetime.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "AircraftDatabase_MaxDaysLifetime", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ud_Options_Planes_Position_DatabaseLifetime.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_Planes_Position_DatabaseLifetime.Location = new System.Drawing.Point(199, 14);
+            this.ud_Options_Planes_Position_DatabaseLifetime.Maximum = new decimal(new int[] {
+            365,
+            0,
+            0,
+            0});
+            this.ud_Options_Planes_Position_DatabaseLifetime.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ud_Options_Planes_Position_DatabaseLifetime.Name = "ud_Options_Planes_Position_DatabaseLifetime";
+            this.ud_Options_Planes_Position_DatabaseLifetime.Size = new System.Drawing.Size(49, 22);
+            this.ud_Options_Planes_Position_DatabaseLifetime.TabIndex = 2;
+            this.ud_Options_Planes_Position_DatabaseLifetime.Value = global::AirScout.Properties.Settings.Default.AircraftDatabase_MaxDaysLifetime;
             // 
             // label53
             // 
@@ -823,6 +1159,48 @@
             this.groupBox38.TabIndex = 37;
             this.groupBox38.TabStop = false;
             this.groupBox38.Text = "Plane Position Database Filters";
+            // 
+            // tb_Options_Planes_Positions_TTL
+            // 
+            this.tb_Options_Planes_Positions_TTL.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_Position_TTL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_Positions_TTL.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_Positions_TTL.FormatSpecifier = "F0";
+            this.tb_Options_Planes_Positions_TTL.Location = new System.Drawing.Point(192, 65);
+            this.tb_Options_Planes_Positions_TTL.MaxValue = 30;
+            this.tb_Options_Planes_Positions_TTL.MinValue = 0;
+            this.tb_Options_Planes_Positions_TTL.Name = "tb_Options_Planes_Positions_TTL";
+            this.tb_Options_Planes_Positions_TTL.Size = new System.Drawing.Size(52, 22);
+            this.tb_Options_Planes_Positions_TTL.TabIndex = 43;
+            this.tb_Options_Planes_Positions_TTL.Text = "5";
+            this.tb_Options_Planes_Positions_TTL.Value = global::AirScout.Properties.Settings.Default.Planes_Position_TTL;
+            // 
+            // tb_Options_Planes_MaxAlt
+            // 
+            this.tb_Options_Planes_MaxAlt.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_MaxAlt", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_MaxAlt.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_MaxAlt.FormatSpecifier = "F0";
+            this.tb_Options_Planes_MaxAlt.Location = new System.Drawing.Point(192, 39);
+            this.tb_Options_Planes_MaxAlt.MaxValue = 20000;
+            this.tb_Options_Planes_MaxAlt.MinValue = 0;
+            this.tb_Options_Planes_MaxAlt.Name = "tb_Options_Planes_MaxAlt";
+            this.tb_Options_Planes_MaxAlt.Size = new System.Drawing.Size(52, 22);
+            this.tb_Options_Planes_MaxAlt.TabIndex = 42;
+            this.tb_Options_Planes_MaxAlt.Text = "12200";
+            this.tb_Options_Planes_MaxAlt.Value = global::AirScout.Properties.Settings.Default.Planes_MaxAlt;
+            // 
+            // tb_Options_Planes_MinAlt
+            // 
+            this.tb_Options_Planes_MinAlt.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_MinAlt", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_MinAlt.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_MinAlt.FormatSpecifier = "F0";
+            this.tb_Options_Planes_MinAlt.Location = new System.Drawing.Point(192, 14);
+            this.tb_Options_Planes_MinAlt.MaxValue = 20000;
+            this.tb_Options_Planes_MinAlt.MinValue = 0;
+            this.tb_Options_Planes_MinAlt.Name = "tb_Options_Planes_MinAlt";
+            this.tb_Options_Planes_MinAlt.Size = new System.Drawing.Size(52, 22);
+            this.tb_Options_Planes_MinAlt.TabIndex = 41;
+            this.tb_Options_Planes_MinAlt.Text = "5000";
+            this.tb_Options_Planes_MinAlt.Value = global::AirScout.Properties.Settings.Default.Planes_MinAlt;
             // 
             // label2
             // 
@@ -901,6 +1279,34 @@
             this.groupBox26.TabIndex = 33;
             this.groupBox26.TabStop = false;
             this.groupBox26.Text = "Plane Live Position Filters";
+            // 
+            // tb_Options_Planes_Filter_MinAlt
+            // 
+            this.tb_Options_Planes_Filter_MinAlt.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_Filter_Min_Alt", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_Filter_MinAlt.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_Filter_MinAlt.FormatSpecifier = "F0";
+            this.tb_Options_Planes_Filter_MinAlt.Location = new System.Drawing.Point(192, 86);
+            this.tb_Options_Planes_Filter_MinAlt.MaxValue = 12000;
+            this.tb_Options_Planes_Filter_MinAlt.MinValue = 0;
+            this.tb_Options_Planes_Filter_MinAlt.Name = "tb_Options_Planes_Filter_MinAlt";
+            this.tb_Options_Planes_Filter_MinAlt.Size = new System.Drawing.Size(52, 22);
+            this.tb_Options_Planes_Filter_MinAlt.TabIndex = 43;
+            this.tb_Options_Planes_Filter_MinAlt.Text = "0";
+            this.tb_Options_Planes_Filter_MinAlt.Value = global::AirScout.Properties.Settings.Default.Planes_Filter_Min_Alt;
+            // 
+            // tb_Options_Planes_Filter_Max_Circumcircle
+            // 
+            this.tb_Options_Planes_Filter_Max_Circumcircle.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_Filter_Max_Circumcircle", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_Filter_Max_Circumcircle.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_Filter_Max_Circumcircle.FormatSpecifier = "F0";
+            this.tb_Options_Planes_Filter_Max_Circumcircle.Location = new System.Drawing.Point(192, 59);
+            this.tb_Options_Planes_Filter_Max_Circumcircle.MaxValue = 1000;
+            this.tb_Options_Planes_Filter_Max_Circumcircle.MinValue = -1;
+            this.tb_Options_Planes_Filter_Max_Circumcircle.Name = "tb_Options_Planes_Filter_Max_Circumcircle";
+            this.tb_Options_Planes_Filter_Max_Circumcircle.Size = new System.Drawing.Size(52, 22);
+            this.tb_Options_Planes_Filter_Max_Circumcircle.TabIndex = 42;
+            this.tb_Options_Planes_Filter_Max_Circumcircle.Text = "0";
+            this.tb_Options_Planes_Filter_Max_Circumcircle.Value = global::AirScout.Properties.Settings.Default.Planes_Filter_Max_Circumcircle;
             // 
             // label96
             // 
@@ -1255,6 +1661,20 @@
             this.label147.Text = "Export elevation path to CSV (do not change settings before as they may not have " +
     " effect):";
             // 
+            // tb_Options_Path_MaxLength
+            // 
+            this.tb_Options_Path_MaxLength.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Path_MaxLength", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Path_MaxLength.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Path_MaxLength.FormatSpecifier = "F0";
+            this.tb_Options_Path_MaxLength.Location = new System.Drawing.Point(318, 385);
+            this.tb_Options_Path_MaxLength.MaxValue = double.NaN;
+            this.tb_Options_Path_MaxLength.MinValue = double.NaN;
+            this.tb_Options_Path_MaxLength.Name = "tb_Options_Path_MaxLength";
+            this.tb_Options_Path_MaxLength.Size = new System.Drawing.Size(57, 20);
+            this.tb_Options_Path_MaxLength.TabIndex = 39;
+            this.tb_Options_Path_MaxLength.Text = "1000";
+            this.tb_Options_Path_MaxLength.Value = global::AirScout.Properties.Settings.Default.Path_MaxLength;
+            // 
             // label131
             // 
             this.label131.AutoSize = true;
@@ -1404,6 +1824,7 @@
             this.gm_Options_SRTM1.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Options_SRTM1.Name = "gm_Options_SRTM1";
             this.gm_Options_SRTM1.NegativeMode = false;
+            this.gm_Options_SRTM1.Opacity = 1D;
             this.gm_Options_SRTM1.PolygonsEnabled = true;
             this.gm_Options_SRTM1.RetryLoadTile = 0;
             this.gm_Options_SRTM1.RoutesEnabled = true;
@@ -1424,6 +1845,34 @@
             this.groupBox12.TabIndex = 16;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Use Elevation Model";
+            // 
+            // cb_Options_Elevation_SRTM1_EnableCache
+            // 
+            this.cb_Options_Elevation_SRTM1_EnableCache.AutoSize = true;
+            this.cb_Options_Elevation_SRTM1_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM1_EnableCache;
+            this.cb_Options_Elevation_SRTM1_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM1_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_SRTM1_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_SRTM1_EnableCache.Location = new System.Drawing.Point(6, 42);
+            this.cb_Options_Elevation_SRTM1_EnableCache.Name = "cb_Options_Elevation_SRTM1_EnableCache";
+            this.cb_Options_Elevation_SRTM1_EnableCache.Size = new System.Drawing.Size(179, 17);
+            this.cb_Options_Elevation_SRTM1_EnableCache.TabIndex = 17;
+            this.cb_Options_Elevation_SRTM1_EnableCache.Tag = "";
+            this.cb_Options_Elevation_SRTM1_EnableCache.Text = "Keep downloaded elevation tiles";
+            this.cb_Options_Elevation_SRTM1_EnableCache.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Elevation_SRTM1
+            // 
+            this.cb_Options_Elevation_SRTM1.AutoSize = true;
+            this.cb_Options_Elevation_SRTM1.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM1_Enabled;
+            this.cb_Options_Elevation_SRTM1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM1_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_SRTM1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_SRTM1.Location = new System.Drawing.Point(6, 19);
+            this.cb_Options_Elevation_SRTM1.Name = "cb_Options_Elevation_SRTM1";
+            this.cb_Options_Elevation_SRTM1.Size = new System.Drawing.Size(155, 17);
+            this.cb_Options_Elevation_SRTM1.TabIndex = 16;
+            this.cb_Options_Elevation_SRTM1.Tag = "";
+            this.cb_Options_Elevation_SRTM1.Text = "Use SRTM1 elevation data";
+            this.cb_Options_Elevation_SRTM1.UseVisualStyleBackColor = true;
             // 
             // tab_Options_SRTM3
             // 
@@ -1511,6 +1960,7 @@
             this.gm_Options_SRTM3.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Options_SRTM3.Name = "gm_Options_SRTM3";
             this.gm_Options_SRTM3.NegativeMode = false;
+            this.gm_Options_SRTM3.Opacity = 1D;
             this.gm_Options_SRTM3.PolygonsEnabled = true;
             this.gm_Options_SRTM3.RetryLoadTile = 0;
             this.gm_Options_SRTM3.RoutesEnabled = true;
@@ -1531,6 +1981,34 @@
             this.groupBox8.TabIndex = 12;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Use Elevation Model";
+            // 
+            // cb_Options_Elevation_SRTM3_EnableCache
+            // 
+            this.cb_Options_Elevation_SRTM3_EnableCache.AutoSize = true;
+            this.cb_Options_Elevation_SRTM3_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM3_EnableCache;
+            this.cb_Options_Elevation_SRTM3_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM3_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_SRTM3_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_SRTM3_EnableCache.Location = new System.Drawing.Point(6, 42);
+            this.cb_Options_Elevation_SRTM3_EnableCache.Name = "cb_Options_Elevation_SRTM3_EnableCache";
+            this.cb_Options_Elevation_SRTM3_EnableCache.Size = new System.Drawing.Size(179, 17);
+            this.cb_Options_Elevation_SRTM3_EnableCache.TabIndex = 13;
+            this.cb_Options_Elevation_SRTM3_EnableCache.Tag = "";
+            this.cb_Options_Elevation_SRTM3_EnableCache.Text = "Keep downloaded elevation tiles";
+            this.cb_Options_Elevation_SRTM3_EnableCache.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Elevation_SRTM3
+            // 
+            this.cb_Options_Elevation_SRTM3.AutoSize = true;
+            this.cb_Options_Elevation_SRTM3.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM3_Enabled;
+            this.cb_Options_Elevation_SRTM3.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM3_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_SRTM3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_SRTM3.Location = new System.Drawing.Point(6, 19);
+            this.cb_Options_Elevation_SRTM3.Name = "cb_Options_Elevation_SRTM3";
+            this.cb_Options_Elevation_SRTM3.Size = new System.Drawing.Size(155, 17);
+            this.cb_Options_Elevation_SRTM3.TabIndex = 12;
+            this.cb_Options_Elevation_SRTM3.Tag = "";
+            this.cb_Options_Elevation_SRTM3.Text = "Use SRTM3 elevation data";
+            this.cb_Options_Elevation_SRTM3.UseVisualStyleBackColor = true;
             // 
             // tab_Options_GLOBE
             // 
@@ -1618,6 +2096,7 @@
             this.gm_Options_GLOBE.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Options_GLOBE.Name = "gm_Options_GLOBE";
             this.gm_Options_GLOBE.NegativeMode = false;
+            this.gm_Options_GLOBE.Opacity = 1D;
             this.gm_Options_GLOBE.PolygonsEnabled = true;
             this.gm_Options_GLOBE.RetryLoadTile = 0;
             this.gm_Options_GLOBE.RoutesEnabled = true;
@@ -1638,6 +2117,36 @@
             this.groupBox10.TabIndex = 13;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Use Elevation Model";
+            // 
+            // cb_Options_Elevation_GLOBE_EnableCache
+            // 
+            this.cb_Options_Elevation_GLOBE_EnableCache.AutoSize = true;
+            this.cb_Options_Elevation_GLOBE_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_GLOBE_EnableCache;
+            this.cb_Options_Elevation_GLOBE_EnableCache.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Elevation_GLOBE_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_GLOBE_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_GLOBE_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_GLOBE_EnableCache.Location = new System.Drawing.Point(12, 42);
+            this.cb_Options_Elevation_GLOBE_EnableCache.Name = "cb_Options_Elevation_GLOBE_EnableCache";
+            this.cb_Options_Elevation_GLOBE_EnableCache.Size = new System.Drawing.Size(179, 17);
+            this.cb_Options_Elevation_GLOBE_EnableCache.TabIndex = 8;
+            this.cb_Options_Elevation_GLOBE_EnableCache.Tag = "";
+            this.cb_Options_Elevation_GLOBE_EnableCache.Text = "Keep downloaded elevation tiles";
+            this.cb_Options_Elevation_GLOBE_EnableCache.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Elevation_GLOBE
+            // 
+            this.cb_Options_Elevation_GLOBE.AutoSize = true;
+            this.cb_Options_Elevation_GLOBE.Checked = global::AirScout.Properties.Settings.Default.Elevation_GLOBE_Enabled;
+            this.cb_Options_Elevation_GLOBE.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Elevation_GLOBE.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_GLOBE_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_GLOBE.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_GLOBE.Location = new System.Drawing.Point(12, 19);
+            this.cb_Options_Elevation_GLOBE.Name = "cb_Options_Elevation_GLOBE";
+            this.cb_Options_Elevation_GLOBE.Size = new System.Drawing.Size(154, 17);
+            this.cb_Options_Elevation_GLOBE.TabIndex = 7;
+            this.cb_Options_Elevation_GLOBE.Tag = "";
+            this.cb_Options_Elevation_GLOBE.Text = "Use GLOBE elevation data";
+            this.cb_Options_Elevation_GLOBE.UseVisualStyleBackColor = true;
             // 
             // tab_Options_Map
             // 
@@ -1670,6 +2179,34 @@
             this.groupBox49.TabStop = false;
             this.groupBox49.Text = "Multi-Path";
             // 
+            // cb_Options_Map_SmallMarkers
+            // 
+            this.cb_Options_Map_SmallMarkers.AutoSize = true;
+            this.cb_Options_Map_SmallMarkers.Checked = global::AirScout.Properties.Settings.Default.Map_SmallMarkers;
+            this.cb_Options_Map_SmallMarkers.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Map_SmallMarkers.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Map_SmallMarkers", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Map_SmallMarkers.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Map_SmallMarkers.Location = new System.Drawing.Point(18, 22);
+            this.cb_Options_Map_SmallMarkers.Name = "cb_Options_Map_SmallMarkers";
+            this.cb_Options_Map_SmallMarkers.Size = new System.Drawing.Size(199, 17);
+            this.cb_Options_Map_SmallMarkers.TabIndex = 2;
+            this.cb_Options_Map_SmallMarkers.Text = "Use Small Markers for all Path Marks";
+            this.cb_Options_Map_SmallMarkers.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Map_LabelCalls
+            // 
+            this.cb_Options_Map_LabelCalls.AutoSize = true;
+            this.cb_Options_Map_LabelCalls.Checked = global::AirScout.Properties.Settings.Default.Map_LabelCalls;
+            this.cb_Options_Map_LabelCalls.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Map_LabelCalls.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Map_LabelCalls", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Map_LabelCalls.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Map_LabelCalls.Location = new System.Drawing.Point(18, 45);
+            this.cb_Options_Map_LabelCalls.Name = "cb_Options_Map_LabelCalls";
+            this.cb_Options_Map_LabelCalls.Size = new System.Drawing.Size(209, 17);
+            this.cb_Options_Map_LabelCalls.TabIndex = 3;
+            this.cb_Options_Map_LabelCalls.Text = "Show Labels with Callsign at Locations";
+            this.cb_Options_Map_LabelCalls.UseVisualStyleBackColor = true;
+            // 
             // groupBox37
             // 
             this.groupBox37.Controls.Add(this.label34);
@@ -1692,6 +2229,26 @@
             this.label34.TabIndex = 2;
             this.label34.Text = "Font Size for Axes in Diagrams etc.:";
             // 
+            // ud_Options_Charts_FontSize
+            // 
+            this.ud_Options_Charts_FontSize.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Charts_FontSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ud_Options_Charts_FontSize.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_Charts_FontSize.Location = new System.Drawing.Point(192, 15);
+            this.ud_Options_Charts_FontSize.Maximum = new decimal(new int[] {
+            16,
+            0,
+            0,
+            0});
+            this.ud_Options_Charts_FontSize.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.ud_Options_Charts_FontSize.Name = "ud_Options_Charts_FontSize";
+            this.ud_Options_Charts_FontSize.Size = new System.Drawing.Size(45, 22);
+            this.ud_Options_Charts_FontSize.TabIndex = 0;
+            this.ud_Options_Charts_FontSize.Value = global::AirScout.Properties.Settings.Default.Charts_FontSize;
+            // 
             // groupBox39
             // 
             this.groupBox39.Controls.Add(this.tb_Options_Map_Update_Interval);
@@ -1704,6 +2261,20 @@
             this.groupBox39.TabIndex = 8;
             this.groupBox39.TabStop = false;
             this.groupBox39.Text = "Screen Updates";
+            // 
+            // tb_Options_Map_Update_Interval
+            // 
+            this.tb_Options_Map_Update_Interval.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Map_Update", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Map_Update_Interval.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Map_Update_Interval.FormatSpecifier = "F0";
+            this.tb_Options_Map_Update_Interval.Location = new System.Drawing.Point(119, 33);
+            this.tb_Options_Map_Update_Interval.MaxValue = 3600;
+            this.tb_Options_Map_Update_Interval.MinValue = 0;
+            this.tb_Options_Map_Update_Interval.Name = "tb_Options_Map_Update_Interval";
+            this.tb_Options_Map_Update_Interval.Size = new System.Drawing.Size(37, 22);
+            this.tb_Options_Map_Update_Interval.TabIndex = 23;
+            this.tb_Options_Map_Update_Interval.Text = "1";
+            this.tb_Options_Map_Update_Interval.Value = global::AirScout.Properties.Settings.Default.Map_Update;
             // 
             // label97
             // 
@@ -1727,6 +2298,8 @@
             // 
             // groupBox23
             // 
+            this.groupBox23.Controls.Add(this.cb_Options_Distances_Activated);
+            this.groupBox23.Controls.Add(this.cb_Options_Locators_Activate);
             this.groupBox23.Controls.Add(this.ud_Options_Map_Opacity);
             this.groupBox23.Controls.Add(this.label148);
             this.groupBox23.Controls.Add(this.ud_Options_Map_Preloader_MaxZoom);
@@ -1742,15 +2315,102 @@
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "General ";
             // 
+            // ud_Options_Map_Opacity
+            // 
+            this.ud_Options_Map_Opacity.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Map_Opacity", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ud_Options_Map_Opacity.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_Map_Opacity.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.ud_Options_Map_Opacity.Location = new System.Drawing.Point(320, 18);
+            this.ud_Options_Map_Opacity.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ud_Options_Map_Opacity.Name = "ud_Options_Map_Opacity";
+            this.ud_Options_Map_Opacity.Size = new System.Drawing.Size(54, 20);
+            this.ud_Options_Map_Opacity.TabIndex = 10;
+            this.ud_Options_Map_Opacity.Value = global::AirScout.Properties.Settings.Default.Map_Opacity;
+            // 
+            // label148
+            // 
+            this.label148.AutoSize = true;
+            this.label148.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label148.Location = new System.Drawing.Point(234, 20);
+            this.label148.Name = "label148";
+            this.label148.Size = new System.Drawing.Size(70, 13);
+            this.label148.TabIndex = 7;
+            this.label148.Text = "Map Opacity:";
+            // 
+            // ud_Options_Map_Preloader_MaxZoom
+            // 
+            this.ud_Options_Map_Preloader_MaxZoom.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Map_Preloader_MaxZoom", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ud_Options_Map_Preloader_MaxZoom.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_Map_Preloader_MaxZoom.Location = new System.Drawing.Point(319, 66);
+            this.ud_Options_Map_Preloader_MaxZoom.Maximum = new decimal(new int[] {
+            11,
+            0,
+            0,
+            0});
+            this.ud_Options_Map_Preloader_MaxZoom.Name = "ud_Options_Map_Preloader_MaxZoom";
+            this.ud_Options_Map_Preloader_MaxZoom.Size = new System.Drawing.Size(54, 22);
+            this.ud_Options_Map_Preloader_MaxZoom.TabIndex = 6;
+            this.ud_Options_Map_Preloader_MaxZoom.Value = global::AirScout.Properties.Settings.Default.Map_Preloader_MaxZoom;
+            // 
             // label144
             // 
             this.label144.AutoSize = true;
             this.label144.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label144.Location = new System.Drawing.Point(226, 64);
+            this.label144.Location = new System.Drawing.Point(234, 64);
             this.label144.Name = "label144";
-            this.label144.Size = new System.Drawing.Size(87, 26);
+            this.label144.Size = new System.Drawing.Size(78, 26);
             this.label144.TabIndex = 5;
-            this.label144.Text = "Preload down to \r\nZoom Level:";
+            this.label144.Text = "Preload down \r\nto Zoom Level:";
+            // 
+            // cb_Options_Map_Preloader_Enabled
+            // 
+            this.cb_Options_Map_Preloader_Enabled.AutoSize = true;
+            this.cb_Options_Map_Preloader_Enabled.Checked = global::AirScout.Properties.Settings.Default.Map_Preloader_Enabled;
+            this.cb_Options_Map_Preloader_Enabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Map_Preloader_Enabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Map_Preloader_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Map_Preloader_Enabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Map_Preloader_Enabled.Location = new System.Drawing.Point(237, 44);
+            this.cb_Options_Map_Preloader_Enabled.Name = "cb_Options_Map_Preloader_Enabled";
+            this.cb_Options_Map_Preloader_Enabled.Size = new System.Drawing.Size(136, 17);
+            this.cb_Options_Map_Preloader_Enabled.TabIndex = 4;
+            this.cb_Options_Map_Preloader_Enabled.Text = "Enable Map Preloading";
+            this.cb_Options_Map_Preloader_Enabled.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Watchlist_Activate
+            // 
+            this.cb_Options_Watchlist_Activate.AutoSize = true;
+            this.cb_Options_Watchlist_Activate.Checked = global::AirScout.Properties.Settings.Default.Watchlist_Activated;
+            this.cb_Options_Watchlist_Activate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Watchlist_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Watchlist_Activated", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Watchlist_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Watchlist_Activate.Location = new System.Drawing.Point(16, 71);
+            this.cb_Options_Watchlist_Activate.Name = "cb_Options_Watchlist_Activate";
+            this.cb_Options_Watchlist_Activate.Size = new System.Drawing.Size(144, 17);
+            this.cb_Options_Watchlist_Activate.TabIndex = 1;
+            this.cb_Options_Watchlist_Activate.Text = "Show Watchlist Callsigns";
+            this.cb_Options_Watchlist_Activate.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Airports_Activate
+            // 
+            this.cb_Options_Airports_Activate.AutoSize = true;
+            this.cb_Options_Airports_Activate.Checked = global::AirScout.Properties.Settings.Default.Airports_Activate;
+            this.cb_Options_Airports_Activate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Airports_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Airports_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Airports_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Airports_Activate.Location = new System.Drawing.Point(16, 19);
+            this.cb_Options_Airports_Activate.Name = "cb_Options_Airports_Activate";
+            this.cb_Options_Airports_Activate.Size = new System.Drawing.Size(91, 17);
+            this.cb_Options_Airports_Activate.TabIndex = 0;
+            this.cb_Options_Airports_Activate.Text = "Show Airports";
+            this.cb_Options_Airports_Activate.UseVisualStyleBackColor = true;
             // 
             // groupBox30
             // 
@@ -1770,6 +2430,62 @@
             this.groupBox30.TabIndex = 6;
             this.groupBox30.TabStop = false;
             this.groupBox30.Text = "Plane Icon Sizes per Category";
+            // 
+            // tb_Options_Planes_IconSize_S
+            // 
+            this.tb_Options_Planes_IconSize_S.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_IconSize_S", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_IconSize_S.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_IconSize_S.FormatSpecifier = "F0";
+            this.tb_Options_Planes_IconSize_S.Location = new System.Drawing.Point(183, 47);
+            this.tb_Options_Planes_IconSize_S.MaxValue = 128;
+            this.tb_Options_Planes_IconSize_S.MinValue = 0;
+            this.tb_Options_Planes_IconSize_S.Name = "tb_Options_Planes_IconSize_S";
+            this.tb_Options_Planes_IconSize_S.Size = new System.Drawing.Size(37, 22);
+            this.tb_Options_Planes_IconSize_S.TabIndex = 16;
+            this.tb_Options_Planes_IconSize_S.Text = "48";
+            this.tb_Options_Planes_IconSize_S.Value = global::AirScout.Properties.Settings.Default.Planes_IconSize_S;
+            // 
+            // tb_Options_Planes_IconSize_H
+            // 
+            this.tb_Options_Planes_IconSize_H.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_IconSize_H", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_IconSize_H.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_IconSize_H.FormatSpecifier = "F0";
+            this.tb_Options_Planes_IconSize_H.Location = new System.Drawing.Point(183, 19);
+            this.tb_Options_Planes_IconSize_H.MaxValue = 128;
+            this.tb_Options_Planes_IconSize_H.MinValue = 0;
+            this.tb_Options_Planes_IconSize_H.Name = "tb_Options_Planes_IconSize_H";
+            this.tb_Options_Planes_IconSize_H.Size = new System.Drawing.Size(37, 22);
+            this.tb_Options_Planes_IconSize_H.TabIndex = 15;
+            this.tb_Options_Planes_IconSize_H.Text = "36";
+            this.tb_Options_Planes_IconSize_H.Value = global::AirScout.Properties.Settings.Default.Planes_IconSize_H;
+            // 
+            // tb_Options_Planes_IconSize_M
+            // 
+            this.tb_Options_Planes_IconSize_M.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_IconSize_M", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_IconSize_M.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_IconSize_M.FormatSpecifier = "F0";
+            this.tb_Options_Planes_IconSize_M.Location = new System.Drawing.Point(63, 47);
+            this.tb_Options_Planes_IconSize_M.MaxValue = 128;
+            this.tb_Options_Planes_IconSize_M.MinValue = 0;
+            this.tb_Options_Planes_IconSize_M.Name = "tb_Options_Planes_IconSize_M";
+            this.tb_Options_Planes_IconSize_M.Size = new System.Drawing.Size(37, 22);
+            this.tb_Options_Planes_IconSize_M.TabIndex = 14;
+            this.tb_Options_Planes_IconSize_M.Text = "24";
+            this.tb_Options_Planes_IconSize_M.Value = global::AirScout.Properties.Settings.Default.Planes_IconSize_M;
+            // 
+            // tb_Options_Planes_IconSize_L
+            // 
+            this.tb_Options_Planes_IconSize_L.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_IconSize_L", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_IconSize_L.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Planes_IconSize_L.FormatSpecifier = "F0";
+            this.tb_Options_Planes_IconSize_L.Location = new System.Drawing.Point(63, 21);
+            this.tb_Options_Planes_IconSize_L.MaxValue = 128;
+            this.tb_Options_Planes_IconSize_L.MinValue = 0;
+            this.tb_Options_Planes_IconSize_L.Name = "tb_Options_Planes_IconSize_L";
+            this.tb_Options_Planes_IconSize_L.Size = new System.Drawing.Size(37, 22);
+            this.tb_Options_Planes_IconSize_L.TabIndex = 13;
+            this.tb_Options_Planes_IconSize_L.Text = "16";
+            this.tb_Options_Planes_IconSize_L.Value = global::AirScout.Properties.Settings.Default.Planes_IconSize_L;
             // 
             // label84
             // 
@@ -1859,7 +2575,7 @@
             this.label76.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label76.Location = new System.Drawing.Point(10, 41);
             this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(116, 16);
+            this.label76.Size = new System.Drawing.Size(115, 16);
             this.label76.TabIndex = 18;
             this.label76.Text = "bold characters";
             // 
@@ -1882,6 +2598,153 @@
             this.label75.TabIndex = 17;
             this.label75.Text = "are affecting both Simple and Detailed Info Window.";
             // 
+            // cb_Options_InfoWin_Angle
+            // 
+            this.cb_Options_InfoWin_Angle.AutoSize = true;
+            this.cb_Options_InfoWin_Angle.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Angle;
+            this.cb_Options_InfoWin_Angle.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Angle", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Angle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Angle.Location = new System.Drawing.Point(139, 75);
+            this.cb_Options_InfoWin_Angle.Name = "cb_Options_InfoWin_Angle";
+            this.cb_Options_InfoWin_Angle.Size = new System.Drawing.Size(96, 17);
+            this.cb_Options_InfoWin_Angle.TabIndex = 15;
+            this.cb_Options_InfoWin_Angle.Tag = "";
+            this.cb_Options_InfoWin_Angle.Text = "Crossing Angle";
+            this.cb_Options_InfoWin_Angle.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_InfoWin_Speed
+            // 
+            this.cb_Options_InfoWin_Speed.AutoSize = true;
+            this.cb_Options_InfoWin_Speed.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Speed;
+            this.cb_Options_InfoWin_Speed.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Speed", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Speed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Speed.Location = new System.Drawing.Point(26, 100);
+            this.cb_Options_InfoWin_Speed.Name = "cb_Options_InfoWin_Speed";
+            this.cb_Options_InfoWin_Speed.Size = new System.Drawing.Size(87, 17);
+            this.cb_Options_InfoWin_Speed.TabIndex = 14;
+            this.cb_Options_InfoWin_Speed.Tag = "";
+            this.cb_Options_InfoWin_Speed.Text = "Plane Speed";
+            this.cb_Options_InfoWin_Speed.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_InfoWin_Squint
+            // 
+            this.cb_Options_InfoWin_Squint.AutoSize = true;
+            this.cb_Options_InfoWin_Squint.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Squint;
+            this.cb_Options_InfoWin_Squint.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_InfoWin_Squint.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Squint", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Squint.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Squint.Location = new System.Drawing.Point(139, 121);
+            this.cb_Options_InfoWin_Squint.Name = "cb_Options_InfoWin_Squint";
+            this.cb_Options_InfoWin_Squint.Size = new System.Drawing.Size(86, 17);
+            this.cb_Options_InfoWin_Squint.TabIndex = 13;
+            this.cb_Options_InfoWin_Squint.Tag = "";
+            this.cb_Options_InfoWin_Squint.Text = "Squint Angle";
+            this.cb_Options_InfoWin_Squint.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_InfoWin_Epsilon
+            // 
+            this.cb_Options_InfoWin_Epsilon.AutoSize = true;
+            this.cb_Options_InfoWin_Epsilon.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Epsilon;
+            this.cb_Options_InfoWin_Epsilon.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Epsilon", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Epsilon.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Epsilon.Location = new System.Drawing.Point(139, 98);
+            this.cb_Options_InfoWin_Epsilon.Name = "cb_Options_InfoWin_Epsilon";
+            this.cb_Options_InfoWin_Epsilon.Size = new System.Drawing.Size(105, 17);
+            this.cb_Options_InfoWin_Epsilon.TabIndex = 12;
+            this.cb_Options_InfoWin_Epsilon.Tag = "";
+            this.cb_Options_InfoWin_Epsilon.Text = "Elevation Angles";
+            this.cb_Options_InfoWin_Epsilon.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_InfoWin_Dist
+            // 
+            this.cb_Options_InfoWin_Dist.AutoSize = true;
+            this.cb_Options_InfoWin_Dist.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Dist;
+            this.cb_Options_InfoWin_Dist.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_InfoWin_Dist.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Dist", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Dist.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Dist.Location = new System.Drawing.Point(139, 29);
+            this.cb_Options_InfoWin_Dist.Name = "cb_Options_InfoWin_Dist";
+            this.cb_Options_InfoWin_Dist.Size = new System.Drawing.Size(111, 17);
+            this.cb_Options_InfoWin_Dist.TabIndex = 11;
+            this.cb_Options_InfoWin_Dist.Tag = "";
+            this.cb_Options_InfoWin_Dist.Text = "Crossing Distance";
+            this.cb_Options_InfoWin_Dist.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_InfoWin_Time
+            // 
+            this.cb_Options_InfoWin_Time.AutoSize = true;
+            this.cb_Options_InfoWin_Time.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Time;
+            this.cb_Options_InfoWin_Time.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_InfoWin_Time.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Time", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Time.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Time.Location = new System.Drawing.Point(139, 52);
+            this.cb_Options_InfoWin_Time.Name = "cb_Options_InfoWin_Time";
+            this.cb_Options_InfoWin_Time.Size = new System.Drawing.Size(92, 17);
+            this.cb_Options_InfoWin_Time.TabIndex = 10;
+            this.cb_Options_InfoWin_Time.Tag = "";
+            this.cb_Options_InfoWin_Time.Text = "Crossing Time";
+            this.cb_Options_InfoWin_Time.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_InfoWin_Type
+            // 
+            this.cb_Options_InfoWin_Type.AutoSize = true;
+            this.cb_Options_InfoWin_Type.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Type;
+            this.cb_Options_InfoWin_Type.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_InfoWin_Type.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Type", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Type.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Type.Location = new System.Drawing.Point(26, 123);
+            this.cb_Options_InfoWin_Type.Name = "cb_Options_InfoWin_Type";
+            this.cb_Options_InfoWin_Type.Size = new System.Drawing.Size(90, 17);
+            this.cb_Options_InfoWin_Type.TabIndex = 9;
+            this.cb_Options_InfoWin_Type.Tag = "";
+            this.cb_Options_InfoWin_Type.Text = "Plane Type";
+            this.cb_Options_InfoWin_Type.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_InfoWin_Track
+            // 
+            this.cb_Options_InfoWin_Track.AutoSize = true;
+            this.cb_Options_InfoWin_Track.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Track;
+            this.cb_Options_InfoWin_Track.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_InfoWin_Track.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Track", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Track.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Track.Location = new System.Drawing.Point(26, 77);
+            this.cb_Options_InfoWin_Track.Name = "cb_Options_InfoWin_Track";
+            this.cb_Options_InfoWin_Track.Size = new System.Drawing.Size(95, 17);
+            this.cb_Options_InfoWin_Track.TabIndex = 8;
+            this.cb_Options_InfoWin_Track.Tag = "";
+            this.cb_Options_InfoWin_Track.Text = "Plane Track";
+            this.cb_Options_InfoWin_Track.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_InfoWin_Alt
+            // 
+            this.cb_Options_InfoWin_Alt.AutoSize = true;
+            this.cb_Options_InfoWin_Alt.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Alt;
+            this.cb_Options_InfoWin_Alt.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_InfoWin_Alt.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Alt", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Alt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Alt.Location = new System.Drawing.Point(26, 54);
+            this.cb_Options_InfoWin_Alt.Name = "cb_Options_InfoWin_Alt";
+            this.cb_Options_InfoWin_Alt.Size = new System.Drawing.Size(105, 17);
+            this.cb_Options_InfoWin_Alt.TabIndex = 7;
+            this.cb_Options_InfoWin_Alt.Tag = "";
+            this.cb_Options_InfoWin_Alt.Text = "Plane Altitude";
+            this.cb_Options_InfoWin_Alt.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_InfoWin_Position
+            // 
+            this.cb_Options_InfoWin_Position.AutoSize = true;
+            this.cb_Options_InfoWin_Position.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Position;
+            this.cb_Options_InfoWin_Position.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_InfoWin_Position.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Position", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_InfoWin_Position.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_InfoWin_Position.Location = new System.Drawing.Point(26, 31);
+            this.cb_Options_InfoWin_Position.Name = "cb_Options_InfoWin_Position";
+            this.cb_Options_InfoWin_Position.Size = new System.Drawing.Size(107, 17);
+            this.cb_Options_InfoWin_Position.TabIndex = 6;
+            this.cb_Options_InfoWin_Position.Tag = "";
+            this.cb_Options_InfoWin_Position.Text = "Plane Position";
+            this.cb_Options_InfoWin_Position.UseVisualStyleBackColor = true;
+            // 
             // groupBox22
             // 
             this.groupBox22.Controls.Add(this.rb_Options_InfoWin_Imperial);
@@ -1897,6 +2760,35 @@
             this.groupBox22.TabIndex = 4;
             this.groupBox22.TabStop = false;
             this.groupBox22.Text = "Info Window Options";
+            // 
+            // rb_Options_InfoWin_Imperial
+            // 
+            this.rb_Options_InfoWin_Imperial.AutoSize = true;
+            this.rb_Options_InfoWin_Imperial.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Imperial;
+            this.rb_Options_InfoWin_Imperial.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Imperial", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.rb_Options_InfoWin_Imperial.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_InfoWin_Imperial.Location = new System.Drawing.Point(156, 18);
+            this.rb_Options_InfoWin_Imperial.Name = "rb_Options_InfoWin_Imperial";
+            this.rb_Options_InfoWin_Imperial.Size = new System.Drawing.Size(61, 17);
+            this.rb_Options_InfoWin_Imperial.TabIndex = 5;
+            this.rb_Options_InfoWin_Imperial.Tag = "";
+            this.rb_Options_InfoWin_Imperial.Text = "Imperial";
+            this.rb_Options_InfoWin_Imperial.UseVisualStyleBackColor = true;
+            // 
+            // rb_Options_InfoWin_Metric
+            // 
+            this.rb_Options_InfoWin_Metric.AutoSize = true;
+            this.rb_Options_InfoWin_Metric.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Metric;
+            this.rb_Options_InfoWin_Metric.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Metric", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.rb_Options_InfoWin_Metric.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_InfoWin_Metric.Location = new System.Drawing.Point(83, 18);
+            this.rb_Options_InfoWin_Metric.Name = "rb_Options_InfoWin_Metric";
+            this.rb_Options_InfoWin_Metric.Size = new System.Drawing.Size(54, 17);
+            this.rb_Options_InfoWin_Metric.TabIndex = 4;
+            this.rb_Options_InfoWin_Metric.TabStop = true;
+            this.rb_Options_InfoWin_Metric.Tag = "";
+            this.rb_Options_InfoWin_Metric.Text = "Metric";
+            this.rb_Options_InfoWin_Metric.UseVisualStyleBackColor = true;
             // 
             // label72
             // 
@@ -1928,6 +2820,17 @@
             this.label62.Size = new System.Drawing.Size(31, 13);
             this.label62.TabIndex = 1;
             this.label62.Text = "Font:";
+            // 
+            // tb_Options_Map_ToolTipFont
+            // 
+            this.tb_Options_Map_ToolTipFont.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "Map_ToolTipFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Map_ToolTipFont.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Map_ToolTipFont.Location = new System.Drawing.Point(72, 39);
+            this.tb_Options_Map_ToolTipFont.Name = "tb_Options_Map_ToolTipFont";
+            this.tb_Options_Map_ToolTipFont.ReadOnly = true;
+            this.tb_Options_Map_ToolTipFont.Size = new System.Drawing.Size(179, 20);
+            this.tb_Options_Map_ToolTipFont.TabIndex = 0;
+            this.tb_Options_Map_ToolTipFont.Text = global::AirScout.Properties.Settings.Default.Map_ToolTipFont;
             // 
             // groupBox2
             // 
@@ -2350,6 +3253,34 @@
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Location Settings";
             // 
+            // cb_Options_SmallLettersForSubSquares
+            // 
+            this.cb_Options_SmallLettersForSubSquares.AutoSize = true;
+            this.cb_Options_SmallLettersForSubSquares.Checked = global::AirScout.Properties.Settings.Default.Locator_SmallLettersForSubsquares;
+            this.cb_Options_SmallLettersForSubSquares.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Locator_SmallLettersForSubsquares", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_SmallLettersForSubSquares.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_SmallLettersForSubSquares.Location = new System.Drawing.Point(239, 16);
+            this.cb_Options_SmallLettersForSubSquares.Name = "cb_Options_SmallLettersForSubSquares";
+            this.cb_Options_SmallLettersForSubSquares.Size = new System.Drawing.Size(157, 17);
+            this.cb_Options_SmallLettersForSubSquares.TabIndex = 11;
+            this.cb_Options_SmallLettersForSubSquares.Text = "Small letters for subsquares:";
+            this.cb_Options_SmallLettersForSubSquares.UseVisualStyleBackColor = true;
+            this.cb_Options_SmallLettersForSubSquares.CheckedChanged += new System.EventHandler(this.cb_Options_SmallLettersForSubSquares_CheckedChanged);
+            // 
+            // cb_Options_Locator_AutoLength
+            // 
+            this.cb_Options_Locator_AutoLength.AutoSize = true;
+            this.cb_Options_Locator_AutoLength.Checked = global::AirScout.Properties.Settings.Default.Locator_AutoLength;
+            this.cb_Options_Locator_AutoLength.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Locator_AutoLength.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Locator_AutoLength", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Locator_AutoLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Locator_AutoLength.Location = new System.Drawing.Point(12, 38);
+            this.cb_Options_Locator_AutoLength.Name = "cb_Options_Locator_AutoLength";
+            this.cb_Options_Locator_AutoLength.Size = new System.Drawing.Size(319, 17);
+            this.cb_Options_Locator_AutoLength.TabIndex = 10;
+            this.cb_Options_Locator_AutoLength.Text = "Cut locator to significant digits automatically (Minimum 6 digits):";
+            this.cb_Options_Locator_AutoLength.UseVisualStyleBackColor = true;
+            // 
             // label48
             // 
             this.label48.AutoSize = true;
@@ -2359,6 +3290,31 @@
             this.label48.Size = new System.Drawing.Size(161, 13);
             this.label48.TabIndex = 1;
             this.label48.Text = "Number of Locator digits (6 ..14):";
+            // 
+            // ud_Options_Locator_MaxLength
+            // 
+            this.ud_Options_Locator_MaxLength.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Locator_MaxLength", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ud_Options_Locator_MaxLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_Locator_MaxLength.Increment = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.ud_Options_Locator_MaxLength.Location = new System.Drawing.Point(180, 15);
+            this.ud_Options_Locator_MaxLength.Maximum = new decimal(new int[] {
+            14,
+            0,
+            0,
+            0});
+            this.ud_Options_Locator_MaxLength.Minimum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.ud_Options_Locator_MaxLength.Name = "ud_Options_Locator_MaxLength";
+            this.ud_Options_Locator_MaxLength.Size = new System.Drawing.Size(50, 20);
+            this.ud_Options_Locator_MaxLength.TabIndex = 9;
+            this.ud_Options_Locator_MaxLength.Value = global::AirScout.Properties.Settings.Default.Locator_MaxLength;
             // 
             // groupBox16
             // 
@@ -2406,6 +3362,18 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "DX Station";
             // 
+            // btn_Options_DXMap
+            // 
+            this.btn_Options_DXMap.BackgroundImage = global::AirScout.Properties.Resources.Map2;
+            this.btn_Options_DXMap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btn_Options_DXMap.Location = new System.Drawing.Point(8, 135);
+            this.btn_Options_DXMap.Name = "btn_Options_DXMap";
+            this.btn_Options_DXMap.Size = new System.Drawing.Size(75, 81);
+            this.btn_Options_DXMap.TabIndex = 29;
+            this.btn_Options_DXMap.Text = "\r\nMap";
+            this.btn_Options_DXMap.UseVisualStyleBackColor = true;
+            this.btn_Options_DXMap.Click += new System.EventHandler(this.btn_Options_DXMap_Click);
+            // 
             // tb_Options_DXLon
             // 
             this.tb_Options_DXLon.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2433,6 +3401,21 @@
             this.tb_Options_DXLat.Text = "52.05626084";
             this.tb_Options_DXLat.Value = 52.05626084D;
             this.tb_Options_DXLat.TextChanged += new System.EventHandler(this.tb_Options_DXLat_TextChanged);
+            // 
+            // tb_Options_DXLoc
+            // 
+            this.tb_Options_DXLoc.BackColor = System.Drawing.SystemColors.Window;
+            this.tb_Options_DXLoc.DataBindings.Add(new System.Windows.Forms.Binding("SmallLettersForSubsquares", global::AirScout.Properties.Settings.Default, "Locator_SmallLettersForSubsquares", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_DXLoc.ErrorBackColor = System.Drawing.Color.Red;
+            this.tb_Options_DXLoc.ErrorForeColor = System.Drawing.Color.White;
+            this.tb_Options_DXLoc.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_DXLoc.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.tb_Options_DXLoc.Location = new System.Drawing.Point(90, 36);
+            this.tb_Options_DXLoc.Name = "tb_Options_DXLoc";
+            this.tb_Options_DXLoc.Size = new System.Drawing.Size(100, 21);
+            this.tb_Options_DXLoc.SmallLettersForSubsquares = global::AirScout.Properties.Settings.Default.Locator_SmallLettersForSubsquares;
+            this.tb_Options_DXLoc.TabIndex = 6;
+            this.tb_Options_DXLoc.TextChanged += new System.EventHandler(this.tb_Options_DXLoc_TextChanged);
             // 
             // tb_Options_DXCall
             // 
@@ -2565,6 +3548,18 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "My Station";
             // 
+            // btn_Options_MyMap
+            // 
+            this.btn_Options_MyMap.BackgroundImage = global::AirScout.Properties.Resources.Map2;
+            this.btn_Options_MyMap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btn_Options_MyMap.Location = new System.Drawing.Point(7, 134);
+            this.btn_Options_MyMap.Name = "btn_Options_MyMap";
+            this.btn_Options_MyMap.Size = new System.Drawing.Size(75, 81);
+            this.btn_Options_MyMap.TabIndex = 30;
+            this.btn_Options_MyMap.Text = "\r\nMap";
+            this.btn_Options_MyMap.UseVisualStyleBackColor = true;
+            this.btn_Options_MyMap.Click += new System.EventHandler(this.btn_Options_MyMap_Click);
+            // 
             // btn_Options_MyHorizon
             // 
             this.btn_Options_MyHorizon.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2603,6 +3598,21 @@
             this.tb_Options_MyLat.Text = "50.937067";
             this.tb_Options_MyLat.Value = 50.937067D;
             this.tb_Options_MyLat.TextChanged += new System.EventHandler(this.tb_Options_MyLat_TextChanged);
+            // 
+            // tb_Options_MyLoc
+            // 
+            this.tb_Options_MyLoc.BackColor = System.Drawing.SystemColors.Window;
+            this.tb_Options_MyLoc.DataBindings.Add(new System.Windows.Forms.Binding("SmallLettersForSubsquares", global::AirScout.Properties.Settings.Default, "Locator_SmallLettersForSubsquares", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_MyLoc.ErrorBackColor = System.Drawing.Color.Red;
+            this.tb_Options_MyLoc.ErrorForeColor = System.Drawing.Color.White;
+            this.tb_Options_MyLoc.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_MyLoc.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.tb_Options_MyLoc.Location = new System.Drawing.Point(89, 36);
+            this.tb_Options_MyLoc.Name = "tb_Options_MyLoc";
+            this.tb_Options_MyLoc.Size = new System.Drawing.Size(100, 21);
+            this.tb_Options_MyLoc.SmallLettersForSubsquares = global::AirScout.Properties.Settings.Default.Locator_SmallLettersForSubsquares;
+            this.tb_Options_MyLoc.TabIndex = 2;
+            this.tb_Options_MyLoc.TextChanged += new System.EventHandler(this.tb_Options_MyLoc_TextChanged);
             // 
             // tb_Options_MyCall
             // 
@@ -2732,6 +3742,66 @@
             this.groupBox25.TabStop = false;
             this.groupBox25.Text = "Covered Area";
             // 
+            // tb_Coverage_MaxLat
+            // 
+            this.tb_Coverage_MaxLat.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "MaxLat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Coverage_MaxLat.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Coverage_MaxLat.FormatSpecifier = "F0";
+            this.tb_Coverage_MaxLat.Location = new System.Drawing.Point(589, 416);
+            this.tb_Coverage_MaxLat.MaxValue = 90D;
+            this.tb_Coverage_MaxLat.MinValue = -90D;
+            this.tb_Coverage_MaxLat.Name = "tb_Coverage_MaxLat";
+            this.tb_Coverage_MaxLat.Size = new System.Drawing.Size(50, 22);
+            this.tb_Coverage_MaxLat.TabIndex = 4;
+            this.tb_Coverage_MaxLat.Text = "60";
+            this.tb_Coverage_MaxLat.Value = global::AirScout.Properties.Settings.Default.MaxLat;
+            this.tb_Coverage_MaxLat.TextChanged += new System.EventHandler(this.tab_Options_General_Update);
+            // 
+            // tb_Coverage_MinLat
+            // 
+            this.tb_Coverage_MinLat.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "MinLat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Coverage_MinLat.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Coverage_MinLat.FormatSpecifier = "F0";
+            this.tb_Coverage_MinLat.Location = new System.Drawing.Point(589, 391);
+            this.tb_Coverage_MinLat.MaxValue = 90D;
+            this.tb_Coverage_MinLat.MinValue = -90D;
+            this.tb_Coverage_MinLat.Name = "tb_Coverage_MinLat";
+            this.tb_Coverage_MinLat.Size = new System.Drawing.Size(50, 22);
+            this.tb_Coverage_MinLat.TabIndex = 3;
+            this.tb_Coverage_MinLat.Text = "35";
+            this.tb_Coverage_MinLat.Value = global::AirScout.Properties.Settings.Default.MinLat;
+            this.tb_Coverage_MinLat.TextChanged += new System.EventHandler(this.tab_Options_General_Update);
+            // 
+            // tb_Coverage_MaxLon
+            // 
+            this.tb_Coverage_MaxLon.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "MaxLon", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Coverage_MaxLon.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Coverage_MaxLon.FormatSpecifier = "F0";
+            this.tb_Coverage_MaxLon.Location = new System.Drawing.Point(589, 364);
+            this.tb_Coverage_MaxLon.MaxValue = 180D;
+            this.tb_Coverage_MaxLon.MinValue = -180D;
+            this.tb_Coverage_MaxLon.Name = "tb_Coverage_MaxLon";
+            this.tb_Coverage_MaxLon.Size = new System.Drawing.Size(50, 22);
+            this.tb_Coverage_MaxLon.TabIndex = 2;
+            this.tb_Coverage_MaxLon.Text = "30";
+            this.tb_Coverage_MaxLon.Value = global::AirScout.Properties.Settings.Default.MaxLon;
+            this.tb_Coverage_MaxLon.TextChanged += new System.EventHandler(this.tab_Options_General_Update);
+            // 
+            // tb_Coverage_MinLon
+            // 
+            this.tb_Coverage_MinLon.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "MinLon", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Coverage_MinLon.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Coverage_MinLon.FormatSpecifier = "F0";
+            this.tb_Coverage_MinLon.Location = new System.Drawing.Point(589, 337);
+            this.tb_Coverage_MinLon.MaxValue = 180D;
+            this.tb_Coverage_MinLon.MinValue = -180D;
+            this.tb_Coverage_MinLon.Name = "tb_Coverage_MinLon";
+            this.tb_Coverage_MinLon.Size = new System.Drawing.Size(50, 22);
+            this.tb_Coverage_MinLon.TabIndex = 1;
+            this.tb_Coverage_MinLon.Text = "-15";
+            this.tb_Coverage_MinLon.Value = global::AirScout.Properties.Settings.Default.MinLon;
+            this.tb_Coverage_MinLon.TextChanged += new System.EventHandler(this.tab_Options_General_Update);
+            // 
             // gm_Options_Coverage
             // 
             this.gm_Options_Coverage.Bearing = 0F;
@@ -2747,6 +3817,7 @@
             this.gm_Options_Coverage.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Options_Coverage.Name = "gm_Options_Coverage";
             this.gm_Options_Coverage.NegativeMode = false;
+            this.gm_Options_Coverage.Opacity = 1D;
             this.gm_Options_Coverage.PolygonsEnabled = true;
             this.gm_Options_Coverage.RetryLoadTile = 0;
             this.gm_Options_Coverage.RoutesEnabled = true;
@@ -2813,6 +3884,7 @@
             this.tc_Options.Controls.Add(this.tab_Options_Network);
             this.tc_Options.Controls.Add(this.tab_Options_SpecLab);
             this.tc_Options.Controls.Add(this.tab_Options_Track);
+            this.tc_Options.Controls.Add(this.tab_Options_CAT);
             this.tc_Options.Controls.Add(this.tab_Options_Watchlist);
             this.tc_Options.Controls.Add(this.tab_Options_Misc);
             this.tc_Options.Controls.Add(this.tab_Options_Info);
@@ -2891,6 +3963,20 @@
             this.gb_Options_Database_Settings.TabStop = false;
             this.gb_Options_Database_Settings.Text = "Background Update and Pre-Calculation Settings";
             // 
+            // cb_Options_Background_Calculations_Enable
+            // 
+            this.cb_Options_Background_Calculations_Enable.AutoSize = true;
+            this.cb_Options_Background_Calculations_Enable.Checked = global::AirScout.Properties.Settings.Default.Background_Calculations_Enable;
+            this.cb_Options_Background_Calculations_Enable.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Background_Calculations_Enable.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Background_Calculations_Enable", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Background_Calculations_Enable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Background_Calculations_Enable.Location = new System.Drawing.Point(22, 126);
+            this.cb_Options_Background_Calculations_Enable.Name = "cb_Options_Background_Calculations_Enable";
+            this.cb_Options_Background_Calculations_Enable.Size = new System.Drawing.Size(308, 17);
+            this.cb_Options_Background_Calculations_Enable.TabIndex = 6;
+            this.cb_Options_Background_Calculations_Enable.Text = "Enable Background Pre-Calculations for paths/horizons etc.";
+            this.cb_Options_Background_Calculations_Enable.UseVisualStyleBackColor = true;
+            // 
             // label47
             // 
             this.label47.AutoSize = true;
@@ -2900,6 +3986,26 @@
             this.label47.Size = new System.Drawing.Size(107, 13);
             this.label47.TabIndex = 5;
             this.label47.Text = "Update interval [min]:";
+            // 
+            // ud_Options_Database_Update_Period
+            // 
+            this.ud_Options_Database_Update_Period.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Background_Update_Period", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ud_Options_Database_Update_Period.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_Database_Update_Period.Location = new System.Drawing.Point(278, 84);
+            this.ud_Options_Database_Update_Period.Maximum = new decimal(new int[] {
+            6000,
+            0,
+            0,
+            0});
+            this.ud_Options_Database_Update_Period.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ud_Options_Database_Update_Period.Name = "ud_Options_Database_Update_Period";
+            this.ud_Options_Database_Update_Period.Size = new System.Drawing.Size(39, 20);
+            this.ud_Options_Database_Update_Period.TabIndex = 3;
+            this.ud_Options_Database_Update_Period.Value = global::AirScout.Properties.Settings.Default.Background_Update_Period;
             // 
             // rb_Options_Database_Update_Periodically
             // 
@@ -3521,7 +4627,7 @@
             this.label104.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label104.Location = new System.Drawing.Point(60, 10);
             this.label104.Name = "label104";
-            this.label104.Size = new System.Drawing.Size(473, 16);
+            this.label104.Size = new System.Drawing.Size(472, 16);
             this.label104.TabIndex = 10;
             this.label104.Text = "This box is showing general info about the SQLite databases used by AirScout.";
             // 
@@ -3680,6 +4786,7 @@
             this.gm_Options_ASTER3.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Options_ASTER3.Name = "gm_Options_ASTER3";
             this.gm_Options_ASTER3.NegativeMode = false;
+            this.gm_Options_ASTER3.Opacity = 1D;
             this.gm_Options_ASTER3.PolygonsEnabled = true;
             this.gm_Options_ASTER3.RetryLoadTile = 0;
             this.gm_Options_ASTER3.RoutesEnabled = true;
@@ -3700,6 +4807,34 @@
             this.groupBox53.TabIndex = 12;
             this.groupBox53.TabStop = false;
             this.groupBox53.Text = "Use Elevation Model";
+            // 
+            // cb_Options_Elevation_ASTER3_EnableCache
+            // 
+            this.cb_Options_Elevation_ASTER3_EnableCache.AutoSize = true;
+            this.cb_Options_Elevation_ASTER3_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_ASTER3_EnableCache;
+            this.cb_Options_Elevation_ASTER3_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_ASTER3_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_ASTER3_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_ASTER3_EnableCache.Location = new System.Drawing.Point(6, 42);
+            this.cb_Options_Elevation_ASTER3_EnableCache.Name = "cb_Options_Elevation_ASTER3_EnableCache";
+            this.cb_Options_Elevation_ASTER3_EnableCache.Size = new System.Drawing.Size(179, 17);
+            this.cb_Options_Elevation_ASTER3_EnableCache.TabIndex = 13;
+            this.cb_Options_Elevation_ASTER3_EnableCache.Tag = "";
+            this.cb_Options_Elevation_ASTER3_EnableCache.Text = "Keep downloaded elevation tiles";
+            this.cb_Options_Elevation_ASTER3_EnableCache.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Elevation_ASTER3
+            // 
+            this.cb_Options_Elevation_ASTER3.AutoSize = true;
+            this.cb_Options_Elevation_ASTER3.Checked = global::AirScout.Properties.Settings.Default.Elevation_ASTER3_Enabled;
+            this.cb_Options_Elevation_ASTER3.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_ASTER3_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_ASTER3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_ASTER3.Location = new System.Drawing.Point(6, 19);
+            this.cb_Options_Elevation_ASTER3.Name = "cb_Options_Elevation_ASTER3";
+            this.cb_Options_Elevation_ASTER3.Size = new System.Drawing.Size(160, 17);
+            this.cb_Options_Elevation_ASTER3.TabIndex = 12;
+            this.cb_Options_Elevation_ASTER3.Tag = "";
+            this.cb_Options_Elevation_ASTER3.Text = "Use ASTER3 elevation data";
+            this.cb_Options_Elevation_ASTER3.UseVisualStyleBackColor = true;
             // 
             // tba_Option_ASTER1
             // 
@@ -3776,6 +4911,7 @@
             this.gm_Options_ASTER1.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Options_ASTER1.Name = "gm_Options_ASTER1";
             this.gm_Options_ASTER1.NegativeMode = false;
+            this.gm_Options_ASTER1.Opacity = 1D;
             this.gm_Options_ASTER1.PolygonsEnabled = true;
             this.gm_Options_ASTER1.RetryLoadTile = 0;
             this.gm_Options_ASTER1.RoutesEnabled = true;
@@ -3796,6 +4932,34 @@
             this.groupBox56.TabIndex = 12;
             this.groupBox56.TabStop = false;
             this.groupBox56.Text = "Use Elevation Model";
+            // 
+            // cb_Options_Elevation_ASTER1_EnableCache
+            // 
+            this.cb_Options_Elevation_ASTER1_EnableCache.AutoSize = true;
+            this.cb_Options_Elevation_ASTER1_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_ASTER1_EnableCache;
+            this.cb_Options_Elevation_ASTER1_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_ASTER1_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_ASTER1_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_ASTER1_EnableCache.Location = new System.Drawing.Point(6, 42);
+            this.cb_Options_Elevation_ASTER1_EnableCache.Name = "cb_Options_Elevation_ASTER1_EnableCache";
+            this.cb_Options_Elevation_ASTER1_EnableCache.Size = new System.Drawing.Size(179, 17);
+            this.cb_Options_Elevation_ASTER1_EnableCache.TabIndex = 13;
+            this.cb_Options_Elevation_ASTER1_EnableCache.Tag = "";
+            this.cb_Options_Elevation_ASTER1_EnableCache.Text = "Keep downloaded elevation tiles";
+            this.cb_Options_Elevation_ASTER1_EnableCache.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Elevation_ASTER1
+            // 
+            this.cb_Options_Elevation_ASTER1.AutoSize = true;
+            this.cb_Options_Elevation_ASTER1.Checked = global::AirScout.Properties.Settings.Default.Elevation_ASTER1_Enabled;
+            this.cb_Options_Elevation_ASTER1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_ASTER1_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Elevation_ASTER1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Elevation_ASTER1.Location = new System.Drawing.Point(6, 19);
+            this.cb_Options_Elevation_ASTER1.Name = "cb_Options_Elevation_ASTER1";
+            this.cb_Options_Elevation_ASTER1.Size = new System.Drawing.Size(160, 17);
+            this.cb_Options_Elevation_ASTER1.TabIndex = 12;
+            this.cb_Options_Elevation_ASTER1.Tag = "";
+            this.cb_Options_Elevation_ASTER1.Text = "Use ASTER1 elevation data";
+            this.cb_Options_Elevation_ASTER1.UseVisualStyleBackColor = true;
             // 
             // tab_Options_Alarm
             // 
@@ -3821,6 +4985,20 @@
             this.groupBox21.TabStop = false;
             this.groupBox21.Text = "Activate Alarm";
             // 
+            // cb_Options_Alarm_Activate
+            // 
+            this.cb_Options_Alarm_Activate.AutoSize = true;
+            this.cb_Options_Alarm_Activate.Checked = global::AirScout.Properties.Settings.Default.Alarm_Activate;
+            this.cb_Options_Alarm_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Alarm_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Alarm_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Alarm_Activate.Location = new System.Drawing.Point(13, 19);
+            this.cb_Options_Alarm_Activate.Name = "cb_Options_Alarm_Activate";
+            this.cb_Options_Alarm_Activate.Size = new System.Drawing.Size(94, 17);
+            this.cb_Options_Alarm_Activate.TabIndex = 1;
+            this.cb_Options_Alarm_Activate.Tag = "";
+            this.cb_Options_Alarm_Activate.Text = "Activate Alarm";
+            this.cb_Options_Alarm_Activate.UseVisualStyleBackColor = true;
+            // 
             // groupBox19
             // 
             this.groupBox19.Controls.Add(this.cb_Options_Alarm_PlaySound);
@@ -3832,6 +5010,21 @@
             this.groupBox19.TabIndex = 7;
             this.groupBox19.TabStop = false;
             this.groupBox19.Text = "Alarm Settings";
+            // 
+            // cb_Options_Alarm_PlaySound
+            // 
+            this.cb_Options_Alarm_PlaySound.AutoSize = true;
+            this.cb_Options_Alarm_PlaySound.Checked = global::AirScout.Properties.Settings.Default.Alarm_PlaySound;
+            this.cb_Options_Alarm_PlaySound.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Alarm_PlaySound.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Alarm_PlaySound", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Alarm_PlaySound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Alarm_PlaySound.Location = new System.Drawing.Point(13, 53);
+            this.cb_Options_Alarm_PlaySound.Name = "cb_Options_Alarm_PlaySound";
+            this.cb_Options_Alarm_PlaySound.Size = new System.Drawing.Size(78, 17);
+            this.cb_Options_Alarm_PlaySound.TabIndex = 1;
+            this.cb_Options_Alarm_PlaySound.Tag = "";
+            this.cb_Options_Alarm_PlaySound.Text = "Play sound";
+            this.cb_Options_Alarm_PlaySound.UseVisualStyleBackColor = true;
             // 
             // cb_Options_Alarm_BringWindowToFront
             // 
@@ -3859,6 +5052,20 @@
             this.groupBox20.TabIndex = 6;
             this.groupBox20.TabStop = false;
             this.groupBox20.Text = "Generate Alarm";
+            // 
+            // tb_Options_Alarm_Distance
+            // 
+            this.tb_Options_Alarm_Distance.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Alarm_Distance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Alarm_Distance.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Alarm_Distance.FormatSpecifier = "F0";
+            this.tb_Options_Alarm_Distance.Location = new System.Drawing.Point(143, 49);
+            this.tb_Options_Alarm_Distance.MaxValue = 1000D;
+            this.tb_Options_Alarm_Distance.MinValue = 0D;
+            this.tb_Options_Alarm_Distance.Name = "tb_Options_Alarm_Distance";
+            this.tb_Options_Alarm_Distance.Size = new System.Drawing.Size(75, 22);
+            this.tb_Options_Alarm_Distance.TabIndex = 3;
+            this.tb_Options_Alarm_Distance.Text = "100";
+            this.tb_Options_Alarm_Distance.Value = global::AirScout.Properties.Settings.Default.Alarm_Distance;
             // 
             // label36
             // 
@@ -3920,6 +5127,20 @@
             this.groupBox32.TabStop = false;
             this.groupBox32.Text = "HTTP Server Settings";
             // 
+            // tb_Options_Webserver_Port
+            // 
+            this.tb_Options_Webserver_Port.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Webserver_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Webserver_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Webserver_Port.FormatSpecifier = "F0";
+            this.tb_Options_Webserver_Port.Location = new System.Drawing.Point(150, 28);
+            this.tb_Options_Webserver_Port.MaxValue = 65535;
+            this.tb_Options_Webserver_Port.MinValue = 0;
+            this.tb_Options_Webserver_Port.Name = "tb_Options_Webserver_Port";
+            this.tb_Options_Webserver_Port.Size = new System.Drawing.Size(57, 22);
+            this.tb_Options_Webserver_Port.TabIndex = 8;
+            this.tb_Options_Webserver_Port.Text = "9880";
+            this.tb_Options_Webserver_Port.Value = global::AirScout.Properties.Settings.Default.Webserver_Port;
+            // 
             // label85
             // 
             this.label85.AutoSize = true;
@@ -3941,6 +5162,20 @@
             this.groupBox31.TabIndex = 9;
             this.groupBox31.TabStop = false;
             this.groupBox31.Text = "Activate Server";
+            // 
+            // cb_Options_Server_Activate
+            // 
+            this.cb_Options_Server_Activate.AutoSize = true;
+            this.cb_Options_Server_Activate.Checked = global::AirScout.Properties.Settings.Default.Server_Activate;
+            this.cb_Options_Server_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Server_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Server_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Server_Activate.Location = new System.Drawing.Point(13, 23);
+            this.cb_Options_Server_Activate.Name = "cb_Options_Server_Activate";
+            this.cb_Options_Server_Activate.Size = new System.Drawing.Size(142, 17);
+            this.cb_Options_Server_Activate.TabIndex = 1;
+            this.cb_Options_Server_Activate.Tag = "";
+            this.cb_Options_Server_Activate.Text = "Activate Network Server";
+            this.cb_Options_Server_Activate.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -3965,6 +5200,20 @@
             this.groupBox24.TabStop = false;
             this.groupBox24.Text = "UDP Server Settings";
             // 
+            // tb_Options_Server_Port
+            // 
+            this.tb_Options_Server_Port.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Server_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Server_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Server_Port.FormatSpecifier = "F0";
+            this.tb_Options_Server_Port.Location = new System.Drawing.Point(153, 56);
+            this.tb_Options_Server_Port.MaxValue = 65535;
+            this.tb_Options_Server_Port.MinValue = 0;
+            this.tb_Options_Server_Port.Name = "tb_Options_Server_Port";
+            this.tb_Options_Server_Port.Size = new System.Drawing.Size(57, 22);
+            this.tb_Options_Server_Port.TabIndex = 6;
+            this.tb_Options_Server_Port.Text = "9872";
+            this.tb_Options_Server_Port.Value = global::AirScout.Properties.Settings.Default.Server_Port;
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -3984,6 +5233,18 @@
             this.label4.Size = new System.Drawing.Size(141, 13);
             this.label4.TabIndex = 4;
             this.label4.Text = "AirScout UDP Server Name:";
+            // 
+            // tb_Options_Server_Name
+            // 
+            this.tb_Options_Server_Name.BackColor = System.Drawing.Color.FloralWhite;
+            this.tb_Options_Server_Name.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "Server_Name", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Server_Name.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Server_Name.Location = new System.Drawing.Point(153, 30);
+            this.tb_Options_Server_Name.Name = "tb_Options_Server_Name";
+            this.tb_Options_Server_Name.Size = new System.Drawing.Size(57, 20);
+            this.tb_Options_Server_Name.TabIndex = 2;
+            this.tb_Options_Server_Name.Tag = "";
+            this.tb_Options_Server_Name.Text = global::AirScout.Properties.Settings.Default.Server_Name;
             // 
             // tab_Options_SpecLab
             // 
@@ -4021,6 +5282,48 @@
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Spectrum Lab Settings";
+            // 
+            // tb_Options_SpecLab_UpdateInterval
+            // 
+            this.tb_Options_SpecLab_UpdateInterval.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "SpecLab_Update", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_SpecLab_UpdateInterval.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_SpecLab_UpdateInterval.FormatSpecifier = "F1";
+            this.tb_Options_SpecLab_UpdateInterval.Location = new System.Drawing.Point(106, 230);
+            this.tb_Options_SpecLab_UpdateInterval.MaxValue = 100D;
+            this.tb_Options_SpecLab_UpdateInterval.MinValue = 0D;
+            this.tb_Options_SpecLab_UpdateInterval.Name = "tb_Options_SpecLab_UpdateInterval";
+            this.tb_Options_SpecLab_UpdateInterval.Size = new System.Drawing.Size(63, 22);
+            this.tb_Options_SpecLab_UpdateInterval.TabIndex = 18;
+            this.tb_Options_SpecLab_UpdateInterval.Text = "1.0";
+            this.tb_Options_SpecLab_UpdateInterval.Value = global::AirScout.Properties.Settings.Default.SpecLab_Update;
+            // 
+            // tb_Options_SpecLab_F2
+            // 
+            this.tb_Options_SpecLab_F2.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "SpecLab_F2", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_SpecLab_F2.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_SpecLab_F2.FormatSpecifier = "F0";
+            this.tb_Options_SpecLab_F2.Location = new System.Drawing.Point(109, 205);
+            this.tb_Options_SpecLab_F2.MaxValue = 10000;
+            this.tb_Options_SpecLab_F2.MinValue = 0;
+            this.tb_Options_SpecLab_F2.Name = "tb_Options_SpecLab_F2";
+            this.tb_Options_SpecLab_F2.Size = new System.Drawing.Size(60, 22);
+            this.tb_Options_SpecLab_F2.TabIndex = 17;
+            this.tb_Options_SpecLab_F2.Text = "1600";
+            this.tb_Options_SpecLab_F2.Value = global::AirScout.Properties.Settings.Default.SpecLab_F2;
+            // 
+            // tb_Options_SpecLab_F1
+            // 
+            this.tb_Options_SpecLab_F1.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "SpecLab_F1", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_SpecLab_F1.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_SpecLab_F1.FormatSpecifier = "F0";
+            this.tb_Options_SpecLab_F1.Location = new System.Drawing.Point(109, 179);
+            this.tb_Options_SpecLab_F1.MaxValue = 10000;
+            this.tb_Options_SpecLab_F1.MinValue = 0;
+            this.tb_Options_SpecLab_F1.Name = "tb_Options_SpecLab_F1";
+            this.tb_Options_SpecLab_F1.Size = new System.Drawing.Size(60, 22);
+            this.tb_Options_SpecLab_F1.TabIndex = 16;
+            this.tb_Options_SpecLab_F1.Text = "400";
+            this.tb_Options_SpecLab_F1.Value = global::AirScout.Properties.Settings.Default.SpecLab_F1;
             // 
             // label70
             // 
@@ -4082,6 +5385,18 @@
             this.label66.TabIndex = 8;
             this.label66.Text = "F1:";
             // 
+            // tb_SpecLab_FileName
+            // 
+            this.tb_SpecLab_FileName.BackColor = System.Drawing.Color.FloralWhite;
+            this.tb_SpecLab_FileName.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "SpecLab_FileName", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_SpecLab_FileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_SpecLab_FileName.Location = new System.Drawing.Point(109, 153);
+            this.tb_SpecLab_FileName.Name = "tb_SpecLab_FileName";
+            this.tb_SpecLab_FileName.Size = new System.Drawing.Size(347, 20);
+            this.tb_SpecLab_FileName.TabIndex = 6;
+            this.tb_SpecLab_FileName.Tag = "";
+            this.tb_SpecLab_FileName.Text = global::AirScout.Properties.Settings.Default.SpecLab_FileName;
+            // 
             // label63
             // 
             this.label63.AutoSize = true;
@@ -4111,68 +5426,637 @@
             this.label65.TabIndex = 3;
             this.label65.Text = resources.GetString("label65.Text");
             // 
+            // tb_SpecLab_URL
+            // 
+            this.tb_SpecLab_URL.BackColor = System.Drawing.Color.FloralWhite;
+            this.tb_SpecLab_URL.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "SpecLab_URL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_SpecLab_URL.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_SpecLab_URL.Location = new System.Drawing.Point(109, 126);
+            this.tb_SpecLab_URL.Name = "tb_SpecLab_URL";
+            this.tb_SpecLab_URL.Size = new System.Drawing.Size(347, 20);
+            this.tb_SpecLab_URL.TabIndex = 2;
+            this.tb_SpecLab_URL.Tag = "";
+            this.tb_SpecLab_URL.Text = global::AirScout.Properties.Settings.Default.SpecLab_URL;
+            // 
+            // cb_SpecLab_Enabled
+            // 
+            this.cb_SpecLab_Enabled.AutoSize = true;
+            this.cb_SpecLab_Enabled.Checked = global::AirScout.Properties.Settings.Default.SpecLab_Enabled;
+            this.cb_SpecLab_Enabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "SpecLab_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_SpecLab_Enabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_SpecLab_Enabled.Location = new System.Drawing.Point(18, 90);
+            this.cb_SpecLab_Enabled.Name = "cb_SpecLab_Enabled";
+            this.cb_SpecLab_Enabled.Size = new System.Drawing.Size(122, 17);
+            this.cb_SpecLab_Enabled.TabIndex = 1;
+            this.cb_SpecLab_Enabled.Tag = "";
+            this.cb_SpecLab_Enabled.Text = "Activate Connection";
+            this.cb_SpecLab_Enabled.UseVisualStyleBackColor = true;
+            // 
             // tab_Options_Track
             // 
             this.tab_Options_Track.BackColor = System.Drawing.SystemColors.Control;
-            this.tab_Options_Track.Controls.Add(this.groupBox36);
-            this.tab_Options_Track.Controls.Add(this.groupBox35);
-            this.tab_Options_Track.Controls.Add(this.groupBox34);
-            this.tab_Options_Track.Controls.Add(this.groupBox33);
+            this.tab_Options_Track.Controls.Add(this.gb_Options_Doppler);
+            this.tab_Options_Track.Controls.Add(this.gb_Options_Track_File);
+            this.tab_Options_Track.Controls.Add(this.gb_Options_Track_DDE);
+            this.tab_Options_Track.Controls.Add(this.gb_Options_Track_UDP);
+            this.tab_Options_Track.Controls.Add(this.gb_Options_Track_Serial);
             this.tab_Options_Track.Controls.Add(this.groupBox28);
             this.tab_Options_Track.Location = new System.Drawing.Point(4, 40);
             this.tab_Options_Track.Name = "tab_Options_Track";
             this.tab_Options_Track.Size = new System.Drawing.Size(671, 480);
             this.tab_Options_Track.TabIndex = 14;
             this.tab_Options_Track.Text = "Track";
+            this.tab_Options_Track.Enter += new System.EventHandler(this.tab_Options_Track_Enter);
             this.tab_Options_Track.Validating += new System.ComponentModel.CancelEventHandler(this.tc_Track_Validating);
             // 
-            // groupBox36
+            // gb_Options_Doppler
             // 
-            this.groupBox36.Controls.Add(this.rb_Options_Track_File_None);
-            this.groupBox36.Controls.Add(this.rb_Options_Track_File_WSJT);
-            this.groupBox36.Controls.Add(this.rb_Options_Track_File_Native);
-            this.groupBox36.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox36.Location = new System.Drawing.Point(16, 347);
-            this.groupBox36.Name = "groupBox36";
-            this.groupBox36.Size = new System.Drawing.Size(619, 96);
-            this.groupBox36.TabIndex = 12;
-            this.groupBox36.TabStop = false;
-            this.groupBox36.Text = "File Output";
+            this.gb_Options_Doppler.Controls.Add(this.label150);
+            this.gb_Options_Doppler.Controls.Add(this.tb_Options_Track_DialFreq);
+            this.gb_Options_Doppler.Controls.Add(this.label180);
+            this.gb_Options_Doppler.Controls.Add(this.label181);
+            this.gb_Options_Doppler.Controls.Add(this.label182);
+            this.gb_Options_Doppler.Controls.Add(this.label183);
+            this.gb_Options_Doppler.Controls.Add(this.label184);
+            this.gb_Options_Doppler.Controls.Add(this.rb_Options_Doppler_Strategy_None);
+            this.gb_Options_Doppler.Controls.Add(this.label178);
+            this.gb_Options_Doppler.Controls.Add(this.label179);
+            this.gb_Options_Doppler.Controls.Add(this.label176);
+            this.gb_Options_Doppler.Controls.Add(this.label177);
+            this.gb_Options_Doppler.Controls.Add(this.label174);
+            this.gb_Options_Doppler.Controls.Add(this.label175);
+            this.gb_Options_Doppler.Controls.Add(this.label172);
+            this.gb_Options_Doppler.Controls.Add(this.label173);
+            this.gb_Options_Doppler.Controls.Add(this.label170);
+            this.gb_Options_Doppler.Controls.Add(this.label171);
+            this.gb_Options_Doppler.Controls.Add(this.label168);
+            this.gb_Options_Doppler.Controls.Add(this.label169);
+            this.gb_Options_Doppler.Controls.Add(this.label166);
+            this.gb_Options_Doppler.Controls.Add(this.label167);
+            this.gb_Options_Doppler.Controls.Add(this.label165);
+            this.gb_Options_Doppler.Controls.Add(this.label163);
+            this.gb_Options_Doppler.Controls.Add(this.label164);
+            this.gb_Options_Doppler.Controls.Add(this.label162);
+            this.gb_Options_Doppler.Controls.Add(this.label161);
+            this.gb_Options_Doppler.Controls.Add(this.label160);
+            this.gb_Options_Doppler.Controls.Add(this.label159);
+            this.gb_Options_Doppler.Controls.Add(this.label158);
+            this.gb_Options_Doppler.Controls.Add(this.label157);
+            this.gb_Options_Doppler.Controls.Add(this.label156);
+            this.gb_Options_Doppler.Controls.Add(this.label155);
+            this.gb_Options_Doppler.Controls.Add(this.rb_Options_Doppler_Strategy_D);
+            this.gb_Options_Doppler.Controls.Add(this.rb_Options_Doppler_Strategy_C);
+            this.gb_Options_Doppler.Controls.Add(this.rb_Options_Doppler_Strategy_B);
+            this.gb_Options_Doppler.Controls.Add(this.rb_Options_Doppler_Strategy_A);
+            this.gb_Options_Doppler.Controls.Add(this.label154);
+            this.gb_Options_Doppler.Controls.Add(this.label153);
+            this.gb_Options_Doppler.Controls.Add(this.label152);
+            this.gb_Options_Doppler.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gb_Options_Doppler.Location = new System.Drawing.Point(16, 246);
+            this.gb_Options_Doppler.Name = "gb_Options_Doppler";
+            this.gb_Options_Doppler.Size = new System.Drawing.Size(640, 226);
+            this.gb_Options_Doppler.TabIndex = 14;
+            this.gb_Options_Doppler.TabStop = false;
+            this.gb_Options_Doppler.Text = "Doppler Compensation (requires activated CAT and Rig connected)";
             // 
-            // groupBox35
+            // label150
             // 
-            this.groupBox35.Controls.Add(this.rb_Options_Track_DDE_None);
-            this.groupBox35.Controls.Add(this.rb_Options_Track_DDE_HRD);
-            this.groupBox35.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox35.Location = new System.Drawing.Point(16, 261);
-            this.groupBox35.Name = "groupBox35";
-            this.groupBox35.Size = new System.Drawing.Size(619, 80);
-            this.groupBox35.TabIndex = 11;
-            this.groupBox35.TabStop = false;
-            this.groupBox35.Text = "DDE Output";
+            this.label150.AutoSize = true;
+            this.label150.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label150.Location = new System.Drawing.Point(584, 41);
+            this.label150.Name = "label150";
+            this.label150.Size = new System.Drawing.Size(23, 16);
+            this.label150.TabIndex = 59;
+            this.label150.Text = "Hz";
             // 
-            // groupBox34
+            // label180
             // 
-            this.groupBox34.Controls.Add(this.tb_Options_Track_UDP_AirScout_Port);
-            this.groupBox34.Controls.Add(this.tb_Options_Track_UDP_WinTest_Port);
-            this.groupBox34.Controls.Add(this.label90);
-            this.groupBox34.Controls.Add(this.label89);
-            this.groupBox34.Controls.Add(this.rb_Options_Track_UDP_None);
-            this.groupBox34.Controls.Add(this.rb_Options_Track_UDP_AirScout);
-            this.groupBox34.Controls.Add(this.rb_Options_Track_UDP_WinTest);
-            this.groupBox34.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox34.Location = new System.Drawing.Point(16, 157);
-            this.groupBox34.Name = "groupBox34";
-            this.groupBox34.Size = new System.Drawing.Size(619, 98);
-            this.groupBox34.TabIndex = 10;
-            this.groupBox34.TabStop = false;
-            this.groupBox34.Text = "Network Output";
+            this.label180.AutoSize = true;
+            this.label180.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label180.Location = new System.Drawing.Point(538, 123);
+            this.label180.Name = "label180";
+            this.label180.Size = new System.Drawing.Size(19, 13);
+            this.label180.TabIndex = 58;
+            this.label180.Text = "no";
+            // 
+            // label181
+            // 
+            this.label181.AutoSize = true;
+            this.label181.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label181.Location = new System.Drawing.Point(585, 123);
+            this.label181.Name = "label181";
+            this.label181.Size = new System.Drawing.Size(19, 13);
+            this.label181.TabIndex = 57;
+            this.label181.Text = "no";
+            // 
+            // label182
+            // 
+            this.label182.AutoSize = true;
+            this.label182.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label182.Location = new System.Drawing.Point(55, 123);
+            this.label182.Name = "label182";
+            this.label182.Size = new System.Drawing.Size(19, 13);
+            this.label182.TabIndex = 56;
+            this.label182.Text = "no";
+            // 
+            // label183
+            // 
+            this.label183.AutoSize = true;
+            this.label183.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label183.Location = new System.Drawing.Point(102, 123);
+            this.label183.Name = "label183";
+            this.label183.Size = new System.Drawing.Size(19, 13);
+            this.label183.TabIndex = 55;
+            this.label183.Text = "no";
+            // 
+            // label184
+            // 
+            this.label184.AutoSize = true;
+            this.label184.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label184.Location = new System.Drawing.Point(265, 123);
+            this.label184.Name = "label184";
+            this.label184.Size = new System.Drawing.Size(33, 13);
+            this.label184.TabIndex = 54;
+            this.label184.Text = "None";
+            // 
+            // rb_Options_Doppler_Strategy_None
+            // 
+            this.rb_Options_Doppler_Strategy_None.AutoSize = true;
+            this.rb_Options_Doppler_Strategy_None.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Doppler_Strategy_None.Location = new System.Drawing.Point(16, 123);
+            this.rb_Options_Doppler_Strategy_None.Name = "rb_Options_Doppler_Strategy_None";
+            this.rb_Options_Doppler_Strategy_None.Size = new System.Drawing.Size(14, 13);
+            this.rb_Options_Doppler_Strategy_None.TabIndex = 53;
+            this.rb_Options_Doppler_Strategy_None.Tag = "";
+            this.rb_Options_Doppler_Strategy_None.UseVisualStyleBackColor = true;
+            this.rb_Options_Doppler_Strategy_None.CheckedChanged += new System.EventHandler(this.gb_Options_Doppler_CheckedChanged);
+            // 
+            // label178
+            // 
+            this.label178.AutoSize = true;
+            this.label178.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label178.Location = new System.Drawing.Point(538, 200);
+            this.label178.Name = "label178";
+            this.label178.Size = new System.Drawing.Size(23, 13);
+            this.label178.TabIndex = 52;
+            this.label178.Text = "yes";
+            // 
+            // label179
+            // 
+            this.label179.AutoSize = true;
+            this.label179.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label179.Location = new System.Drawing.Point(585, 200);
+            this.label179.Name = "label179";
+            this.label179.Size = new System.Drawing.Size(23, 13);
+            this.label179.TabIndex = 51;
+            this.label179.Text = "yes";
+            // 
+            // label176
+            // 
+            this.label176.AutoSize = true;
+            this.label176.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label176.Location = new System.Drawing.Point(538, 182);
+            this.label176.Name = "label176";
+            this.label176.Size = new System.Drawing.Size(19, 13);
+            this.label176.TabIndex = 50;
+            this.label176.Text = "no";
+            // 
+            // label177
+            // 
+            this.label177.AutoSize = true;
+            this.label177.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label177.Location = new System.Drawing.Point(585, 182);
+            this.label177.Name = "label177";
+            this.label177.Size = new System.Drawing.Size(19, 13);
+            this.label177.TabIndex = 49;
+            this.label177.Text = "no";
+            // 
+            // label174
+            // 
+            this.label174.AutoSize = true;
+            this.label174.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label174.Location = new System.Drawing.Point(538, 162);
+            this.label174.Name = "label174";
+            this.label174.Size = new System.Drawing.Size(23, 13);
+            this.label174.TabIndex = 48;
+            this.label174.Text = "yes";
+            // 
+            // label175
+            // 
+            this.label175.AutoSize = true;
+            this.label175.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label175.Location = new System.Drawing.Point(585, 162);
+            this.label175.Name = "label175";
+            this.label175.Size = new System.Drawing.Size(19, 13);
+            this.label175.TabIndex = 47;
+            this.label175.Text = "no";
+            // 
+            // label172
+            // 
+            this.label172.AutoSize = true;
+            this.label172.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label172.Location = new System.Drawing.Point(538, 142);
+            this.label172.Name = "label172";
+            this.label172.Size = new System.Drawing.Size(19, 13);
+            this.label172.TabIndex = 46;
+            this.label172.Text = "no";
+            // 
+            // label173
+            // 
+            this.label173.AutoSize = true;
+            this.label173.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label173.Location = new System.Drawing.Point(585, 142);
+            this.label173.Name = "label173";
+            this.label173.Size = new System.Drawing.Size(23, 13);
+            this.label173.TabIndex = 45;
+            this.label173.Text = "yes";
+            // 
+            // label170
+            // 
+            this.label170.AutoSize = true;
+            this.label170.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label170.Location = new System.Drawing.Point(55, 202);
+            this.label170.Name = "label170";
+            this.label170.Size = new System.Drawing.Size(23, 13);
+            this.label170.TabIndex = 44;
+            this.label170.Text = "yes";
+            // 
+            // label171
+            // 
+            this.label171.AutoSize = true;
+            this.label171.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label171.Location = new System.Drawing.Point(102, 202);
+            this.label171.Name = "label171";
+            this.label171.Size = new System.Drawing.Size(23, 13);
+            this.label171.TabIndex = 43;
+            this.label171.Text = "yes";
+            // 
+            // label168
+            // 
+            this.label168.AutoSize = true;
+            this.label168.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label168.Location = new System.Drawing.Point(55, 182);
+            this.label168.Name = "label168";
+            this.label168.Size = new System.Drawing.Size(23, 13);
+            this.label168.TabIndex = 42;
+            this.label168.Text = "yes";
+            // 
+            // label169
+            // 
+            this.label169.AutoSize = true;
+            this.label169.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label169.Location = new System.Drawing.Point(102, 182);
+            this.label169.Name = "label169";
+            this.label169.Size = new System.Drawing.Size(23, 13);
+            this.label169.TabIndex = 41;
+            this.label169.Text = "yes";
+            // 
+            // label166
+            // 
+            this.label166.AutoSize = true;
+            this.label166.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label166.Location = new System.Drawing.Point(55, 162);
+            this.label166.Name = "label166";
+            this.label166.Size = new System.Drawing.Size(23, 13);
+            this.label166.TabIndex = 40;
+            this.label166.Text = "yes";
+            // 
+            // label167
+            // 
+            this.label167.AutoSize = true;
+            this.label167.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label167.Location = new System.Drawing.Point(102, 162);
+            this.label167.Name = "label167";
+            this.label167.Size = new System.Drawing.Size(19, 13);
+            this.label167.TabIndex = 39;
+            this.label167.Text = "no";
+            // 
+            // label165
+            // 
+            this.label165.AutoSize = true;
+            this.label165.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label165.Location = new System.Drawing.Point(55, 142);
+            this.label165.Name = "label165";
+            this.label165.Size = new System.Drawing.Size(19, 13);
+            this.label165.TabIndex = 38;
+            this.label165.Text = "no";
+            // 
+            // label163
+            // 
+            this.label163.AutoSize = true;
+            this.label163.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label163.Location = new System.Drawing.Point(581, 103);
+            this.label163.Name = "label163";
+            this.label163.Size = new System.Drawing.Size(24, 13);
+            this.label163.TabIndex = 37;
+            this.label163.Text = "RX";
+            // 
+            // label164
+            // 
+            this.label164.AutoSize = true;
+            this.label164.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label164.Location = new System.Drawing.Point(538, 103);
+            this.label164.Name = "label164";
+            this.label164.Size = new System.Drawing.Size(23, 13);
+            this.label164.TabIndex = 36;
+            this.label164.Text = "TX";
+            // 
+            // label162
+            // 
+            this.label162.AutoSize = true;
+            this.label162.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label162.Location = new System.Drawing.Point(94, 103);
+            this.label162.Name = "label162";
+            this.label162.Size = new System.Drawing.Size(24, 13);
+            this.label162.TabIndex = 35;
+            this.label162.Text = "RX";
+            // 
+            // label161
+            // 
+            this.label161.AutoSize = true;
+            this.label161.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label161.Location = new System.Drawing.Point(51, 103);
+            this.label161.Name = "label161";
+            this.label161.Size = new System.Drawing.Size(23, 13);
+            this.label161.TabIndex = 34;
+            this.label161.Text = "TX";
+            // 
+            // label160
+            // 
+            this.label160.AutoSize = true;
+            this.label160.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label160.Location = new System.Drawing.Point(102, 142);
+            this.label160.Name = "label160";
+            this.label160.Size = new System.Drawing.Size(23, 13);
+            this.label160.TabIndex = 33;
+            this.label160.Text = "yes";
+            // 
+            // label159
+            // 
+            this.label159.AutoSize = true;
+            this.label159.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label159.Location = new System.Drawing.Point(138, 202);
+            this.label159.Name = "label159";
+            this.label159.Size = new System.Drawing.Size(363, 13);
+            this.label159.TabIndex = 32;
+            this.label159.Text = "Constant frequency at aircraft: Both stations have to compensate RX + TX .";
+            // 
+            // label158
+            // 
+            this.label158.AutoSize = true;
+            this.label158.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label158.Location = new System.Drawing.Point(138, 182);
+            this.label158.Name = "label158";
+            this.label158.Size = new System.Drawing.Size(343, 13);
+            this.label158.TabIndex = 31;
+            this.label158.Text = "Compensate both RX + TX at my station: DX station does nothing at all.";
+            // 
+            // label157
+            // 
+            this.label157.AutoSize = true;
+            this.label157.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label157.Location = new System.Drawing.Point(138, 162);
+            this.label157.Name = "label157";
+            this.label157.Size = new System.Drawing.Size(333, 13);
+            this.label157.TabIndex = 30;
+            this.label157.Text = "Constant RX: Both stations compensate their own TX frequency only.";
+            // 
+            // label156
+            // 
+            this.label156.AutoSize = true;
+            this.label156.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label156.Location = new System.Drawing.Point(138, 142);
+            this.label156.Name = "label156";
+            this.label156.Size = new System.Drawing.Size(333, 13);
+            this.label156.TabIndex = 29;
+            this.label156.Text = "Constant TX: Both stations compensate their own RX frequency only.";
+            // 
+            // label155
+            // 
+            this.label155.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label155.Location = new System.Drawing.Point(5, 24);
+            this.label155.Name = "label155";
+            this.label155.Size = new System.Drawing.Size(267, 60);
+            this.label155.TabIndex = 28;
+            this.label155.Text = "You can see the dial frequency from rig here and choose how to compensate Doppler" +
+    " shift on your site and on DX site.";
+            // 
+            // rb_Options_Doppler_Strategy_D
+            // 
+            this.rb_Options_Doppler_Strategy_D.AutoSize = true;
+            this.rb_Options_Doppler_Strategy_D.Location = new System.Drawing.Point(16, 204);
+            this.rb_Options_Doppler_Strategy_D.Name = "rb_Options_Doppler_Strategy_D";
+            this.rb_Options_Doppler_Strategy_D.Size = new System.Drawing.Size(14, 13);
+            this.rb_Options_Doppler_Strategy_D.TabIndex = 27;
+            this.rb_Options_Doppler_Strategy_D.UseVisualStyleBackColor = true;
+            this.rb_Options_Doppler_Strategy_D.CheckedChanged += new System.EventHandler(this.gb_Options_Doppler_CheckedChanged);
+            // 
+            // rb_Options_Doppler_Strategy_C
+            // 
+            this.rb_Options_Doppler_Strategy_C.AutoSize = true;
+            this.rb_Options_Doppler_Strategy_C.Location = new System.Drawing.Point(16, 182);
+            this.rb_Options_Doppler_Strategy_C.Name = "rb_Options_Doppler_Strategy_C";
+            this.rb_Options_Doppler_Strategy_C.Size = new System.Drawing.Size(14, 13);
+            this.rb_Options_Doppler_Strategy_C.TabIndex = 26;
+            this.rb_Options_Doppler_Strategy_C.UseVisualStyleBackColor = true;
+            this.rb_Options_Doppler_Strategy_C.CheckedChanged += new System.EventHandler(this.gb_Options_Doppler_CheckedChanged);
+            // 
+            // rb_Options_Doppler_Strategy_B
+            // 
+            this.rb_Options_Doppler_Strategy_B.AutoSize = true;
+            this.rb_Options_Doppler_Strategy_B.Checked = true;
+            this.rb_Options_Doppler_Strategy_B.Location = new System.Drawing.Point(16, 162);
+            this.rb_Options_Doppler_Strategy_B.Name = "rb_Options_Doppler_Strategy_B";
+            this.rb_Options_Doppler_Strategy_B.Size = new System.Drawing.Size(14, 13);
+            this.rb_Options_Doppler_Strategy_B.TabIndex = 25;
+            this.rb_Options_Doppler_Strategy_B.TabStop = true;
+            this.rb_Options_Doppler_Strategy_B.UseVisualStyleBackColor = true;
+            this.rb_Options_Doppler_Strategy_B.CheckedChanged += new System.EventHandler(this.gb_Options_Doppler_CheckedChanged);
+            // 
+            // rb_Options_Doppler_Strategy_A
+            // 
+            this.rb_Options_Doppler_Strategy_A.AutoSize = true;
+            this.rb_Options_Doppler_Strategy_A.Location = new System.Drawing.Point(16, 142);
+            this.rb_Options_Doppler_Strategy_A.Name = "rb_Options_Doppler_Strategy_A";
+            this.rb_Options_Doppler_Strategy_A.Size = new System.Drawing.Size(14, 13);
+            this.rb_Options_Doppler_Strategy_A.TabIndex = 24;
+            this.rb_Options_Doppler_Strategy_A.UseVisualStyleBackColor = true;
+            this.rb_Options_Doppler_Strategy_A.CheckedChanged += new System.EventHandler(this.gb_Options_Doppler_CheckedChanged);
+            // 
+            // label154
+            // 
+            this.label154.AutoSize = true;
+            this.label154.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label154.Location = new System.Drawing.Point(223, 85);
+            this.label154.Name = "label154";
+            this.label154.Size = new System.Drawing.Size(134, 13);
+            this.label154.TabIndex = 23;
+            this.label154.Text = "Doppler Compensation";
+            // 
+            // label153
+            // 
+            this.label153.AutoSize = true;
+            this.label153.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label153.Location = new System.Drawing.Point(538, 85);
+            this.label153.Name = "label153";
+            this.label153.Size = new System.Drawing.Size(68, 13);
+            this.label153.TabIndex = 22;
+            this.label153.Text = "DX Station";
+            // 
+            // label152
+            // 
+            this.label152.AutoSize = true;
+            this.label152.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label152.Location = new System.Drawing.Point(51, 85);
+            this.label152.Name = "label152";
+            this.label152.Size = new System.Drawing.Size(67, 13);
+            this.label152.TabIndex = 21;
+            this.label152.Text = "My Station";
+            // 
+            // gb_Options_Track_File
+            // 
+            this.gb_Options_Track_File.Controls.Add(this.rb_Options_Track_File_None);
+            this.gb_Options_Track_File.Controls.Add(this.rb_Options_Track_File_WSJT);
+            this.gb_Options_Track_File.Controls.Add(this.rb_Options_Track_File_Native);
+            this.gb_Options_Track_File.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gb_Options_Track_File.Location = new System.Drawing.Point(331, 160);
+            this.gb_Options_Track_File.Name = "gb_Options_Track_File";
+            this.gb_Options_Track_File.Size = new System.Drawing.Size(325, 80);
+            this.gb_Options_Track_File.TabIndex = 12;
+            this.gb_Options_Track_File.TabStop = false;
+            this.gb_Options_Track_File.Text = "Rotator Control File Output";
+            // 
+            // rb_Options_Track_File_None
+            // 
+            this.rb_Options_Track_File_None.AutoSize = true;
+            this.rb_Options_Track_File_None.Checked = true;
+            this.rb_Options_Track_File_None.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_File_None.Location = new System.Drawing.Point(17, 19);
+            this.rb_Options_Track_File_None.Name = "rb_Options_Track_File_None";
+            this.rb_Options_Track_File_None.Size = new System.Drawing.Size(51, 17);
+            this.rb_Options_Track_File_None.TabIndex = 12;
+            this.rb_Options_Track_File_None.TabStop = true;
+            this.rb_Options_Track_File_None.Tag = "";
+            this.rb_Options_Track_File_None.Text = "None";
+            this.rb_Options_Track_File_None.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_File_None.CheckedChanged += new System.EventHandler(this.gb_Options_Track_File_CheckedChanged);
+            // 
+            // rb_Options_Track_File_WSJT
+            // 
+            this.rb_Options_Track_File_WSJT.AutoSize = true;
+            this.rb_Options_Track_File_WSJT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_File_WSJT.Location = new System.Drawing.Point(17, 55);
+            this.rb_Options_Track_File_WSJT.Name = "rb_Options_Track_File_WSJT";
+            this.rb_Options_Track_File_WSJT.Size = new System.Drawing.Size(84, 17);
+            this.rb_Options_Track_File_WSJT.TabIndex = 7;
+            this.rb_Options_Track_File_WSJT.Tag = "";
+            this.rb_Options_Track_File_WSJT.Text = "WSJT Az/El";
+            this.rb_Options_Track_File_WSJT.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_File_WSJT.CheckedChanged += new System.EventHandler(this.gb_Options_Track_File_CheckedChanged);
+            // 
+            // rb_Options_Track_File_Native
+            // 
+            this.rb_Options_Track_File_Native.AutoSize = true;
+            this.rb_Options_Track_File_Native.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_File_Native.Location = new System.Drawing.Point(17, 37);
+            this.rb_Options_Track_File_Native.Name = "rb_Options_Track_File_Native";
+            this.rb_Options_Track_File_Native.Size = new System.Drawing.Size(85, 17);
+            this.rb_Options_Track_File_Native.TabIndex = 6;
+            this.rb_Options_Track_File_Native.Tag = "";
+            this.rb_Options_Track_File_Native.Text = "Native Az/El";
+            this.rb_Options_Track_File_Native.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_File_Native.CheckedChanged += new System.EventHandler(this.gb_Options_Track_File_CheckedChanged);
+            // 
+            // gb_Options_Track_DDE
+            // 
+            this.gb_Options_Track_DDE.Controls.Add(this.rb_Options_Track_DDE_None);
+            this.gb_Options_Track_DDE.Controls.Add(this.rb_Options_Track_DDE_HRD);
+            this.gb_Options_Track_DDE.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gb_Options_Track_DDE.Location = new System.Drawing.Point(16, 160);
+            this.gb_Options_Track_DDE.Name = "gb_Options_Track_DDE";
+            this.gb_Options_Track_DDE.Size = new System.Drawing.Size(309, 80);
+            this.gb_Options_Track_DDE.TabIndex = 11;
+            this.gb_Options_Track_DDE.TabStop = false;
+            this.gb_Options_Track_DDE.Text = "Rotator Control DDE Output";
+            // 
+            // rb_Options_Track_DDE_None
+            // 
+            this.rb_Options_Track_DDE_None.AutoSize = true;
+            this.rb_Options_Track_DDE_None.Checked = true;
+            this.rb_Options_Track_DDE_None.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_DDE_None.Location = new System.Drawing.Point(17, 19);
+            this.rb_Options_Track_DDE_None.Name = "rb_Options_Track_DDE_None";
+            this.rb_Options_Track_DDE_None.Size = new System.Drawing.Size(51, 17);
+            this.rb_Options_Track_DDE_None.TabIndex = 11;
+            this.rb_Options_Track_DDE_None.TabStop = true;
+            this.rb_Options_Track_DDE_None.Tag = "";
+            this.rb_Options_Track_DDE_None.Text = "None";
+            this.rb_Options_Track_DDE_None.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_DDE_None.CheckedChanged += new System.EventHandler(this.gb_Options_Track_DDE_CheckedChanged);
+            // 
+            // rb_Options_Track_DDE_HRD
+            // 
+            this.rb_Options_Track_DDE_HRD.AutoSize = true;
+            this.rb_Options_Track_DDE_HRD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_DDE_HRD.Location = new System.Drawing.Point(17, 37);
+            this.rb_Options_Track_DDE_HRD.Name = "rb_Options_Track_DDE_HRD";
+            this.rb_Options_Track_DDE_HRD.Size = new System.Drawing.Size(202, 17);
+            this.rb_Options_Track_DDE_HRD.TabIndex = 6;
+            this.rb_Options_Track_DDE_HRD.Tag = "";
+            this.rb_Options_Track_DDE_HRD.Text = "Ham Radio Deluxe (HRDRotator.exe)";
+            this.rb_Options_Track_DDE_HRD.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_DDE_HRD.CheckedChanged += new System.EventHandler(this.gb_Options_Track_DDE_CheckedChanged);
+            // 
+            // gb_Options_Track_UDP
+            // 
+            this.gb_Options_Track_UDP.Controls.Add(this.tb_Options_Track_UDP_AirScout_Port);
+            this.gb_Options_Track_UDP.Controls.Add(this.tb_Options_Track_UDP_WinTest_Port);
+            this.gb_Options_Track_UDP.Controls.Add(this.label90);
+            this.gb_Options_Track_UDP.Controls.Add(this.label89);
+            this.gb_Options_Track_UDP.Controls.Add(this.rb_Options_Track_UDP_None);
+            this.gb_Options_Track_UDP.Controls.Add(this.rb_Options_Track_UDP_AirScout);
+            this.gb_Options_Track_UDP.Controls.Add(this.rb_Options_Track_UDP_WinTest);
+            this.gb_Options_Track_UDP.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gb_Options_Track_UDP.Location = new System.Drawing.Point(331, 64);
+            this.gb_Options_Track_UDP.Name = "gb_Options_Track_UDP";
+            this.gb_Options_Track_UDP.Size = new System.Drawing.Size(325, 90);
+            this.gb_Options_Track_UDP.TabIndex = 10;
+            this.gb_Options_Track_UDP.TabStop = false;
+            this.gb_Options_Track_UDP.Text = "Rotator Control Network Output";
+            // 
+            // tb_Options_Track_UDP_AirScout_Port
+            // 
+            this.tb_Options_Track_UDP_AirScout_Port.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Track_UDP_AirScout_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Track_UDP_AirScout_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Track_UDP_AirScout_Port.FormatSpecifier = "F0";
+            this.tb_Options_Track_UDP_AirScout_Port.Location = new System.Drawing.Point(254, 60);
+            this.tb_Options_Track_UDP_AirScout_Port.MaxValue = 0;
+            this.tb_Options_Track_UDP_AirScout_Port.MinValue = 0;
+            this.tb_Options_Track_UDP_AirScout_Port.Name = "tb_Options_Track_UDP_AirScout_Port";
+            this.tb_Options_Track_UDP_AirScout_Port.Size = new System.Drawing.Size(43, 22);
+            this.tb_Options_Track_UDP_AirScout_Port.TabIndex = 17;
+            this.tb_Options_Track_UDP_AirScout_Port.Text = "9872";
+            this.tb_Options_Track_UDP_AirScout_Port.Value = global::AirScout.Properties.Settings.Default.Track_UDP_AirScout_Port;
+            // 
+            // tb_Options_Track_UDP_WinTest_Port
+            // 
+            this.tb_Options_Track_UDP_WinTest_Port.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Track_UDP_WinTest_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Track_UDP_WinTest_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Track_UDP_WinTest_Port.FormatSpecifier = "F0";
+            this.tb_Options_Track_UDP_WinTest_Port.Location = new System.Drawing.Point(254, 37);
+            this.tb_Options_Track_UDP_WinTest_Port.MaxValue = 0;
+            this.tb_Options_Track_UDP_WinTest_Port.MinValue = 0;
+            this.tb_Options_Track_UDP_WinTest_Port.Name = "tb_Options_Track_UDP_WinTest_Port";
+            this.tb_Options_Track_UDP_WinTest_Port.Size = new System.Drawing.Size(43, 22);
+            this.tb_Options_Track_UDP_WinTest_Port.TabIndex = 16;
+            this.tb_Options_Track_UDP_WinTest_Port.Text = "9871";
+            this.tb_Options_Track_UDP_WinTest_Port.Value = global::AirScout.Properties.Settings.Default.Track_UDP_WinTest_Port;
             // 
             // label90
             // 
             this.label90.AutoSize = true;
             this.label90.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label90.Location = new System.Drawing.Point(491, 75);
+            this.label90.Location = new System.Drawing.Point(219, 64);
             this.label90.Name = "label90";
             this.label90.Size = new System.Drawing.Size(29, 13);
             this.label90.TabIndex = 15;
@@ -4182,34 +6066,77 @@
             // 
             this.label89.AutoSize = true;
             this.label89.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label89.Location = new System.Drawing.Point(491, 46);
+            this.label89.Location = new System.Drawing.Point(219, 41);
             this.label89.Name = "label89";
             this.label89.Size = new System.Drawing.Size(29, 13);
             this.label89.TabIndex = 13;
             this.label89.Text = "Port:";
             // 
-            // groupBox33
+            // rb_Options_Track_UDP_None
             // 
-            this.groupBox33.Controls.Add(this.tb_Options_Track_Serial_Baudrate);
-            this.groupBox33.Controls.Add(this.rb_Options_Track_Serial_None);
-            this.groupBox33.Controls.Add(this.label88);
-            this.groupBox33.Controls.Add(this.label87);
-            this.groupBox33.Controls.Add(this.tb_Options_Track_Serial_Port);
-            this.groupBox33.Controls.Add(this.rb_Options_Track_Serial_GS232_AZEL);
-            this.groupBox33.Controls.Add(this.rb_Options_Track_Serial_GS232_AZ);
-            this.groupBox33.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox33.Location = new System.Drawing.Point(16, 64);
-            this.groupBox33.Name = "groupBox33";
-            this.groupBox33.Size = new System.Drawing.Size(619, 87);
-            this.groupBox33.TabIndex = 9;
-            this.groupBox33.TabStop = false;
-            this.groupBox33.Text = "Serial Output";
+            this.rb_Options_Track_UDP_None.AutoSize = true;
+            this.rb_Options_Track_UDP_None.Checked = true;
+            this.rb_Options_Track_UDP_None.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_UDP_None.Location = new System.Drawing.Point(17, 19);
+            this.rb_Options_Track_UDP_None.Name = "rb_Options_Track_UDP_None";
+            this.rb_Options_Track_UDP_None.Size = new System.Drawing.Size(51, 17);
+            this.rb_Options_Track_UDP_None.TabIndex = 11;
+            this.rb_Options_Track_UDP_None.TabStop = true;
+            this.rb_Options_Track_UDP_None.Tag = "";
+            this.rb_Options_Track_UDP_None.Text = "None";
+            this.rb_Options_Track_UDP_None.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_UDP_None.CheckedChanged += new System.EventHandler(this.gb_Options_Track_UDP_CheckedChanged);
+            // 
+            // rb_Options_Track_UDP_WinTest
+            // 
+            this.rb_Options_Track_UDP_WinTest.AutoSize = true;
+            this.rb_Options_Track_UDP_WinTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_UDP_WinTest.Location = new System.Drawing.Point(17, 42);
+            this.rb_Options_Track_UDP_WinTest.Name = "rb_Options_Track_UDP_WinTest";
+            this.rb_Options_Track_UDP_WinTest.Size = new System.Drawing.Size(188, 17);
+            this.rb_Options_Track_UDP_WinTest.TabIndex = 6;
+            this.rb_Options_Track_UDP_WinTest.Tag = "";
+            this.rb_Options_Track_UDP_WinTest.Text = "UDP Broadcast (Win-Test) Az only";
+            this.rb_Options_Track_UDP_WinTest.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_UDP_WinTest.CheckedChanged += new System.EventHandler(this.gb_Options_Track_UDP_CheckedChanged);
+            // 
+            // gb_Options_Track_Serial
+            // 
+            this.gb_Options_Track_Serial.Controls.Add(this.tb_Options_Track_Serial_Baudrate);
+            this.gb_Options_Track_Serial.Controls.Add(this.rb_Options_Track_Serial_None);
+            this.gb_Options_Track_Serial.Controls.Add(this.label88);
+            this.gb_Options_Track_Serial.Controls.Add(this.label87);
+            this.gb_Options_Track_Serial.Controls.Add(this.tb_Options_Track_Serial_Port);
+            this.gb_Options_Track_Serial.Controls.Add(this.rb_Options_Track_Serial_GS232_AZEL);
+            this.gb_Options_Track_Serial.Controls.Add(this.rb_Options_Track_Serial_GS232_AZ);
+            this.gb_Options_Track_Serial.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gb_Options_Track_Serial.Location = new System.Drawing.Point(16, 64);
+            this.gb_Options_Track_Serial.Name = "gb_Options_Track_Serial";
+            this.gb_Options_Track_Serial.Size = new System.Drawing.Size(309, 90);
+            this.gb_Options_Track_Serial.TabIndex = 9;
+            this.gb_Options_Track_Serial.TabStop = false;
+            this.gb_Options_Track_Serial.Text = "Rotator Control Serial Output";
+            // 
+            // rb_Options_Track_Serial_None
+            // 
+            this.rb_Options_Track_Serial_None.AutoSize = true;
+            this.rb_Options_Track_Serial_None.Checked = true;
+            this.rb_Options_Track_Serial_None.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_Serial_None.Location = new System.Drawing.Point(17, 19);
+            this.rb_Options_Track_Serial_None.Name = "rb_Options_Track_Serial_None";
+            this.rb_Options_Track_Serial_None.Size = new System.Drawing.Size(51, 17);
+            this.rb_Options_Track_Serial_None.TabIndex = 10;
+            this.rb_Options_Track_Serial_None.TabStop = true;
+            this.rb_Options_Track_Serial_None.Tag = "";
+            this.rb_Options_Track_Serial_None.Text = "None";
+            this.rb_Options_Track_Serial_None.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_Serial_None.CheckedChanged += new System.EventHandler(this.gb_Options_Track_Serial_CheckedChanged);
             // 
             // label88
             // 
             this.label88.AutoSize = true;
             this.label88.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label88.Location = new System.Drawing.Point(467, 17);
+            this.label88.Location = new System.Drawing.Point(128, 44);
             this.label88.Name = "label88";
             this.label88.Size = new System.Drawing.Size(53, 13);
             this.label88.TabIndex = 9;
@@ -4219,23 +6146,549 @@
             // 
             this.label87.AutoSize = true;
             this.label87.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label87.Location = new System.Drawing.Point(373, 17);
+            this.label87.Location = new System.Drawing.Point(134, 21);
             this.label87.Name = "label87";
             this.label87.Size = new System.Drawing.Size(29, 13);
             this.label87.TabIndex = 7;
             this.label87.Text = "Port:";
             // 
+            // rb_Options_Track_Serial_GS232_AZEL
+            // 
+            this.rb_Options_Track_Serial_GS232_AZEL.AutoSize = true;
+            this.rb_Options_Track_Serial_GS232_AZEL.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_Serial_GS232_AZEL.Location = new System.Drawing.Point(17, 65);
+            this.rb_Options_Track_Serial_GS232_AZEL.Name = "rb_Options_Track_Serial_GS232_AZEL";
+            this.rb_Options_Track_Serial_GS232_AZEL.Size = new System.Drawing.Size(97, 17);
+            this.rb_Options_Track_Serial_GS232_AZEL.TabIndex = 5;
+            this.rb_Options_Track_Serial_GS232_AZEL.Tag = "";
+            this.rb_Options_Track_Serial_GS232_AZEL.Text = "GS-232A Az/El";
+            this.rb_Options_Track_Serial_GS232_AZEL.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_Serial_GS232_AZEL.CheckedChanged += new System.EventHandler(this.gb_Options_Track_Serial_CheckedChanged);
+            // 
+            // rb_Options_Track_Serial_GS232_AZ
+            // 
+            this.rb_Options_Track_Serial_GS232_AZ.AutoSize = true;
+            this.rb_Options_Track_Serial_GS232_AZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rb_Options_Track_Serial_GS232_AZ.Location = new System.Drawing.Point(17, 42);
+            this.rb_Options_Track_Serial_GS232_AZ.Name = "rb_Options_Track_Serial_GS232_AZ";
+            this.rb_Options_Track_Serial_GS232_AZ.Size = new System.Drawing.Size(105, 17);
+            this.rb_Options_Track_Serial_GS232_AZ.TabIndex = 0;
+            this.rb_Options_Track_Serial_GS232_AZ.Tag = "";
+            this.rb_Options_Track_Serial_GS232_AZ.Text = "GS-232A Az only";
+            this.rb_Options_Track_Serial_GS232_AZ.UseVisualStyleBackColor = true;
+            this.rb_Options_Track_Serial_GS232_AZ.CheckedChanged += new System.EventHandler(this.gb_Options_Track_Serial_CheckedChanged);
+            // 
             // groupBox28
             // 
+            this.groupBox28.Controls.Add(this.label186);
+            this.groupBox28.Controls.Add(this.label187);
+            this.groupBox28.Controls.Add(this.tb_Options_Track_Offset);
+            this.groupBox28.Controls.Add(this.label185);
+            this.groupBox28.Controls.Add(this.label151);
+            this.groupBox28.Controls.Add(this.int32TextBox2);
             this.groupBox28.Controls.Add(this.cb_Options_Track_Activate);
             this.groupBox28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox28.Location = new System.Drawing.Point(3, 13);
+            this.groupBox28.Location = new System.Drawing.Point(16, 13);
             this.groupBox28.Name = "groupBox28";
-            this.groupBox28.Size = new System.Drawing.Size(632, 45);
+            this.groupBox28.Size = new System.Drawing.Size(640, 45);
             this.groupBox28.TabIndex = 8;
             this.groupBox28.TabStop = false;
-            this.groupBox28.Text = "Activate Antenna Tracking";
+            this.groupBox28.Text = "Activate Tracking";
             this.groupBox28.Enter += new System.EventHandler(this.tab_Options_Track_Enter);
+            // 
+            // label186
+            // 
+            this.label186.AutoSize = true;
+            this.label186.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label186.Location = new System.Drawing.Point(622, 20);
+            this.label186.Name = "label186";
+            this.label186.Size = new System.Drawing.Size(12, 13);
+            this.label186.TabIndex = 59;
+            this.label186.Text = "s";
+            // 
+            // label187
+            // 
+            this.label187.AutoSize = true;
+            this.label187.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label187.Location = new System.Drawing.Point(454, 20);
+            this.label187.Name = "label187";
+            this.label187.Size = new System.Drawing.Size(109, 13);
+            this.label187.TabIndex = 58;
+            this.label187.Text = "Tracking Time Offset:";
+            // 
+            // label185
+            // 
+            this.label185.AutoSize = true;
+            this.label185.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label185.Location = new System.Drawing.Point(386, 21);
+            this.label185.Name = "label185";
+            this.label185.Size = new System.Drawing.Size(20, 13);
+            this.label185.TabIndex = 56;
+            this.label185.Text = "ms";
+            // 
+            // label151
+            // 
+            this.label151.AutoSize = true;
+            this.label151.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label151.Location = new System.Drawing.Point(205, 20);
+            this.label151.Name = "label151";
+            this.label151.Size = new System.Drawing.Size(104, 13);
+            this.label151.TabIndex = 55;
+            this.label151.Text = "Track Refresh Rate:";
+            // 
+            // tab_Options_CAT
+            // 
+            this.tab_Options_CAT.BackColor = System.Drawing.SystemColors.Control;
+            this.tab_Options_CAT.Controls.Add(this.gb_Options_CAT_PortSettings);
+            this.tab_Options_CAT.Controls.Add(this.gb_Options_CAT_RigType);
+            this.tab_Options_CAT.Controls.Add(this.gb_Options_CAT_OperatingInstructions);
+            this.tab_Options_CAT.Controls.Add(this.groupBox57);
+            this.tab_Options_CAT.Location = new System.Drawing.Point(4, 40);
+            this.tab_Options_CAT.Name = "tab_Options_CAT";
+            this.tab_Options_CAT.Size = new System.Drawing.Size(671, 480);
+            this.tab_Options_CAT.TabIndex = 20;
+            this.tab_Options_CAT.Text = "CAT";
+            this.tab_Options_CAT.Enter += new System.EventHandler(this.tab_Options_CAT_Enter);
+            // 
+            // gb_Options_CAT_PortSettings
+            // 
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.ud_Options_CAT_Timeout);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.label149);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.ud_Options_CAT_Poll);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.label190);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.label191);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.cb_Options_CAT_DTR);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.label192);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.cb_Options_CAT_RTS);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.label193);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.cb_Options_CAT_StopBits);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.label194);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.cb_Options_CAT_Parity);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.label195);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.cb_Options_CAT_DataBits);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.label196);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.cb_Options_CAT_Baudrate);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.label197);
+            this.gb_Options_CAT_PortSettings.Controls.Add(this.cb_Options_CAT_PortName);
+            this.gb_Options_CAT_PortSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gb_Options_CAT_PortSettings.Location = new System.Drawing.Point(423, 67);
+            this.gb_Options_CAT_PortSettings.Name = "gb_Options_CAT_PortSettings";
+            this.gb_Options_CAT_PortSettings.Size = new System.Drawing.Size(231, 277);
+            this.gb_Options_CAT_PortSettings.TabIndex = 3;
+            this.gb_Options_CAT_PortSettings.TabStop = false;
+            this.gb_Options_CAT_PortSettings.Text = "Serial Port Settings";
+            // 
+            // ud_Options_CAT_Timeout
+            // 
+            this.ud_Options_CAT_Timeout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_CAT_Timeout.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Timeout.Location = new System.Drawing.Point(146, 235);
+            this.ud_Options_CAT_Timeout.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Timeout.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Timeout.Name = "ud_Options_CAT_Timeout";
+            this.ud_Options_CAT_Timeout.Size = new System.Drawing.Size(69, 20);
+            this.ud_Options_CAT_Timeout.TabIndex = 46;
+            this.ud_Options_CAT_Timeout.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Timeout.ValueChanged += new System.EventHandler(this.ud_Options_CAT_Timeout_ValueChanged);
+            // 
+            // label149
+            // 
+            this.label149.AutoSize = true;
+            this.label149.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label149.Location = new System.Drawing.Point(30, 237);
+            this.label149.Name = "label149";
+            this.label149.Size = new System.Drawing.Size(70, 13);
+            this.label149.TabIndex = 47;
+            this.label149.Text = "Timeout [ms]:";
+            // 
+            // ud_Options_CAT_Poll
+            // 
+            this.ud_Options_CAT_Poll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_CAT_Poll.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Poll.Location = new System.Drawing.Point(146, 209);
+            this.ud_Options_CAT_Poll.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Poll.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Poll.Name = "ud_Options_CAT_Poll";
+            this.ud_Options_CAT_Poll.Size = new System.Drawing.Size(69, 20);
+            this.ud_Options_CAT_Poll.TabIndex = 29;
+            this.ud_Options_CAT_Poll.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Poll.ValueChanged += new System.EventHandler(this.ud_Options_CAT_Poll_ValueChanged);
+            // 
+            // label190
+            // 
+            this.label190.AutoSize = true;
+            this.label190.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label190.Location = new System.Drawing.Point(30, 211);
+            this.label190.Name = "label190";
+            this.label190.Size = new System.Drawing.Size(64, 13);
+            this.label190.TabIndex = 45;
+            this.label190.Text = "Poll Int [ms]:";
+            // 
+            // label191
+            // 
+            this.label191.AutoSize = true;
+            this.label191.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label191.Location = new System.Drawing.Point(30, 184);
+            this.label191.Name = "label191";
+            this.label191.Size = new System.Drawing.Size(33, 13);
+            this.label191.TabIndex = 44;
+            this.label191.Text = "DTR:";
+            // 
+            // cb_Options_CAT_DTR
+            // 
+            this.cb_Options_CAT_DTR.DisplayMember = "Text";
+            this.cb_Options_CAT_DTR.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_Options_CAT_DTR.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_CAT_DTR.FormattingEnabled = true;
+            this.cb_Options_CAT_DTR.Location = new System.Drawing.Point(108, 181);
+            this.cb_Options_CAT_DTR.Name = "cb_Options_CAT_DTR";
+            this.cb_Options_CAT_DTR.Size = new System.Drawing.Size(107, 21);
+            this.cb_Options_CAT_DTR.TabIndex = 43;
+            this.cb_Options_CAT_DTR.ValueMember = "Value";
+            this.cb_Options_CAT_DTR.SelectedIndexChanged += new System.EventHandler(this.cb_Options_CAT_DTR_SelectedIndexChanged);
+            // 
+            // label192
+            // 
+            this.label192.AutoSize = true;
+            this.label192.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label192.Location = new System.Drawing.Point(30, 157);
+            this.label192.Name = "label192";
+            this.label192.Size = new System.Drawing.Size(32, 13);
+            this.label192.TabIndex = 42;
+            this.label192.Text = "RTS:";
+            // 
+            // cb_Options_CAT_RTS
+            // 
+            this.cb_Options_CAT_RTS.DisplayMember = "Text";
+            this.cb_Options_CAT_RTS.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_Options_CAT_RTS.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_CAT_RTS.FormattingEnabled = true;
+            this.cb_Options_CAT_RTS.Location = new System.Drawing.Point(108, 154);
+            this.cb_Options_CAT_RTS.Name = "cb_Options_CAT_RTS";
+            this.cb_Options_CAT_RTS.Size = new System.Drawing.Size(107, 21);
+            this.cb_Options_CAT_RTS.TabIndex = 41;
+            this.cb_Options_CAT_RTS.ValueMember = "Value";
+            this.cb_Options_CAT_RTS.SelectedIndexChanged += new System.EventHandler(this.cb_Options_CAT_RTS_SelectedIndexChanged);
+            // 
+            // label193
+            // 
+            this.label193.AutoSize = true;
+            this.label193.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label193.Location = new System.Drawing.Point(30, 130);
+            this.label193.Name = "label193";
+            this.label193.Size = new System.Drawing.Size(48, 13);
+            this.label193.TabIndex = 40;
+            this.label193.Text = "Stopbits:";
+            // 
+            // cb_Options_CAT_StopBits
+            // 
+            this.cb_Options_CAT_StopBits.DisplayMember = "Text";
+            this.cb_Options_CAT_StopBits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_Options_CAT_StopBits.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_CAT_StopBits.FormattingEnabled = true;
+            this.cb_Options_CAT_StopBits.Location = new System.Drawing.Point(108, 127);
+            this.cb_Options_CAT_StopBits.Name = "cb_Options_CAT_StopBits";
+            this.cb_Options_CAT_StopBits.Size = new System.Drawing.Size(107, 21);
+            this.cb_Options_CAT_StopBits.TabIndex = 39;
+            this.cb_Options_CAT_StopBits.ValueMember = "Value";
+            this.cb_Options_CAT_StopBits.SelectedIndexChanged += new System.EventHandler(this.cb_Options_CAT_Stopbits_SelectedIndexChanged);
+            // 
+            // label194
+            // 
+            this.label194.AutoSize = true;
+            this.label194.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label194.Location = new System.Drawing.Point(30, 103);
+            this.label194.Name = "label194";
+            this.label194.Size = new System.Drawing.Size(36, 13);
+            this.label194.TabIndex = 38;
+            this.label194.Text = "Parity:";
+            // 
+            // cb_Options_CAT_Parity
+            // 
+            this.cb_Options_CAT_Parity.DisplayMember = "Text";
+            this.cb_Options_CAT_Parity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_Options_CAT_Parity.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_CAT_Parity.FormattingEnabled = true;
+            this.cb_Options_CAT_Parity.Location = new System.Drawing.Point(108, 100);
+            this.cb_Options_CAT_Parity.Name = "cb_Options_CAT_Parity";
+            this.cb_Options_CAT_Parity.Size = new System.Drawing.Size(107, 21);
+            this.cb_Options_CAT_Parity.TabIndex = 37;
+            this.cb_Options_CAT_Parity.ValueMember = "Value";
+            this.cb_Options_CAT_Parity.SelectedIndexChanged += new System.EventHandler(this.cb_Parity_SelectedIndexChanged);
+            // 
+            // label195
+            // 
+            this.label195.AutoSize = true;
+            this.label195.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label195.Location = new System.Drawing.Point(30, 76);
+            this.label195.Name = "label195";
+            this.label195.Size = new System.Drawing.Size(49, 13);
+            this.label195.TabIndex = 36;
+            this.label195.Text = "Databits:";
+            // 
+            // cb_Options_CAT_DataBits
+            // 
+            this.cb_Options_CAT_DataBits.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_Options_CAT_DataBits.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_CAT_DataBits.FormattingEnabled = true;
+            this.cb_Options_CAT_DataBits.Location = new System.Drawing.Point(108, 73);
+            this.cb_Options_CAT_DataBits.Name = "cb_Options_CAT_DataBits";
+            this.cb_Options_CAT_DataBits.Size = new System.Drawing.Size(107, 21);
+            this.cb_Options_CAT_DataBits.TabIndex = 35;
+            this.cb_Options_CAT_DataBits.SelectedIndexChanged += new System.EventHandler(this.cb_Options_CAT_DataBits_SelectedIndexChanged);
+            // 
+            // label196
+            // 
+            this.label196.AutoSize = true;
+            this.label196.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label196.Location = new System.Drawing.Point(30, 49);
+            this.label196.Name = "label196";
+            this.label196.Size = new System.Drawing.Size(53, 13);
+            this.label196.TabIndex = 34;
+            this.label196.Text = "Baudrate:";
+            // 
+            // cb_Options_CAT_Baudrate
+            // 
+            this.cb_Options_CAT_Baudrate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_Options_CAT_Baudrate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_CAT_Baudrate.FormattingEnabled = true;
+            this.cb_Options_CAT_Baudrate.Location = new System.Drawing.Point(108, 46);
+            this.cb_Options_CAT_Baudrate.Name = "cb_Options_CAT_Baudrate";
+            this.cb_Options_CAT_Baudrate.Size = new System.Drawing.Size(107, 21);
+            this.cb_Options_CAT_Baudrate.TabIndex = 33;
+            this.cb_Options_CAT_Baudrate.SelectedIndexChanged += new System.EventHandler(this.cb_Options_CAT_Baudrate_SelectedIndexChanged);
+            // 
+            // label197
+            // 
+            this.label197.AutoSize = true;
+            this.label197.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label197.Location = new System.Drawing.Point(30, 22);
+            this.label197.Name = "label197";
+            this.label197.Size = new System.Drawing.Size(57, 13);
+            this.label197.TabIndex = 32;
+            this.label197.Text = "PortName:";
+            // 
+            // cb_Options_CAT_PortName
+            // 
+            this.cb_Options_CAT_PortName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_Options_CAT_PortName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_CAT_PortName.FormattingEnabled = true;
+            this.cb_Options_CAT_PortName.Location = new System.Drawing.Point(108, 19);
+            this.cb_Options_CAT_PortName.Name = "cb_Options_CAT_PortName";
+            this.cb_Options_CAT_PortName.Size = new System.Drawing.Size(107, 21);
+            this.cb_Options_CAT_PortName.TabIndex = 31;
+            this.cb_Options_CAT_PortName.SelectedIndexChanged += new System.EventHandler(this.cb_Options_CAT_PortName_SelectedIndexChanged);
+            // 
+            // gb_Options_CAT_RigType
+            // 
+            this.gb_Options_CAT_RigType.Controls.Add(this.richTextBox5);
+            this.gb_Options_CAT_RigType.Controls.Add(this.richTextBox4);
+            this.gb_Options_CAT_RigType.Controls.Add(this.richTextBox3);
+            this.gb_Options_CAT_RigType.Controls.Add(this.label199);
+            this.gb_Options_CAT_RigType.Controls.Add(this.richTextBox2);
+            this.gb_Options_CAT_RigType.Controls.Add(this.cb_Options_CAT_Rig);
+            this.gb_Options_CAT_RigType.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gb_Options_CAT_RigType.Location = new System.Drawing.Point(21, 67);
+            this.gb_Options_CAT_RigType.Name = "gb_Options_CAT_RigType";
+            this.gb_Options_CAT_RigType.Size = new System.Drawing.Size(396, 277);
+            this.gb_Options_CAT_RigType.TabIndex = 2;
+            this.gb_Options_CAT_RigType.TabStop = false;
+            this.gb_Options_CAT_RigType.Text = "Rig Type";
+            // 
+            // richTextBox5
+            // 
+            this.richTextBox5.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox5.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.richTextBox5.Location = new System.Drawing.Point(18, 121);
+            this.richTextBox5.Name = "richTextBox5";
+            this.richTextBox5.ReadOnly = true;
+            this.richTextBox5.Size = new System.Drawing.Size(372, 32);
+            this.richTextBox5.TabIndex = 35;
+            this.richTextBox5.Text = "2. ScoutBase.CAT via serial port (Windows/Linux)\n(with OmniRig rig definitions, r" +
+    "equires exclusive access to rig)";
+            // 
+            // richTextBox4
+            // 
+            this.richTextBox4.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox4.Location = new System.Drawing.Point(18, 170);
+            this.richTextBox4.Name = "richTextBox4";
+            this.richTextBox4.ReadOnly = true;
+            this.richTextBox4.Size = new System.Drawing.Size(372, 96);
+            this.richTextBox4.TabIndex = 34;
+            this.richTextBox4.Text = resources.GetString("richTextBox4.Text");
+            // 
+            // richTextBox3
+            // 
+            this.richTextBox3.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox3.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.richTextBox3.Location = new System.Drawing.Point(18, 77);
+            this.richTextBox3.Name = "richTextBox3";
+            this.richTextBox3.ReadOnly = true;
+            this.richTextBox3.Size = new System.Drawing.Size(372, 43);
+            this.richTextBox3.TabIndex = 32;
+            this.richTextBox3.Text = "1. OmniRig V1.19 or V2.x via ActiveX (Windows only)\n(multiple access to rig from " +
+    "different applications possible)";
+            // 
+            // label199
+            // 
+            this.label199.AutoSize = true;
+            this.label199.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label199.Location = new System.Drawing.Point(27, 22);
+            this.label199.Name = "label199";
+            this.label199.Size = new System.Drawing.Size(155, 13);
+            this.label199.TabIndex = 31;
+            this.label199.Text = "Select CAT-Engine & Rig-Type:";
+            this.label199.UseMnemonic = false;
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox2.Location = new System.Drawing.Point(18, 49);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.ReadOnly = true;
+            this.richTextBox2.Size = new System.Drawing.Size(372, 18);
+            this.richTextBox2.TabIndex = 1;
+            this.richTextBox2.Text = "AirScout supports the following CAT-Engines:";
+            // 
+            // cb_Options_CAT_Rig
+            // 
+            this.cb_Options_CAT_Rig.DisplayMember = "Type";
+            this.cb_Options_CAT_Rig.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_Options_CAT_Rig.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_CAT_Rig.FormattingEnabled = true;
+            this.cb_Options_CAT_Rig.Location = new System.Drawing.Point(194, 19);
+            this.cb_Options_CAT_Rig.Name = "cb_Options_CAT_Rig";
+            this.cb_Options_CAT_Rig.Size = new System.Drawing.Size(170, 21);
+            this.cb_Options_CAT_Rig.TabIndex = 0;
+            this.cb_Options_CAT_Rig.ValueMember = "Type";
+            this.cb_Options_CAT_Rig.SelectedIndexChanged += new System.EventHandler(this.cb_Options_CAT_Rig_SelectedIndexChanged);
+            // 
+            // gb_Options_CAT_OperatingInstructions
+            // 
+            this.gb_Options_CAT_OperatingInstructions.Controls.Add(this.richTextBox1);
+            this.gb_Options_CAT_OperatingInstructions.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gb_Options_CAT_OperatingInstructions.Location = new System.Drawing.Point(21, 350);
+            this.gb_Options_CAT_OperatingInstructions.Name = "gb_Options_CAT_OperatingInstructions";
+            this.gb_Options_CAT_OperatingInstructions.Size = new System.Drawing.Size(633, 121);
+            this.gb_Options_CAT_OperatingInstructions.TabIndex = 1;
+            this.gb_Options_CAT_OperatingInstructions.TabStop = false;
+            this.gb_Options_CAT_OperatingInstructions.Text = "Operating Instructions";
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox1.Location = new System.Drawing.Point(18, 19);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(609, 109);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
+            // 
+            // groupBox57
+            // 
+            this.groupBox57.Controls.Add(this.ud_Options_CAT_Update);
+            this.groupBox57.Controls.Add(this.label189);
+            this.groupBox57.Controls.Add(this.cb_Options_CAT_Activate);
+            this.groupBox57.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox57.Location = new System.Drawing.Point(20, 12);
+            this.groupBox57.Name = "groupBox57";
+            this.groupBox57.Size = new System.Drawing.Size(634, 49);
+            this.groupBox57.TabIndex = 0;
+            this.groupBox57.TabStop = false;
+            this.groupBox57.Text = "Activate CAT Interface";
+            // 
+            // ud_Options_CAT_Update
+            // 
+            this.ud_Options_CAT_Update.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ud_Options_CAT_Update.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Update.Location = new System.Drawing.Point(549, 18);
+            this.ud_Options_CAT_Update.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Update.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.ud_Options_CAT_Update.Name = "ud_Options_CAT_Update";
+            this.ud_Options_CAT_Update.Size = new System.Drawing.Size(69, 20);
+            this.ud_Options_CAT_Update.TabIndex = 61;
+            this.ud_Options_CAT_Update.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            // 
+            // label189
+            // 
+            this.label189.AutoSize = true;
+            this.label189.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label189.Location = new System.Drawing.Point(433, 20);
+            this.label189.Name = "label189";
+            this.label189.Size = new System.Drawing.Size(93, 13);
+            this.label189.TabIndex = 60;
+            this.label189.Text = "CAT Refresh [ms]:";
+            // 
+            // cb_Options_CAT_Activate
+            // 
+            this.cb_Options_CAT_Activate.AutoSize = true;
+            this.cb_Options_CAT_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_CAT_Activate.Location = new System.Drawing.Point(19, 19);
+            this.cb_Options_CAT_Activate.Name = "cb_Options_CAT_Activate";
+            this.cb_Options_CAT_Activate.Size = new System.Drawing.Size(134, 17);
+            this.cb_Options_CAT_Activate.TabIndex = 2;
+            this.cb_Options_CAT_Activate.Tag = "";
+            this.cb_Options_CAT_Activate.Text = "Activate CAT Interface";
+            this.cb_Options_CAT_Activate.UseVisualStyleBackColor = true;
+            this.cb_Options_CAT_Activate.CheckedChanged += new System.EventHandler(this.cb_Options_CAT_Activate_CheckedChanged);
             // 
             // tab_Options_Watchlist
             // 
@@ -4266,6 +6719,26 @@
             this.groupBox50.TabStop = false;
             this.groupBox50.Text = "Info";
             // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::AirScout.Properties.Resources.AirScout_Watchlist;
+            this.pictureBox3.Location = new System.Drawing.Point(520, 19);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(113, 344);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.TabIndex = 3;
+            this.pictureBox3.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::AirScout.Properties.Resources.AirScout_Marker;
+            this.pictureBox2.Location = new System.Drawing.Point(281, 36);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(210, 118);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 2;
+            this.pictureBox2.TabStop = false;
+            // 
             // label37
             // 
             this.label37.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -4275,6 +6748,17 @@
             this.label37.TabIndex = 1;
             this.label37.Text = resources.GetString("label37.Text");
             this.label37.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::AirScout.Properties.Resources.AirScout_Multi;
+            this.pictureBox1.InitialImage = global::AirScout.Properties.Resources.AirScout_Multi;
+            this.pictureBox1.Location = new System.Drawing.Point(6, 15);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(283, 153);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // btn_Options_Watchlist_Clear
             // 
@@ -4300,6 +6784,39 @@
             this.groupBox17.TabIndex = 1;
             this.groupBox17.TabStop = false;
             this.groupBox17.Text = "General";
+            // 
+            // cb_Options_Watchlist_SyncWithKST
+            // 
+            this.cb_Options_Watchlist_SyncWithKST.AutoSize = true;
+            this.cb_Options_Watchlist_SyncWithKST.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cb_Options_Watchlist_SyncWithKST.Checked = global::AirScout.Properties.Settings.Default.Watchlist_SyncWithKST;
+            this.cb_Options_Watchlist_SyncWithKST.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Watchlist_SyncWithKST.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", global::AirScout.Properties.Settings.Default, "Server_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Watchlist_SyncWithKST.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Watchlist_SyncWithKST", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Watchlist_SyncWithKST.Enabled = global::AirScout.Properties.Settings.Default.Server_Activate;
+            this.cb_Options_Watchlist_SyncWithKST.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Watchlist_SyncWithKST.Location = new System.Drawing.Point(6, 47);
+            this.cb_Options_Watchlist_SyncWithKST.Name = "cb_Options_Watchlist_SyncWithKST";
+            this.cb_Options_Watchlist_SyncWithKST.Size = new System.Drawing.Size(436, 17);
+            this.cb_Options_Watchlist_SyncWithKST.TabIndex = 6;
+            this.cb_Options_Watchlist_SyncWithKST.Text = "Keep in sync with KST user list (needs wtKST > V3.1 and network functions activat" +
+    "ed):";
+            this.cb_Options_Watchlist_SyncWithKST.UseVisualStyleBackColor = true;
+            this.cb_Options_Watchlist_SyncWithKST.CheckedChanged += new System.EventHandler(this.cb_Options_Watchlist_SyncWithKST_CheckedChanged);
+            // 
+            // tb_Options_Watchlist_MaxCount
+            // 
+            this.tb_Options_Watchlist_MaxCount.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Watchlist_MaxCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Watchlist_MaxCount.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Options_Watchlist_MaxCount.FormatSpecifier = "F0";
+            this.tb_Options_Watchlist_MaxCount.Location = new System.Drawing.Point(395, 20);
+            this.tb_Options_Watchlist_MaxCount.MaxValue = 1000;
+            this.tb_Options_Watchlist_MaxCount.MinValue = 1;
+            this.tb_Options_Watchlist_MaxCount.Name = "tb_Options_Watchlist_MaxCount";
+            this.tb_Options_Watchlist_MaxCount.Size = new System.Drawing.Size(47, 22);
+            this.tb_Options_Watchlist_MaxCount.TabIndex = 5;
+            this.tb_Options_Watchlist_MaxCount.Text = "1000";
+            this.tb_Options_Watchlist_MaxCount.Value = global::AirScout.Properties.Settings.Default.Watchlist_MaxCount;
             // 
             // label31
             // 
@@ -4335,6 +6852,18 @@
             this.tab_Options_Misc.Size = new System.Drawing.Size(671, 480);
             this.tab_Options_Misc.TabIndex = 17;
             this.tab_Options_Misc.Text = "Misc.";
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.BackColor = System.Drawing.Color.White;
+            this.pictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox4.Image = global::AirScout.Properties.Resources.Settings;
+            this.pictureBox4.Location = new System.Drawing.Point(343, 108);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(306, 277);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox4.TabIndex = 5;
+            this.pictureBox4.TabStop = false;
             // 
             // label143
             // 
@@ -4426,7 +6955,7 @@
             this.lbl_Options_Elevation_SRTM1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_Options_Elevation_SRTM1.Location = new System.Drawing.Point(89, 314);
             this.lbl_Options_Elevation_SRTM1.Name = "lbl_Options_Elevation_SRTM1";
-            this.lbl_Options_Elevation_SRTM1.Size = new System.Drawing.Size(478, 16);
+            this.lbl_Options_Elevation_SRTM1.Size = new System.Drawing.Size(477, 16);
             this.lbl_Options_Elevation_SRTM1.TabIndex = 41;
             this.lbl_Options_Elevation_SRTM1.TabStop = true;
             this.lbl_Options_Elevation_SRTM1.Text = "1arsec (30m x 30m) Elevation Data from  SRTM - Project and ASTER";
@@ -4447,7 +6976,7 @@
             this.lbl_Options_Elevation_SRTM3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_Options_Elevation_SRTM3.Location = new System.Drawing.Point(89, 250);
             this.lbl_Options_Elevation_SRTM3.Name = "lbl_Options_Elevation_SRTM3";
-            this.lbl_Options_Elevation_SRTM3.Size = new System.Drawing.Size(478, 16);
+            this.lbl_Options_Elevation_SRTM3.Size = new System.Drawing.Size(477, 16);
             this.lbl_Options_Elevation_SRTM3.TabIndex = 39;
             this.lbl_Options_Elevation_SRTM3.TabStop = true;
             this.lbl_Options_Elevation_SRTM3.Text = "3arsec (90m x 90m) Elevation Data from  SRTM - Project and ASTER";
@@ -4458,7 +6987,7 @@
             this.lbl_Options_Elevation_GLOBE.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_Options_Elevation_GLOBE.Location = new System.Drawing.Point(164, 211);
             this.lbl_Options_Elevation_GLOBE.Name = "lbl_Options_Elevation_GLOBE";
-            this.lbl_Options_Elevation_GLOBE.Size = new System.Drawing.Size(340, 16);
+            this.lbl_Options_Elevation_GLOBE.Size = new System.Drawing.Size(339, 16);
             this.lbl_Options_Elevation_GLOBE.TabIndex = 38;
             this.lbl_Options_Elevation_GLOBE.TabStop = true;
             this.lbl_Options_Elevation_GLOBE.Text = "1km based Elevation Data from GLOBE - Project";
@@ -4489,7 +7018,7 @@
             this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label25.Location = new System.Drawing.Point(105, 391);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(495, 16);
+            this.label25.Size = new System.Drawing.Size(494, 16);
             this.label25.TabIndex = 33;
             this.label25.Text = "special tnx to DF9IC and DL8AAU for extensive discussions and testing";
             // 
@@ -4649,1442 +7178,32 @@
             this.bw_ASTER1_MapUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_ASTER1_MapUpdater_ProgressChanged);
             this.bw_ASTER1_MapUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_ASTER1_MapUpdater_RunWorkerCompleted);
             // 
-            // label148
-            // 
-            this.label148.AutoSize = true;
-            this.label148.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label148.Location = new System.Drawing.Point(218, 20);
-            this.label148.Name = "label148";
-            this.label148.Size = new System.Drawing.Size(96, 13);
-            this.label148.TabIndex = 7;
-            this.label148.Text = "Main Map Opacity:";
-            // 
-            // tb_Coverage_MaxLat
-            // 
-            this.tb_Coverage_MaxLat.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "MaxLat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Coverage_MaxLat.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Coverage_MaxLat.FormatSpecifier = "F0";
-            this.tb_Coverage_MaxLat.Location = new System.Drawing.Point(589, 416);
-            this.tb_Coverage_MaxLat.MaxValue = 90D;
-            this.tb_Coverage_MaxLat.MinValue = -90D;
-            this.tb_Coverage_MaxLat.Name = "tb_Coverage_MaxLat";
-            this.tb_Coverage_MaxLat.Size = new System.Drawing.Size(50, 22);
-            this.tb_Coverage_MaxLat.TabIndex = 4;
-            this.tb_Coverage_MaxLat.Text = "60";
-            this.tb_Coverage_MaxLat.Value = global::AirScout.Properties.Settings.Default.MaxLat;
-            this.tb_Coverage_MaxLat.TextChanged += new System.EventHandler(this.tab_Options_General_Update);
-            // 
-            // tb_Coverage_MinLat
-            // 
-            this.tb_Coverage_MinLat.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "MinLat", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Coverage_MinLat.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Coverage_MinLat.FormatSpecifier = "F0";
-            this.tb_Coverage_MinLat.Location = new System.Drawing.Point(589, 391);
-            this.tb_Coverage_MinLat.MaxValue = 90D;
-            this.tb_Coverage_MinLat.MinValue = -90D;
-            this.tb_Coverage_MinLat.Name = "tb_Coverage_MinLat";
-            this.tb_Coverage_MinLat.Size = new System.Drawing.Size(50, 22);
-            this.tb_Coverage_MinLat.TabIndex = 3;
-            this.tb_Coverage_MinLat.Text = "35";
-            this.tb_Coverage_MinLat.Value = global::AirScout.Properties.Settings.Default.MinLat;
-            this.tb_Coverage_MinLat.TextChanged += new System.EventHandler(this.tab_Options_General_Update);
-            // 
-            // tb_Coverage_MaxLon
-            // 
-            this.tb_Coverage_MaxLon.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "MaxLon", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Coverage_MaxLon.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Coverage_MaxLon.FormatSpecifier = "F0";
-            this.tb_Coverage_MaxLon.Location = new System.Drawing.Point(589, 364);
-            this.tb_Coverage_MaxLon.MaxValue = 180D;
-            this.tb_Coverage_MaxLon.MinValue = -180D;
-            this.tb_Coverage_MaxLon.Name = "tb_Coverage_MaxLon";
-            this.tb_Coverage_MaxLon.Size = new System.Drawing.Size(50, 22);
-            this.tb_Coverage_MaxLon.TabIndex = 2;
-            this.tb_Coverage_MaxLon.Text = "30";
-            this.tb_Coverage_MaxLon.Value = global::AirScout.Properties.Settings.Default.MaxLon;
-            this.tb_Coverage_MaxLon.TextChanged += new System.EventHandler(this.tab_Options_General_Update);
-            // 
-            // tb_Coverage_MinLon
-            // 
-            this.tb_Coverage_MinLon.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "MinLon", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Coverage_MinLon.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Coverage_MinLon.FormatSpecifier = "F0";
-            this.tb_Coverage_MinLon.Location = new System.Drawing.Point(589, 337);
-            this.tb_Coverage_MinLon.MaxValue = 180D;
-            this.tb_Coverage_MinLon.MinValue = -180D;
-            this.tb_Coverage_MinLon.Name = "tb_Coverage_MinLon";
-            this.tb_Coverage_MinLon.Size = new System.Drawing.Size(50, 22);
-            this.tb_Coverage_MinLon.TabIndex = 1;
-            this.tb_Coverage_MinLon.Text = "-15";
-            this.tb_Coverage_MinLon.Value = global::AirScout.Properties.Settings.Default.MinLon;
-            this.tb_Coverage_MinLon.TextChanged += new System.EventHandler(this.tab_Options_General_Update);
-            // 
-            // cb_Options_Background_Calculations_Enable
-            // 
-            this.cb_Options_Background_Calculations_Enable.AutoSize = true;
-            this.cb_Options_Background_Calculations_Enable.Checked = global::AirScout.Properties.Settings.Default.Background_Calculations_Enable;
-            this.cb_Options_Background_Calculations_Enable.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Background_Calculations_Enable.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Background_Calculations_Enable", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Background_Calculations_Enable.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Background_Calculations_Enable.Location = new System.Drawing.Point(22, 126);
-            this.cb_Options_Background_Calculations_Enable.Name = "cb_Options_Background_Calculations_Enable";
-            this.cb_Options_Background_Calculations_Enable.Size = new System.Drawing.Size(308, 17);
-            this.cb_Options_Background_Calculations_Enable.TabIndex = 6;
-            this.cb_Options_Background_Calculations_Enable.Text = "Enable Background Pre-Calculations for paths/horizons etc.";
-            this.cb_Options_Background_Calculations_Enable.UseVisualStyleBackColor = true;
-            // 
-            // ud_Options_Database_Update_Period
-            // 
-            this.ud_Options_Database_Update_Period.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Background_Update_Period", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ud_Options_Database_Update_Period.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ud_Options_Database_Update_Period.Location = new System.Drawing.Point(278, 84);
-            this.ud_Options_Database_Update_Period.Maximum = new decimal(new int[] {
-            6000,
-            0,
-            0,
-            0});
-            this.ud_Options_Database_Update_Period.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ud_Options_Database_Update_Period.Name = "ud_Options_Database_Update_Period";
-            this.ud_Options_Database_Update_Period.Size = new System.Drawing.Size(39, 20);
-            this.ud_Options_Database_Update_Period.TabIndex = 3;
-            this.ud_Options_Database_Update_Period.Value = global::AirScout.Properties.Settings.Default.Background_Update_Period;
-            // 
-            // cb_Options_Locations_RestrictToAreaOfInterest
-            // 
-            this.cb_Options_Locations_RestrictToAreaOfInterest.AutoSize = true;
-            this.cb_Options_Locations_RestrictToAreaOfInterest.Checked = global::AirScout.Properties.Settings.Default.Location_RestrictToAreaOfInterest;
-            this.cb_Options_Locations_RestrictToAreaOfInterest.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Locations_RestrictToAreaOfInterest.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Location_RestrictToAreaOfInterest", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Locations_RestrictToAreaOfInterest.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Locations_RestrictToAreaOfInterest.Location = new System.Drawing.Point(12, 58);
-            this.cb_Options_Locations_RestrictToAreaOfInterest.Name = "cb_Options_Locations_RestrictToAreaOfInterest";
-            this.cb_Options_Locations_RestrictToAreaOfInterest.Size = new System.Drawing.Size(230, 17);
-            this.cb_Options_Locations_RestrictToAreaOfInterest.TabIndex = 12;
-            this.cb_Options_Locations_RestrictToAreaOfInterest.Text = "Restrict locations to current Area of Interest";
-            this.tt_Options.SetToolTip(this.cb_Options_Locations_RestrictToAreaOfInterest, "Restrict stations kept in the database to Area of Interest  \r\n(all other stations" +
-        "  will be removed during the update process)");
-            this.cb_Options_Locations_RestrictToAreaOfInterest.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_SmallLettersForSubSquares
-            // 
-            this.cb_Options_SmallLettersForSubSquares.AutoSize = true;
-            this.cb_Options_SmallLettersForSubSquares.Checked = global::AirScout.Properties.Settings.Default.Locator_SmallLettersForSubsquares;
-            this.cb_Options_SmallLettersForSubSquares.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Locator_SmallLettersForSubsquares", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_SmallLettersForSubSquares.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_SmallLettersForSubSquares.Location = new System.Drawing.Point(239, 16);
-            this.cb_Options_SmallLettersForSubSquares.Name = "cb_Options_SmallLettersForSubSquares";
-            this.cb_Options_SmallLettersForSubSquares.Size = new System.Drawing.Size(157, 17);
-            this.cb_Options_SmallLettersForSubSquares.TabIndex = 11;
-            this.cb_Options_SmallLettersForSubSquares.Text = "Small letters for subsquares:";
-            this.cb_Options_SmallLettersForSubSquares.UseVisualStyleBackColor = true;
-            this.cb_Options_SmallLettersForSubSquares.CheckedChanged += new System.EventHandler(this.cb_Options_SmallLettersForSubSquares_CheckedChanged);
-            // 
-            // cb_Options_Locator_AutoLength
-            // 
-            this.cb_Options_Locator_AutoLength.AutoSize = true;
-            this.cb_Options_Locator_AutoLength.Checked = global::AirScout.Properties.Settings.Default.Locator_AutoLength;
-            this.cb_Options_Locator_AutoLength.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Locator_AutoLength.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Locator_AutoLength", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Locator_AutoLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Locator_AutoLength.Location = new System.Drawing.Point(12, 38);
-            this.cb_Options_Locator_AutoLength.Name = "cb_Options_Locator_AutoLength";
-            this.cb_Options_Locator_AutoLength.Size = new System.Drawing.Size(319, 17);
-            this.cb_Options_Locator_AutoLength.TabIndex = 10;
-            this.cb_Options_Locator_AutoLength.Text = "Cut locator to significant digits automatically (Minimum 6 digits):";
-            this.cb_Options_Locator_AutoLength.UseVisualStyleBackColor = true;
-            // 
-            // ud_Options_Locator_MaxLength
-            // 
-            this.ud_Options_Locator_MaxLength.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Locator_MaxLength", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ud_Options_Locator_MaxLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ud_Options_Locator_MaxLength.Increment = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.ud_Options_Locator_MaxLength.Location = new System.Drawing.Point(180, 15);
-            this.ud_Options_Locator_MaxLength.Maximum = new decimal(new int[] {
-            14,
-            0,
-            0,
-            0});
-            this.ud_Options_Locator_MaxLength.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.ud_Options_Locator_MaxLength.Name = "ud_Options_Locator_MaxLength";
-            this.ud_Options_Locator_MaxLength.Size = new System.Drawing.Size(50, 20);
-            this.ud_Options_Locator_MaxLength.TabIndex = 9;
-            this.ud_Options_Locator_MaxLength.Value = global::AirScout.Properties.Settings.Default.Locator_MaxLength;
-            // 
-            // tb_Options_DXLoc
-            // 
-            this.tb_Options_DXLoc.BackColor = System.Drawing.SystemColors.Window;
-            this.tb_Options_DXLoc.DataBindings.Add(new System.Windows.Forms.Binding("SmallLettersForSubsquares", global::AirScout.Properties.Settings.Default, "Locator_SmallLettersForSubsquares", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_DXLoc.ErrorBackColor = System.Drawing.Color.Red;
-            this.tb_Options_DXLoc.ErrorForeColor = System.Drawing.Color.White;
-            this.tb_Options_DXLoc.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_DXLoc.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.tb_Options_DXLoc.Location = new System.Drawing.Point(90, 36);
-            this.tb_Options_DXLoc.Name = "tb_Options_DXLoc";
-            this.tb_Options_DXLoc.Size = new System.Drawing.Size(100, 21);
-            this.tb_Options_DXLoc.SmallLettersForSubsquares = global::AirScout.Properties.Settings.Default.Locator_SmallLettersForSubsquares;
-            this.tb_Options_DXLoc.TabIndex = 6;
-            this.tb_Options_DXLoc.TextChanged += new System.EventHandler(this.tb_Options_DXLoc_TextChanged);
-            // 
-            // tb_Options_MyLoc
-            // 
-            this.tb_Options_MyLoc.BackColor = System.Drawing.SystemColors.Window;
-            this.tb_Options_MyLoc.DataBindings.Add(new System.Windows.Forms.Binding("SmallLettersForSubsquares", global::AirScout.Properties.Settings.Default, "Locator_SmallLettersForSubsquares", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_MyLoc.ErrorBackColor = System.Drawing.Color.Red;
-            this.tb_Options_MyLoc.ErrorForeColor = System.Drawing.Color.White;
-            this.tb_Options_MyLoc.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_MyLoc.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.tb_Options_MyLoc.Location = new System.Drawing.Point(89, 36);
-            this.tb_Options_MyLoc.Name = "tb_Options_MyLoc";
-            this.tb_Options_MyLoc.Size = new System.Drawing.Size(100, 21);
-            this.tb_Options_MyLoc.SmallLettersForSubsquares = global::AirScout.Properties.Settings.Default.Locator_SmallLettersForSubsquares;
-            this.tb_Options_MyLoc.TabIndex = 2;
-            this.tb_Options_MyLoc.TextChanged += new System.EventHandler(this.tb_Options_MyLoc_TextChanged);
-            // 
-            // cb_Options_Map_SmallMarkers
-            // 
-            this.cb_Options_Map_SmallMarkers.AutoSize = true;
-            this.cb_Options_Map_SmallMarkers.Checked = global::AirScout.Properties.Settings.Default.Map_SmallMarkers;
-            this.cb_Options_Map_SmallMarkers.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Map_SmallMarkers.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Map_SmallMarkers", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Map_SmallMarkers.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Map_SmallMarkers.Location = new System.Drawing.Point(18, 22);
-            this.cb_Options_Map_SmallMarkers.Name = "cb_Options_Map_SmallMarkers";
-            this.cb_Options_Map_SmallMarkers.Size = new System.Drawing.Size(199, 17);
-            this.cb_Options_Map_SmallMarkers.TabIndex = 2;
-            this.cb_Options_Map_SmallMarkers.Text = "Use Small Markers for all Path Marks";
-            this.cb_Options_Map_SmallMarkers.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Map_LabelCalls
-            // 
-            this.cb_Options_Map_LabelCalls.AutoSize = true;
-            this.cb_Options_Map_LabelCalls.Checked = global::AirScout.Properties.Settings.Default.Map_LabelCalls;
-            this.cb_Options_Map_LabelCalls.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Map_LabelCalls.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Map_LabelCalls", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Map_LabelCalls.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Map_LabelCalls.Location = new System.Drawing.Point(18, 45);
-            this.cb_Options_Map_LabelCalls.Name = "cb_Options_Map_LabelCalls";
-            this.cb_Options_Map_LabelCalls.Size = new System.Drawing.Size(209, 17);
-            this.cb_Options_Map_LabelCalls.TabIndex = 3;
-            this.cb_Options_Map_LabelCalls.Text = "Show Labels with Callsign at Locations";
-            this.cb_Options_Map_LabelCalls.UseVisualStyleBackColor = true;
-            // 
-            // ud_Options_Charts_FontSize
-            // 
-            this.ud_Options_Charts_FontSize.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Charts_FontSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ud_Options_Charts_FontSize.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ud_Options_Charts_FontSize.Location = new System.Drawing.Point(192, 15);
-            this.ud_Options_Charts_FontSize.Maximum = new decimal(new int[] {
-            16,
-            0,
-            0,
-            0});
-            this.ud_Options_Charts_FontSize.Minimum = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            this.ud_Options_Charts_FontSize.Name = "ud_Options_Charts_FontSize";
-            this.ud_Options_Charts_FontSize.Size = new System.Drawing.Size(45, 22);
-            this.ud_Options_Charts_FontSize.TabIndex = 0;
-            this.ud_Options_Charts_FontSize.Value = global::AirScout.Properties.Settings.Default.Charts_FontSize;
-            // 
-            // tb_Options_Map_Update_Interval
-            // 
-            this.tb_Options_Map_Update_Interval.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Map_Update", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Map_Update_Interval.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Map_Update_Interval.FormatSpecifier = "F0";
-            this.tb_Options_Map_Update_Interval.Location = new System.Drawing.Point(119, 33);
-            this.tb_Options_Map_Update_Interval.MaxValue = 3600;
-            this.tb_Options_Map_Update_Interval.MinValue = 0;
-            this.tb_Options_Map_Update_Interval.Name = "tb_Options_Map_Update_Interval";
-            this.tb_Options_Map_Update_Interval.Size = new System.Drawing.Size(37, 22);
-            this.tb_Options_Map_Update_Interval.TabIndex = 23;
-            this.tb_Options_Map_Update_Interval.Text = "1";
-            this.tb_Options_Map_Update_Interval.Value = global::AirScout.Properties.Settings.Default.Map_Update;
-            // 
-            // ud_Options_Map_Preloader_MaxZoom
-            // 
-            this.ud_Options_Map_Preloader_MaxZoom.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Map_Preloader_MaxZoom", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ud_Options_Map_Preloader_MaxZoom.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ud_Options_Map_Preloader_MaxZoom.Location = new System.Drawing.Point(319, 66);
-            this.ud_Options_Map_Preloader_MaxZoom.Maximum = new decimal(new int[] {
-            11,
-            0,
-            0,
-            0});
-            this.ud_Options_Map_Preloader_MaxZoom.Name = "ud_Options_Map_Preloader_MaxZoom";
-            this.ud_Options_Map_Preloader_MaxZoom.Size = new System.Drawing.Size(54, 22);
-            this.ud_Options_Map_Preloader_MaxZoom.TabIndex = 6;
-            this.ud_Options_Map_Preloader_MaxZoom.Value = global::AirScout.Properties.Settings.Default.Map_Preloader_MaxZoom;
-            // 
-            // cb_Options_Map_Preloader_Enabled
-            // 
-            this.cb_Options_Map_Preloader_Enabled.AutoSize = true;
-            this.cb_Options_Map_Preloader_Enabled.Checked = global::AirScout.Properties.Settings.Default.Map_Preloader_Enabled;
-            this.cb_Options_Map_Preloader_Enabled.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Map_Preloader_Enabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Map_Preloader_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Map_Preloader_Enabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Map_Preloader_Enabled.Location = new System.Drawing.Point(15, 63);
-            this.cb_Options_Map_Preloader_Enabled.Name = "cb_Options_Map_Preloader_Enabled";
-            this.cb_Options_Map_Preloader_Enabled.Size = new System.Drawing.Size(205, 30);
-            this.cb_Options_Map_Preloader_Enabled.TabIndex = 4;
-            this.cb_Options_Map_Preloader_Enabled.Text = "Enable Map Preloading from AirScout \r\nWeb Server or Selected Provider";
-            this.cb_Options_Map_Preloader_Enabled.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Watchlist_Activate
-            // 
-            this.cb_Options_Watchlist_Activate.AutoSize = true;
-            this.cb_Options_Watchlist_Activate.Checked = global::AirScout.Properties.Settings.Default.Watchlist_Activated;
-            this.cb_Options_Watchlist_Activate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Watchlist_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Watchlist_Activated", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Watchlist_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Watchlist_Activate.Location = new System.Drawing.Point(15, 43);
-            this.cb_Options_Watchlist_Activate.Name = "cb_Options_Watchlist_Activate";
-            this.cb_Options_Watchlist_Activate.Size = new System.Drawing.Size(144, 17);
-            this.cb_Options_Watchlist_Activate.TabIndex = 1;
-            this.cb_Options_Watchlist_Activate.Text = "Show Watchlist Callsigns";
-            this.cb_Options_Watchlist_Activate.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Airports_Activate
-            // 
-            this.cb_Options_Airports_Activate.AutoSize = true;
-            this.cb_Options_Airports_Activate.Checked = global::AirScout.Properties.Settings.Default.Airports_Activate;
-            this.cb_Options_Airports_Activate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Airports_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Airports_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Airports_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Airports_Activate.Location = new System.Drawing.Point(16, 19);
-            this.cb_Options_Airports_Activate.Name = "cb_Options_Airports_Activate";
-            this.cb_Options_Airports_Activate.Size = new System.Drawing.Size(91, 17);
-            this.cb_Options_Airports_Activate.TabIndex = 0;
-            this.cb_Options_Airports_Activate.Text = "Show Airports";
-            this.cb_Options_Airports_Activate.UseVisualStyleBackColor = true;
-            // 
-            // tb_Options_Planes_IconSize_S
-            // 
-            this.tb_Options_Planes_IconSize_S.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_IconSize_S", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_IconSize_S.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_IconSize_S.FormatSpecifier = "F0";
-            this.tb_Options_Planes_IconSize_S.Location = new System.Drawing.Point(183, 47);
-            this.tb_Options_Planes_IconSize_S.MaxValue = 128;
-            this.tb_Options_Planes_IconSize_S.MinValue = 0;
-            this.tb_Options_Planes_IconSize_S.Name = "tb_Options_Planes_IconSize_S";
-            this.tb_Options_Planes_IconSize_S.Size = new System.Drawing.Size(37, 22);
-            this.tb_Options_Planes_IconSize_S.TabIndex = 16;
-            this.tb_Options_Planes_IconSize_S.Text = "48";
-            this.tb_Options_Planes_IconSize_S.Value = global::AirScout.Properties.Settings.Default.Planes_IconSize_S;
-            // 
-            // tb_Options_Planes_IconSize_H
-            // 
-            this.tb_Options_Planes_IconSize_H.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_IconSize_H", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_IconSize_H.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_IconSize_H.FormatSpecifier = "F0";
-            this.tb_Options_Planes_IconSize_H.Location = new System.Drawing.Point(183, 19);
-            this.tb_Options_Planes_IconSize_H.MaxValue = 128;
-            this.tb_Options_Planes_IconSize_H.MinValue = 0;
-            this.tb_Options_Planes_IconSize_H.Name = "tb_Options_Planes_IconSize_H";
-            this.tb_Options_Planes_IconSize_H.Size = new System.Drawing.Size(37, 22);
-            this.tb_Options_Planes_IconSize_H.TabIndex = 15;
-            this.tb_Options_Planes_IconSize_H.Text = "36";
-            this.tb_Options_Planes_IconSize_H.Value = global::AirScout.Properties.Settings.Default.Planes_IconSize_H;
-            // 
-            // tb_Options_Planes_IconSize_M
-            // 
-            this.tb_Options_Planes_IconSize_M.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_IconSize_M", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_IconSize_M.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_IconSize_M.FormatSpecifier = "F0";
-            this.tb_Options_Planes_IconSize_M.Location = new System.Drawing.Point(63, 47);
-            this.tb_Options_Planes_IconSize_M.MaxValue = 128;
-            this.tb_Options_Planes_IconSize_M.MinValue = 0;
-            this.tb_Options_Planes_IconSize_M.Name = "tb_Options_Planes_IconSize_M";
-            this.tb_Options_Planes_IconSize_M.Size = new System.Drawing.Size(37, 22);
-            this.tb_Options_Planes_IconSize_M.TabIndex = 14;
-            this.tb_Options_Planes_IconSize_M.Text = "24";
-            this.tb_Options_Planes_IconSize_M.Value = global::AirScout.Properties.Settings.Default.Planes_IconSize_M;
-            // 
-            // tb_Options_Planes_IconSize_L
-            // 
-            this.tb_Options_Planes_IconSize_L.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_IconSize_L", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_IconSize_L.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_IconSize_L.FormatSpecifier = "F0";
-            this.tb_Options_Planes_IconSize_L.Location = new System.Drawing.Point(63, 21);
-            this.tb_Options_Planes_IconSize_L.MaxValue = 128;
-            this.tb_Options_Planes_IconSize_L.MinValue = 0;
-            this.tb_Options_Planes_IconSize_L.Name = "tb_Options_Planes_IconSize_L";
-            this.tb_Options_Planes_IconSize_L.Size = new System.Drawing.Size(37, 22);
-            this.tb_Options_Planes_IconSize_L.TabIndex = 13;
-            this.tb_Options_Planes_IconSize_L.Text = "16";
-            this.tb_Options_Planes_IconSize_L.Value = global::AirScout.Properties.Settings.Default.Planes_IconSize_L;
-            // 
-            // cb_Options_InfoWin_Angle
-            // 
-            this.cb_Options_InfoWin_Angle.AutoSize = true;
-            this.cb_Options_InfoWin_Angle.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Angle;
-            this.cb_Options_InfoWin_Angle.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Angle", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Angle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Angle.Location = new System.Drawing.Point(139, 75);
-            this.cb_Options_InfoWin_Angle.Name = "cb_Options_InfoWin_Angle";
-            this.cb_Options_InfoWin_Angle.Size = new System.Drawing.Size(96, 17);
-            this.cb_Options_InfoWin_Angle.TabIndex = 15;
-            this.cb_Options_InfoWin_Angle.Tag = "";
-            this.cb_Options_InfoWin_Angle.Text = "Crossing Angle";
-            this.cb_Options_InfoWin_Angle.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_InfoWin_Speed
-            // 
-            this.cb_Options_InfoWin_Speed.AutoSize = true;
-            this.cb_Options_InfoWin_Speed.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Speed;
-            this.cb_Options_InfoWin_Speed.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Speed", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Speed.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Speed.Location = new System.Drawing.Point(26, 100);
-            this.cb_Options_InfoWin_Speed.Name = "cb_Options_InfoWin_Speed";
-            this.cb_Options_InfoWin_Speed.Size = new System.Drawing.Size(87, 17);
-            this.cb_Options_InfoWin_Speed.TabIndex = 14;
-            this.cb_Options_InfoWin_Speed.Tag = "";
-            this.cb_Options_InfoWin_Speed.Text = "Plane Speed";
-            this.cb_Options_InfoWin_Speed.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_InfoWin_Squint
-            // 
-            this.cb_Options_InfoWin_Squint.AutoSize = true;
-            this.cb_Options_InfoWin_Squint.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Squint;
-            this.cb_Options_InfoWin_Squint.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_InfoWin_Squint.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Squint", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Squint.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Squint.Location = new System.Drawing.Point(139, 121);
-            this.cb_Options_InfoWin_Squint.Name = "cb_Options_InfoWin_Squint";
-            this.cb_Options_InfoWin_Squint.Size = new System.Drawing.Size(86, 17);
-            this.cb_Options_InfoWin_Squint.TabIndex = 13;
-            this.cb_Options_InfoWin_Squint.Tag = "";
-            this.cb_Options_InfoWin_Squint.Text = "Squint Angle";
-            this.cb_Options_InfoWin_Squint.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_InfoWin_Epsilon
-            // 
-            this.cb_Options_InfoWin_Epsilon.AutoSize = true;
-            this.cb_Options_InfoWin_Epsilon.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Epsilon;
-            this.cb_Options_InfoWin_Epsilon.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Epsilon", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Epsilon.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Epsilon.Location = new System.Drawing.Point(139, 98);
-            this.cb_Options_InfoWin_Epsilon.Name = "cb_Options_InfoWin_Epsilon";
-            this.cb_Options_InfoWin_Epsilon.Size = new System.Drawing.Size(105, 17);
-            this.cb_Options_InfoWin_Epsilon.TabIndex = 12;
-            this.cb_Options_InfoWin_Epsilon.Tag = "";
-            this.cb_Options_InfoWin_Epsilon.Text = "Elevation Angles";
-            this.cb_Options_InfoWin_Epsilon.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_InfoWin_Dist
-            // 
-            this.cb_Options_InfoWin_Dist.AutoSize = true;
-            this.cb_Options_InfoWin_Dist.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Dist;
-            this.cb_Options_InfoWin_Dist.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_InfoWin_Dist.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Dist", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Dist.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Dist.Location = new System.Drawing.Point(139, 29);
-            this.cb_Options_InfoWin_Dist.Name = "cb_Options_InfoWin_Dist";
-            this.cb_Options_InfoWin_Dist.Size = new System.Drawing.Size(111, 17);
-            this.cb_Options_InfoWin_Dist.TabIndex = 11;
-            this.cb_Options_InfoWin_Dist.Tag = "";
-            this.cb_Options_InfoWin_Dist.Text = "Crossing Distance";
-            this.cb_Options_InfoWin_Dist.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_InfoWin_Time
-            // 
-            this.cb_Options_InfoWin_Time.AutoSize = true;
-            this.cb_Options_InfoWin_Time.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Time;
-            this.cb_Options_InfoWin_Time.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_InfoWin_Time.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Time", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Time.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Time.Location = new System.Drawing.Point(139, 52);
-            this.cb_Options_InfoWin_Time.Name = "cb_Options_InfoWin_Time";
-            this.cb_Options_InfoWin_Time.Size = new System.Drawing.Size(92, 17);
-            this.cb_Options_InfoWin_Time.TabIndex = 10;
-            this.cb_Options_InfoWin_Time.Tag = "";
-            this.cb_Options_InfoWin_Time.Text = "Crossing Time";
-            this.cb_Options_InfoWin_Time.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_InfoWin_Type
-            // 
-            this.cb_Options_InfoWin_Type.AutoSize = true;
-            this.cb_Options_InfoWin_Type.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Type;
-            this.cb_Options_InfoWin_Type.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_InfoWin_Type.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Type", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Type.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Type.Location = new System.Drawing.Point(26, 123);
-            this.cb_Options_InfoWin_Type.Name = "cb_Options_InfoWin_Type";
-            this.cb_Options_InfoWin_Type.Size = new System.Drawing.Size(90, 17);
-            this.cb_Options_InfoWin_Type.TabIndex = 9;
-            this.cb_Options_InfoWin_Type.Tag = "";
-            this.cb_Options_InfoWin_Type.Text = "Plane Type";
-            this.cb_Options_InfoWin_Type.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_InfoWin_Track
-            // 
-            this.cb_Options_InfoWin_Track.AutoSize = true;
-            this.cb_Options_InfoWin_Track.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Track;
-            this.cb_Options_InfoWin_Track.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_InfoWin_Track.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Track", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Track.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Track.Location = new System.Drawing.Point(26, 77);
-            this.cb_Options_InfoWin_Track.Name = "cb_Options_InfoWin_Track";
-            this.cb_Options_InfoWin_Track.Size = new System.Drawing.Size(95, 17);
-            this.cb_Options_InfoWin_Track.TabIndex = 8;
-            this.cb_Options_InfoWin_Track.Tag = "";
-            this.cb_Options_InfoWin_Track.Text = "Plane Track";
-            this.cb_Options_InfoWin_Track.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_InfoWin_Alt
-            // 
-            this.cb_Options_InfoWin_Alt.AutoSize = true;
-            this.cb_Options_InfoWin_Alt.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Alt;
-            this.cb_Options_InfoWin_Alt.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_InfoWin_Alt.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Alt", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Alt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Alt.Location = new System.Drawing.Point(26, 54);
-            this.cb_Options_InfoWin_Alt.Name = "cb_Options_InfoWin_Alt";
-            this.cb_Options_InfoWin_Alt.Size = new System.Drawing.Size(105, 17);
-            this.cb_Options_InfoWin_Alt.TabIndex = 7;
-            this.cb_Options_InfoWin_Alt.Tag = "";
-            this.cb_Options_InfoWin_Alt.Text = "Plane Altitude";
-            this.cb_Options_InfoWin_Alt.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_InfoWin_Position
-            // 
-            this.cb_Options_InfoWin_Position.AutoSize = true;
-            this.cb_Options_InfoWin_Position.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Position;
-            this.cb_Options_InfoWin_Position.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_InfoWin_Position.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Position", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_InfoWin_Position.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_InfoWin_Position.Location = new System.Drawing.Point(26, 31);
-            this.cb_Options_InfoWin_Position.Name = "cb_Options_InfoWin_Position";
-            this.cb_Options_InfoWin_Position.Size = new System.Drawing.Size(107, 17);
-            this.cb_Options_InfoWin_Position.TabIndex = 6;
-            this.cb_Options_InfoWin_Position.Tag = "";
-            this.cb_Options_InfoWin_Position.Text = "Plane Position";
-            this.cb_Options_InfoWin_Position.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_InfoWin_Imperial
-            // 
-            this.rb_Options_InfoWin_Imperial.AutoSize = true;
-            this.rb_Options_InfoWin_Imperial.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Imperial;
-            this.rb_Options_InfoWin_Imperial.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Imperial", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_InfoWin_Imperial.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_InfoWin_Imperial.Location = new System.Drawing.Point(156, 18);
-            this.rb_Options_InfoWin_Imperial.Name = "rb_Options_InfoWin_Imperial";
-            this.rb_Options_InfoWin_Imperial.Size = new System.Drawing.Size(61, 17);
-            this.rb_Options_InfoWin_Imperial.TabIndex = 5;
-            this.rb_Options_InfoWin_Imperial.Tag = "";
-            this.rb_Options_InfoWin_Imperial.Text = "Imperial";
-            this.rb_Options_InfoWin_Imperial.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_InfoWin_Metric
-            // 
-            this.rb_Options_InfoWin_Metric.AutoSize = true;
-            this.rb_Options_InfoWin_Metric.Checked = global::AirScout.Properties.Settings.Default.InfoWin_Metric;
-            this.rb_Options_InfoWin_Metric.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "InfoWin_Metric", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_InfoWin_Metric.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_InfoWin_Metric.Location = new System.Drawing.Point(83, 18);
-            this.rb_Options_InfoWin_Metric.Name = "rb_Options_InfoWin_Metric";
-            this.rb_Options_InfoWin_Metric.Size = new System.Drawing.Size(54, 17);
-            this.rb_Options_InfoWin_Metric.TabIndex = 4;
-            this.rb_Options_InfoWin_Metric.TabStop = true;
-            this.rb_Options_InfoWin_Metric.Tag = "";
-            this.rb_Options_InfoWin_Metric.Text = "Metric";
-            this.rb_Options_InfoWin_Metric.UseVisualStyleBackColor = true;
-            // 
-            // tb_Options_Map_ToolTipFont
-            // 
-            this.tb_Options_Map_ToolTipFont.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "Map_ToolTipFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Map_ToolTipFont.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Map_ToolTipFont.Location = new System.Drawing.Point(72, 39);
-            this.tb_Options_Map_ToolTipFont.Name = "tb_Options_Map_ToolTipFont";
-            this.tb_Options_Map_ToolTipFont.ReadOnly = true;
-            this.tb_Options_Map_ToolTipFont.Size = new System.Drawing.Size(179, 20);
-            this.tb_Options_Map_ToolTipFont.TabIndex = 0;
-            this.tb_Options_Map_ToolTipFont.Text = global::AirScout.Properties.Settings.Default.Map_ToolTipFont;
-            // 
-            // cb_Options_Elevation_GLOBE_EnableCache
-            // 
-            this.cb_Options_Elevation_GLOBE_EnableCache.AutoSize = true;
-            this.cb_Options_Elevation_GLOBE_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_GLOBE_EnableCache;
-            this.cb_Options_Elevation_GLOBE_EnableCache.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Elevation_GLOBE_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_GLOBE_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_GLOBE_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_GLOBE_EnableCache.Location = new System.Drawing.Point(12, 42);
-            this.cb_Options_Elevation_GLOBE_EnableCache.Name = "cb_Options_Elevation_GLOBE_EnableCache";
-            this.cb_Options_Elevation_GLOBE_EnableCache.Size = new System.Drawing.Size(179, 17);
-            this.cb_Options_Elevation_GLOBE_EnableCache.TabIndex = 8;
-            this.cb_Options_Elevation_GLOBE_EnableCache.Tag = "";
-            this.cb_Options_Elevation_GLOBE_EnableCache.Text = "Keep downloaded elevation tiles";
-            this.cb_Options_Elevation_GLOBE_EnableCache.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Elevation_GLOBE
-            // 
-            this.cb_Options_Elevation_GLOBE.AutoSize = true;
-            this.cb_Options_Elevation_GLOBE.Checked = global::AirScout.Properties.Settings.Default.Elevation_GLOBE_Enabled;
-            this.cb_Options_Elevation_GLOBE.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Elevation_GLOBE.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_GLOBE_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_GLOBE.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_GLOBE.Location = new System.Drawing.Point(12, 19);
-            this.cb_Options_Elevation_GLOBE.Name = "cb_Options_Elevation_GLOBE";
-            this.cb_Options_Elevation_GLOBE.Size = new System.Drawing.Size(154, 17);
-            this.cb_Options_Elevation_GLOBE.TabIndex = 7;
-            this.cb_Options_Elevation_GLOBE.Tag = "";
-            this.cb_Options_Elevation_GLOBE.Text = "Use GLOBE elevation data";
-            this.cb_Options_Elevation_GLOBE.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Elevation_SRTM3_EnableCache
-            // 
-            this.cb_Options_Elevation_SRTM3_EnableCache.AutoSize = true;
-            this.cb_Options_Elevation_SRTM3_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM3_EnableCache;
-            this.cb_Options_Elevation_SRTM3_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM3_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_SRTM3_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_SRTM3_EnableCache.Location = new System.Drawing.Point(6, 42);
-            this.cb_Options_Elevation_SRTM3_EnableCache.Name = "cb_Options_Elevation_SRTM3_EnableCache";
-            this.cb_Options_Elevation_SRTM3_EnableCache.Size = new System.Drawing.Size(179, 17);
-            this.cb_Options_Elevation_SRTM3_EnableCache.TabIndex = 13;
-            this.cb_Options_Elevation_SRTM3_EnableCache.Tag = "";
-            this.cb_Options_Elevation_SRTM3_EnableCache.Text = "Keep downloaded elevation tiles";
-            this.cb_Options_Elevation_SRTM3_EnableCache.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Elevation_SRTM3
-            // 
-            this.cb_Options_Elevation_SRTM3.AutoSize = true;
-            this.cb_Options_Elevation_SRTM3.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM3_Enabled;
-            this.cb_Options_Elevation_SRTM3.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM3_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_SRTM3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_SRTM3.Location = new System.Drawing.Point(6, 19);
-            this.cb_Options_Elevation_SRTM3.Name = "cb_Options_Elevation_SRTM3";
-            this.cb_Options_Elevation_SRTM3.Size = new System.Drawing.Size(155, 17);
-            this.cb_Options_Elevation_SRTM3.TabIndex = 12;
-            this.cb_Options_Elevation_SRTM3.Tag = "";
-            this.cb_Options_Elevation_SRTM3.Text = "Use SRTM3 elevation data";
-            this.cb_Options_Elevation_SRTM3.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Elevation_SRTM1_EnableCache
-            // 
-            this.cb_Options_Elevation_SRTM1_EnableCache.AutoSize = true;
-            this.cb_Options_Elevation_SRTM1_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM1_EnableCache;
-            this.cb_Options_Elevation_SRTM1_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM1_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_SRTM1_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_SRTM1_EnableCache.Location = new System.Drawing.Point(6, 42);
-            this.cb_Options_Elevation_SRTM1_EnableCache.Name = "cb_Options_Elevation_SRTM1_EnableCache";
-            this.cb_Options_Elevation_SRTM1_EnableCache.Size = new System.Drawing.Size(179, 17);
-            this.cb_Options_Elevation_SRTM1_EnableCache.TabIndex = 17;
-            this.cb_Options_Elevation_SRTM1_EnableCache.Tag = "";
-            this.cb_Options_Elevation_SRTM1_EnableCache.Text = "Keep downloaded elevation tiles";
-            this.cb_Options_Elevation_SRTM1_EnableCache.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Elevation_SRTM1
-            // 
-            this.cb_Options_Elevation_SRTM1.AutoSize = true;
-            this.cb_Options_Elevation_SRTM1.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM1_Enabled;
-            this.cb_Options_Elevation_SRTM1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM1_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_SRTM1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_SRTM1.Location = new System.Drawing.Point(6, 19);
-            this.cb_Options_Elevation_SRTM1.Name = "cb_Options_Elevation_SRTM1";
-            this.cb_Options_Elevation_SRTM1.Size = new System.Drawing.Size(155, 17);
-            this.cb_Options_Elevation_SRTM1.TabIndex = 16;
-            this.cb_Options_Elevation_SRTM1.Tag = "";
-            this.cb_Options_Elevation_SRTM1.Text = "Use SRTM1 elevation data";
-            this.cb_Options_Elevation_SRTM1.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Elevation_ASTER3_EnableCache
-            // 
-            this.cb_Options_Elevation_ASTER3_EnableCache.AutoSize = true;
-            this.cb_Options_Elevation_ASTER3_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_ASTER3_EnableCache;
-            this.cb_Options_Elevation_ASTER3_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_ASTER3_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_ASTER3_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_ASTER3_EnableCache.Location = new System.Drawing.Point(6, 42);
-            this.cb_Options_Elevation_ASTER3_EnableCache.Name = "cb_Options_Elevation_ASTER3_EnableCache";
-            this.cb_Options_Elevation_ASTER3_EnableCache.Size = new System.Drawing.Size(179, 17);
-            this.cb_Options_Elevation_ASTER3_EnableCache.TabIndex = 13;
-            this.cb_Options_Elevation_ASTER3_EnableCache.Tag = "";
-            this.cb_Options_Elevation_ASTER3_EnableCache.Text = "Keep downloaded elevation tiles";
-            this.cb_Options_Elevation_ASTER3_EnableCache.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Elevation_ASTER3
-            // 
-            this.cb_Options_Elevation_ASTER3.AutoSize = true;
-            this.cb_Options_Elevation_ASTER3.Checked = global::AirScout.Properties.Settings.Default.Elevation_ASTER3_Enabled;
-            this.cb_Options_Elevation_ASTER3.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_ASTER3_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_ASTER3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_ASTER3.Location = new System.Drawing.Point(6, 19);
-            this.cb_Options_Elevation_ASTER3.Name = "cb_Options_Elevation_ASTER3";
-            this.cb_Options_Elevation_ASTER3.Size = new System.Drawing.Size(160, 17);
-            this.cb_Options_Elevation_ASTER3.TabIndex = 12;
-            this.cb_Options_Elevation_ASTER3.Tag = "";
-            this.cb_Options_Elevation_ASTER3.Text = "Use ASTER3 elevation data";
-            this.cb_Options_Elevation_ASTER3.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Elevation_ASTER1_EnableCache
-            // 
-            this.cb_Options_Elevation_ASTER1_EnableCache.AutoSize = true;
-            this.cb_Options_Elevation_ASTER1_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_ASTER1_EnableCache;
-            this.cb_Options_Elevation_ASTER1_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_ASTER1_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_ASTER1_EnableCache.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_ASTER1_EnableCache.Location = new System.Drawing.Point(6, 42);
-            this.cb_Options_Elevation_ASTER1_EnableCache.Name = "cb_Options_Elevation_ASTER1_EnableCache";
-            this.cb_Options_Elevation_ASTER1_EnableCache.Size = new System.Drawing.Size(179, 17);
-            this.cb_Options_Elevation_ASTER1_EnableCache.TabIndex = 13;
-            this.cb_Options_Elevation_ASTER1_EnableCache.Tag = "";
-            this.cb_Options_Elevation_ASTER1_EnableCache.Text = "Keep downloaded elevation tiles";
-            this.cb_Options_Elevation_ASTER1_EnableCache.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Elevation_ASTER1
-            // 
-            this.cb_Options_Elevation_ASTER1.AutoSize = true;
-            this.cb_Options_Elevation_ASTER1.Checked = global::AirScout.Properties.Settings.Default.Elevation_ASTER1_Enabled;
-            this.cb_Options_Elevation_ASTER1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_ASTER1_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Elevation_ASTER1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Elevation_ASTER1.Location = new System.Drawing.Point(6, 19);
-            this.cb_Options_Elevation_ASTER1.Name = "cb_Options_Elevation_ASTER1";
-            this.cb_Options_Elevation_ASTER1.Size = new System.Drawing.Size(160, 17);
-            this.cb_Options_Elevation_ASTER1.TabIndex = 12;
-            this.cb_Options_Elevation_ASTER1.Tag = "";
-            this.cb_Options_Elevation_ASTER1.Text = "Use ASTER1 elevation data";
-            this.cb_Options_Elevation_ASTER1.UseVisualStyleBackColor = true;
-            // 
-            // tb_Options_Path_MaxLength
-            // 
-            this.tb_Options_Path_MaxLength.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Path_MaxLength", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Path_MaxLength.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Path_MaxLength.FormatSpecifier = "F0";
-            this.tb_Options_Path_MaxLength.Location = new System.Drawing.Point(318, 385);
-            this.tb_Options_Path_MaxLength.MaxValue = double.NaN;
-            this.tb_Options_Path_MaxLength.MinValue = double.NaN;
-            this.tb_Options_Path_MaxLength.Name = "tb_Options_Path_MaxLength";
-            this.tb_Options_Path_MaxLength.Size = new System.Drawing.Size(57, 20);
-            this.tb_Options_Path_MaxLength.TabIndex = 39;
-            this.tb_Options_Path_MaxLength.Text = "1000";
-            this.tb_Options_Path_MaxLength.Value = global::AirScout.Properties.Settings.Default.Path_MaxLength;
-            // 
-            // cb_Options_Path_BestCaseElevation
-            // 
-            this.cb_Options_Path_BestCaseElevation.AutoSize = true;
-            this.cb_Options_Path_BestCaseElevation.Checked = global::AirScout.Properties.Settings.Default.Path_BestCaseElevation;
-            this.cb_Options_Path_BestCaseElevation.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Path_BestCaseElevation.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Path_BestCaseElevation", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Path_BestCaseElevation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Path_BestCaseElevation.Location = new System.Drawing.Point(6, 411);
-            this.cb_Options_Path_BestCaseElevation.Name = "cb_Options_Path_BestCaseElevation";
-            this.cb_Options_Path_BestCaseElevation.Size = new System.Drawing.Size(438, 17);
-            this.cb_Options_Path_BestCaseElevation.TabIndex = 28;
-            this.cb_Options_Path_BestCaseElevation.Tag = "";
-            this.cb_Options_Path_BestCaseElevation.Text = "Use best case elevation from grid square for both stations if precise location is" +
-    " unknown";
-            this.tt_Options.SetToolTip(this.cb_Options_Path_BestCaseElevation, "If an exact position of a station is not available, use highest available elevati" +
-        "on within the given grid square. \r\nThis position is ONLY used for path calculati" +
-        "on and is not kept in database.");
-            this.cb_Options_Path_BestCaseElevation.UseVisualStyleBackColor = true;
-            // 
-            // int32TextBox1
-            // 
-            this.int32TextBox1.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_ExtendedPlausibilityCheck_MaxErrorDist", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.int32TextBox1.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.int32TextBox1.FormatSpecifier = "F0";
-            this.int32TextBox1.Location = new System.Drawing.Point(199, 84);
-            this.int32TextBox1.MaxValue = 600;
-            this.int32TextBox1.MinValue = 10;
-            this.int32TextBox1.Name = "int32TextBox1";
-            this.int32TextBox1.Size = new System.Drawing.Size(52, 22);
-            this.int32TextBox1.TabIndex = 46;
-            this.int32TextBox1.Text = "10";
-            this.int32TextBox1.Value = global::AirScout.Properties.Settings.Default.Planes_ExtendedPlausibilityCheck_MaxErrorDist;
-            // 
-            // cb_Options_Planes_ExtendedPlausibilityCheck_Enabled
-            // 
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.AutoSize = true;
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Checked = global::AirScout.Properties.Settings.Default.Planes_ExtendedPlausibilityCheck_Enabled;
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Planes_ExtendedPlausibilityCheck_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Location = new System.Drawing.Point(13, 53);
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Name = "cb_Options_Planes_ExtendedPlausibilityCheck_Enabled";
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Size = new System.Drawing.Size(256, 17);
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.TabIndex = 44;
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.Text = "Enable extended plausibility check of aircraft info";
-            this.cb_Options_Planes_ExtendedPlausibilityCheck_Enabled.UseVisualStyleBackColor = true;
-            // 
-            // tb_Options_Planes_Interval
-            // 
-            this.tb_Options_Planes_Interval.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_Interval", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_Interval.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_Interval.FormatSpecifier = "F0";
-            this.tb_Options_Planes_Interval.Location = new System.Drawing.Point(199, 22);
-            this.tb_Options_Planes_Interval.MaxValue = 600;
-            this.tb_Options_Planes_Interval.MinValue = 10;
-            this.tb_Options_Planes_Interval.Name = "tb_Options_Planes_Interval";
-            this.tb_Options_Planes_Interval.Size = new System.Drawing.Size(52, 22);
-            this.tb_Options_Planes_Interval.TabIndex = 43;
-            this.tb_Options_Planes_Interval.Text = "60";
-            this.tb_Options_Planes_Interval.Value = global::AirScout.Properties.Settings.Default.Planes_Interval;
-            // 
-            // cb_Options_Planes_LogErrors
-            // 
-            this.cb_Options_Planes_LogErrors.AutoSize = true;
-            this.cb_Options_Planes_LogErrors.Checked = global::AirScout.Properties.Settings.Default.Planes_LogErrors;
-            this.cb_Options_Planes_LogErrors.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Planes_LogErrors", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Planes_LogErrors.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Planes_LogErrors.Location = new System.Drawing.Point(12, 118);
-            this.cb_Options_Planes_LogErrors.Name = "cb_Options_Planes_LogErrors";
-            this.cb_Options_Planes_LogErrors.Size = new System.Drawing.Size(249, 17);
-            this.cb_Options_Planes_LogErrors.TabIndex = 0;
-            this.cb_Options_Planes_LogErrors.Text = "Log errors as warnings to AirScout\'s main logfile";
-            this.cb_Options_Planes_LogErrors.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Planes_KeepHistory
-            // 
-            this.cb_Options_Planes_KeepHistory.AutoSize = true;
-            this.cb_Options_Planes_KeepHistory.Checked = global::AirScout.Properties.Settings.Default.Planes_KeepHistory;
-            this.cb_Options_Planes_KeepHistory.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Planes_KeepHistory", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Planes_KeepHistory.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Planes_KeepHistory.Location = new System.Drawing.Point(18, 81);
-            this.cb_Options_Planes_KeepHistory.Name = "cb_Options_Planes_KeepHistory";
-            this.cb_Options_Planes_KeepHistory.Size = new System.Drawing.Size(156, 17);
-            this.cb_Options_Planes_KeepHistory.TabIndex = 4;
-            this.cb_Options_Planes_KeepHistory.Text = "Keep Plane Position History";
-            this.tt_Options.SetToolTip(this.cb_Options_Planes_KeepHistory, "Check this option to keep plane positions in database for history analysis.\r\nCAUT" +
-        "ION! This will need lot of CPU performance and space on disk!");
-            this.cb_Options_Planes_KeepHistory.UseVisualStyleBackColor = true;
-            // 
-            // ud_Options_Planes_Position_DatabaseLifetime
-            // 
-            this.ud_Options_Planes_Position_DatabaseLifetime.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "AircraftDatabase_MaxDaysLifetime", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ud_Options_Planes_Position_DatabaseLifetime.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ud_Options_Planes_Position_DatabaseLifetime.Location = new System.Drawing.Point(199, 14);
-            this.ud_Options_Planes_Position_DatabaseLifetime.Maximum = new decimal(new int[] {
-            365,
-            0,
-            0,
-            0});
-            this.ud_Options_Planes_Position_DatabaseLifetime.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ud_Options_Planes_Position_DatabaseLifetime.Name = "ud_Options_Planes_Position_DatabaseLifetime";
-            this.ud_Options_Planes_Position_DatabaseLifetime.Size = new System.Drawing.Size(49, 22);
-            this.ud_Options_Planes_Position_DatabaseLifetime.TabIndex = 2;
-            this.ud_Options_Planes_Position_DatabaseLifetime.Value = global::AirScout.Properties.Settings.Default.AircraftDatabase_MaxDaysLifetime;
-            // 
-            // tb_Options_Planes_Positions_TTL
-            // 
-            this.tb_Options_Planes_Positions_TTL.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_Position_TTL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_Positions_TTL.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_Positions_TTL.FormatSpecifier = "F0";
-            this.tb_Options_Planes_Positions_TTL.Location = new System.Drawing.Point(192, 65);
-            this.tb_Options_Planes_Positions_TTL.MaxValue = 30;
-            this.tb_Options_Planes_Positions_TTL.MinValue = 0;
-            this.tb_Options_Planes_Positions_TTL.Name = "tb_Options_Planes_Positions_TTL";
-            this.tb_Options_Planes_Positions_TTL.Size = new System.Drawing.Size(52, 22);
-            this.tb_Options_Planes_Positions_TTL.TabIndex = 43;
-            this.tb_Options_Planes_Positions_TTL.Text = "5";
-            this.tb_Options_Planes_Positions_TTL.Value = global::AirScout.Properties.Settings.Default.Planes_Position_TTL;
-            // 
-            // tb_Options_Planes_MaxAlt
-            // 
-            this.tb_Options_Planes_MaxAlt.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_MaxAlt", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_MaxAlt.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_MaxAlt.FormatSpecifier = "F0";
-            this.tb_Options_Planes_MaxAlt.Location = new System.Drawing.Point(192, 39);
-            this.tb_Options_Planes_MaxAlt.MaxValue = 20000;
-            this.tb_Options_Planes_MaxAlt.MinValue = 0;
-            this.tb_Options_Planes_MaxAlt.Name = "tb_Options_Planes_MaxAlt";
-            this.tb_Options_Planes_MaxAlt.Size = new System.Drawing.Size(52, 22);
-            this.tb_Options_Planes_MaxAlt.TabIndex = 42;
-            this.tb_Options_Planes_MaxAlt.Text = "12200";
-            this.tb_Options_Planes_MaxAlt.Value = global::AirScout.Properties.Settings.Default.Planes_MaxAlt;
-            // 
-            // tb_Options_Planes_MinAlt
-            // 
-            this.tb_Options_Planes_MinAlt.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_MinAlt", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_MinAlt.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_MinAlt.FormatSpecifier = "F0";
-            this.tb_Options_Planes_MinAlt.Location = new System.Drawing.Point(192, 14);
-            this.tb_Options_Planes_MinAlt.MaxValue = 20000;
-            this.tb_Options_Planes_MinAlt.MinValue = 0;
-            this.tb_Options_Planes_MinAlt.Name = "tb_Options_Planes_MinAlt";
-            this.tb_Options_Planes_MinAlt.Size = new System.Drawing.Size(52, 22);
-            this.tb_Options_Planes_MinAlt.TabIndex = 41;
-            this.tb_Options_Planes_MinAlt.Text = "5000";
-            this.tb_Options_Planes_MinAlt.Value = global::AirScout.Properties.Settings.Default.Planes_MinAlt;
-            // 
-            // tb_Options_Planes_Filter_MinAlt
-            // 
-            this.tb_Options_Planes_Filter_MinAlt.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_Filter_Min_Alt", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_Filter_MinAlt.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_Filter_MinAlt.FormatSpecifier = "F0";
-            this.tb_Options_Planes_Filter_MinAlt.Location = new System.Drawing.Point(192, 86);
-            this.tb_Options_Planes_Filter_MinAlt.MaxValue = 12000;
-            this.tb_Options_Planes_Filter_MinAlt.MinValue = 0;
-            this.tb_Options_Planes_Filter_MinAlt.Name = "tb_Options_Planes_Filter_MinAlt";
-            this.tb_Options_Planes_Filter_MinAlt.Size = new System.Drawing.Size(52, 22);
-            this.tb_Options_Planes_Filter_MinAlt.TabIndex = 43;
-            this.tb_Options_Planes_Filter_MinAlt.Text = "0";
-            this.tb_Options_Planes_Filter_MinAlt.Value = global::AirScout.Properties.Settings.Default.Planes_Filter_Min_Alt;
-            // 
-            // tb_Options_Planes_Filter_Max_Circumcircle
-            // 
-            this.tb_Options_Planes_Filter_Max_Circumcircle.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_Filter_Max_Circumcircle", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Planes_Filter_Max_Circumcircle.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Planes_Filter_Max_Circumcircle.FormatSpecifier = "F0";
-            this.tb_Options_Planes_Filter_Max_Circumcircle.Location = new System.Drawing.Point(192, 59);
-            this.tb_Options_Planes_Filter_Max_Circumcircle.MaxValue = 1000;
-            this.tb_Options_Planes_Filter_Max_Circumcircle.MinValue = -1;
-            this.tb_Options_Planes_Filter_Max_Circumcircle.Name = "tb_Options_Planes_Filter_Max_Circumcircle";
-            this.tb_Options_Planes_Filter_Max_Circumcircle.Size = new System.Drawing.Size(52, 22);
-            this.tb_Options_Planes_Filter_Max_Circumcircle.TabIndex = 42;
-            this.tb_Options_Planes_Filter_Max_Circumcircle.Text = "0";
-            this.tb_Options_Planes_Filter_Max_Circumcircle.Value = global::AirScout.Properties.Settings.Default.Planes_Filter_Max_Circumcircle;
-            // 
-            // cb_Options_Alarm_Activate
-            // 
-            this.cb_Options_Alarm_Activate.AutoSize = true;
-            this.cb_Options_Alarm_Activate.Checked = global::AirScout.Properties.Settings.Default.Alarm_Activate;
-            this.cb_Options_Alarm_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Alarm_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Alarm_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Alarm_Activate.Location = new System.Drawing.Point(13, 19);
-            this.cb_Options_Alarm_Activate.Name = "cb_Options_Alarm_Activate";
-            this.cb_Options_Alarm_Activate.Size = new System.Drawing.Size(94, 17);
-            this.cb_Options_Alarm_Activate.TabIndex = 1;
-            this.cb_Options_Alarm_Activate.Tag = "";
-            this.cb_Options_Alarm_Activate.Text = "Activate Alarm";
-            this.cb_Options_Alarm_Activate.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Alarm_PlaySound
-            // 
-            this.cb_Options_Alarm_PlaySound.AutoSize = true;
-            this.cb_Options_Alarm_PlaySound.Checked = global::AirScout.Properties.Settings.Default.Alarm_PlaySound;
-            this.cb_Options_Alarm_PlaySound.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Alarm_PlaySound.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Alarm_PlaySound", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Alarm_PlaySound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Alarm_PlaySound.Location = new System.Drawing.Point(13, 53);
-            this.cb_Options_Alarm_PlaySound.Name = "cb_Options_Alarm_PlaySound";
-            this.cb_Options_Alarm_PlaySound.Size = new System.Drawing.Size(78, 17);
-            this.cb_Options_Alarm_PlaySound.TabIndex = 1;
-            this.cb_Options_Alarm_PlaySound.Tag = "";
-            this.cb_Options_Alarm_PlaySound.Text = "Play sound";
-            this.cb_Options_Alarm_PlaySound.UseVisualStyleBackColor = true;
-            // 
-            // tb_Options_Alarm_Distance
-            // 
-            this.tb_Options_Alarm_Distance.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Alarm_Distance", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Alarm_Distance.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Alarm_Distance.FormatSpecifier = "F0";
-            this.tb_Options_Alarm_Distance.Location = new System.Drawing.Point(143, 49);
-            this.tb_Options_Alarm_Distance.MaxValue = 1000D;
-            this.tb_Options_Alarm_Distance.MinValue = 0D;
-            this.tb_Options_Alarm_Distance.Name = "tb_Options_Alarm_Distance";
-            this.tb_Options_Alarm_Distance.Size = new System.Drawing.Size(75, 22);
-            this.tb_Options_Alarm_Distance.TabIndex = 3;
-            this.tb_Options_Alarm_Distance.Text = "100";
-            this.tb_Options_Alarm_Distance.Value = global::AirScout.Properties.Settings.Default.Alarm_Distance;
-            // 
-            // tb_Options_Webserver_Port
-            // 
-            this.tb_Options_Webserver_Port.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Webserver_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Webserver_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Webserver_Port.FormatSpecifier = "F0";
-            this.tb_Options_Webserver_Port.Location = new System.Drawing.Point(150, 28);
-            this.tb_Options_Webserver_Port.MaxValue = 65535;
-            this.tb_Options_Webserver_Port.MinValue = 0;
-            this.tb_Options_Webserver_Port.Name = "tb_Options_Webserver_Port";
-            this.tb_Options_Webserver_Port.Size = new System.Drawing.Size(57, 22);
-            this.tb_Options_Webserver_Port.TabIndex = 8;
-            this.tb_Options_Webserver_Port.Text = "9880";
-            this.tb_Options_Webserver_Port.Value = global::AirScout.Properties.Settings.Default.Webserver_Port;
-            // 
-            // cb_Options_Server_Activate
-            // 
-            this.cb_Options_Server_Activate.AutoSize = true;
-            this.cb_Options_Server_Activate.Checked = global::AirScout.Properties.Settings.Default.Server_Activate;
-            this.cb_Options_Server_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Server_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Server_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Server_Activate.Location = new System.Drawing.Point(13, 23);
-            this.cb_Options_Server_Activate.Name = "cb_Options_Server_Activate";
-            this.cb_Options_Server_Activate.Size = new System.Drawing.Size(142, 17);
-            this.cb_Options_Server_Activate.TabIndex = 1;
-            this.cb_Options_Server_Activate.Tag = "";
-            this.cb_Options_Server_Activate.Text = "Activate Network Server";
-            this.cb_Options_Server_Activate.UseVisualStyleBackColor = true;
-            // 
-            // tb_Options_Server_Port
-            // 
-            this.tb_Options_Server_Port.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Server_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Server_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Server_Port.FormatSpecifier = "F0";
-            this.tb_Options_Server_Port.Location = new System.Drawing.Point(153, 56);
-            this.tb_Options_Server_Port.MaxValue = 65535;
-            this.tb_Options_Server_Port.MinValue = 0;
-            this.tb_Options_Server_Port.Name = "tb_Options_Server_Port";
-            this.tb_Options_Server_Port.Size = new System.Drawing.Size(57, 22);
-            this.tb_Options_Server_Port.TabIndex = 6;
-            this.tb_Options_Server_Port.Text = "9872";
-            this.tb_Options_Server_Port.Value = global::AirScout.Properties.Settings.Default.Server_Port;
-            // 
-            // tb_Options_Server_Name
-            // 
-            this.tb_Options_Server_Name.BackColor = System.Drawing.Color.FloralWhite;
-            this.tb_Options_Server_Name.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "Server_Name", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Server_Name.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Server_Name.Location = new System.Drawing.Point(153, 30);
-            this.tb_Options_Server_Name.Name = "tb_Options_Server_Name";
-            this.tb_Options_Server_Name.Size = new System.Drawing.Size(57, 20);
-            this.tb_Options_Server_Name.TabIndex = 2;
-            this.tb_Options_Server_Name.Tag = "";
-            this.tb_Options_Server_Name.Text = global::AirScout.Properties.Settings.Default.Server_Name;
-            // 
-            // tb_Options_SpecLab_UpdateInterval
-            // 
-            this.tb_Options_SpecLab_UpdateInterval.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "SpecLab_Update", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_SpecLab_UpdateInterval.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_SpecLab_UpdateInterval.FormatSpecifier = "F1";
-            this.tb_Options_SpecLab_UpdateInterval.Location = new System.Drawing.Point(106, 230);
-            this.tb_Options_SpecLab_UpdateInterval.MaxValue = 100D;
-            this.tb_Options_SpecLab_UpdateInterval.MinValue = 0D;
-            this.tb_Options_SpecLab_UpdateInterval.Name = "tb_Options_SpecLab_UpdateInterval";
-            this.tb_Options_SpecLab_UpdateInterval.Size = new System.Drawing.Size(63, 22);
-            this.tb_Options_SpecLab_UpdateInterval.TabIndex = 18;
-            this.tb_Options_SpecLab_UpdateInterval.Text = "1.0";
-            this.tb_Options_SpecLab_UpdateInterval.Value = global::AirScout.Properties.Settings.Default.SpecLab_Update;
-            // 
-            // tb_Options_SpecLab_F2
-            // 
-            this.tb_Options_SpecLab_F2.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "SpecLab_F2", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_SpecLab_F2.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_SpecLab_F2.FormatSpecifier = "F0";
-            this.tb_Options_SpecLab_F2.Location = new System.Drawing.Point(109, 205);
-            this.tb_Options_SpecLab_F2.MaxValue = 10000;
-            this.tb_Options_SpecLab_F2.MinValue = 0;
-            this.tb_Options_SpecLab_F2.Name = "tb_Options_SpecLab_F2";
-            this.tb_Options_SpecLab_F2.Size = new System.Drawing.Size(60, 22);
-            this.tb_Options_SpecLab_F2.TabIndex = 17;
-            this.tb_Options_SpecLab_F2.Text = "1600";
-            this.tb_Options_SpecLab_F2.Value = global::AirScout.Properties.Settings.Default.SpecLab_F2;
-            // 
-            // tb_Options_SpecLab_F1
-            // 
-            this.tb_Options_SpecLab_F1.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "SpecLab_F1", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_SpecLab_F1.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_SpecLab_F1.FormatSpecifier = "F0";
-            this.tb_Options_SpecLab_F1.Location = new System.Drawing.Point(109, 179);
-            this.tb_Options_SpecLab_F1.MaxValue = 10000;
-            this.tb_Options_SpecLab_F1.MinValue = 0;
-            this.tb_Options_SpecLab_F1.Name = "tb_Options_SpecLab_F1";
-            this.tb_Options_SpecLab_F1.Size = new System.Drawing.Size(60, 22);
-            this.tb_Options_SpecLab_F1.TabIndex = 16;
-            this.tb_Options_SpecLab_F1.Text = "400";
-            this.tb_Options_SpecLab_F1.Value = global::AirScout.Properties.Settings.Default.SpecLab_F1;
-            // 
-            // tb_SpecLab_FileName
-            // 
-            this.tb_SpecLab_FileName.BackColor = System.Drawing.Color.FloralWhite;
-            this.tb_SpecLab_FileName.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "SpecLab_FileName", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_SpecLab_FileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_SpecLab_FileName.Location = new System.Drawing.Point(109, 153);
-            this.tb_SpecLab_FileName.Name = "tb_SpecLab_FileName";
-            this.tb_SpecLab_FileName.Size = new System.Drawing.Size(347, 20);
-            this.tb_SpecLab_FileName.TabIndex = 6;
-            this.tb_SpecLab_FileName.Tag = "";
-            this.tb_SpecLab_FileName.Text = global::AirScout.Properties.Settings.Default.SpecLab_FileName;
-            // 
-            // tb_SpecLab_URL
-            // 
-            this.tb_SpecLab_URL.BackColor = System.Drawing.Color.FloralWhite;
-            this.tb_SpecLab_URL.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "SpecLab_URL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_SpecLab_URL.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_SpecLab_URL.Location = new System.Drawing.Point(109, 126);
-            this.tb_SpecLab_URL.Name = "tb_SpecLab_URL";
-            this.tb_SpecLab_URL.Size = new System.Drawing.Size(347, 20);
-            this.tb_SpecLab_URL.TabIndex = 2;
-            this.tb_SpecLab_URL.Tag = "";
-            this.tb_SpecLab_URL.Text = global::AirScout.Properties.Settings.Default.SpecLab_URL;
-            // 
-            // cb_SpecLab_Enabled
-            // 
-            this.cb_SpecLab_Enabled.AutoSize = true;
-            this.cb_SpecLab_Enabled.Checked = global::AirScout.Properties.Settings.Default.SpecLab_Enabled;
-            this.cb_SpecLab_Enabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "SpecLab_Enabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_SpecLab_Enabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_SpecLab_Enabled.Location = new System.Drawing.Point(18, 90);
-            this.cb_SpecLab_Enabled.Name = "cb_SpecLab_Enabled";
-            this.cb_SpecLab_Enabled.Size = new System.Drawing.Size(122, 17);
-            this.cb_SpecLab_Enabled.TabIndex = 1;
-            this.cb_SpecLab_Enabled.Tag = "";
-            this.cb_SpecLab_Enabled.Text = "Activate Connection";
-            this.cb_SpecLab_Enabled.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_Track_File_None
-            // 
-            this.rb_Options_Track_File_None.AutoSize = true;
-            this.rb_Options_Track_File_None.Checked = global::AirScout.Properties.Settings.Default.Track_File_None;
-            this.rb_Options_Track_File_None.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_File_None", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_File_None.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_File_None.Location = new System.Drawing.Point(17, 19);
-            this.rb_Options_Track_File_None.Name = "rb_Options_Track_File_None";
-            this.rb_Options_Track_File_None.Size = new System.Drawing.Size(51, 17);
-            this.rb_Options_Track_File_None.TabIndex = 12;
-            this.rb_Options_Track_File_None.TabStop = true;
-            this.rb_Options_Track_File_None.Tag = "";
-            this.rb_Options_Track_File_None.Text = "None";
-            this.rb_Options_Track_File_None.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_Track_File_WSJT
-            // 
-            this.rb_Options_Track_File_WSJT.AutoSize = true;
-            this.rb_Options_Track_File_WSJT.Checked = global::AirScout.Properties.Settings.Default.Track_File_WSJT;
-            this.rb_Options_Track_File_WSJT.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_File_WSJT", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_File_WSJT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_File_WSJT.Location = new System.Drawing.Point(17, 66);
-            this.rb_Options_Track_File_WSJT.Name = "rb_Options_Track_File_WSJT";
-            this.rb_Options_Track_File_WSJT.Size = new System.Drawing.Size(84, 17);
-            this.rb_Options_Track_File_WSJT.TabIndex = 7;
-            this.rb_Options_Track_File_WSJT.Tag = "";
-            this.rb_Options_Track_File_WSJT.Text = "WSJT Az/El";
-            this.rb_Options_Track_File_WSJT.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_Track_File_Native
-            // 
-            this.rb_Options_Track_File_Native.AutoSize = true;
-            this.rb_Options_Track_File_Native.Checked = global::AirScout.Properties.Settings.Default.Track_File_Native;
-            this.rb_Options_Track_File_Native.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_File_Native", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_File_Native.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_File_Native.Location = new System.Drawing.Point(17, 43);
-            this.rb_Options_Track_File_Native.Name = "rb_Options_Track_File_Native";
-            this.rb_Options_Track_File_Native.Size = new System.Drawing.Size(85, 17);
-            this.rb_Options_Track_File_Native.TabIndex = 6;
-            this.rb_Options_Track_File_Native.Tag = "";
-            this.rb_Options_Track_File_Native.Text = "Native Az/El";
-            this.rb_Options_Track_File_Native.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_Track_DDE_None
-            // 
-            this.rb_Options_Track_DDE_None.AutoSize = true;
-            this.rb_Options_Track_DDE_None.Checked = global::AirScout.Properties.Settings.Default.Track_DDE_None;
-            this.rb_Options_Track_DDE_None.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_DDE_None", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_DDE_None.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_DDE_None.Location = new System.Drawing.Point(17, 19);
-            this.rb_Options_Track_DDE_None.Name = "rb_Options_Track_DDE_None";
-            this.rb_Options_Track_DDE_None.Size = new System.Drawing.Size(51, 17);
-            this.rb_Options_Track_DDE_None.TabIndex = 11;
-            this.rb_Options_Track_DDE_None.TabStop = true;
-            this.rb_Options_Track_DDE_None.Tag = "";
-            this.rb_Options_Track_DDE_None.Text = "None";
-            this.rb_Options_Track_DDE_None.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_Track_DDE_HRD
-            // 
-            this.rb_Options_Track_DDE_HRD.AutoSize = true;
-            this.rb_Options_Track_DDE_HRD.Checked = global::AirScout.Properties.Settings.Default.Track_DDE_HRD;
-            this.rb_Options_Track_DDE_HRD.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_DDE_HRD", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_DDE_HRD.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_DDE_HRD.Location = new System.Drawing.Point(17, 42);
-            this.rb_Options_Track_DDE_HRD.Name = "rb_Options_Track_DDE_HRD";
-            this.rb_Options_Track_DDE_HRD.Size = new System.Drawing.Size(202, 17);
-            this.rb_Options_Track_DDE_HRD.TabIndex = 6;
-            this.rb_Options_Track_DDE_HRD.Tag = "";
-            this.rb_Options_Track_DDE_HRD.Text = "Ham Radio Deluxe (HRDRotator.exe)";
-            this.rb_Options_Track_DDE_HRD.UseVisualStyleBackColor = true;
-            // 
-            // tb_Options_Track_UDP_AirScout_Port
-            // 
-            this.tb_Options_Track_UDP_AirScout_Port.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Track_UDP_AirScout_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Track_UDP_AirScout_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Track_UDP_AirScout_Port.FormatSpecifier = "F0";
-            this.tb_Options_Track_UDP_AirScout_Port.Location = new System.Drawing.Point(526, 71);
-            this.tb_Options_Track_UDP_AirScout_Port.MaxValue = 0;
-            this.tb_Options_Track_UDP_AirScout_Port.MinValue = 0;
-            this.tb_Options_Track_UDP_AirScout_Port.Name = "tb_Options_Track_UDP_AirScout_Port";
-            this.tb_Options_Track_UDP_AirScout_Port.Size = new System.Drawing.Size(43, 22);
-            this.tb_Options_Track_UDP_AirScout_Port.TabIndex = 17;
-            this.tb_Options_Track_UDP_AirScout_Port.Text = "9872";
-            this.tb_Options_Track_UDP_AirScout_Port.Value = global::AirScout.Properties.Settings.Default.Track_UDP_AirScout_Port;
-            // 
-            // tb_Options_Track_UDP_WinTest_Port
-            // 
-            this.tb_Options_Track_UDP_WinTest_Port.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Track_UDP_WinTest_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Track_UDP_WinTest_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Track_UDP_WinTest_Port.FormatSpecifier = "F0";
-            this.tb_Options_Track_UDP_WinTest_Port.Location = new System.Drawing.Point(526, 42);
-            this.tb_Options_Track_UDP_WinTest_Port.MaxValue = 0;
-            this.tb_Options_Track_UDP_WinTest_Port.MinValue = 0;
-            this.tb_Options_Track_UDP_WinTest_Port.Name = "tb_Options_Track_UDP_WinTest_Port";
-            this.tb_Options_Track_UDP_WinTest_Port.Size = new System.Drawing.Size(43, 22);
-            this.tb_Options_Track_UDP_WinTest_Port.TabIndex = 16;
-            this.tb_Options_Track_UDP_WinTest_Port.Text = "9871";
-            this.tb_Options_Track_UDP_WinTest_Port.Value = global::AirScout.Properties.Settings.Default.Track_UDP_WinTest_Port;
-            // 
-            // rb_Options_Track_UDP_None
-            // 
-            this.rb_Options_Track_UDP_None.AutoSize = true;
-            this.rb_Options_Track_UDP_None.Checked = global::AirScout.Properties.Settings.Default.Track_UDP_None;
-            this.rb_Options_Track_UDP_None.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_UDP_None", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_UDP_None.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_UDP_None.Location = new System.Drawing.Point(17, 19);
-            this.rb_Options_Track_UDP_None.Name = "rb_Options_Track_UDP_None";
-            this.rb_Options_Track_UDP_None.Size = new System.Drawing.Size(51, 17);
-            this.rb_Options_Track_UDP_None.TabIndex = 11;
-            this.rb_Options_Track_UDP_None.TabStop = true;
-            this.rb_Options_Track_UDP_None.Tag = "";
-            this.rb_Options_Track_UDP_None.Text = "None";
-            this.rb_Options_Track_UDP_None.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_Track_UDP_AirScout
-            // 
-            this.rb_Options_Track_UDP_AirScout.AutoSize = true;
-            this.rb_Options_Track_UDP_AirScout.Checked = global::AirScout.Properties.Settings.Default.Track_UDP_AirScout;
-            this.rb_Options_Track_UDP_AirScout.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_UDP_AirScout", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_UDP_AirScout.Enabled = false;
-            this.rb_Options_Track_UDP_AirScout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_UDP_AirScout.Location = new System.Drawing.Point(17, 65);
-            this.rb_Options_Track_UDP_AirScout.Name = "rb_Options_Track_UDP_AirScout";
-            this.rb_Options_Track_UDP_AirScout.Size = new System.Drawing.Size(280, 17);
-            this.rb_Options_Track_UDP_AirScout.TabIndex = 7;
-            this.rb_Options_Track_UDP_AirScout.Tag = "";
-            this.rb_Options_Track_UDP_AirScout.Text = "UDP Broadcast (AirScout) Az/El (not implemented yet)";
-            this.rb_Options_Track_UDP_AirScout.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_Track_UDP_WinTest
-            // 
-            this.rb_Options_Track_UDP_WinTest.AutoSize = true;
-            this.rb_Options_Track_UDP_WinTest.Checked = global::AirScout.Properties.Settings.Default.Track_UDP_WinTest;
-            this.rb_Options_Track_UDP_WinTest.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_UDP_WinTest", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_UDP_WinTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_UDP_WinTest.Location = new System.Drawing.Point(17, 42);
-            this.rb_Options_Track_UDP_WinTest.Name = "rb_Options_Track_UDP_WinTest";
-            this.rb_Options_Track_UDP_WinTest.Size = new System.Drawing.Size(188, 17);
-            this.rb_Options_Track_UDP_WinTest.TabIndex = 6;
-            this.rb_Options_Track_UDP_WinTest.Tag = "";
-            this.rb_Options_Track_UDP_WinTest.Text = "UDP Broadcast (Win-Test) Az only";
-            this.rb_Options_Track_UDP_WinTest.UseVisualStyleBackColor = true;
-            // 
-            // tb_Options_Track_Serial_Baudrate
-            // 
-            this.tb_Options_Track_Serial_Baudrate.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Track_Serial_Baudrate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Track_Serial_Baudrate.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Track_Serial_Baudrate.FormatSpecifier = "F0";
-            this.tb_Options_Track_Serial_Baudrate.Location = new System.Drawing.Point(526, 13);
-            this.tb_Options_Track_Serial_Baudrate.MaxValue = 115200;
-            this.tb_Options_Track_Serial_Baudrate.MinValue = 0;
-            this.tb_Options_Track_Serial_Baudrate.Name = "tb_Options_Track_Serial_Baudrate";
-            this.tb_Options_Track_Serial_Baudrate.Size = new System.Drawing.Size(72, 22);
-            this.tb_Options_Track_Serial_Baudrate.TabIndex = 11;
-            this.tb_Options_Track_Serial_Baudrate.Text = "4800";
-            this.tb_Options_Track_Serial_Baudrate.Value = global::AirScout.Properties.Settings.Default.Track_Serial_Baudrate;
-            // 
-            // rb_Options_Track_Serial_None
-            // 
-            this.rb_Options_Track_Serial_None.AutoSize = true;
-            this.rb_Options_Track_Serial_None.Checked = global::AirScout.Properties.Settings.Default.Track_Serial_None;
-            this.rb_Options_Track_Serial_None.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_Serial_None", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_Serial_None.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_Serial_None.Location = new System.Drawing.Point(17, 15);
-            this.rb_Options_Track_Serial_None.Name = "rb_Options_Track_Serial_None";
-            this.rb_Options_Track_Serial_None.Size = new System.Drawing.Size(51, 17);
-            this.rb_Options_Track_Serial_None.TabIndex = 10;
-            this.rb_Options_Track_Serial_None.TabStop = true;
-            this.rb_Options_Track_Serial_None.Tag = "";
-            this.rb_Options_Track_Serial_None.Text = "None";
-            this.rb_Options_Track_Serial_None.UseVisualStyleBackColor = true;
-            // 
-            // tb_Options_Track_Serial_Port
-            // 
-            this.tb_Options_Track_Serial_Port.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tb_Options_Track_Serial_Port.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::AirScout.Properties.Settings.Default, "Track_Serial_Port", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Track_Serial_Port.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Track_Serial_Port.Location = new System.Drawing.Point(407, 14);
-            this.tb_Options_Track_Serial_Port.Name = "tb_Options_Track_Serial_Port";
-            this.tb_Options_Track_Serial_Port.Size = new System.Drawing.Size(54, 22);
-            this.tb_Options_Track_Serial_Port.TabIndex = 6;
-            this.tb_Options_Track_Serial_Port.Tag = "";
-            this.tb_Options_Track_Serial_Port.Text = global::AirScout.Properties.Settings.Default.Track_Serial_Port;
-            // 
-            // rb_Options_Track_Serial_GS232_AZEL
-            // 
-            this.rb_Options_Track_Serial_GS232_AZEL.AutoSize = true;
-            this.rb_Options_Track_Serial_GS232_AZEL.Checked = global::AirScout.Properties.Settings.Default.Track_Serial_GS232_AZEL;
-            this.rb_Options_Track_Serial_GS232_AZEL.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_Serial_GS232_AZEL", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_Serial_GS232_AZEL.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_Serial_GS232_AZEL.Location = new System.Drawing.Point(17, 61);
-            this.rb_Options_Track_Serial_GS232_AZEL.Name = "rb_Options_Track_Serial_GS232_AZEL";
-            this.rb_Options_Track_Serial_GS232_AZEL.Size = new System.Drawing.Size(97, 17);
-            this.rb_Options_Track_Serial_GS232_AZEL.TabIndex = 5;
-            this.rb_Options_Track_Serial_GS232_AZEL.Tag = "";
-            this.rb_Options_Track_Serial_GS232_AZEL.Text = "GS-232A Az/El";
-            this.rb_Options_Track_Serial_GS232_AZEL.UseVisualStyleBackColor = true;
-            // 
-            // rb_Options_Track_Serial_GS232_AZ
-            // 
-            this.rb_Options_Track_Serial_GS232_AZ.AutoSize = true;
-            this.rb_Options_Track_Serial_GS232_AZ.Checked = global::AirScout.Properties.Settings.Default.Track_Serial_GS232_AZ;
-            this.rb_Options_Track_Serial_GS232_AZ.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_Serial_GS232_AZ", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.rb_Options_Track_Serial_GS232_AZ.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rb_Options_Track_Serial_GS232_AZ.Location = new System.Drawing.Point(17, 38);
-            this.rb_Options_Track_Serial_GS232_AZ.Name = "rb_Options_Track_Serial_GS232_AZ";
-            this.rb_Options_Track_Serial_GS232_AZ.Size = new System.Drawing.Size(105, 17);
-            this.rb_Options_Track_Serial_GS232_AZ.TabIndex = 0;
-            this.rb_Options_Track_Serial_GS232_AZ.Tag = "";
-            this.rb_Options_Track_Serial_GS232_AZ.Text = "GS-232A Az only";
-            this.rb_Options_Track_Serial_GS232_AZ.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Track_Activate
-            // 
-            this.cb_Options_Track_Activate.AutoSize = true;
-            this.cb_Options_Track_Activate.Checked = global::AirScout.Properties.Settings.Default.Track_Activate;
-            this.cb_Options_Track_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Track_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Track_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Track_Activate.Location = new System.Drawing.Point(13, 19);
-            this.cb_Options_Track_Activate.Name = "cb_Options_Track_Activate";
-            this.cb_Options_Track_Activate.Size = new System.Drawing.Size(153, 17);
-            this.cb_Options_Track_Activate.TabIndex = 1;
-            this.cb_Options_Track_Activate.Tag = "";
-            this.cb_Options_Track_Activate.Text = "Activate Antenna Tracking";
-            this.cb_Options_Track_Activate.UseVisualStyleBackColor = true;
-            // 
-            // cb_Options_Watchlist_SyncWithKST
-            // 
-            this.cb_Options_Watchlist_SyncWithKST.AutoSize = true;
-            this.cb_Options_Watchlist_SyncWithKST.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.cb_Options_Watchlist_SyncWithKST.Checked = global::AirScout.Properties.Settings.Default.Watchlist_SyncWithKST;
-            this.cb_Options_Watchlist_SyncWithKST.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Options_Watchlist_SyncWithKST.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", global::AirScout.Properties.Settings.Default, "Server_Activate", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Watchlist_SyncWithKST.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Watchlist_SyncWithKST", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Options_Watchlist_SyncWithKST.Enabled = global::AirScout.Properties.Settings.Default.Server_Activate;
-            this.cb_Options_Watchlist_SyncWithKST.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cb_Options_Watchlist_SyncWithKST.Location = new System.Drawing.Point(6, 47);
-            this.cb_Options_Watchlist_SyncWithKST.Name = "cb_Options_Watchlist_SyncWithKST";
-            this.cb_Options_Watchlist_SyncWithKST.Size = new System.Drawing.Size(436, 17);
-            this.cb_Options_Watchlist_SyncWithKST.TabIndex = 6;
-            this.cb_Options_Watchlist_SyncWithKST.Text = "Keep in sync with KST user list (needs wtKST > V3.1 and network functions activat" +
-    "ed):";
-            this.cb_Options_Watchlist_SyncWithKST.UseVisualStyleBackColor = true;
-            this.cb_Options_Watchlist_SyncWithKST.CheckedChanged += new System.EventHandler(this.cb_Options_Watchlist_SyncWithKST_CheckedChanged);
-            // 
-            // tb_Options_Watchlist_MaxCount
-            // 
-            this.tb_Options_Watchlist_MaxCount.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Watchlist_MaxCount", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.tb_Options_Watchlist_MaxCount.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Options_Watchlist_MaxCount.FormatSpecifier = "F0";
-            this.tb_Options_Watchlist_MaxCount.Location = new System.Drawing.Point(395, 20);
-            this.tb_Options_Watchlist_MaxCount.MaxValue = 1000;
-            this.tb_Options_Watchlist_MaxCount.MinValue = 1;
-            this.tb_Options_Watchlist_MaxCount.Name = "tb_Options_Watchlist_MaxCount";
-            this.tb_Options_Watchlist_MaxCount.Size = new System.Drawing.Size(47, 22);
-            this.tb_Options_Watchlist_MaxCount.TabIndex = 5;
-            this.tb_Options_Watchlist_MaxCount.Text = "1000";
-            this.tb_Options_Watchlist_MaxCount.Value = global::AirScout.Properties.Settings.Default.Watchlist_MaxCount;
-            // 
-            // btn_Options_DXMap
-            // 
-            this.btn_Options_DXMap.BackgroundImage = global::AirScout.Properties.Resources.Map2;
-            this.btn_Options_DXMap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_Options_DXMap.Location = new System.Drawing.Point(8, 135);
-            this.btn_Options_DXMap.Name = "btn_Options_DXMap";
-            this.btn_Options_DXMap.Size = new System.Drawing.Size(75, 81);
-            this.btn_Options_DXMap.TabIndex = 29;
-            this.btn_Options_DXMap.Text = "\r\nMap";
-            this.btn_Options_DXMap.UseVisualStyleBackColor = true;
-            this.btn_Options_DXMap.Click += new System.EventHandler(this.btn_Options_DXMap_Click);
-            // 
-            // btn_Options_MyMap
-            // 
-            this.btn_Options_MyMap.BackgroundImage = global::AirScout.Properties.Resources.Map2;
-            this.btn_Options_MyMap.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_Options_MyMap.Location = new System.Drawing.Point(7, 134);
-            this.btn_Options_MyMap.Name = "btn_Options_MyMap";
-            this.btn_Options_MyMap.Size = new System.Drawing.Size(75, 81);
-            this.btn_Options_MyMap.TabIndex = 30;
-            this.btn_Options_MyMap.Text = "\r\nMap";
-            this.btn_Options_MyMap.UseVisualStyleBackColor = true;
-            this.btn_Options_MyMap.Click += new System.EventHandler(this.btn_Options_MyMap_Click);
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::AirScout.Properties.Resources.AirScout_Watchlist;
-            this.pictureBox3.Location = new System.Drawing.Point(520, 19);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(113, 344);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox3.TabIndex = 3;
-            this.pictureBox3.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::AirScout.Properties.Resources.AirScout_Marker;
-            this.pictureBox2.Location = new System.Drawing.Point(281, 36);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(210, 118);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 2;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::AirScout.Properties.Resources.AirScout_Multi;
-            this.pictureBox1.InitialImage = global::AirScout.Properties.Resources.AirScout_Multi;
-            this.pictureBox1.Location = new System.Drawing.Point(6, 15);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(283, 153);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pb_Donate
-            // 
-            this.pb_Donate.Image = ((System.Drawing.Image)(resources.GetObject("pb_Donate.Image")));
-            this.pb_Donate.InitialImage = ((System.Drawing.Image)(resources.GetObject("pb_Donate.InitialImage")));
-            this.pb_Donate.Location = new System.Drawing.Point(18, 272);
-            this.pb_Donate.Name = "pb_Donate";
-            this.pb_Donate.Size = new System.Drawing.Size(306, 113);
-            this.pb_Donate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pb_Donate.TabIndex = 38;
-            this.pb_Donate.TabStop = false;
-            this.tt_Options.SetToolTip(this.pb_Donate, "Click here to open a browser window with link.");
-            this.pb_Donate.Click += new System.EventHandler(this.pb_Donate_Click);
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.BackColor = System.Drawing.Color.White;
-            this.pictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox4.Image = global::AirScout.Properties.Resources.Settings;
-            this.pictureBox4.Location = new System.Drawing.Point(343, 108);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(306, 277);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox4.TabIndex = 5;
-            this.pictureBox4.TabStop = false;
-            // 
-            // ud_Options_Map_Opacity
-            // 
-            this.ud_Options_Map_Opacity.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Map_Opacity", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ud_Options_Map_Opacity.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ud_Options_Map_Opacity.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.ud_Options_Map_Opacity.Location = new System.Drawing.Point(320, 18);
-            this.ud_Options_Map_Opacity.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.ud_Options_Map_Opacity.Name = "ud_Options_Map_Opacity";
-            this.ud_Options_Map_Opacity.Size = new System.Drawing.Size(54, 20);
-            this.ud_Options_Map_Opacity.TabIndex = 10;
-            this.ud_Options_Map_Opacity.Value = global::AirScout.Properties.Settings.Default.Map_Opacity;
+            // cb_Options_Locators_Activate
+            // 
+            this.cb_Options_Locators_Activate.AutoSize = true;
+            this.cb_Options_Locators_Activate.Checked = global::AirScout.Properties.Settings.Default.Map_ShowLocators;
+            this.cb_Options_Locators_Activate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Options_Locators_Activate.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Map_ShowLocators", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Locators_Activate.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Locators_Activate.Location = new System.Drawing.Point(16, 37);
+            this.cb_Options_Locators_Activate.Name = "cb_Options_Locators_Activate";
+            this.cb_Options_Locators_Activate.Size = new System.Drawing.Size(114, 17);
+            this.cb_Options_Locators_Activate.TabIndex = 11;
+            this.cb_Options_Locators_Activate.Text = "Show Locator Grid";
+            this.cb_Options_Locators_Activate.UseVisualStyleBackColor = true;
+            // 
+            // cb_Options_Distances_Activated
+            // 
+            this.cb_Options_Distances_Activated.AutoSize = true;
+            this.cb_Options_Distances_Activated.Checked = global::AirScout.Properties.Settings.Default.Map_ShowDistances;
+            this.cb_Options_Distances_Activated.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Map_ShowDistances", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Options_Distances_Activated.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_Options_Distances_Activated.Location = new System.Drawing.Point(16, 54);
+            this.cb_Options_Distances_Activated.Name = "cb_Options_Distances_Activated";
+            this.cb_Options_Distances_Activated.Size = new System.Drawing.Size(132, 17);
+            this.cb_Options_Distances_Activated.TabIndex = 12;
+            this.cb_Options_Distances_Activated.Text = "Show Distance Circles";
+            this.cb_Options_Distances_Activated.UseVisualStyleBackColor = true;
             // 
             // OptionsDlg
             // 
@@ -6103,11 +7222,13 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OptionsDlg_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OptionsDlg_FormClosed);
             this.Load += new System.EventHandler(this.OptionsDlg_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).EndInit();
             this.tab_Options_Planes.ResumeLayout(false);
             this.groupBox48.ResumeLayout(false);
             this.groupBox48.PerformLayout();
             this.groupBox40.ResumeLayout(false);
             this.groupBox40.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Planes_Position_DatabaseLifetime)).EndInit();
             this.groupBox38.ResumeLayout(false);
             this.groupBox38.PerformLayout();
             this.groupBox26.ResumeLayout(false);
@@ -6141,10 +7262,13 @@
             this.groupBox49.PerformLayout();
             this.groupBox37.ResumeLayout(false);
             this.groupBox37.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Charts_FontSize)).EndInit();
             this.groupBox39.ResumeLayout(false);
             this.groupBox39.PerformLayout();
             this.groupBox23.ResumeLayout(false);
             this.groupBox23.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Map_Opacity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Map_Preloader_MaxZoom)).EndInit();
             this.groupBox30.ResumeLayout(false);
             this.groupBox30.PerformLayout();
             this.groupBox7.ResumeLayout(false);
@@ -6165,6 +7289,7 @@
             this.groupBox44.PerformLayout();
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Locator_MaxLength)).EndInit();
             this.groupBox16.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
@@ -6180,6 +7305,7 @@
             this.groupBox27.PerformLayout();
             this.gb_Options_Database_Settings.ResumeLayout(false);
             this.gb_Options_Database_Settings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Database_Update_Period)).EndInit();
             this.gb_Options_Database_Info.ResumeLayout(false);
             this.gb_Options_Database_Info.PerformLayout();
             this.tab_Options_ASTER3.ResumeLayout(false);
@@ -6212,37 +7338,43 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.tab_Options_Track.ResumeLayout(false);
-            this.groupBox36.ResumeLayout(false);
-            this.groupBox36.PerformLayout();
-            this.groupBox35.ResumeLayout(false);
-            this.groupBox35.PerformLayout();
-            this.groupBox34.ResumeLayout(false);
-            this.groupBox34.PerformLayout();
-            this.groupBox33.ResumeLayout(false);
-            this.groupBox33.PerformLayout();
+            this.gb_Options_Doppler.ResumeLayout(false);
+            this.gb_Options_Doppler.PerformLayout();
+            this.gb_Options_Track_File.ResumeLayout(false);
+            this.gb_Options_Track_File.PerformLayout();
+            this.gb_Options_Track_DDE.ResumeLayout(false);
+            this.gb_Options_Track_DDE.PerformLayout();
+            this.gb_Options_Track_UDP.ResumeLayout(false);
+            this.gb_Options_Track_UDP.PerformLayout();
+            this.gb_Options_Track_Serial.ResumeLayout(false);
+            this.gb_Options_Track_Serial.PerformLayout();
             this.groupBox28.ResumeLayout(false);
             this.groupBox28.PerformLayout();
+            this.tab_Options_CAT.ResumeLayout(false);
+            this.gb_Options_CAT_PortSettings.ResumeLayout(false);
+            this.gb_Options_CAT_PortSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_CAT_Timeout)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_CAT_Poll)).EndInit();
+            this.gb_Options_CAT_RigType.ResumeLayout(false);
+            this.gb_Options_CAT_RigType.PerformLayout();
+            this.gb_Options_CAT_OperatingInstructions.ResumeLayout(false);
+            this.groupBox57.ResumeLayout(false);
+            this.groupBox57.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_CAT_Update)).EndInit();
             this.tab_Options_Watchlist.ResumeLayout(false);
             this.groupBox50.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox17.ResumeLayout(false);
             this.groupBox17.PerformLayout();
             this.tab_Options_Misc.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.groupBox15.ResumeLayout(false);
             this.tab_Options_Info.ResumeLayout(false);
             this.tab_Options_Info.PerformLayout();
             this.ss_Options.ResumeLayout(false);
             this.ss_Options.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Database_Update_Period)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Locator_MaxLength)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Charts_FontSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Map_Preloader_MaxZoom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Planes_Position_DatabaseLifetime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ud_Options_Map_Opacity)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -6381,18 +7513,18 @@
         private System.Windows.Forms.GroupBox groupBox31;
         private System.Windows.Forms.Label label86;
         private System.Windows.Forms.GroupBox groupBox32;
-        private System.Windows.Forms.GroupBox groupBox33;
+        private System.Windows.Forms.GroupBox gb_Options_Track_Serial;
         private System.Windows.Forms.Label label88;
         private System.Windows.Forms.Label label87;
         private System.Windows.Forms.TextBox tb_Options_Track_Serial_Port;
         private System.Windows.Forms.RadioButton rb_Options_Track_Serial_GS232_AZEL;
         private System.Windows.Forms.RadioButton rb_Options_Track_Serial_GS232_AZ;
-        private System.Windows.Forms.GroupBox groupBox34;
+        private System.Windows.Forms.GroupBox gb_Options_Track_UDP;
         private System.Windows.Forms.RadioButton rb_Options_Track_UDP_WinTest;
-        private System.Windows.Forms.GroupBox groupBox35;
+        private System.Windows.Forms.GroupBox gb_Options_Track_DDE;
         private System.Windows.Forms.RadioButton rb_Options_Track_DDE_HRD;
         private System.Windows.Forms.RadioButton rb_Options_Track_UDP_AirScout;
-        private System.Windows.Forms.GroupBox groupBox36;
+        private System.Windows.Forms.GroupBox gb_Options_Track_File;
         private System.Windows.Forms.RadioButton rb_Options_Track_File_WSJT;
         private System.Windows.Forms.RadioButton rb_Options_Track_File_Native;
         private System.Windows.Forms.RadioButton rb_Options_Track_Serial_None;
@@ -6693,5 +7825,87 @@
         private System.Windows.Forms.Label label147;
         private System.Windows.Forms.Label label148;
         private PercentageControl ud_Options_Map_Opacity;
+        private System.Windows.Forms.TabPage tab_Options_CAT;
+        private System.Windows.Forms.GroupBox groupBox57;
+        private System.Windows.Forms.ComboBox cb_Options_CAT_Rig;
+        private System.Windows.Forms.CheckBox cb_Options_CAT_Activate;
+        private System.Windows.Forms.GroupBox gb_Options_Doppler;
+        private ScoutBase.Core.LongTextBox tb_Options_Track_DialFreq;
+        private System.Windows.Forms.GroupBox gb_Options_CAT_OperatingInstructions;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Label label154;
+        private System.Windows.Forms.Label label153;
+        private System.Windows.Forms.Label label152;
+        private System.Windows.Forms.RadioButton rb_Options_Doppler_Strategy_D;
+        private System.Windows.Forms.RadioButton rb_Options_Doppler_Strategy_C;
+        private System.Windows.Forms.RadioButton rb_Options_Doppler_Strategy_B;
+        private System.Windows.Forms.RadioButton rb_Options_Doppler_Strategy_A;
+        private System.Windows.Forms.Label label155;
+        private System.Windows.Forms.Label label178;
+        private System.Windows.Forms.Label label179;
+        private System.Windows.Forms.Label label176;
+        private System.Windows.Forms.Label label177;
+        private System.Windows.Forms.Label label174;
+        private System.Windows.Forms.Label label175;
+        private System.Windows.Forms.Label label172;
+        private System.Windows.Forms.Label label173;
+        private System.Windows.Forms.Label label170;
+        private System.Windows.Forms.Label label171;
+        private System.Windows.Forms.Label label168;
+        private System.Windows.Forms.Label label169;
+        private System.Windows.Forms.Label label166;
+        private System.Windows.Forms.Label label167;
+        private System.Windows.Forms.Label label165;
+        private System.Windows.Forms.Label label163;
+        private System.Windows.Forms.Label label164;
+        private System.Windows.Forms.Label label162;
+        private System.Windows.Forms.Label label161;
+        private System.Windows.Forms.Label label160;
+        private System.Windows.Forms.Label label159;
+        private System.Windows.Forms.Label label158;
+        private System.Windows.Forms.Label label157;
+        private System.Windows.Forms.Label label156;
+        private System.Windows.Forms.RadioButton rb_Options_Doppler_Strategy_None;
+        private System.Windows.Forms.Label label180;
+        private System.Windows.Forms.Label label181;
+        private System.Windows.Forms.Label label182;
+        private System.Windows.Forms.Label label183;
+        private System.Windows.Forms.Label label184;
+        private System.Windows.Forms.Label label150;
+        private System.Windows.Forms.Label label185;
+        private System.Windows.Forms.Label label151;
+        private ScoutBase.Core.Int32TextBox int32TextBox2;
+        private System.Windows.Forms.Label label186;
+        private System.Windows.Forms.Label label187;
+        private ScoutBase.Core.Int32TextBox tb_Options_Track_Offset;
+        private System.Windows.Forms.Label label189;
+        private System.Windows.Forms.GroupBox gb_Options_CAT_PortSettings;
+        private System.Windows.Forms.GroupBox gb_Options_CAT_RigType;
+        private System.Windows.Forms.NumericUpDown ud_Options_CAT_Timeout;
+        private System.Windows.Forms.Label label149;
+        private System.Windows.Forms.NumericUpDown ud_Options_CAT_Poll;
+        private System.Windows.Forms.Label label190;
+        private System.Windows.Forms.Label label191;
+        private System.Windows.Forms.ComboBox cb_Options_CAT_DTR;
+        private System.Windows.Forms.Label label192;
+        private System.Windows.Forms.ComboBox cb_Options_CAT_RTS;
+        private System.Windows.Forms.Label label193;
+        private System.Windows.Forms.ComboBox cb_Options_CAT_StopBits;
+        private System.Windows.Forms.Label label194;
+        private System.Windows.Forms.ComboBox cb_Options_CAT_Parity;
+        private System.Windows.Forms.Label label195;
+        private System.Windows.Forms.ComboBox cb_Options_CAT_DataBits;
+        private System.Windows.Forms.Label label196;
+        private System.Windows.Forms.ComboBox cb_Options_CAT_Baudrate;
+        private System.Windows.Forms.Label label197;
+        private System.Windows.Forms.ComboBox cb_Options_CAT_PortName;
+        private System.Windows.Forms.Label label199;
+        private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.NumericUpDown ud_Options_CAT_Update;
+        private System.Windows.Forms.RichTextBox richTextBox3;
+        private System.Windows.Forms.RichTextBox richTextBox5;
+        private System.Windows.Forms.RichTextBox richTextBox4;
+        private System.Windows.Forms.CheckBox cb_Options_Locators_Activate;
+        private System.Windows.Forms.CheckBox cb_Options_Distances_Activated;
     }
 }

@@ -30,6 +30,7 @@ namespace ScoutBase.Elevation
     /// Holds the local obstruction information
     /// </summary>
     [System.ComponentModel.DesignerCategory("")]
+    [Serializable]
     public class LocalObstructionDesignator : SQLiteEntry
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -31,6 +31,7 @@ using ScoutBase;
 using Newtonsoft.Json;
 using static ScoutBase.Core.ZIP;
 using AirScout.PlaneFeeds.Plugin.MEFContract;
+using AirScout.CAT;
 
 namespace AirScout
 {
@@ -51,6 +52,8 @@ namespace AirScout
         private LocalObstructionDesignator LocalObstructions;
 
         private LogWriter Log = LogWriter.Instance;
+
+        private bool LoadingTab = false;
 
         public OptionsDlg(MapDlg parentDlg)
         {
@@ -2538,7 +2541,45 @@ namespace AirScout
 
         private void tab_Options_Track_Enter(object sender, EventArgs e)
         {
+            if (AirScout.CAT.Properties.Settings.Default.CAT_Activate)
+            {
+                gb_Options_Doppler.Enabled = true;
+            }
+            else
+            {
+                gb_Options_Doppler.Enabled = false;
+            }
 
+            // check/uncheck radio buttons
+            // do not use property binding here!
+            if (Properties.Settings.Default.Track_Serial_None) { rb_Options_Track_Serial_None.Checked = true; }
+            else if (Properties.Settings.Default.Track_Serial_GS232_AZ) { rb_Options_Track_Serial_GS232_AZ.Checked = true; }
+            else if (Properties.Settings.Default.Track_Serial_GS232_AZEL) { rb_Options_Track_Serial_GS232_AZEL.Checked = true; }
+
+            if (Properties.Settings.Default.Track_DDE_None) { rb_Options_Track_DDE_None.Checked = true; }
+            else if (Properties.Settings.Default.Track_DDE_HRD) { rb_Options_Track_DDE_HRD.Checked = true; }
+
+            if (Properties.Settings.Default.Track_UDP_None) { rb_Options_Track_UDP_None.Checked = true; }
+            else if (Properties.Settings.Default.Track_UDP_WinTest) { rb_Options_Track_UDP_WinTest.Checked = true; }
+            else if (Properties.Settings.Default.Track_UDP_AirScout) { rb_Options_Track_UDP_AirScout.Checked = true; }
+
+            if (Properties.Settings.Default.Track_File_None) { rb_Options_Track_File_None.Checked = true; }
+            else if (Properties.Settings.Default.Track_File_Native) { rb_Options_Track_File_Native.Checked = true; }
+            else if (Properties.Settings.Default.Track_File_WSJT) { rb_Options_Track_File_WSJT.Checked = true; }
+
+            if (Properties.Settings.Default.Doppler_Strategy_None) { rb_Options_Doppler_Strategy_None.Checked = true; }
+            else if (Properties.Settings.Default.Doppler_Strategy_A) { rb_Options_Doppler_Strategy_A.Checked = true; }
+            else if (Properties.Settings.Default.Doppler_Strategy_B) { rb_Options_Doppler_Strategy_B.Checked = true; }
+            else if (Properties.Settings.Default.Doppler_Strategy_C) { rb_Options_Doppler_Strategy_C.Checked = true; }
+            else if (Properties.Settings.Default.Doppler_Strategy_D) { rb_Options_Doppler_Strategy_D.Checked = true; }
+
+            ud_Options_CAT_Update.Value = AirScout.CAT.Properties.Settings.Default.CAT_Update;
+            tb_Options_Track_DialFreq.SilentValue = Properties.Settings.Default.Doppler_DialFreq;
+            cb_Options_Track_Activate_CheckedChanged(this, null);
+        }
+
+        private void tb_Options_CAT_DialFreq_TextChanged(object sender, EventArgs e)
+        {
         }
 
         private void tc_Track_Validating(object sender, CancelEventArgs e)
@@ -2560,7 +2601,402 @@ namespace AirScout
             }
         }
 
+        private void cb_Options_Track_Activate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb_Options_Track_Activate.Checked)
+            {
+                gb_Options_Track_Serial.Enabled = true;
+                gb_Options_Track_UDP.Enabled = true;
+                gb_Options_Track_DDE.Enabled = true;
+                gb_Options_Track_File.Enabled = true;
+                if (AirScout.CAT.Properties.Settings.Default.CAT_Activate)
+                {
+                    gb_Options_Doppler.Enabled = true;
+                }
+            }
+            else
+            {
+                gb_Options_Track_Serial.Enabled = false;
+                gb_Options_Track_UDP.Enabled = false;
+                gb_Options_Track_DDE.Enabled = false;
+                gb_Options_Track_File.Enabled = false;
+                gb_Options_Doppler.Enabled = false;
+            }
+        }
+
+        private void gb_Options_Track_Serial_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Track_Serial_None = rb_Options_Track_Serial_None.Checked;
+            Properties.Settings.Default.Track_Serial_GS232_AZ = rb_Options_Track_Serial_GS232_AZ.Checked;
+            Properties.Settings.Default.Track_Serial_GS232_AZEL = rb_Options_Track_Serial_GS232_AZEL.Checked;
+        }
+
+        private void gb_Options_Track_DDE_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Track_DDE_None = rb_Options_Track_DDE_None.Checked;
+            Properties.Settings.Default.Track_DDE_HRD = rb_Options_Track_DDE_HRD.Checked;
+        }
+
+        private void gb_Options_Track_UDP_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Track_UDP_None = rb_Options_Track_UDP_None.Checked;
+            Properties.Settings.Default.Track_UDP_WinTest = rb_Options_Track_UDP_WinTest.Checked;
+            Properties.Settings.Default.Track_UDP_AirScout = rb_Options_Track_UDP_AirScout.Checked;
+        }
+
+        private void gb_Options_Track_File_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Track_File_None = rb_Options_Track_File_None.Checked;
+            Properties.Settings.Default.Track_File_Native = rb_Options_Track_File_Native.Checked;
+            Properties.Settings.Default.Track_File_WSJT = rb_Options_Track_File_WSJT.Checked;
+        }
+
+        private void gb_Options_Doppler_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Doppler_Strategy_None = rb_Options_Doppler_Strategy_None.Checked;
+            Properties.Settings.Default.Doppler_Strategy_A = rb_Options_Doppler_Strategy_A.Checked;
+            Properties.Settings.Default.Doppler_Strategy_B = rb_Options_Doppler_Strategy_B.Checked;
+            Properties.Settings.Default.Doppler_Strategy_C = rb_Options_Doppler_Strategy_C.Checked;
+            Properties.Settings.Default.Doppler_Strategy_D = rb_Options_Doppler_Strategy_D.Checked;
+        }
+
+
         #endregion
+
+        #region tab_Options_CAT
+
+        private void tab_Options_CAT_Enter(object sender, EventArgs e)
+        {
+            LoadingTab = true;
+
+            cb_Options_CAT_Activate.Checked = AirScout.CAT.Properties.Settings.Default.CAT_Activate;
+
+
+            // get a list of supported rigs and add them to combo box
+            List<SupportedRig> rigs = CATWorker.SupportedRigs();
+            cb_Options_CAT_Rig.Items.Clear();
+            foreach (SupportedRig rig in rigs)
+            {
+                cb_Options_CAT_Rig.Items.Add(rig);
+            }
+
+            // try to select settings
+            if (AirScout.CAT.Properties.Settings.Default.CAT_RigType != null)
+            {
+                try
+                {
+                    int index = cb_Options_CAT_Rig.FindString(AirScout.CAT.Properties.Settings.Default.CAT_RigType);
+                    if (index >= 0)
+                    {
+                        cb_Options_CAT_Rig.SelectedIndex = index;
+                    }
+                }
+                catch
+                {
+                    // do nothing if something goes wrong
+                }
+            }
+            try
+            {
+                cb_Options_CAT_PortName.DataSource = System.IO.Ports.SerialPort.GetPortNames();
+                cb_Options_CAT_PortName.SelectedItem = AirScout.CAT.Properties.Settings.Default.CAT_PortName;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                cb_Options_CAT_Baudrate.DataSource = new string[] { "110", "300", "600", "1200", "2400", "4800", "9600", "14400", "19200", "38400", "56000", "57600", "115200", "128000", "256000" };
+                cb_Options_CAT_Baudrate.SelectedItem = AirScout.CAT.Properties.Settings.Default.CAT_Baudrate.ToString();
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                cb_Options_CAT_DataBits.DataSource = new string[] { "5", "6", "7", "8" };
+                cb_Options_CAT_DataBits.SelectedItem = AirScout.CAT.Properties.Settings.Default.CAT_DataBits.ToString();
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                EnumHelpers.BindToEnum<PARITY>(cb_Options_CAT_Parity);
+                cb_Options_CAT_Parity.SelectedValue = (int)AirScout.CAT.Properties.Settings.Default.CAT_Parity;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                EnumHelpers.BindToEnum<STOPBITS>(cb_Options_CAT_StopBits);
+                cb_Options_CAT_StopBits.SelectedValue = (int)AirScout.CAT.Properties.Settings.Default.CAT_StopBits;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                EnumHelpers.BindToEnum<FLOWCONTROL>(cb_Options_CAT_RTS);
+                cb_Options_CAT_RTS.SelectedValue = (int)AirScout.CAT.Properties.Settings.Default.CAT_RTS;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                EnumHelpers.BindToEnum<FLOWCONTROL>(cb_Options_CAT_DTR);
+                cb_Options_CAT_DTR.SelectedValue = (int)AirScout.CAT.Properties.Settings.Default.CAT_DTR;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                ud_Options_CAT_Poll.Value = AirScout.CAT.Properties.Settings.Default.CAT_Poll;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                ud_Options_CAT_Timeout.Value = AirScout.CAT.Properties.Settings.Default.CAT_Timeout;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+
+            cb_Options_CAT_Activate_CheckedChanged(this, null);
+
+            LoadingTab = false;
+        }
+
+        private void cb_Options_CAT_Activate_CheckedChanged(object sender, EventArgs e)
+        {
+            AirScout.CAT.Properties.Settings.Default.CAT_Activate = cb_Options_CAT_Activate.Checked;
+
+            // check if port settings must be enabled (depending on rig type)
+            bool portenabled = true;
+            try
+            {
+                SupportedRig rig = (SupportedRig)cb_Options_CAT_Rig.SelectedItem;
+                if (rig.CATEngine == CATENGINE.OMNIRIGX)
+                    portenabled = false;
+            }
+            catch
+            {
+
+            }
+
+            if (cb_Options_CAT_Activate.Checked)
+            {
+                ud_Options_CAT_Update.Enabled = true;
+                gb_Options_CAT_RigType.Enabled = true;
+                if (portenabled)
+                    gb_Options_CAT_PortSettings.Enabled = true;
+                else
+                    gb_Options_CAT_PortSettings.Enabled = false;
+                gb_Options_CAT_OperatingInstructions.Enabled = true;
+                if (Properties.Settings.Default.Track_Activate)
+                {
+                    gb_Options_Doppler.Enabled = true;
+                }
+            }
+            else
+            {
+                ud_Options_CAT_Update.Enabled = false;
+                gb_Options_CAT_RigType.Enabled = false;
+                gb_Options_CAT_PortSettings.Enabled = false;
+                gb_Options_CAT_OperatingInstructions.Enabled = false;
+                gb_Options_Doppler.Enabled = false;
+            }
+        }
+
+        private void cb_Options_CAT_Rig_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                SupportedRig rig = (SupportedRig)cb_Options_CAT_Rig.SelectedItem;
+                if (rig != null)
+                {
+                    AirScout.CAT.Properties.Settings.Default.CAT_RigType = rig.Type;
+
+                    // disable port settings when using OmniRig ActiveX
+                    if (rig.CATEngine == CATENGINE.OMNIRIGX)
+                    {
+                        gb_Options_CAT_PortSettings.Enabled = false;
+                    }
+                    else
+                    {
+                        gb_Options_CAT_PortSettings.Enabled = true;
+                    }
+                }
+
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void ud_Options_CAT_Update_ValueChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            AirScout.CAT.Properties.Settings.Default.CAT_Update = (int)ud_Options_CAT_Update.Value;
+        }
+
+        private void cb_Options_CAT_PortName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_PortName = (string)cb_Options_CAT_PortName.SelectedItem;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_Baudrate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_Baudrate = System.Convert.ToInt32(cb_Options_CAT_Baudrate.SelectedItem);
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_DataBits_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_DataBits = System.Convert.ToInt32(cb_Options_CAT_DataBits.SelectedItem);
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Parity_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_Parity = (PARITY)cb_Options_CAT_Parity.SelectedValue;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_Stopbits_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_StopBits = (STOPBITS)cb_Options_CAT_StopBits.SelectedValue;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_RTS_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_RTS = (FLOWCONTROL)cb_Options_CAT_RTS.SelectedValue;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_DTR_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_DTR = (FLOWCONTROL)cb_Options_CAT_DTR.SelectedValue;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void ud_Options_CAT_Poll_ValueChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_Poll = (int)ud_Options_CAT_Poll.Value;            }
+            catch
+            {
+                // do nothing if fails
+            }
+
+        }
+
+        private void ud_Options_CAT_Timeout_ValueChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_Timeout = (int)ud_Options_CAT_Timeout.Value;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        #endregion
+
 
         #region tab_Options_Info
 

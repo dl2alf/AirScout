@@ -17,6 +17,7 @@ namespace ScoutBase.Propagation
     /// Holds the horizon information
     /// </summary>
     [System.ComponentModel.DesignerCategory("")]
+    [Serializable]
     public class PropagationHorizonDesignator : SQLiteEntry
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +46,7 @@ namespace ScoutBase.Propagation
 
         // MEMBERS ONLY TO STORE STATUS TEMPORARLY --> NOT STORED IN DATABASE
         // horizon status: valid / invalid
-        public bool Valid = true;
+        public bool Valid = false;
         // horizon status: selected / not selected
         public bool Selected = false;
         // horizon status local obstructed / not obstructed
@@ -74,6 +75,7 @@ namespace ScoutBase.Propagation
             LocalObstruction = localobstruction;
             if (Horizon == null)
                 return;
+            Valid = true;
             if (LocalObstruction == null)
                 return;
             for (int i = 0; i > 360; i++)

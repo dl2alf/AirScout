@@ -21,7 +21,42 @@ namespace ScoutBase.Core
         }
 
         /// <summary>
-        /// Returns the elevation angle Epsilon an object at (bearing, distance, H) is seen from an observer(h)
+        /// Returns the slant range of an object at (h)eight of observer, position of observer (mylat, mylon), position of object (lat, lon), (H))eight of object is seen from an observer
+        /// </summary>
+        /// <param name="h">The height of the observer [m].</param>
+        /// <param name="mylat">The latitude of the observer [deg].</param>
+        /// <param name="mylon">The longitude of the observer [deg].</param>
+        /// <param name="lat">The latitude of the object [deg].</param>
+        /// <param name="lon">The longitude of the object [deg].</param>
+        /// <param name="H">The height of the object [m].</param>
+        /// <param name="radius">The equivalent earth radius [km].</param>
+        /// <returns>The slant range in [km].</returns>
+        public static double SlantRangeFromHeights(double h, double mylat, double mylon, double lat, double lon, double H, double radius)
+        {
+            return SlantRangeFromHeights(h, LatLon.Distance(mylat, mylon, lat, lon), H, radius);
+        }
+
+        /// <summary>
+        /// Returns the slant range of an object at (h)eight of observer, (dist)ance to object, (H))eight of object is seen from an observer
+        /// </summary>
+        /// <param name="h">The height of the observer [m].</param>
+        /// <param name="dist">The distance of the object [km].</param>
+        /// <param name="H">The height of the object [m].</param>
+        /// <param name="radius">The equivalent earth radius [km].</param>
+        /// <returns>The slant range in [km].</returns>
+        public static double SlantRangeFromHeights(double h, double dist, double H, double radius)
+        {
+            // convert heights into [km]
+            h = h / 1000.0;
+            H = H / 1000.0;
+            // calculate alpha angle in [rad]
+            double alpha = dist / radius;
+            double d = Math.Sqrt((radius + h) * (radius + h) + (radius + H) * (radius + H) - 2.0 * (radius + h) * (radius + H) * Math.Cos(alpha));
+            return d;
+        }
+
+        /// <summary>
+        /// Returns the elevation angle Epsilon an object at (h)eight of observer, (dist)ance to object, (H))eight of object is seen from an observer
         /// </summary>
         /// <param name="h">The height of the observer [m].</param>
         /// <param name="dist">The distance of the object [km].</param>
@@ -34,8 +69,7 @@ namespace ScoutBase.Core
             h = h / 1000.0;
             H = H / 1000.0;
             // calculate alpha angle in [rad]
-            double alpha = dist / radius;
-            double d = Math.Sqrt((radius + h) * (radius + h) + (radius + H) * (radius + H) - 2.0 * (radius + h) * (radius + H) * Math.Cos(alpha));
+            double d = SlantRangeFromHeights(h, dist, H, radius);
             double a = ((radius + H) * (radius + H) - (radius + h) * (radius + h) - d * d) / 2.0 / d;
             return Math.Asin(a / (radius + h));
         }
@@ -73,8 +107,27 @@ namespace ScoutBase.Core
             // convert heights into [km]
             h = h / 1000.0;
             double beta = Math.PI / 2.0 + eps;
-            double gamma = Math.PI - AlphaFromDistance(dist,radius) - beta;
+            double gamma = Math.PI - AlphaFromDistance(dist, radius) - beta;
             return ((radius + h) * Math.Sin(beta) / Math.Sin(gamma) - radius) * 1000;
+        }
+
+        /// <summary>
+        /// Returns the maximum distance an object can have at a given Height (H) to be still visible to an observer(h) at an angle Epsilon (eps)
+        /// </summary>
+        /// <param name="h">The height of the observer [m].</param>
+        /// <param name="H">The height of the object [m].</param>
+        /// <param name="eps">The angle Epsilon [rad].</param>
+        /// <param name="radius">The equivalent earth radius [km].</param>
+        /// <returns>The distance of the object [km].</returns>
+        public static double DistanceFromEpsilon(double h, double H, double eps, double radius)
+        {
+            // convert heights into [km]
+            h = h / 1000.0;
+            H = H / 1000.0;
+            double beta = Math.PI / 2.0 + eps;
+            double gamma = Math.Asin((radius + h) / (radius + H) * Math.Sin(beta));
+            double alpha = Math.PI - beta - gamma;
+            return alpha * radius;
         }
 
         /// <summary>
@@ -104,6 +157,17 @@ namespace ScoutBase.Core
             return Math.Sqrt(2 * re) * (Math.Sqrt(h1) + Math.Sqrt(h2));
         }
 
+        /// <summary>
+        /// Returns the Doppler shift of a moving object in relation to an observer
+        /// </summary>
+        /// <param name="qrg">The frequency in [Hz].</param>
+        /// <param name="speed">The resulting speed [m/s] - positive when moving away, negative when moving towards.</param>
+        /// <returns>The resulting doppler shift [Hz].</returns>
+        public static double DopplerShift(double qrg, double speed)
+        {
+            double c = 300000000.0;     // light speed in m/s
+            return qrg - qrg * c / (c + speed);
+        }
 
     }
 }

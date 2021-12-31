@@ -228,7 +228,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(180, 25);
             this.label2.TabIndex = 15;
-            this.label2.Text = "Availbale Callsigns";
+            this.label2.Text = "Available Callsigns";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3

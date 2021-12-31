@@ -1,0 +1,1 @@
+TIMEOUT 5 || exit /b 0

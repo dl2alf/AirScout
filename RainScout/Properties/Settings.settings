@@ -1,0 +1,219 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RainScout.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Map_Provider" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OpenStreetMap</Value>
+    </Setting>
+    <Setting Name="MyCall" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DL2ALF</Value>
+    </Setting>
+    <Setting Name="MyLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">50.937067</Value>
+    </Setting>
+    <Setting Name="MyLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">10.68327</Value>
+    </Setting>
+    <Setting Name="MyLoc" Type="System.String" Scope="User">
+      <Value Profile="(Default)">JO50IW</Value>
+    </Setting>
+    <Setting Name="ScpLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ScpLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ScpLoc" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Elevation_GLOBE_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ElevationData\GLOBE</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ElevationData\SRTM1</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ElevationData\SRTM3</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Path_Cubic_Spline" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Path_Default_F1_Clearance" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.6</Value>
+    </Setting>
+    <Setting Name="Path_Default_Ground_Clearance" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Path_Default_K_Factor" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1.33</Value>
+    </Setting>
+    <Setting Name="Path_Default_Max_Distance" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="Path_Default_Max_Elevation" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Path_Default_Max_Squint" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Path_NearFieldSuppression" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Path_StepWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="Path_BandSettings" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Horizon_DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Horizon\</Value>
+    </Setting>
+    <Setting Name="Scatter_MaxRadius" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
+    <Setting Name="Scatter_MinRadius" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">200</Value>
+    </Setting>
+    <Setting Name="Scatter_MaxAngle" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">45</Value>
+    </Setting>
+    <Setting Name="Scatter_MinHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">8000</Value>
+    </Setting>
+    <Setting Name="Scatter_MaxHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">20000</Value>
+    </Setting>
+    <Setting Name="DXCall" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DXLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DXLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="DXLoc" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Database_Filename" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Database\calls.bin</Value>
+    </Setting>
+    <Setting Name="MyElevation" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="MyHeight" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="MinLat" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">35</Value>
+    </Setting>
+    <Setting Name="MaxLat" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="MinLon" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">-15</Value>
+    </Setting>
+    <Setting Name="MaxLon" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="CurrentBand" Type="ScoutBase.Core.BAND" Scope="User">
+      <Value Profile="(Default)">B10G</Value>
+    </Setting>
+    <Setting Name="CurrentElevationModel" Type="ScoutBase.Elevation.ELEVATIONMODEL" Scope="User">
+      <Value Profile="(Default)">SRTM3</Value>
+    </Setting>
+    <Setting Name="Band_Settings" Type="RainScout.BandSettings" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CurrentRadar" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Filter_VisibleScpOnly" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Filter_MinDistance" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Filter_MaxDistance" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="Radar_Opacity" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Map_Intensity" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Map_CloudTops" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Map_Lightning" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Map_Bounds" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Map_Horizons" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Map_Distances" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ScpCloudTop" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="StationsDatabase_Status" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Background_Update_OnStartup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Location_RestrictToAreaOfInterest" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_DatabaseStatus" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_DatabaseStatus" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_DatabaseStatus" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Elevation_GLOBE_EnableCache" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM3_EnableCache" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Elevation_SRTM1_EnableCache" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RainScout_Instance_ID" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AirScout_GetKey_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/usr/getkey.php</Value>
+    </Setting>
+    <Setting Name="AirScout_Register_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/usr/register.php</Value>
+    </Setting>
+    <Setting Name="AirScout_UploadLocation_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/usr/upload_location.php</Value>
+    </Setting>
+    <Setting Name="AirScout_UploadQRV_URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://www.airscout.eu/usr/upload_qrv.php</Value>
+    </Setting>
+    <Setting Name="RainScout_Device_ID" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

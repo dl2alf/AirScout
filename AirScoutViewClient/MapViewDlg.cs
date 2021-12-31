@@ -141,7 +141,7 @@ namespace AirScoutViewClient
         SortedList<string, PlaneInfo> ActivePlanes = new SortedList<string, PlaneInfo>();
         private List<string> SelectedPlanes = new List<string>();
 
-        private VIEWCLIENTSTATUS VieClientStatus = VIEWCLIENTSTATUS.NONE;
+        private VIEWCLIENTSTATUS ViewClientStatus = VIEWCLIENTSTATUS.NONE;
 
         [CategoryAttribute("Directories")]
         [DescriptionAttribute("Application Directory")]
@@ -268,7 +268,7 @@ namespace AirScoutViewClient
             BAND band = Properties.Settings.Default.Band;
             cb_Band.SelectedItem = Bands.GetStringValue(band);
             PlayMode = AIRSCOUTPLAYMODE.PAUSE;
-            VieClientStatus = VIEWCLIENTSTATUS.CONNECTED;
+            ViewClientStatus = VIEWCLIENTSTATUS.CONNECTED;
             UpdateStatus();
             Say("");
         }
@@ -627,10 +627,10 @@ namespace AirScoutViewClient
             {
                 string json = "";
                 // get settings
-                json = GetJSONFromURL(GetServerURL(Properties.Settings.Default.Server_URL, Properties.Settings.Default.Server_Port, "settings.json"));
+                json = GetJSONFromURL(GetServerURL(Properties.Settings.Default.Server_URL, (int)Properties.Settings.Default.Server_Port, "settings.json"));
                 if (String.IsNullOrEmpty(json))
                 {
-                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return false; 
                 }
                 if (json.StartsWith("Error:"))
@@ -689,14 +689,14 @@ namespace AirScoutViewClient
             {
                 string url = GetServerURL(
                     Properties.Settings.Default.Server_URL,
-                    Properties.Settings.Default.Server_Port,
+                    (int)Properties.Settings.Default.Server_Port,
                     "location.json",
                     "call=" + Properties.Settings.Default.MyCall +
                     "&loc=all");
                 json = GetJSONFromURL(url);
                 if (String.IsNullOrEmpty(json))
                 {
-                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -727,14 +727,14 @@ namespace AirScoutViewClient
             {
                 string url = GetServerURL(
                     Properties.Settings.Default.Server_URL,
-                    Properties.Settings.Default.Server_Port,
+                    (int)Properties.Settings.Default.Server_Port,
                     "location.json",
                     "call=" + Properties.Settings.Default.MyCall +
                     "&loc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, false, 3));
                 json = GetJSONFromURL(url);
                 if (String.IsNullOrEmpty(json))
                 {
-                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -760,14 +760,14 @@ namespace AirScoutViewClient
             {
                 string url = GetServerURL(
                     Properties.Settings.Default.Server_URL,
-                    Properties.Settings.Default.Server_Port,
+                    (int)Properties.Settings.Default.Server_Port,
                     "location.json",
                     "call=" + Properties.Settings.Default.DXCall +
                     "&loc=all");
                 json = GetJSONFromURL(url);
                 if (String.IsNullOrEmpty(json))
                 {
-                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -798,14 +798,14 @@ namespace AirScoutViewClient
             {
                 string url = GetServerURL(
                     Properties.Settings.Default.Server_URL,
-                    Properties.Settings.Default.Server_Port,
+                    (int)Properties.Settings.Default.Server_Port,
                     "location.json",
                     "&call=" + Properties.Settings.Default.DXCall +
                     "&loc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3));
                 json = GetJSONFromURL(url);
                 if (String.IsNullOrEmpty(json))
                 {
-                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -830,7 +830,7 @@ namespace AirScoutViewClient
             {
                 json = GetJSONFromURL(GetServerURL(
                     Properties.Settings.Default.Server_URL,
-                    Properties.Settings.Default.Server_Port,
+                    (int)Properties.Settings.Default.Server_Port,
                     "elevationpath.json",
                     "mycall=" + Properties.Settings.Default.MyCall +
                     "&myloc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, false, 3) +
@@ -838,7 +838,7 @@ namespace AirScoutViewClient
                     "&dxloc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3)));
                 if (String.IsNullOrEmpty(json))
                 {
-                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -863,7 +863,7 @@ namespace AirScoutViewClient
             {
                 json = GetJSONFromURL(GetServerURL(
                     Properties.Settings.Default.Server_URL,
-                    Properties.Settings.Default.Server_Port,
+                    (int)Properties.Settings.Default.Server_Port,
                     "propagationpath.json",
                     "mycall=" + Properties.Settings.Default.MyCall +
                     "&myloc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, false, 3) +
@@ -871,7 +871,7 @@ namespace AirScoutViewClient
                     "&dxloc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3)));
                 if (String.IsNullOrEmpty(json))
                 {
-                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -897,7 +897,7 @@ namespace AirScoutViewClient
             {
                 json = GetJSONFromURL(GetServerURL(
                     Properties.Settings.Default.Server_URL,
-                    Properties.Settings.Default.Server_Port,
+                    (int)Properties.Settings.Default.Server_Port,
                     "nearestplanes.json",
                     "mycall=" + Properties.Settings.Default.MyCall +
                     "&myloc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, false, 3) +
@@ -905,7 +905,7 @@ namespace AirScoutViewClient
                 "&dxloc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3)));
                 if (String.IsNullOrEmpty(json))
                 {
-                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -1385,8 +1385,8 @@ namespace AirScoutViewClient
 
         private void ti_Progress_Tick(object sender, EventArgs e)
         {
-            tsl_ConnectionStatus.Text = VieClientStatus.ToString();
-            switch (VieClientStatus)
+            tsl_ConnectionStatus.Text = ViewClientStatus.ToString();
+            switch (ViewClientStatus)
             {
                 case VIEWCLIENTSTATUS.CONNECTING:
                     {
@@ -1423,13 +1423,13 @@ namespace AirScoutViewClient
 
         private void MapViewDlg_Load(object sender, EventArgs e)
         {
-            VieClientStatus = VIEWCLIENTSTATUS.INIT;
+            ViewClientStatus = VIEWCLIENTSTATUS.INIT;
             InitializeIcons();
             InitializeCharts();
             this.Text = "AirScout View Client V" + Application.ProductVersion;
             this.Show();
             ti_Progress.Start();
-            VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+            ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
         }
 
         private void tsi_Exit_Click(object sender, EventArgs e)
@@ -1722,6 +1722,21 @@ namespace AirScoutViewClient
                 btn_Map_PlayPause.ImageIndex = 1;
             }
 
+        }
+
+        private void mnu_Settings_Click(object sender, EventArgs e)
+        {
+            SettingsDlg Dlg = new SettingsDlg();
+            if (Dlg.ShowDialog() == DialogResult.OK)
+            {
+                Properties.Settings.Default.Save();
+                ViewClientStatus = VIEWCLIENTSTATUS.INIT;
+                InitializeSettings();
+            }
+            else
+            {
+                Properties.Settings.Default.Reload();
+            }
         }
     }
 }

@@ -37,6 +37,7 @@
             this.sc_Map = new System.Windows.Forms.SplitContainer();
             this.tc_Map = new System.Windows.Forms.TabControl();
             this.tp_Map = new System.Windows.Forms.TabPage();
+            this.pa_Rig = new System.Windows.Forms.Panel();
             this.ag_Azimuth = new AquaControls.AquaGauge();
             this.ag_Elevation = new AquaControls.AquaGauge();
             this.gm_Main = new GMap.NET.WindowsForms.GMapControl();
@@ -107,6 +108,9 @@
             this.tsl_Database_LED_SRTM1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Database_LED_ASTER3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Database_LED_ASTER1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsl_Track = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsl_Rot = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsl_CAT = new System.Windows.Forms.ToolStripStatusLabel();
             this.tt_Main = new System.Windows.Forms.ToolTip(this.components);
             this.btn_Map_PlayPause = new System.Windows.Forms.Button();
             this.btn_Map_Save = new System.Windows.Forms.Button();
@@ -247,7 +251,7 @@
             this.sc_Map.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.sc_Map.Panel2.Controls.Add(this.tc_Main);
             this.sc_Map.Size = new System.Drawing.Size(852, 706);
-            this.sc_Map.SplitterDistance = 341;
+            this.sc_Map.SplitterDistance = 342;
             this.sc_Map.SplitterWidth = 5;
             this.sc_Map.TabIndex = 20;
             this.sc_Map.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.sc_Map_SplitterMoved);
@@ -261,12 +265,13 @@
             this.tc_Map.Location = new System.Drawing.Point(0, 0);
             this.tc_Map.Name = "tc_Map";
             this.tc_Map.SelectedIndex = 0;
-            this.tc_Map.Size = new System.Drawing.Size(852, 341);
+            this.tc_Map.Size = new System.Drawing.Size(852, 342);
             this.tc_Map.TabIndex = 14;
             this.tc_Map.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tc_Map_Selecting);
             // 
             // tp_Map
             // 
+            this.tp_Map.Controls.Add(this.pa_Rig);
             this.tp_Map.Controls.Add(this.ag_Azimuth);
             this.tp_Map.Controls.Add(this.ag_Elevation);
             this.tp_Map.Controls.Add(this.gm_Main);
@@ -274,11 +279,19 @@
             this.tp_Map.Location = new System.Drawing.Point(4, 22);
             this.tp_Map.Name = "tp_Map";
             this.tp_Map.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Map.Size = new System.Drawing.Size(844, 315);
+            this.tp_Map.Size = new System.Drawing.Size(844, 316);
             this.tp_Map.TabIndex = 0;
             this.tp_Map.Text = "Map";
             this.tp_Map.UseVisualStyleBackColor = true;
             this.tp_Map.Enter += new System.EventHandler(this.tp_Map_Enter);
+            // 
+            // pa_Rig
+            // 
+            this.pa_Rig.Location = new System.Drawing.Point(489, 182);
+            this.pa_Rig.Name = "pa_Rig";
+            this.pa_Rig.Size = new System.Drawing.Size(349, 80);
+            this.pa_Rig.TabIndex = 30;
+            this.pa_Rig.Visible = false;
             // 
             // ag_Azimuth
             // 
@@ -342,12 +355,15 @@
             this.gm_Main.RoutesEnabled = true;
             this.gm_Main.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gm_Main.ShowTileGridLines = false;
-            this.gm_Main.Size = new System.Drawing.Size(838, 309);
+            this.gm_Main.Size = new System.Drawing.Size(838, 310);
             this.gm_Main.TabIndex = 4;
             this.gm_Main.Zoom = 0D;
             this.gm_Main.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.gm_Main_OnMarkerClick);
             this.gm_Main.OnMarkerEnter += new GMap.NET.WindowsForms.MarkerEnter(this.gm_Main_OnMarkerEnter);
             this.gm_Main.OnMarkerLeave += new GMap.NET.WindowsForms.MarkerLeave(this.gm_Main_OnMarkerLeave);
+            this.gm_Main.OnPositionChanged += new GMap.NET.PositionChanged(this.gm_Main_OnPositionChanged);
+            this.gm_Main.OnTileLoadComplete += new GMap.NET.TileLoadComplete(this.gm_Main_OnTileLoadComplete);
+            this.gm_Main.OnMapDrag += new GMap.NET.MapDrag(this.gm_Main_OnMapDrag);
             this.gm_Main.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.gm_Main_OnMapZoomChanged);
             this.gm_Main.SizeChanged += new System.EventHandler(this.gm_Main_SizeChanged);
             this.gm_Main.Paint += new System.Windows.Forms.PaintEventHandler(this.gm_Main_Paint);
@@ -377,7 +393,7 @@
             this.gm_Cache.RoutesEnabled = true;
             this.gm_Cache.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gm_Cache.ShowTileGridLines = false;
-            this.gm_Cache.Size = new System.Drawing.Size(838, 309);
+            this.gm_Cache.Size = new System.Drawing.Size(838, 310);
             this.gm_Cache.TabIndex = 29;
             this.gm_Cache.Zoom = 0D;
             // 
@@ -385,7 +401,7 @@
             // 
             this.tp_News.Location = new System.Drawing.Point(4, 22);
             this.tp_News.Name = "tp_News";
-            this.tp_News.Size = new System.Drawing.Size(844, 315);
+            this.tp_News.Size = new System.Drawing.Size(844, 316);
             this.tp_News.TabIndex = 3;
             this.tp_News.Text = "Latest News";
             this.tp_News.UseVisualStyleBackColor = true;
@@ -403,7 +419,7 @@
             this.tc_Main.MinimumSize = new System.Drawing.Size(0, 200);
             this.tc_Main.Name = "tc_Main";
             this.tc_Main.SelectedIndex = 0;
-            this.tc_Main.Size = new System.Drawing.Size(852, 360);
+            this.tc_Main.Size = new System.Drawing.Size(852, 359);
             this.tc_Main.TabIndex = 0;
             this.tc_Main.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tc_Main_DrawItem);
             this.tc_Main.SelectedIndexChanged += new System.EventHandler(this.tc_Main_SelectedIndexChanged);
@@ -412,10 +428,11 @@
             // tp_Elevation
             // 
             this.tp_Elevation.BackColor = System.Drawing.SystemColors.Control;
+            this.tp_Elevation.ForeColor = System.Drawing.Color.DarkGray;
             this.tp_Elevation.Location = new System.Drawing.Point(4, 22);
             this.tp_Elevation.Name = "tp_Elevation";
             this.tp_Elevation.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Elevation.Size = new System.Drawing.Size(844, 334);
+            this.tp_Elevation.Size = new System.Drawing.Size(844, 333);
             this.tp_Elevation.TabIndex = 0;
             this.tp_Elevation.Text = "Path Profile";
             this.tp_Elevation.Enter += new System.EventHandler(this.tp_Elevation_Enter);
@@ -431,7 +448,7 @@
             this.tp_Spectrum.Location = new System.Drawing.Point(4, 22);
             this.tp_Spectrum.Name = "tp_Spectrum";
             this.tp_Spectrum.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Spectrum.Size = new System.Drawing.Size(844, 334);
+            this.tp_Spectrum.Size = new System.Drawing.Size(844, 333);
             this.tp_Spectrum.TabIndex = 1;
             this.tp_Spectrum.Text = "Spectrum";
             this.tp_Spectrum.Enter += new System.EventHandler(this.tp_Spectrum_Enter);
@@ -455,7 +472,7 @@
             this.gb_Spectrum_NearestInfo.Controls.Add(this.label2);
             this.gb_Spectrum_NearestInfo.Location = new System.Drawing.Point(489, 54);
             this.gb_Spectrum_NearestInfo.Name = "gb_Spectrum_NearestInfo";
-            this.gb_Spectrum_NearestInfo.Size = new System.Drawing.Size(175, 271);
+            this.gb_Spectrum_NearestInfo.Size = new System.Drawing.Size(175, 270);
             this.gb_Spectrum_NearestInfo.TabIndex = 8;
             this.gb_Spectrum_NearestInfo.TabStop = false;
             this.gb_Spectrum_NearestInfo.Text = "Nearest Plane Info";
@@ -607,7 +624,7 @@
             this.gb_NearestPlaneMap.Controls.Add(this.gm_Nearest);
             this.gb_NearestPlaneMap.Location = new System.Drawing.Point(670, 54);
             this.gb_NearestPlaneMap.Name = "gb_NearestPlaneMap";
-            this.gb_NearestPlaneMap.Size = new System.Drawing.Size(168, 274);
+            this.gb_NearestPlaneMap.Size = new System.Drawing.Size(168, 273);
             this.gb_NearestPlaneMap.TabIndex = 6;
             this.gb_NearestPlaneMap.TabStop = false;
             this.gb_NearestPlaneMap.Text = "Nearest Plane Map";
@@ -634,7 +651,7 @@
             this.gm_Nearest.RoutesEnabled = true;
             this.gm_Nearest.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gm_Nearest.ShowTileGridLines = false;
-            this.gm_Nearest.Size = new System.Drawing.Size(162, 255);
+            this.gm_Nearest.Size = new System.Drawing.Size(162, 254);
             this.gm_Nearest.TabIndex = 0;
             this.gm_Nearest.Zoom = 0D;
             // 
@@ -645,7 +662,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gb_Spectrum.Location = new System.Drawing.Point(8, 54);
             this.gb_Spectrum.Name = "gb_Spectrum";
-            this.gb_Spectrum.Size = new System.Drawing.Size(475, 274);
+            this.gb_Spectrum.Size = new System.Drawing.Size(475, 273);
             this.gb_Spectrum.TabIndex = 5;
             this.gb_Spectrum.TabStop = false;
             this.gb_Spectrum.Text = "Spectrum";
@@ -657,7 +674,7 @@
             this.tp_Analysis.Controls.Add(this.panel1);
             this.tp_Analysis.Location = new System.Drawing.Point(4, 22);
             this.tp_Analysis.Name = "tp_Analysis";
-            this.tp_Analysis.Size = new System.Drawing.Size(844, 334);
+            this.tp_Analysis.Size = new System.Drawing.Size(844, 333);
             this.tp_Analysis.TabIndex = 3;
             this.tp_Analysis.Text = "Analysis";
             this.tp_Analysis.Enter += new System.EventHandler(this.tp_Analysis_Enter);
@@ -670,7 +687,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 137);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(844, 197);
+            this.panel2.Size = new System.Drawing.Size(844, 196);
             this.panel2.TabIndex = 1;
             // 
             // gb_Analysis_Player
@@ -682,7 +699,7 @@
             this.gb_Analysis_Player.Location = new System.Drawing.Point(0, 0);
             this.gb_Analysis_Player.MinimumSize = new System.Drawing.Size(565, 58);
             this.gb_Analysis_Player.Name = "gb_Analysis_Player";
-            this.gb_Analysis_Player.Size = new System.Drawing.Size(591, 197);
+            this.gb_Analysis_Player.Size = new System.Drawing.Size(591, 196);
             this.gb_Analysis_Player.TabIndex = 4;
             this.gb_Analysis_Player.TabStop = false;
             this.gb_Analysis_Player.Text = "Player";
@@ -695,7 +712,7 @@
             this.dtp_Analysis_MaxValue.Enabled = false;
             this.dtp_Analysis_MaxValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtp_Analysis_MaxValue.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_Analysis_MaxValue.Location = new System.Drawing.Point(463, 161);
+            this.dtp_Analysis_MaxValue.Location = new System.Drawing.Point(463, 160);
             this.dtp_Analysis_MaxValue.Name = "dtp_Analysis_MaxValue";
             this.dtp_Analysis_MaxValue.Size = new System.Drawing.Size(122, 20);
             this.dtp_Analysis_MaxValue.TabIndex = 25;
@@ -708,7 +725,7 @@
             this.dtp_Analysis_MinValue.Enabled = false;
             this.dtp_Analysis_MinValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dtp_Analysis_MinValue.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_Analysis_MinValue.Location = new System.Drawing.Point(6, 161);
+            this.dtp_Analysis_MinValue.Location = new System.Drawing.Point(6, 160);
             this.dtp_Analysis_MinValue.Name = "dtp_Analysis_MinValue";
             this.dtp_Analysis_MinValue.Size = new System.Drawing.Size(123, 20);
             this.dtp_Analysis_MinValue.TabIndex = 24;
@@ -717,7 +734,7 @@
             // sb_Analysis_Play
             // 
             this.sb_Analysis_Play.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.sb_Analysis_Play.Location = new System.Drawing.Point(146, 161);
+            this.sb_Analysis_Play.Location = new System.Drawing.Point(146, 160);
             this.sb_Analysis_Play.Maximum = 1000000;
             this.sb_Analysis_Play.Name = "sb_Analysis_Play";
             this.sb_Analysis_Play.Orientation = CustomScrollBar.ScrollBarOrientation.Horizontal;
@@ -736,7 +753,7 @@
             this.gb_Analysis_Controls.Dock = System.Windows.Forms.DockStyle.Right;
             this.gb_Analysis_Controls.Location = new System.Drawing.Point(591, 0);
             this.gb_Analysis_Controls.Name = "gb_Analysis_Controls";
-            this.gb_Analysis_Controls.Size = new System.Drawing.Size(253, 197);
+            this.gb_Analysis_Controls.Size = new System.Drawing.Size(253, 196);
             this.gb_Analysis_Controls.TabIndex = 2;
             this.gb_Analysis_Controls.TabStop = false;
             this.gb_Analysis_Controls.Text = "Controls";
@@ -747,7 +764,7 @@
             this.btn_Analysis_FastForward.Enabled = false;
             this.btn_Analysis_FastForward.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_FastForward.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_FastForward.Image")));
-            this.btn_Analysis_FastForward.Location = new System.Drawing.Point(202, 154);
+            this.btn_Analysis_FastForward.Location = new System.Drawing.Point(202, 153);
             this.btn_Analysis_FastForward.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_FastForward.Name = "btn_Analysis_FastForward";
             this.btn_Analysis_FastForward.Size = new System.Drawing.Size(47, 29);
@@ -763,7 +780,7 @@
             this.btn_Analysis_Forward.Enabled = false;
             this.btn_Analysis_Forward.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_Forward.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_Forward.Image")));
-            this.btn_Analysis_Forward.Location = new System.Drawing.Point(153, 154);
+            this.btn_Analysis_Forward.Location = new System.Drawing.Point(153, 153);
             this.btn_Analysis_Forward.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_Forward.Name = "btn_Analysis_Forward";
             this.btn_Analysis_Forward.Size = new System.Drawing.Size(47, 29);
@@ -779,7 +796,7 @@
             this.btn_Analysis_Pause.Enabled = false;
             this.btn_Analysis_Pause.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_Pause.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_Pause.Image")));
-            this.btn_Analysis_Pause.Location = new System.Drawing.Point(104, 154);
+            this.btn_Analysis_Pause.Location = new System.Drawing.Point(104, 153);
             this.btn_Analysis_Pause.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_Pause.Name = "btn_Analysis_Pause";
             this.btn_Analysis_Pause.Size = new System.Drawing.Size(47, 29);
@@ -795,7 +812,7 @@
             this.btn_Analysis_Back.Enabled = false;
             this.btn_Analysis_Back.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_Back.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_Back.Image")));
-            this.btn_Analysis_Back.Location = new System.Drawing.Point(55, 154);
+            this.btn_Analysis_Back.Location = new System.Drawing.Point(55, 153);
             this.btn_Analysis_Back.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_Back.Name = "btn_Analysis_Back";
             this.btn_Analysis_Back.Size = new System.Drawing.Size(47, 29);
@@ -811,7 +828,7 @@
             this.btn_Analysis_Rewind.Enabled = false;
             this.btn_Analysis_Rewind.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_Analysis_Rewind.Image = ((System.Drawing.Image)(resources.GetObject("btn_Analysis_Rewind.Image")));
-            this.btn_Analysis_Rewind.Location = new System.Drawing.Point(6, 154);
+            this.btn_Analysis_Rewind.Location = new System.Drawing.Point(6, 153);
             this.btn_Analysis_Rewind.Margin = new System.Windows.Forms.Padding(0);
             this.btn_Analysis_Rewind.Name = "btn_Analysis_Rewind";
             this.btn_Analysis_Rewind.Size = new System.Drawing.Size(47, 29);
@@ -1063,6 +1080,7 @@
             // 
             // ss_Main
             // 
+            this.ss_Main.AutoSize = false;
             this.ss_Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsl_Status,
             this.tsl_Dummy,
@@ -1074,7 +1092,10 @@
             this.tsl_Database_LED_SRTM3,
             this.tsl_Database_LED_SRTM1,
             this.tsl_Database_LED_ASTER3,
-            this.tsl_Database_LED_ASTER1});
+            this.tsl_Database_LED_ASTER1,
+            this.tsl_Track,
+            this.tsl_Rot,
+            this.tsl_CAT});
             this.ss_Main.Location = new System.Drawing.Point(0, 706);
             this.ss_Main.Name = "ss_Main";
             this.ss_Main.ShowItemToolTips = true;
@@ -1089,7 +1110,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.tsl_Status.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
             this.tsl_Status.Name = "tsl_Status";
-            this.tsl_Status.Size = new System.Drawing.Size(714, 19);
+            this.tsl_Status.Size = new System.Drawing.Size(606, 19);
             this.tsl_Status.Spring = true;
             this.tsl_Status.Text = "No Messages.";
             this.tsl_Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1211,6 +1232,39 @@
             this.tsl_Database_LED_ASTER1.Size = new System.Drawing.Size(12, 14);
             this.tsl_Database_LED_ASTER1.Text = " SRTM3 database status LED";
             this.tsl_Database_LED_ASTER1.ToolTipText = "SRTM3 database status LED";
+            // 
+            // tsl_Track
+            // 
+            this.tsl_Track.AutoSize = false;
+            this.tsl_Track.BackColor = System.Drawing.SystemColors.Control;
+            this.tsl_Track.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsl_Track.ForeColor = System.Drawing.Color.DarkGray;
+            this.tsl_Track.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
+            this.tsl_Track.Name = "tsl_Track";
+            this.tsl_Track.Size = new System.Drawing.Size(32, 14);
+            this.tsl_Track.Text = "TRK";
+            // 
+            // tsl_Rot
+            // 
+            this.tsl_Rot.AutoSize = false;
+            this.tsl_Rot.BackColor = System.Drawing.SystemColors.Control;
+            this.tsl_Rot.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsl_Rot.ForeColor = System.Drawing.Color.DarkGray;
+            this.tsl_Rot.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
+            this.tsl_Rot.Name = "tsl_Rot";
+            this.tsl_Rot.Size = new System.Drawing.Size(32, 14);
+            this.tsl_Rot.Text = "ROT";
+            // 
+            // tsl_CAT
+            // 
+            this.tsl_CAT.AutoSize = false;
+            this.tsl_CAT.BackColor = System.Drawing.SystemColors.Control;
+            this.tsl_CAT.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsl_CAT.ForeColor = System.Drawing.Color.DarkGray;
+            this.tsl_CAT.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
+            this.tsl_CAT.Name = "tsl_CAT";
+            this.tsl_CAT.Size = new System.Drawing.Size(32, 14);
+            this.tsl_CAT.Text = "CAT";
             // 
             // btn_Map_PlayPause
             // 
@@ -2062,7 +2116,6 @@
             this.pa_CommonInfo.PerformLayout();
             this.gb_Map_Buttons.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -2213,6 +2266,10 @@
         private GMap.NET.WindowsForms.GMapControl gm_Cache;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Database_LED_ASTER3;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Database_LED_ASTER1;
+        private System.Windows.Forms.Panel pa_Rig;
+        private System.Windows.Forms.ToolStripStatusLabel tsl_CAT;
+        private System.Windows.Forms.ToolStripStatusLabel tsl_Rot;
+        private System.Windows.Forms.ToolStripStatusLabel tsl_Track;
     }
 }
 

@@ -1,9 +1,50 @@
-﻿2020-xx-xx: V1.4.0.0
+﻿2021-xx-xx: V1.4.1.0
+====================
+
+- Bugfix:  RIT on rig is reset when tracking started --> fixed
+- Bugfix:  Exceptions while accessing elevation database from background processes and more than one elevation model was ticked --> database status shows "Error" --> fixed
+- Bugfix:  Exceptions while accessing elevation database and local obstructions have NULL values --> fixed
+- Bugfix:  Database update was not started when last status was "Error" and no other changes occured
+- Bugfix:  Exceptions were thrown sometimes on concurrent database access from different threads, missing database locks --> fixed
+- Feature: configurable update rate for tracking
+- Feature: configurable time offset for tracking
+- Feature: optional show a locator grid on map
+- Feature: optional show distance circles around own location
+
+2021-04-13: V1.4.0.2
+====================
+
+- Feature: complete rework of tracking module with Status visualization
+- Feature: CAT now handles OmniRi V1.19 or V2.x dynamically
+- Feature: refined extrapolation of plane positions
+- Bugfix:  Planes were shown as hot when crossing path "behind" the DX station --> fixed
+
+2021-04-5: V1.4.0.1 
+====================
+
+- Feature:	introducing CAT Interface with OmniRig V2.1
+- Feature:	introducing Doppler shift compensation with CAT
+
+2021-xx-xx: V1.4.0.0 (not published)
 ====================
 
 - Feature:	introducing ASTER Digital Elevation Model covering earth surface almost complete, but data are very raw and have to filtered, only useful when coverage > 60° needed
-- Feature:	new OpenTopoMap provider, not really suitable for surpervising aircraft travel but has very nice contour levels (based on SRTM)
+- Feature:	new OpenTopoMap provider, not really suitable for supervising aircraft travel but has very nice contour levels (based on SRTM)
 - Feature:	adjust main map opacity via "Options/Map" which is helpful in case map colors are very prominent
+
+2021-12-23: V1.3.3.6
+====================
+
+- Feature:  Elevation grid overlay on "Optionms/Stations/Map" to better understand elevation resolution issues and local situation (for zoom levels >= 17)
+- Bugfix:	AirScout crashes when opening Crossing History Dialog window  --> fixed (tnx PU34HAG)
+- Bugfix:	Near field suppression did not work correctly, showing strange local obstructions under some circumstances --> fixed
+- Bugfix:	No more planes visible (Exception messages shown in status bar and log file) with some language settings (at least Turkish) --> fixed (tnx TA2NC)
+
+2020-04-25: V1.3.3.5
+====================
+
+- Bugfix:	Chunked transport of web content failed while fetching plane feeds (OpenSky, Virtual Radar Server) --> fixed
+- Bugfix:	Drawing map throws an exception under some circumstances --> fixed, added some error handling (tnx SM7LCB)
 
 2020-04-25: V1.3.3.4
 ====================

@@ -29,4 +29,11 @@ namespace AirScout.Core
         FASTFORWARD = 5
     }
 
+    public enum AIRSCOUTTRACKMODE
+    {
+        NONE = 0,
+        SINGLE = 1,
+        TRACK = 2,
+        ERROR = 128
+    }
 }

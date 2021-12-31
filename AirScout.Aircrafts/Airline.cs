@@ -81,7 +81,7 @@ namespace AirScout.Aircrafts
             DataColumn ICAO = this.Columns.Add("ICAO", typeof(string));
             DataColumn Airline = this.Columns.Add("Airline", typeof(string));
             DataColumn Country = this.Columns.Add("Country", typeof(string));
-            DataColumn LastUpdated = this.Columns.Add("LastUpdated", typeof(string));
+            DataColumn LastUpdated = this.Columns.Add("LastUpdated", typeof(int));
             // create primary key
             DataColumn[] keys = new DataColumn[2];
             keys[0] = IATA;
