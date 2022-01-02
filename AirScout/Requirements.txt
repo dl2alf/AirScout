@@ -1,5 +1,12 @@
 ***************** AirScout Requirements **************************
 
+- GreatCircle, distance and locator layer on map (DJ5AR)
 - Snooze button for alarm on main window, clickable in PLAY mode ()
+- Calculate Doppler
+
+* watch list
+- Add/remove call sign from Multi View tab over UDP command
+- add stations to watchlist based on DXCC, Loc, QTF range from QTF1 to QTF2
+
 
 

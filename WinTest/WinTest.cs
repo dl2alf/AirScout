@@ -12,6 +12,8 @@ namespace WinTest
         PKTRCVD = 2,
         SETAZIMUTH = 100,
         SETELEVATION = 101,
+        ASADDWATCH = 247,
+        ASREMOVEWATCH = 248,
         ASWATCHLIST = 249,
         ASSETPATH = 252,
         ASSHOWPATH = 253,
@@ -83,6 +85,8 @@ namespace WinTest
             text = text.Remove(0, text.IndexOf(" ") + 1);
             // Clean up the message --> scrub last byte
             text = text.Substring(0, text.Length - 1).Replace("\"", "");
+            // clean up newer messages with 2 placeholders
+            text = text.TrimEnd('?');
             // convert bytes coded in UTF8 to text
             Data = text.Substring(0, text.Length);
             // get checksum

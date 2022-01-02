@@ -397,6 +397,12 @@ namespace AirScout
             MapData.Database.TileDeleteAll();
         }
 
+        private void btn_DeleteSingleStation_Click(object sender, EventArgs e)
+        {
+            DeleteSingleStationDlg Dlg = new DeleteSingleStationDlg();
+            Dlg.ShowDialog();
+        }
+
         private void btn_Options_ScoutBase_Database_Maintenance_Click(object sender, EventArgs e)
         {
             DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(StationData.Database);

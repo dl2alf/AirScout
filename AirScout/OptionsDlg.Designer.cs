@@ -7162,6 +7162,18 @@
             this.bw_StationDataUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_StationDataUpdater_ProgressChanged);
             this.bw_StationDataUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_StationDataUpdater_RunWorkerCompleted);
             // 
+            // btn_DeleteSingleStation
+            // 
+            this.btn_DeleteSingleStation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_DeleteSingleStation.Location = new System.Drawing.Point(165, 48);
+            this.btn_DeleteSingleStation.Name = "btn_DeleteSingleStation";
+            this.btn_DeleteSingleStation.Size = new System.Drawing.Size(122, 23);
+            this.btn_DeleteSingleStation.TabIndex = 3;
+            this.btn_DeleteSingleStation.Text = "Delete Single Station";
+            this.tt_Options.SetToolTip(this.btn_DeleteSingleStation, "Deletes all cached map tiles from database");
+            this.btn_DeleteSingleStation.UseVisualStyleBackColor = true;
+            this.btn_DeleteSingleStation.Click += new System.EventHandler(this.btn_DeleteSingleStation_Click);
+            // 
             // bw_ASTER3_MapUpdater
             // 
             this.bw_ASTER3_MapUpdater.WorkerReportsProgress = true;
@@ -7822,6 +7834,7 @@
         private System.Windows.Forms.CheckBox cb_Options_Elevation_ASTER1_EnableCache;
         private System.Windows.Forms.CheckBox cb_Options_Elevation_ASTER1;
         private System.Windows.Forms.Button btn_Options_Path_Export;
+        private System.Windows.Forms.Button btn_DeleteSingleStation;
         private System.Windows.Forms.Label label147;
         private System.Windows.Forms.Label label148;
         private PercentageControl ud_Options_Map_Opacity;
