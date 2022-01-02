@@ -460,32 +460,50 @@ namespace ScoutBase.Propagation
             // return null if elevation path is null for whatever reason
             if (ep == null)
                 return null;
-            for (int i = 0; i < ep.Count; i++)
+            //            using (StreamWriter sw = new StreamWriter(File.OpenWrite("propagation.csv")))
             {
-                double dist1 = i * stepwidth / 1000.0;
-                double dist2 = (ep.Count - i - 1) * stepwidth / 1000.0;
-                double f1c1 = ScoutBase.Core.Propagation.F1Radius(qrg, dist1, dist2) * f1_clearance;
-                double f1c2 = ScoutBase.Core.Propagation.F1Radius(qrg, dist2, dist1) * f1_clearance;
-                double nf = NearFieldSuppression / 1000.0;
-                double eps1;
-                double eps2;
-                if (dist1 > nf)
+                //                sw.WriteLine("i;dist1;dist2;f1c1;f1c2;elv;eps1;eps1_min;eps2;eps2_min");
+                for (int i = 0; i < ep.Count; i++)
                 {
-                    eps1 = ScoutBase.Core.Propagation.EpsilonFromHeights(h1, dist1, ep.Path[i] + f1c1, radius);
+                    double dist1 = i * stepwidth / 1000.0;
+                    double dist2 = (ep.Count - i - 1) * stepwidth / 1000.0;
+                    double f1c1 = ScoutBase.Core.Propagation.F1Radius(qrg, dist1, dist2) * f1_clearance;
+                    double f1c2 = ScoutBase.Core.Propagation.F1Radius(qrg, dist2, dist1) * f1_clearance;
+                    double nf = NearFieldSuppression / 1000.0;
+                    double eps1;
+                    double eps2;
+                    if (dist1 > nf)
+                        eps1 = ScoutBase.Core.Propagation.EpsilonFromHeights(h1, dist1, ep.Path[i] + f1c1, radius);
+                    else
+                        eps1 = ScoutBase.Core.Propagation.EpsilonFromHeights(h1, nf, ep.Path[i] + f1c1, radius);
                     if (eps1 > eps1_min)
                         eps1_min = eps1;
-                }
-                if (dist2 > nf)
-                {
-                    eps2 = ScoutBase.Core.Propagation.EpsilonFromHeights(h2, dist2, ep.Path[i] + f1c2, radius);
+                    if (dist2 > nf)
+                        eps2 = ScoutBase.Core.Propagation.EpsilonFromHeights(h2, dist2, ep.Path[i] + f1c2, radius);
+                    else
+                        eps2 = ScoutBase.Core.Propagation.EpsilonFromHeights(h2, nf, ep.Path[i] + f1c2, radius);
                     if (eps2 > eps2_min)
                         eps2_min = eps2;
-                }
-                if (caller != null)
-                {
-                    // abort calculation if cancellation pending
-                    if (caller.WorkerSupportsCancellation && caller.CancellationPending)
-                        return null;
+                    if (caller != null)
+                    {
+                        // abort calculation if cancellation pending
+                        if (caller.WorkerSupportsCancellation && caller.CancellationPending)
+                            return null;
+                    }
+                    /*
+                    sw.WriteLine(
+                        i.ToString() + ";" +
+                        dist1.ToString("F8") + ";" + 
+                        dist2.ToString("F8") + ";" +
+                        f1c1.ToString("F8") + ";" +
+                        f1c2.ToString("F8") + ";" +
+                        ep.Path[i].ToString() + ";" +
+                        eps1.ToString("F8") + ";" +
+                        eps1_min.ToString("F8") + ";" +
+                        eps2.ToString("F8") + ";" +
+                        eps2_min.ToString("F8")
+                        );
+                        */
                 }
             }
             PropagationPathDesignator pp = new PropagationPathDesignator(lat1, lon1, h1, lat2, lon2, h2, qrg, radius, f1_clearance, stepwidth, eps1_min, eps2_min, localobstruction);
