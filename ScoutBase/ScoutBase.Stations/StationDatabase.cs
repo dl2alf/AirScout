@@ -539,6 +539,18 @@ namespace ScoutBase.Stations
 
         }
 
+        public List<LocationDesignator> LocationGetAll(string call)
+        {
+            List<LocationDesignator> l = new List<LocationDesignator>();
+            DataTable Result = db.Select("SELECT * FROM " + LocationDesignator.TableName + " WHERE CALL LIKE '" + call + "' ORDER BY Call ASC");
+            if ((Result == null) || (Result.Rows.Count == 0))
+                return l;
+            foreach (DataRow row in Result.Rows)
+                l.Add(new LocationDesignator(row));
+            return l;
+
+        }
+
         public List<LocationDesignator> LocationGetAll(BackgroundWorker caller)
         {
             // gets all locations from database

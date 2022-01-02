@@ -551,6 +551,7 @@
             this.bw_SRTM1_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_GLOBE_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_StationDataUpdater = new System.ComponentModel.BackgroundWorker();
+            this.btn_DeleteSingleStation = new System.Windows.Forms.Button();
             this.bw_ASTER3_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.bw_ASTER1_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.cb_Options_Locators_Activate = new System.Windows.Forms.CheckBox();

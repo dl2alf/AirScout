@@ -141,7 +141,7 @@ namespace System.Net
             return false;
         }
 
-        public static string DownloadFile (string url, int timeout, string apikey)
+        public static string DownloadFile(string url, int timeout, string apikey)
         {
             string response = "";
             Uri uri = null;
