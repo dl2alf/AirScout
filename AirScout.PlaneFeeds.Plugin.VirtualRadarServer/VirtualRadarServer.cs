@@ -178,7 +178,7 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
     }
 
 
-[Export(typeof(IPlaneFeedPlugin))]
+    [Export(typeof(IPlaneFeedPlugin))]
     [ExportMetadata("Name", "PlaneFeedPlugin")]
     public class VirtualRadarServerPlugin : IPlaneFeedPlugin
     {
@@ -297,7 +297,7 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
                 APIKey = Settings.APIKey;
                 return;
             }
-            
+
             // get AirScout internal key
             try
             {
@@ -377,7 +377,6 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
             {
                 // deserialize JSON
                 dynamic root = JsonConvert.DeserializeObject(json);
-
                 // get local time of request in milliseconds
                 DateTime lt = DateTime.UtcNow;
                 long ltime = (long)(lt - new DateTime(1970, 1, 1)).TotalMilliseconds;
@@ -410,7 +409,7 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
                     {
                         PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
                         // get hex first
-                        plane.Hex = ReadPropertyString(ac, "Icao").Trim().Replace("\"","");
+                        plane.Hex = ReadPropertyString(ac, "Icao").Trim().Replace("\"", "");
                         // get position
                         plane.Lat = ReadPropertyDouble(ac, "Lat");
                         plane.Lon = ReadPropertyDouble(ac, "Long");
@@ -549,7 +548,7 @@ namespace AirScout.PlaneFeeds.Plugin.VirtualRadarServer
             return decrypted;
         }
 
-    [System.Diagnostics.DebuggerNonUserCode]
+        [System.Diagnostics.DebuggerNonUserCode]
         private string ReadPropertyString(dynamic o, string propertyname)
         {
             string s = null;

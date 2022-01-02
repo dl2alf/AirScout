@@ -74,7 +74,7 @@ namespace System.Net
                     throw new TimeoutException("Connection timed out.");
             }
             while (!trailer.Contains("\r\n"));
-            Console.WriteLine("Reading content [" + contentlength.ToString() + " bytes]: " + resp);
+            //            Console.WriteLine("Reading content [" + contentlength.ToString() + " bytes]: " + resp);
             response += resp;
             return true;
         }
@@ -91,50 +91,57 @@ namespace System.Net
             int contentlength = 0;
             // chunked transfer, first line should contain content length
             // read stream bytewise until CRLF is detected
-            do
+            try
             {
-                count = stream.Read(buff, 0, buff.Length);
-                strcontentlength += Encoding.ASCII.GetString(buff, 0, buff.Length);
-                if (st.ElapsedMilliseconds > timeout)
-                    throw new TimeoutException("Connection timed out.");
+                do
+                {
+                    count = stream.Read(buff, 0, buff.Length);
+                    strcontentlength += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                    if (st.ElapsedMilliseconds > timeout)
+                        throw new TimeoutException("Connection timed out.");
+                }
+                while (!strcontentlength.Contains("\r\n"));
+                strcontentlength = strcontentlength.Replace("\r\n", "");
+                contentlength = int.Parse(strcontentlength, System.Globalization.NumberStyles.HexNumber);
+                // finished reading all chunks
+                if (contentlength == 0)
+                {
+                    Console.WriteLine("Reading chunked content finished");
+                    return true;
+                }
+                int bytesread = 0;
+                // read content bytewise
+                while (bytesread < contentlength)
+                {
+                    bytesread += stream.Read(buff, 0, buff.Length);
+                    // add it to response
+                    resp += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                    if (st.ElapsedMilliseconds > timeout)
+                        throw new TimeoutException("Connection timed out.");
+                }
+                string trailer = "";
+                // reassign buffer
+                buff = new byte[1];
+                // read stream bytewise until CRLFCRLF is detected, should be the next two bytes
+                do
+                {
+                    count = stream.Read(buff, 0, buff.Length);
+                    trailer += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                    if (st.ElapsedMilliseconds > timeout)
+                        throw new TimeoutException("Connection timed out.");
+                }
+                while (!trailer.Contains("\r\n"));
             }
-            while (!strcontentlength.Contains("\r\n"));
-            strcontentlength = strcontentlength.Replace("\r\n", "");
-            contentlength = int.Parse(strcontentlength, System.Globalization.NumberStyles.HexNumber);
-            // finished reading all chunks
-            if (contentlength == 0)
+            catch (Exception ex)
             {
-                Console.WriteLine("Reading chunked content finished");
-                return true;
+                Console.WriteLine("Error while reading chunked content: " + ex.Message);
             }
-            int bytesread = 0;
-            // read content bytewise
-            while (bytesread < contentlength)
-            {
-                bytesread += stream.Read(buff, 0, buff.Length);
-                // add it to response
-                resp += Encoding.ASCII.GetString(buff, 0, buff.Length);
-                if (st.ElapsedMilliseconds > timeout)
-                    throw new TimeoutException("Connection timed out.");
-            }
-            string trailer = "";
-            // reassign buffer
-            buff = new byte[1];
-            // read stream bytewise until CRLFCRLF is detected, should be the next two bytes
-            do
-            {
-                count = stream.Read(buff, 0, buff.Length);
-                trailer += Encoding.ASCII.GetString(buff, 0, buff.Length);
-                if (st.ElapsedMilliseconds > timeout)
-                    throw new TimeoutException("Connection timed out.");
-            }
-            while (!trailer.Contains("\r\n"));
-            Console.WriteLine("Reading chunked content [" + contentlength.ToString() + " bytes]: " + resp);
+            // Console.WriteLine("Reading chunked content [" + contentlength.ToString() + " bytes]: " + resp);
             response += resp;
             return false;
         }
 
-        public static string DownloadFile (string url, int timeout, string apikey)
+        public static string DownloadFile(string url, int timeout, string apikey)
         {
             string response = "";
             Uri uri = null;
@@ -209,13 +216,13 @@ namespace System.Net
 
     class MyTlsAuthentication : TlsAuthentication
     {
-        public TlsCredentials GetClientCredentials(CertificateRequest certificateRequest) 
-        { 
-            return null; 
+        public TlsCredentials GetClientCredentials(CertificateRequest certificateRequest)
+        {
+            return null;
         }
 
-        public void NotifyServerCertificate(Certificate serverCertificate) 
-        { 
+        public void NotifyServerCertificate(Certificate serverCertificate)
+        {
         }
     }
 
