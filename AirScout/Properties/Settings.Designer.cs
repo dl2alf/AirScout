@@ -2307,6 +2307,18 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public string StationsMap_OverlayElevation {
+            get {
+                return ((string)(this["StationsMap_OverlayElevation"]));
+            }
+            set {
+                this["StationsMap_OverlayElevation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Maidenhead locator system elvation tiles calculated by DL2ALF based on elevation " +
             "data of the ASTER  project:\r\n\r\nThe ASTER Global Digital Elevation Model (GDEM) V" +
             "ersion 3 (ASTGTM) provides a global digital elevation model (DEM) of land areas " +
@@ -2681,18 +2693,6 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
             }
             set {
                 this["Map_ShowDistances"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public string StationsMap_OverlayElevation {
-            get {
-                return ((string)(this["StationsMap_OverlayElevation"]));
-            }
-            set {
-                this["StationsMap_OverlayElevation"] = value;
             }
         }
     }
