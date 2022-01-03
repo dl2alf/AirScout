@@ -211,8 +211,10 @@ namespace ScoutBase.Stations
 
         public List<LocationDesignator> LocationFindAll(string call)
         {
-            LocationDesignator ld = new LocationDesignator(call);
             List<LocationDesignator> l = new List<LocationDesignator>();
+            if (String.IsNullOrEmpty(call))
+                return l;
+            LocationDesignator ld = new LocationDesignator(call);
             lock (db.DBCommand)
             {
                 // Loc is empty --> search for last recent location for this call
@@ -235,6 +237,8 @@ namespace ScoutBase.Stations
         public LocationDesignator LocationFindLastRecent(string call)
         {
             LocationDesignator ld = new LocationDesignator(call);
+            if (String.IsNullOrEmpty(call))
+                return null;
             lock (db.DBCommand)
             {
                 // Loc is empty --> search for last recent location for this call
@@ -251,6 +255,8 @@ namespace ScoutBase.Stations
         public LocationDesignator LocationFindMostHit(string call)
         {
             LocationDesignator ld = new LocationDesignator(call);
+            if (String.IsNullOrEmpty(call))
+                return null;
             lock (db.DBCommand)
             {
                 // Loc is empty --> search for last recent location for this call
@@ -266,11 +272,15 @@ namespace ScoutBase.Stations
 
         public LocationDesignator LocationFind(string call)
         {
+            if (String.IsNullOrEmpty(call))
+                return null;
             return LocationFindLastRecent(call);
         }
 
         public LocationDesignator LocationFind(string call, string loc)
         {
+            if (String.IsNullOrEmpty(call) || String.IsNullOrEmpty(loc))
+                return null;
             LocationDesignator ld = new LocationDesignator(call, loc);
             return LocationFind(ld);
         }
@@ -300,6 +310,8 @@ namespace ScoutBase.Stations
 
         public LocationDesignator LocationFindOrUpdateOrCreate(string call, double lat, double lon)
         {
+            if (String.IsNullOrEmpty(call))
+                return null;
             LocationDesignator ld = new LocationDesignator(call, MaidenheadLocator.LocFromLatLon(lat, lon, false, 3));
             // try to find entry with call & loc matching
             ld = LocationFind(ld);
@@ -326,6 +338,8 @@ namespace ScoutBase.Stations
 
         public LocationDesignator LocationFindOrCreate(string call, string loc)
         {
+            if (String.IsNullOrEmpty(call) || String.IsNullOrEmpty(loc))
+                return null;
             LocationDesignator ld = this.LocationFind(call, loc);
             if (ld == null)
             {

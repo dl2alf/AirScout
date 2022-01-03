@@ -3915,6 +3915,7 @@
             // 
             // groupBox47
             // 
+            this.groupBox47.Controls.Add(this.btn_DeleteSingleStation);
             this.groupBox47.Controls.Add(this.btn_DeleteAllMapTiles);
             this.groupBox47.Controls.Add(this.btn_Options_DeleteAllPropagationPaths);
             this.groupBox47.Controls.Add(this.btn_Options_DeleteAllElevationPaths);

@@ -536,6 +536,7 @@ namespace ScoutBase.Propagation
                 return null;
             //            using (StreamWriter sw = new StreamWriter(File.OpenWrite("propagation.csv")))
             {
+
             //                sw.WriteLine("i;dist1;dist2;f1c1;f1c2;elv;eps1;eps1_min;eps2;eps2_min");
                 for (int i = 0; i < ep.Count; i++)
                 {

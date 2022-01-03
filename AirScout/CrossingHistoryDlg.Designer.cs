@@ -36,19 +36,19 @@
             this.ss_Main = new System.Windows.Forms.StatusStrip();
             this.tsl_Main = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.ud_Analysis_AmbiguousGap = new System.Windows.Forms.NumericUpDown();
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel = new System.Windows.Forms.CheckBox();
             this.btn_History_Export = new System.Windows.Forms.Button();
             this.btn_History_Cancel = new System.Windows.Forms.Button();
             this.btn_History_Calculate = new System.Windows.Forms.Button();
             this.tt_Crossing_History = new System.Windows.Forms.ToolTip(this.components);
             this.ch_Crossing_History = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel = new System.Windows.Forms.CheckBox();
-            this.ud_Analysis_AmbiguousGap = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.ss_Main.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ch_Crossing_History)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ud_Analysis_AmbiguousGap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ch_Crossing_History)).BeginInit();
             this.SuspendLayout();
             // 
             // bw_History
@@ -89,6 +89,45 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(893, 100);
             this.panel1.TabIndex = 2;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(393, 51);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(32, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "secs.";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 51);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(276, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Timespan within two crossings considered as ambiguous:";
+            // 
+            // ud_Analysis_AmbiguousGap
+            // 
+            this.ud_Analysis_AmbiguousGap.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Analysis_CrossingHistory_AmbigousGap", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.ud_Analysis_AmbiguousGap.Location = new System.Drawing.Point(318, 49);
+            this.ud_Analysis_AmbiguousGap.Name = "ud_Analysis_AmbiguousGap";
+            this.ud_Analysis_AmbiguousGap.Size = new System.Drawing.Size(60, 20);
+            this.ud_Analysis_AmbiguousGap.TabIndex = 4;
+            this.ud_Analysis_AmbiguousGap.Value = global::AirScout.Properties.Settings.Default.Analysis_CrossingHistory_AmbigousGap;
+            // 
+            // cb_Analysis_CrossingHistory_WithSignlaLevel
+            // 
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel.AutoSize = true;
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Checked = global::AirScout.Properties.Settings.Default.Analysis_CrossingHistory_WithSignalLevel;
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Analysis_CrossingHistory_WithSignalLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Location = new System.Drawing.Point(12, 21);
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Name = "cb_Analysis_CrossingHistory_WithSignlaLevel";
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Size = new System.Drawing.Size(258, 17);
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel.TabIndex = 3;
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Text = "Consider crossings with recorded signal level only";
+            this.cb_Analysis_CrossingHistory_WithSignlaLevel.UseVisualStyleBackColor = true;
             // 
             // btn_History_Export
             // 
@@ -151,45 +190,6 @@
             this.ch_Crossing_History.TabIndex = 5;
             this.ch_Crossing_History.Text = "History";
             // 
-            // cb_Analysis_CrossingHistory_WithSignlaLevel
-            // 
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel.AutoSize = true;
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Checked = global::AirScout.Properties.Settings.Default.Analysis_CrossingHistory_WithSignalLevel;
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Analysis_CrossingHistory_WithSignalLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Location = new System.Drawing.Point(12, 21);
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Name = "cb_Analysis_CrossingHistory_WithSignlaLevel";
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Size = new System.Drawing.Size(258, 17);
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel.TabIndex = 3;
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel.Text = "Consider crossings with recorded signal level only";
-            this.cb_Analysis_CrossingHistory_WithSignlaLevel.UseVisualStyleBackColor = true;
-            // 
-            // ud_Analysis_AmbiguousGap
-            // 
-            this.ud_Analysis_AmbiguousGap.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Analysis_CrossingHistory_AmbiguousGap", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.ud_Analysis_AmbiguousGap.Location = new System.Drawing.Point(318, 49);
-            this.ud_Analysis_AmbiguousGap.Name = "ud_Analysis_AmbiguousGap";
-            this.ud_Analysis_AmbiguousGap.Size = new System.Drawing.Size(60, 20);
-            this.ud_Analysis_AmbiguousGap.TabIndex = 4;
-            this.ud_Analysis_AmbiguousGap.Value = global::AirScout.Properties.Settings.Default.Analysis_CrossingHistory_AmbigousGap;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 51);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(276, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Timespan within two crossings considered as ambiguous:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(393, 51);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "secs.";
-            // 
             // CrossingHistoryDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -206,8 +206,8 @@
             this.ss_Main.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ch_Crossing_History)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ud_Analysis_AmbiguousGap)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ch_Crossing_History)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

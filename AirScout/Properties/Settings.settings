@@ -604,7 +604,7 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
     <Setting Name="Map_Preloader_MaxZoom" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">11</Value>
     </Setting>
-    <Setting Name="StationsMap_OverlayElevation" Type="System.String" Scope="User">
+    <Setting Name="StationsMap_OverlayElevation" Type="System.Boolean" Scope="User">
 	  <Value Profile="(Default)">False</Value>
 	</Setting>
     <Setting Name="Elevation_ASTER3_Copyright" Type="System.String" Scope="User">

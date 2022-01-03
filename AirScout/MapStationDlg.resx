@@ -122,4 +122,10 @@
 Use the lat/lon textboxes for numeric input or enter a valid Maidenhead Locator.
 Drag the needle on the map for exact location. Use mouse wheel or +/- buttons to zoom in and out.</value>
   </data>
+  <metadata name="ss_Main.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="bw_Elevationgrid.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>111, 17</value>
+  </metadata>
 </root>

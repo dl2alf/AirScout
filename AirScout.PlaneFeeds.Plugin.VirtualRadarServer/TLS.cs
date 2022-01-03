@@ -216,13 +216,13 @@ namespace System.Net
 
     class MyTlsAuthentication : TlsAuthentication
     {
-        public TlsCredentials GetClientCredentials(CertificateRequest certificateRequest) 
-        { 
-            return null; 
+        public TlsCredentials GetClientCredentials(CertificateRequest certificateRequest)
+        {
+            return null;
         }
 
-        public void NotifyServerCertificate(Certificate serverCertificate) 
-        { 
+        public void NotifyServerCertificate(Certificate serverCertificate)
+        {
         }
     }
 

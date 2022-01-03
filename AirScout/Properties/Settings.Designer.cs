@@ -2308,9 +2308,10 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public string StationsMap_OverlayElevation {
+
+        public bool StationsMap_OverlayElevation {
             get {
-                return ((string)(this["StationsMap_OverlayElevation"]));
+                return ((bool)(this["StationsMap_OverlayElevation"]));
             }
             set {
                 this["StationsMap_OverlayElevation"] = value;
