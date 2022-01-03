@@ -5,7 +5,7 @@
     <Setting Name="Server_URL" Type="System.String" Scope="User">
       <Value Profile="(Default)">localhost</Value>
     </Setting>
-    <Setting Name="Server_Port" Type="System.Int32" Scope="User">
+    <Setting Name="Server_Port" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">9880</Value>
     </Setting>
     <Setting Name="RefreshRate" Type="System.Int32" Scope="User">
@@ -110,7 +110,7 @@
     <Setting Name="Planes_Filter_Min_Alt" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5000</Value>
     </Setting>
-    <Setting Name="Planes_Filter_Min_Category" Type="AirScout.Aircrafts.PLANECATEGORY" Scope="User">
+    <Setting Name="Planes_Filter_Min_Category" Type="AirScout.Core.PLANECATEGORY" Scope="User">
       <Value Profile="(Default)">NONE</Value>
     </Setting>
     <Setting Name="Path_Band_Settings" Type="AirScout.Core.BandSettings" Scope="User">

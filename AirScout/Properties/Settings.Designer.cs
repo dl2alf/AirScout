@@ -12,7 +12,7 @@ namespace AirScout.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -2308,12 +2308,392 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+
         public bool StationsMap_OverlayElevation {
             get {
                 return ((bool)(this["StationsMap_OverlayElevation"]));
             }
             set {
                 this["StationsMap_OverlayElevation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Maidenhead locator system elvation tiles calculated by DL2ALF based on elevation " +
+            "data of the ASTER  project:\r\n\r\nThe ASTER Global Digital Elevation Model (GDEM) V" +
+            "ersion 3 (ASTGTM) provides a global digital elevation model (DEM) of land areas " +
+            "on Earth at a spatial resolution of 1 arc second (approximately 30 meter horizon" +
+            "tal posting at the equator).\r\n\r\nThe development of the ASTER GDEM data products " +
+            "is a collaborative effort between National Aeronautics and Space Administration " +
+            "(NASA) and Japan’s Ministry of Economy, Trade, and Industry (METI).\r\nThe ASTER G" +
+            "DEM data products are created by the Sensor Information Laboratory Corporation (" +
+            "SILC) in Tokyo.\r\n\r\nThe ASTER GDEM Version 3 data product was created from the au" +
+            "tomated processing of the entire ASTER Level 1A archive of scenes acquired betwe" +
+            "en March 1, 2000, and November 30, 2013\r\nStereo correlation was used to produce " +
+            "over one million individual scene based ASTER DEMs, to which cloud masking was a" +
+            "pplied. All cloud screened DEMs and non-cloud screened DEMs were stacked.\r\nResid" +
+            "ual bad values and outliers were removed. In areas with limited data stacking, s" +
+            "everal existing reference DEMs were used to supplement ASTER data to correct for" +
+            " residual anomalies.\r\nSelected data were averaged to create final pixel values b" +
+            "efore partitioning the data into 1° by 1° tiles with a one pixel overlap.\r\nTo co" +
+            "rrect elevation values of water body surfaces, the ASTER Global Water Bodies Dat" +
+            "abase (ASTWBD) Version 1 data product was also generated.\r\n\r\nASTER GDEM is a pro" +
+            "duct of NASA and MET See Ihttps://lpdaac.usgs.gov/products/astgtmv003/\r\n\r\nNASA/M" +
+            "ETI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team (2019). ASTER Glo" +
+            "bal Digital Elevation Model V003 [Data set]. NASA EOSDIS Land Processes DAAC\r\n")]
+        public string Elevation_ASTER3_Copyright {
+            get {
+                return ((string)(this["Elevation_ASTER3_Copyright"]));
+            }
+            set {
+                this["Elevation_ASTER3_Copyright"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Elevation_ASTER3_Enabled {
+            get {
+                return ((bool)(this["Elevation_ASTER3_Enabled"]));
+            }
+            set {
+                this["Elevation_ASTER3_Enabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Elevation_ASTER3_EnableCache {
+            get {
+                return ((bool)(this["Elevation_ASTER3_EnableCache"]));
+            }
+            set {
+                this["Elevation_ASTER3_EnableCache"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Maidenhead locator system elvation tiles calculated by DL2ALF based on elevation " +
+            "data of the ASTER  project:\r\n\r\nThe ASTER Global Digital Elevation Model (GDEM) V" +
+            "ersion 3 (ASTGTM) provides a global digital elevation model (DEM) of land areas " +
+            "on Earth at a spatial resolution of 1 arc second (approximately 30 meter horizon" +
+            "tal posting at the equator).\r\n\r\nThe development of the ASTER GDEM data products " +
+            "is a collaborative effort between National Aeronautics and Space Administration " +
+            "(NASA) and Japan’s Ministry of Economy, Trade, and Industry (METI).\r\nThe ASTER G" +
+            "DEM data products are created by the Sensor Information Laboratory Corporation (" +
+            "SILC) in Tokyo.\r\n\r\nThe ASTER GDEM Version 3 data product was created from the au" +
+            "tomated processing of the entire ASTER Level 1A archive of scenes acquired betwe" +
+            "en March 1, 2000, and November 30, 2013\r\nStereo correlation was used to produce " +
+            "over one million individual scene based ASTER DEMs, to which cloud masking was a" +
+            "pplied. All cloud screened DEMs and non-cloud screened DEMs were stacked.\r\nResid" +
+            "ual bad values and outliers were removed. In areas with limited data stacking, s" +
+            "everal existing reference DEMs were used to supplement ASTER data to correct for" +
+            " residual anomalies.\r\nSelected data were averaged to create final pixel values b" +
+            "efore partitioning the data into 1° by 1° tiles with a one pixel overlap.\r\nTo co" +
+            "rrect elevation values of water body surfaces, the ASTER Global Water Bodies Dat" +
+            "abase (ASTWBD) Version 1 data product was also generated.\r\n\r\nASTER GDEM is a pro" +
+            "duct of NASA and MET See Ihttps://lpdaac.usgs.gov/products/astgtmv003/\r\n\r\nNASA/M" +
+            "ETI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team (2019). ASTER Glo" +
+            "bal Digital Elevation Model V003 [Data set]. NASA EOSDIS Land Processes DAAC\r\n\r\n" +
+            "")]
+        public string Elevation_ASTER1_Copyright {
+            get {
+                return ((string)(this["Elevation_ASTER1_Copyright"]));
+            }
+            set {
+                this["Elevation_ASTER1_Copyright"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Elevation_ASTER1_Enabled {
+            get {
+                return ((bool)(this["Elevation_ASTER1_Enabled"]));
+            }
+            set {
+                this["Elevation_ASTER1_Enabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Elevation_ASTER1_EnableCache {
+            get {
+                return ((bool)(this["Elevation_ASTER1_EnableCache"]));
+            }
+            set {
+                this["Elevation_ASTER1_EnableCache"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UNDEFINED")]
+        public global::System.Data.SQLite.DATABASESTATUS Elevation_ASTER3_DatabaseStatus {
+            get {
+                return ((global::System.Data.SQLite.DATABASESTATUS)(this["Elevation_ASTER3_DatabaseStatus"]));
+            }
+            set {
+                this["Elevation_ASTER3_DatabaseStatus"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UNDEFINED")]
+        public global::System.Data.SQLite.DATABASESTATUS Elevation_ASTER1_DatabaseStatus {
+            get {
+                return ((global::System.Data.SQLite.DATABASESTATUS)(this["Elevation_ASTER1_DatabaseStatus"]));
+            }
+            set {
+                this["Elevation_ASTER1_DatabaseStatus"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public decimal Map_Opacity {
+            get {
+                return ((decimal)(this["Map_Opacity"]));
+            }
+            set {
+                this["Map_Opacity"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long Doppler_DialFreq {
+            get {
+                return ((long)(this["Doppler_DialFreq"]));
+            }
+            set {
+                this["Doppler_DialFreq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double Doppler_MyDoppler {
+            get {
+                return ((double)(this["Doppler_MyDoppler"]));
+            }
+            set {
+                this["Doppler_MyDoppler"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double Doppler_DXDoppler {
+            get {
+                return ((double)(this["Doppler_DXDoppler"]));
+            }
+            set {
+                this["Doppler_DXDoppler"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Doppler_Strategy_A {
+            get {
+                return ((bool)(this["Doppler_Strategy_A"]));
+            }
+            set {
+                this["Doppler_Strategy_A"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Doppler_Strategy_B {
+            get {
+                return ((bool)(this["Doppler_Strategy_B"]));
+            }
+            set {
+                this["Doppler_Strategy_B"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Doppler_Strategy_C {
+            get {
+                return ((bool)(this["Doppler_Strategy_C"]));
+            }
+            set {
+                this["Doppler_Strategy_C"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Doppler_Strategy_D {
+            get {
+                return ((bool)(this["Doppler_Strategy_D"]));
+            }
+            set {
+                this["Doppler_Strategy_D"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long Doppler_RXFreq {
+            get {
+                return ((long)(this["Doppler_RXFreq"]));
+            }
+            set {
+                this["Doppler_RXFreq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long Doppler_TXFreq {
+            get {
+                return ((long)(this["Doppler_TXFreq"]));
+            }
+            set {
+                this["Doppler_TXFreq"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Track_CurrentPlane {
+            get {
+                return ((string)(this["Track_CurrentPlane"]));
+            }
+            set {
+                this["Track_CurrentPlane"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Track_Offset {
+            get {
+                return ((int)(this["Track_Offset"]));
+            }
+            set {
+                this["Track_Offset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Doppler_Strategy_None {
+            get {
+                return ((bool)(this["Doppler_Strategy_None"]));
+            }
+            set {
+                this["Doppler_Strategy_None"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NONE")]
+        public global::AirScout.CAT.RIGSPLIT Doppler_DialSplit {
+            get {
+                return ((global::AirScout.CAT.RIGSPLIT)(this["Doppler_DialSplit"]));
+            }
+            set {
+                this["Doppler_DialSplit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NONE")]
+        public global::AirScout.CAT.RIGMODE Doppler_DialMode {
+            get {
+                return ((global::AirScout.CAT.RIGMODE)(this["Doppler_DialMode"]));
+            }
+            set {
+                this["Doppler_DialMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NONE")]
+        public global::AirScout.CAT.RIGRIT Doppler_DialRit {
+            get {
+                return ((global::AirScout.CAT.RIGRIT)(this["Doppler_DialRit"]));
+            }
+            set {
+                this["Doppler_DialRit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int Track_Update {
+            get {
+                return ((int)(this["Track_Update"]));
+            }
+            set {
+                this["Track_Update"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\ScoutBase\\RigData")]
+        public string Rig_Directory {
+            get {
+                return ((string)(this["Rig_Directory"]));
+            }
+            set {
+                this["Rig_Directory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Map_ShowLocators {
+            get {
+                return ((bool)(this["Map_ShowLocators"]));
+            }
+            set {
+                this["Map_ShowLocators"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Map_ShowDistances {
+            get {
+                return ((bool)(this["Map_ShowDistances"]));
+            }
+            set {
+                this["Map_ShowDistances"] = value;
             }
         }
     }

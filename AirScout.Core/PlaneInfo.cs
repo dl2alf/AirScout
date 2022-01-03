@@ -90,6 +90,14 @@ namespace AirScout.Core
         public bool Ambiguous = false;
         public string Comment = "";
 
+        // old values if available
+        public DateTime OldTime;
+        public double OldLat;
+        public double OldLon;
+        public double OldAlt;
+        public double OldTrack;
+        public double OldSpeed;
+
         public PlaneInfo()
         {
             Time = DateTime.UtcNow;
@@ -108,6 +116,7 @@ namespace AirScout.Core
             From = "";
             To = "";
             VSpeed = 0;
+
         }
 
         public PlaneInfo(DateTime time, string call, string reg, string hex, double lat, double lon, double track, double alt, double speed, string type, string manufacturer, string model, PLANECATEGORY category)
@@ -125,6 +134,13 @@ namespace AirScout.Core
             Manufacturer = manufacturer;
             Model = model;
             Category = category;
+
+            OldTime = DateTime.MinValue;
+            OldLat = 0;
+            OldLon = 0;
+            OldAlt = 0;
+            OldTrack = 0;
+            OldSpeed = 0;
         }
 
         // LEGACY!!!
@@ -143,10 +159,18 @@ namespace AirScout.Core
             Manufacturer = (string)row[10];
             Model = (string)row[11];
             Category = (PLANECATEGORY)row[12];
+
+            OldTime = DateTime.MinValue;
+            OldLat = 0;
+            OldLon = 0;
+            OldAlt = 0;
+            OldTrack = 0;
+            OldSpeed = 0;
         }
 
         public PlaneInfo (PlaneInfo plane)
         {
+
             this.Ambiguous = plane.Ambiguous;
             this.Alt = plane.Alt;
             this.AltDiff = plane.AltDiff;
@@ -173,6 +197,13 @@ namespace AirScout.Core
             this.Time = plane.Time;
             this.Track = plane.Track;
             this.Type = plane.Type;
+
+            this.OldTime = plane.OldTime;
+            this.OldLat = plane.OldLat;
+            this.OldLon = plane.OldLon;
+            this.OldAlt = plane.OldAlt;
+            this.OldTrack = plane.OldTrack;
+            this.OldSpeed = plane.OldSpeed;
 
         }
 

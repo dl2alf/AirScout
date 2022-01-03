@@ -263,7 +263,7 @@ namespace AirScout
                                     Log.WriteMessage(Name + " error processing call [" + ld.Call + "]: " + ex.ToString());
                                 }
                                 // keep cpu load low --> TODO: find better solution here
-                                Thread.Sleep(10);
+                                Thread.Sleep(100);
                             }
                             // save station database timestamp
                             SaveDatabaseTimeStamp();

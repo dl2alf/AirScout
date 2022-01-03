@@ -83,7 +83,7 @@ namespace ScoutBase.Propagation
 
         // MEMBERS ONLY TO STORE STATUS TEMPORARLY --> NOT STORED IN DATABASE
         // path status: valid / invalid
-        public bool Valid = true;
+        public bool Valid = false;
         // path status: selected / not selected
         public bool Selected = false;
         // path status local obstructed / not obstructed
@@ -116,6 +116,7 @@ namespace ScoutBase.Propagation
         public PropagationPathDesignator(DataRow row, double localobstruction) : this()
         {
             FillFromDataRow(row);
+            Valid = true;
             LocalObstruction = localobstruction;
             if (Eps1_Min < LocalObstruction)
                 LocalObstructed = true;
@@ -124,6 +125,7 @@ namespace ScoutBase.Propagation
         public PropagationPathDesignator(IDataRecord record, double localobstruction) : this()
         {
             FillFromDataRecord(record);
+            Valid = true;
             LocalObstruction = localobstruction;
             if (Eps1_Min < LocalObstruction)
                 LocalObstructed = true;

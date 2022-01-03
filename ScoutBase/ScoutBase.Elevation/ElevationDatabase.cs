@@ -95,20 +95,30 @@ namespace ScoutBase.Elevation
         System.Data.SQLite.SQLiteDatabase globe;
         System.Data.SQLite.SQLiteDatabase srtm3;
         System.Data.SQLite.SQLiteDatabase srtm1;
+        System.Data.SQLite.SQLiteDatabase aster3;
+        System.Data.SQLite.SQLiteDatabase aster1;
 
         // tile cache
         private ElevationTileDesignator globe_tile = null;
         private ElevationTileDesignator srtm3_tile = null;
         private ElevationTileDesignator srtm1_tile = null;
+        private ElevationTileDesignator aster3_tile = null;
+        private ElevationTileDesignator aster1_tile = null;
         private OrderedDictionary globe_cache = new OrderedDictionary();
         private OrderedDictionary srtm3_cache = new OrderedDictionary();
         private OrderedDictionary srtm1_cache = new OrderedDictionary();
+        private OrderedDictionary aster3_cache = new OrderedDictionary();
+        private OrderedDictionary aster1_cache = new OrderedDictionary();
         private int globe_tile_size = 138;
         private int srtm3_tile_size = 10038;
         private int srtm1_tile_size = 90038;
+        private int aster3_tile_size = 10038;
+        private int aster1_tile_size = 90038;
         private int globe_cache_count = 0;
         private int srtm3_cache_count = 0;
         private int srtm1_cache_count = 0;
+        private int aster3_cache_count = 0;
+        private int aster1_cache_count = 0;
 
         public ElevationDatabase()
         {
@@ -118,7 +128,7 @@ namespace ScoutBase.Elevation
                 "The basic elevation information is kept unique per  6digit-Maidenhead Locator and is updated periodically from a global web resource.\n" +
                 "The path and horizon information are unique per one oder between two geographical locations.\n" +
                 "These values are (pre-)calculated and stored at runtime.\n" +
-                "All values are based on a distinct elevation model either GLOBE, SRTM3 or SRTM1.";
+                "All values are based on a distinct elevation model either GLOBE, SRTM3, SRTM1 or ASTER.";
             // add table description manually
             TableDescriptions.Add(ElevationTileDesignator.TableName, "Holds elevation information per 6digit Maidenhead Locator.");
             TableDescriptions.Add(ElevationPathDesignator.TableName, "Holds elevation path information between two locations.");
@@ -130,6 +140,8 @@ namespace ScoutBase.Elevation
             globe = OpenDatabase("globe.db3", DefaultDatabaseDirectory(), false);
             srtm3 = OpenDatabase("srtm3.db3", DefaultDatabaseDirectory(), false);
             srtm1 = OpenDatabase("srtm1.db3", DefaultDatabaseDirectory(), false);
+            aster3 = OpenDatabase("aster3.db3", DefaultDatabaseDirectory(), false);
+            aster1 = OpenDatabase("aster1.db3", DefaultDatabaseDirectory(), false);
             // create tables with schemas if not exist
             if (!ElevationTileTableExists(ELEVATIONMODEL.GLOBE))
                 ElevationTileCreateTable(ELEVATIONMODEL.GLOBE);
@@ -137,24 +149,40 @@ namespace ScoutBase.Elevation
                 ElevationTileCreateTable(ELEVATIONMODEL.SRTM3);
             if (!ElevationTileTableExists(ELEVATIONMODEL.SRTM1))
                 ElevationTileCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!ElevationTileTableExists(ELEVATIONMODEL.ASTER3))
+                ElevationTileCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!ElevationTileTableExists(ELEVATIONMODEL.ASTER1))
+                ElevationTileCreateTable(ELEVATIONMODEL.ASTER1);
             if (!ElevationPathTableExists(ELEVATIONMODEL.GLOBE))
                 ElevationPathCreateTable(ELEVATIONMODEL.GLOBE);
             if (!ElevationPathTableExists(ELEVATIONMODEL.SRTM3))
                 ElevationPathCreateTable(ELEVATIONMODEL.SRTM3);
             if (!ElevationPathTableExists(ELEVATIONMODEL.SRTM1))
                 ElevationPathCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!ElevationPathTableExists(ELEVATIONMODEL.ASTER3))
+                ElevationPathCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!ElevationPathTableExists(ELEVATIONMODEL.ASTER1))
+                ElevationPathCreateTable(ELEVATIONMODEL.ASTER1);
             if (!ElevationHorizonTableExists(ELEVATIONMODEL.GLOBE))
                 ElevationHorizonCreateTable(ELEVATIONMODEL.GLOBE);
             if (!ElevationHorizonTableExists(ELEVATIONMODEL.SRTM3))
                 ElevationHorizonCreateTable(ELEVATIONMODEL.SRTM3);
             if (!ElevationHorizonTableExists(ELEVATIONMODEL.SRTM1))
                 ElevationHorizonCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!ElevationHorizonTableExists(ELEVATIONMODEL.ASTER3))
+                ElevationHorizonCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!ElevationHorizonTableExists(ELEVATIONMODEL.ASTER1))
+                ElevationHorizonCreateTable(ELEVATIONMODEL.ASTER1);
             if (!LocalObstructionTableExists(ELEVATIONMODEL.GLOBE))
                 LocalObstructionCreateTable(ELEVATIONMODEL.GLOBE);
             if (!LocalObstructionTableExists(ELEVATIONMODEL.SRTM3))
                 LocalObstructionCreateTable(ELEVATIONMODEL.SRTM3);
             if (!LocalObstructionTableExists(ELEVATIONMODEL.SRTM1))
                 LocalObstructionCreateTable(ELEVATIONMODEL.SRTM1);
+            if (!LocalObstructionTableExists(ELEVATIONMODEL.ASTER3))
+                LocalObstructionCreateTable(ELEVATIONMODEL.ASTER3);
+            if (!LocalObstructionTableExists(ELEVATIONMODEL.ASTER1))
+                LocalObstructionCreateTable(ELEVATIONMODEL.ASTER1);
             // set default bounds
             MinLat = double.MinValue;
             MinLon = double.MinValue;
@@ -167,6 +195,8 @@ namespace ScoutBase.Elevation
             CloseDatabase(globe);
             CloseDatabase(srtm3);
             CloseDatabase(srtm1);
+            CloseDatabase(aster3);
+            CloseDatabase(aster1);
         }
 
         private void UpgradeToV1(System.Data.SQLite.SQLiteDatabase db)
@@ -176,36 +206,39 @@ namespace ScoutBase.Elevation
             // upgrades database to V1
             if (MessageBox.Show("A major database upgrade is necessary to run this version of AirScout. Older versions of AirScout are not compatible anymore and will cause errors. \n\nPress >OK< to start upgrade now (this will take some minutes). \nPress >Cancel< to leave.", "Database Upgrade of " + Path.GetFileName(db.DBLocation), MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 Environment.Exit(-1);                 //  exit immediately
-            // set savepoint
-            string savepointname = "UpgradeToV1";
-            db.Execute("SAVEPOINT " + savepointname);
-            try
+            lock (db)
             {
-                // drop version info table --> maintain PRAGMA user_version instead
-                db.DropTable("VersionInfo");
-                // change Elevation table
-                Stopwatch st = new Stopwatch();
-                st.Start();
-                Log.WriteMessage("Database " + db.DBLocation + " is being converted...");
-                UpgradeTableToV1(db, ElevationTileDesignator.TableName);
-                UpgradeTableToV1(db, ElevationPathDesignator.TableName);
-                st.Stop();
-                Log.WriteMessage("Database " + db.DBLocation + " is converted successfully [" + st.ElapsedMilliseconds / 1000 + "ms]");
-                // set new database version
-                db.SetUserVerion(1);
-                // release savepoint
-                db.Execute("RELEASE " + savepointname);
-            }
-            catch (Exception ex)
-            {
-                // fatal error, can't upgrade database and can't rollback --> write log
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
-                Log.WriteMessage("Application crashed and will close immediately.");
-                Log.FlushLog();
-                // try to rollback database
-                db.Execute("ROLLBACK TO " + savepointname);
-                //  exit immediately
-                Environment.Exit(-1);
+                // set savepoint
+                string savepointname = "UpgradeToV1";
+                db.Execute("SAVEPOINT " + savepointname);
+                try
+                {
+                    // drop version info table --> maintain PRAGMA user_version instead
+                    db.DropTable("VersionInfo");
+                    // change Elevation table
+                    Stopwatch st = new Stopwatch();
+                    st.Start();
+                    Log.WriteMessage("Database " + db.DBLocation + " is being converted...");
+                    UpgradeTableToV1(db, ElevationTileDesignator.TableName);
+                    UpgradeTableToV1(db, ElevationPathDesignator.TableName);
+                    st.Stop();
+                    Log.WriteMessage("Database " + db.DBLocation + " is converted successfully [" + st.ElapsedMilliseconds / 1000 + "ms]");
+                    // set new database version
+                    db.SetUserVerion(1);
+                    // release savepoint
+                    db.Execute("RELEASE " + savepointname);
+                }
+                catch (Exception ex)
+                {
+                    // fatal error, can't upgrade database and can't rollback --> write log
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                    Log.WriteMessage("Application crashed and will close immediately.");
+                    Log.FlushLog();
+                    // try to rollback database
+                    db.Execute("ROLLBACK TO " + savepointname);
+                    //  exit immediately
+                    Environment.Exit(-1);
+                }
             }
         }
 
@@ -216,6 +249,8 @@ namespace ScoutBase.Elevation
                 case ELEVATIONMODEL.GLOBE: return globe;
                 case ELEVATIONMODEL.SRTM3: return srtm3;
                 case ELEVATIONMODEL.SRTM1: return srtm1;
+                case ELEVATIONMODEL.ASTER3: return aster3;
+                case ELEVATIONMODEL.ASTER1: return aster1;
                 default: return null;
             }
         }
@@ -282,6 +317,12 @@ namespace ScoutBase.Elevation
                 case ELEVATIONMODEL.SRTM1:
                     dir = Path.Combine(dir, Properties.Settings.Default.Elevation_SRTM1_DataPath);
                     break;
+                case ELEVATIONMODEL.ASTER3:
+                    dir = Path.Combine(dir, Properties.Settings.Default.Elevation_ASTER3_DataPath);
+                    break;
+                case ELEVATIONMODEL.ASTER1:
+                    dir = Path.Combine(dir, Properties.Settings.Default.Elevation_ASTER1_DataPath);
+                    break;
             }
             // replace Windows/Linux directory spearator chars
             dir = dir.Replace('\\', Path.DirectorySeparatorChar);
@@ -303,6 +344,10 @@ namespace ScoutBase.Elevation
                     return Properties.Settings.Default.Elevation_SRTM3_UpdateURL;
                 case ELEVATIONMODEL.SRTM1:
                     return Properties.Settings.Default.Elevation_SRTM1_UpdateURL;
+                case ELEVATIONMODEL.ASTER3:
+                    return Properties.Settings.Default.Elevation_ASTER3_UpdateURL;
+                case ELEVATIONMODEL.ASTER1:
+                    return Properties.Settings.Default.Elevation_ASTER1_UpdateURL;
             }
             return "";
         }
@@ -318,6 +363,10 @@ namespace ScoutBase.Elevation
                     return Properties.Settings.Default.Elevation_SRTM3_JSONFile;
                 case ELEVATIONMODEL.SRTM1:
                     return Properties.Settings.Default.Elevation_SRTM1_JSONFile;
+                case ELEVATIONMODEL.ASTER3:
+                    return Properties.Settings.Default.Elevation_ASTER3_JSONFile;
+                case ELEVATIONMODEL.ASTER1:
+                    return Properties.Settings.Default.Elevation_ASTER1_JSONFile;
             }
             return "";
 
@@ -325,51 +374,82 @@ namespace ScoutBase.Elevation
 
         public string GetDBLocation(ELEVATIONMODEL model)
         {
-            return this.GetDBLocation(GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return "";
+            return this.GetDBLocation(db);
         }
 
         public double GetDBSize(ELEVATIONMODEL model)
         {
-            return this.GetDBSize(GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return 0;
+            return this.GetDBSize(db);
         }
 
         public DATABASESTATUS GetDBStatus(ELEVATIONMODEL model)
         {
-            return this.GetDBStatus(GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return DATABASESTATUS.UNDEFINED;
+            return this.GetDBStatus(db);
         }
 
         public void SetDBStatus(ELEVATIONMODEL model, DATABASESTATUS status)
         {
-            this.SetDBStatus(status, GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return;
+            this.SetDBStatus(status, db);
         }
 
         public bool GetDBStatusBit(ELEVATIONMODEL model, DATABASESTATUS statusbit)
         {
-            return this.GetDBStatusBit(statusbit, GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return false;
+            return this.GetDBStatusBit(statusbit, db);
         }
 
         public void SetDBStatusBit(ELEVATIONMODEL model, DATABASESTATUS statusbit)
         {
-            this.SetDBStatusBit(statusbit, GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return;
+            this.SetDBStatusBit(statusbit, db);
         }
 
         public void ResetDBStatusBit(ELEVATIONMODEL model, DATABASESTATUS statusbit)
         {
-            this.ResetDBStatusBit(statusbit, GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return;
+            this.ResetDBStatusBit(statusbit, db);
         }
 
         public void BeginTransaction(ELEVATIONMODEL model)
         {
-            this.BeginTransaction(GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return;
+            this.BeginTransaction(db);
         }
 
         public void Commit(ELEVATIONMODEL model)
         {
-            this.Commit(GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return;
+            this.Commit(db);
         }
+
         private DataTable Select(ELEVATIONMODEL model, string sql)
         {
-            return this.Select(sql, GetElevationDatabase(model));
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return null;
+            return this.Select(sql, db);
         }
 
         /// <summary>
@@ -402,6 +482,8 @@ namespace ScoutBase.Elevation
             globe_cache_count = (int)((avmem / globe_tile_size < int.MaxValue) ? avmem / globe_tile_size : int.MaxValue);
             srtm3_cache_count = (int)((avmem / srtm3_tile_size < int.MaxValue) ? avmem / srtm3_tile_size : int.MaxValue);
             srtm1_cache_count = (int)((avmem / srtm1_tile_size < int.MaxValue) ? avmem / srtm1_tile_size : int.MaxValue);
+            aster3_cache_count = (int)((avmem / aster3_tile_size < int.MaxValue) ? avmem / aster3_tile_size : int.MaxValue);
+            aster1_cache_count = (int)((avmem / aster1_tile_size < int.MaxValue) ? avmem / aster1_tile_size : int.MaxValue);
         }
 
         /// <summary>
@@ -412,6 +494,8 @@ namespace ScoutBase.Elevation
             globe_cache.Clear();
             srtm3_cache.Clear();
             srtm1_cache.Clear();
+            aster3_cache.Clear();
+            aster1_cache.Clear();
         }
 
         private int GetCacheSize(ELEVATIONMODEL model)
@@ -425,6 +509,10 @@ namespace ScoutBase.Elevation
                     return srtm3_cache_count;
                 case ELEVATIONMODEL.SRTM1:
                     return srtm1_cache_count;
+                case ELEVATIONMODEL.ASTER3:
+                    return aster3_cache_count;
+                case ELEVATIONMODEL.ASTER1:
+                    return aster1_cache_count;
             }
             return 0;
         }
@@ -542,6 +630,10 @@ namespace ScoutBase.Elevation
                 return srtm3_cache;
             if (model == ELEVATIONMODEL.SRTM1)
                 return srtm1_cache;
+            if (model == ELEVATIONMODEL.ASTER3)
+                return aster3_cache;
+            if (model == ELEVATIONMODEL.ASTER1)
+                return aster1_cache;
             return null;
         }
 
@@ -552,7 +644,11 @@ namespace ScoutBase.Elevation
             if (model == ELEVATIONMODEL.SRTM3)
                 return srtm3_tile;
             if (model == ELEVATIONMODEL.SRTM1)
-                return srtm1_tile;
+                return aster1_tile;
+            if (model == ELEVATIONMODEL.ASTER3)
+                return aster3_tile;
+            if (model == ELEVATIONMODEL.ASTER1)
+                return aster1_tile;
             return null;
         }
 
@@ -564,6 +660,10 @@ namespace ScoutBase.Elevation
                 srtm3_tile = tile;
             if (model == ELEVATIONMODEL.SRTM1)
                 srtm1_tile = tile;
+            if (model == ELEVATIONMODEL.ASTER3)
+                aster3_tile = tile;
+            if (model == ELEVATIONMODEL.ASTER1)
+                aster1_tile = tile;
         }
 
         private ElevationTileDesignator GetElevationTile(ELEVATIONMODEL model, double lat, double lon)
@@ -578,27 +678,36 @@ namespace ScoutBase.Elevation
             // load new tile from cache or database
             string loc = MaidenheadLocator.LocFromLatLon(lat, lon, false, 3);
             ElevationTileDesignator td = null;
-            lock (cache)
+            if (cache != null)
             {
-                // try to find tile in cache first
-                td = (ElevationTileDesignator)cache[loc];
-                if (td == null)
+                lock (cache)
                 {
-                    // try to find tile in database
-                    td = this.ElevationTileFind(loc, model);
-                    if (td != null)
-                    {
-                        // maintain cache size --> remove 
-                        if (cache.Count > GetCacheSize(model))
-                        {
-                            cache.RemoveAt(0);
-                        }
-                        cache.Add(loc, td);
-                    }
+                    // try to find tile in cache first
+                    td = (ElevationTileDesignator)cache[loc];
                 }
             }
+
+            if (td == null)
+            {
+                // try to find tile in database
+                td = this.ElevationTileFind(loc, model);
+                if (td != null)
+                {
+                    // maintain cache size --> remove 
+                    if (cache.Count > GetCacheSize(model))
+                    {
+                        cache.RemoveAt(0);
+                    }
+                    cache.Add(loc, td);
+                }
+            }
+
             // keep tile in cache
-            SetElevationTile(model, td);
+            if (td != null)
+            {
+                SetElevationTile(model, td);
+            }
+
             // return tile even if null
             return td;
         }
@@ -665,6 +774,10 @@ namespace ScoutBase.Elevation
                 return 30;
             if (model == ELEVATIONMODEL.SRTM3)
                 return 90;
+            if (model == ELEVATIONMODEL.ASTER1)
+                return 30;
+            if (model == ELEVATIONMODEL.ASTER3)
+                return 90;
             return 1000;
         }
 
@@ -676,13 +789,18 @@ namespace ScoutBase.Elevation
             string tn = tablename;
             if (String.IsNullOrEmpty(tn))
                 tn = ElevationTileDesignator.TableName;
-            return GetElevationDatabase(model).TableExists(tn);
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return false;
+            return db.TableExists(tn);
         }
 
         public void ElevationTileCreateTable(ELEVATIONMODEL model, string tablename = "")
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return;
+            lock (db)
             {
                 // check for table name is null or empty --> use default tablename from type instead
                 string tn = tablename;
@@ -697,7 +815,9 @@ namespace ScoutBase.Elevation
         public int ElevationTileInsert(ElevationTileDesignator tile, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "INSERT INTO " + ElevationTileDesignator.TableName + " (TileIndex, MinElv, MinLat, MinLon, MaxElv, MaxLat, MaxLon, Rows, Columns, Elv, LastUpdated) VALUES (@TileIndex, @MinElv, @MinLat, @MinLon, @MaxElv, @MaxLat, @MaxLon, @Rows, @Columns, @Elv, @LastUpdated)";
                 db.DBCommand.Parameters.Clear();
@@ -720,6 +840,8 @@ namespace ScoutBase.Elevation
         {
             int errors = 0;
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return -1;
             try
             {
                 db.BeginTransaction();
@@ -747,7 +869,9 @@ namespace ScoutBase.Elevation
         public int ElevationTileDelete(ElevationTileDesignator tile, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + ElevationTileDesignator.TableName + " WHERE TileIndex = @TileIndex";
                 db.DBCommand.Parameters.Clear();
@@ -759,7 +883,9 @@ namespace ScoutBase.Elevation
         public int ElevationTileUpdate(ElevationTileDesignator tile, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "UPDATE " + ElevationTileDesignator.TableName + " SET TileIndex = @TileIndex, MinElv = @MinElv, MinLat = @MinLat, MinLon = @MinLon, MaxElv = @MaxElv, MaxLat = @MaxLat, MaxLon = @MaxLon, Rows = @Rows, Columns = @Columns, Elv = @Elv, LastUpdated = @LastUpdated WHERE TileIndex = @TileIndex";
                 db.DBCommand.Parameters.Clear();
@@ -771,7 +897,7 @@ namespace ScoutBase.Elevation
                 db.DBCommand.Parameters.Add(tile.AsDouble("MaxLat"));
                 db.DBCommand.Parameters.Add(tile.AsDouble("MaxLon"));
                 db.DBCommand.Parameters.Add(tile.AsInt32("Rows"));
-                db.DBCommand.Parameters.Add(tile.AsInt32("Columms"));
+                db.DBCommand.Parameters.Add(tile.AsInt32("Columns"));
                 db.DBCommand.Parameters.Add(tile.AsBinary("Elv"));
                 db.DBCommand.Parameters.Add(tile.AsUNIXTime("LastUpdated"));
                 return db.ExecuteNonQuery(db.DBCommand);
@@ -781,6 +907,8 @@ namespace ScoutBase.Elevation
         public void ElevationTileInsertOrUpdateIfNewer(ElevationTileDesignator tile, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return;
             DateTime dt = this.ElevationTileFindLastUpdated(tile,model);
             if (dt == DateTime.MinValue)
                 this.ElevationTileInsert(tile, model);
@@ -797,7 +925,9 @@ namespace ScoutBase.Elevation
         public ElevationTileDesignator ElevationTileFind(ElevationTileDesignator tile, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return null;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT * FROM " + ElevationTileDesignator.TableName + " WHERE TileIndex = @TileIndex";
                 db.DBCommand.Parameters.Clear();
@@ -820,7 +950,9 @@ namespace ScoutBase.Elevation
         public bool ElevationTileExists(ElevationTileDesignator tile, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return false;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT EXISTS (SELECT LastUpdated FROM " + ElevationTileDesignator.TableName + " WHERE TileIndex = @TileIndex)";
                 db.DBCommand.Parameters.Clear();
@@ -841,12 +973,22 @@ namespace ScoutBase.Elevation
         public DateTime ElevationTileFindLastUpdated(ElevationTileDesignator tile, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return DateTime.MinValue;
+            lock (db)
             {
-                db.DBCommand.CommandText = "SELECT LastUpdated FROM " + ElevationTileDesignator.TableName + " WHERE TileIndex = @TileIndex";
-                db.DBCommand.Parameters.Clear();
-                db.DBCommand.Parameters.Add(tile.AsString("TileIndex"));
-                object result = db.ExecuteScalar(db.DBCommand);
+                object result = null;
+                try
+                {
+                    db.DBCommand.CommandText = "SELECT LastUpdated FROM " + ElevationTileDesignator.TableName + " WHERE TileIndex = @TileIndex";
+                    db.DBCommand.Parameters.Clear();
+                    db.DBCommand.Parameters.Add(tile.AsString("TileIndex"));
+                    result = db.ExecuteScalar(db.DBCommand);
+                }
+                catch (Exception ex)
+                {
+
+                }
                 if (result != null)
                     return (SQLiteEntry.UNIXTimeToDateTime((int)result));
             }
@@ -862,7 +1004,9 @@ namespace ScoutBase.Elevation
         public ElvMinMaxInfo ElevationTileFindMinMaxInfo(ElevationTileDesignator tile, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return null;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT MinElv, MinLat, MInLon, MaxElv, MaxLat, MaxLon FROM " + ElevationTileDesignator.TableName + " WHERE TileIndex = @TileIndex";
                 db.DBCommand.Parameters.Clear();
@@ -885,7 +1029,10 @@ namespace ScoutBase.Elevation
         public List<ElevationTileDesignator> ElevationTileGetAll(ELEVATIONMODEL model)
         {
             List<ElevationTileDesignator> l = new List<ElevationTileDesignator>();
-            DataTable Result = GetElevationDatabase(model).Select("SELECT * FROM " + ElevationTileDesignator.TableName);
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return l;
+            DataTable Result = db.Select("SELECT * FROM " + ElevationTileDesignator.TableName);
             if ((Result == null) || (Result.Rows.Count == 0))
                 return l;
             foreach (DataRow row in Result.Rows)
@@ -899,31 +1046,40 @@ namespace ScoutBase.Elevation
             // gets all aircraftpositions from database
             // supports abort calculation if called from background worker and cancellation requested
             int i = 0;
-            SQLiteCommand cmd = new SQLiteCommand(GetElevationDatabase(model).DBConnection);
-            cmd.CommandText = "SELECT * FROM " + ElevationTileDesignator.TableName;
-            SQLiteDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return l;
+            lock (db)
             {
-                ElevationTileDesignator tile = new ElevationTileDesignator((IDataRecord)reader);
-                l.Add(tile);
-                i++;
-                // abort calculation if called from background worker and cancellation pending
-                if (caller != null)
+                SQLiteCommand cmd = new SQLiteCommand(db.DBConnection);
+                cmd.CommandText = "SELECT * FROM " + ElevationTileDesignator.TableName;
+                SQLiteDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    if (caller.WorkerSupportsCancellation && caller.CancellationPending)
-                        return new List<ElevationTileDesignator>();
-                    if (caller.WorkerReportsProgress && (i % 1000 == 0))
-                        caller.ReportProgress(0, "Getting tile " + i.ToString() + " of");
+                    ElevationTileDesignator tile = new ElevationTileDesignator((IDataRecord)reader);
+                    l.Add(tile);
+                    i++;
+                    // abort calculation if called from background worker and cancellation pending
+                    if (caller != null)
+                    {
+                        if (caller.WorkerSupportsCancellation && caller.CancellationPending)
+                            return new List<ElevationTileDesignator>();
+                        if (caller.WorkerReportsProgress && (i % 1000 == 0))
+                            caller.ReportProgress(0, "Getting tile " + i.ToString() + " of");
+                    }
                 }
+                reader.Close();
             }
-            reader.Close();
             return l;
         }
 
         public List<ElevationTileDesignator> ElevationTileGetAll(ELEVATIONMODEL model, double minlat, double minlon, double maxlat, double maxlon)
         {
             List<ElevationTileDesignator> l = new List<ElevationTileDesignator>();
-            DataTable Result = GetElevationDatabase(model).Select("SELECT * FROM Elevation");
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return l;
+            DataTable Result = db.Select("SELECT * FROM Elevation");
             if ((Result == null) || (Result.Rows.Count == 0))
                 return l;
             foreach (DataRow row in Result.Rows)
@@ -942,28 +1098,34 @@ namespace ScoutBase.Elevation
             // gets all elevation tiles from database
             // supports abort calculation if called from background worker and cancellation requested
             int i = 0;
-            SQLiteCommand cmd = new SQLiteCommand(GetElevationDatabase(model).DBConnection);
-            cmd.CommandText = "SELECT * FROM " + ElevationTileDesignator.TableName;
-            SQLiteDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return l;
+            lock (db)
             {
-                ElevationTileDesignator tile = new ElevationTileDesignator((IDataRecord)reader);
-                if ((tile.BaseLat >= minlat) && (tile.BaseLat <= maxlat) && ((tile.BaseLon >= minlon) && (tile.BaseLon <= maxlon)) ||
-                    (tile.BaseLat + 1 / 24.0 >= minlat) && (tile.BaseLat + 1 / 24.0 <= maxlat) && ((tile.BaseLon + 2 / 24.0 >= minlon) && (tile.BaseLon + 2 / 24.0 <= maxlon)))
+                SQLiteCommand cmd = new SQLiteCommand(db.DBConnection);
+                cmd.CommandText = "SELECT * FROM " + ElevationTileDesignator.TableName;
+                SQLiteDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    l.Add(tile);
-                    i++;
+                    ElevationTileDesignator tile = new ElevationTileDesignator((IDataRecord)reader);
+                    if ((tile.BaseLat >= minlat) && (tile.BaseLat <= maxlat) && ((tile.BaseLon >= minlon) && (tile.BaseLon <= maxlon)) ||
+                        (tile.BaseLat + 1 / 24.0 >= minlat) && (tile.BaseLat + 1 / 24.0 <= maxlat) && ((tile.BaseLon + 2 / 24.0 >= minlon) && (tile.BaseLon + 2 / 24.0 <= maxlon)))
+                    {
+                        l.Add(tile);
+                        i++;
+                    }
+                    // abort calculation if called from background worker and cancellation pending
+                    if (caller != null)
+                    {
+                        if (caller.WorkerSupportsCancellation && caller.CancellationPending)
+                            return new List<ElevationTileDesignator>();
+                        if (caller.WorkerReportsProgress && (i % 1000 == 0))
+                            caller.ReportProgress(0, "Getting tile " + i.ToString() + " of");
+                    }
                 }
-                // abort calculation if called from background worker and cancellation pending
-                if (caller != null)
-                {
-                    if (caller.WorkerSupportsCancellation && caller.CancellationPending)
-                        return new List<ElevationTileDesignator>();
-                    if (caller.WorkerReportsProgress && (i % 1000 == 0))
-                        caller.ReportProgress(0, "Getting tile " + i.ToString() + " of");
-                }
+                reader.Close();
             }
-            reader.Close();
             return l;
         }
 
@@ -982,7 +1144,14 @@ namespace ScoutBase.Elevation
 
         public long ElevationTileCount(ELEVATIONMODEL model)
         {
-            long count = (long)GetElevationDatabase(model).ExecuteScalar("SELECT COUNT(*) FROM " + ElevationTileDesignator.TableName);
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return 0;
+            long count = 0;
+            lock (db)
+            {
+                count = (long)db.ExecuteScalar("SELECT COUNT(*) FROM " + ElevationTileDesignator.TableName);
+            }
             if (count <= 0)
                 return 0;
             return count;
@@ -992,19 +1161,34 @@ namespace ScoutBase.Elevation
 
         #region ElevationPath
 
+        public int GetElevationPathAveragePeriod(ELEVATIONMODEL model)
+        {
+            if (model == ELEVATIONMODEL.ASTER1)
+                return 5;
+            if (model == ELEVATIONMODEL.ASTER3)
+                return 5;
+            return 0;
+
+        }
+
         public bool ElevationPathTableExists(ELEVATIONMODEL model, string tablename = "")
         {
             // check for table name is null or empty --> use default tablename from type instead
             string tn = tablename;
             if (String.IsNullOrEmpty(tn))
                 tn = ElevationPathDesignator.TableName;
-            return GetElevationDatabase(model).TableExists(tn);
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return false;
+            return db.TableExists(tn);
         }
 
         public void ElevationPathCreateTable(ELEVATIONMODEL model, string tablename = "")
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return;
+            lock (db)
             {
                 // check for table name is null or empty --> use default tablename from type instead
                 string tn = tablename;
@@ -1025,7 +1209,9 @@ namespace ScoutBase.Elevation
         public bool ElevationPathExists(ElevationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return false;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT EXISTS (SELECT LastUpdated FROM " + ElevationPathDesignator.TableName + " WHERE Lat1 = @Lat1 AND Lon1 = @Lon1 AND Lat2 = @Lat2 AND Lon2 = @Lon2 AND StepWidth = @StepWidth)";
                 db.DBCommand.Parameters.Clear();
@@ -1050,7 +1236,9 @@ namespace ScoutBase.Elevation
         public ElevationPathDesignator ElevationPathFind(ElevationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+                if (db == null)
+                    return null;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT * FROM " + ElevationPathDesignator.TableName + " WHERE Lat1 = @Lat1 AND Lon1 = @Lon1 AND Lat2 = @Lat2 AND Lon2 = @Lon2 AND StepWidth = @StepWidth";
                 db.DBCommand.Parameters.Clear();
@@ -1075,7 +1263,9 @@ namespace ScoutBase.Elevation
         public DateTime ElevationPathFindLastUpdated(ElevationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return DateTime.MinValue;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT LastUpdated FROM " + ElevationPathDesignator.TableName + " WHERE Lat1 = @Lat1 AND Lon1 = @Lon1 AND Lat2 = @Lat2 AND Lon2 = @Lon2 AND StepWidth = @StepWidth";
                 db.DBCommand.Parameters.Clear();
@@ -1094,7 +1284,9 @@ namespace ScoutBase.Elevation
         public int ElevationPathInsert(ElevationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "INSERT INTO " + ElevationPathDesignator.TableName + " (Lat1, Lon1, Lat2, Lon2, StepWidth, Count, Path, LastUpdated) VALUES (@Lat1, @Lon1, @Lat2, @Lon2, @StepWidth, @Count, @Path, @LastUpdated)";
                 db.DBCommand.Parameters.Clear();
@@ -1113,7 +1305,9 @@ namespace ScoutBase.Elevation
         public int ElevationPathDelete(ElevationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + ElevationPathDesignator.TableName + " WHERE Lat1 = @Lat1 AND Lon1 = @Lon1 AND Lat2 = @Lat2 AND Lon2 = @Lon2 AND StepWidth = @StepWidth";
                 db.DBCommand.Parameters.Clear();
@@ -1129,7 +1323,9 @@ namespace ScoutBase.Elevation
         public int ElevationPathDeleteAll(ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + ElevationPathDesignator.TableName;
                 db.DBCommand.Parameters.Clear();
@@ -1140,7 +1336,9 @@ namespace ScoutBase.Elevation
         public int ElevationPathUpdate(ElevationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "UPDATE " + ElevationPathDesignator.TableName + " SET Lat1 = @Lat1, Lon1 = @Lon1, Lat2 = @Lat2, Lon2 = @Lon2, StepWidth = @StepWidth, Count = @Count, Path = @Path, LastUpdated = @LastUpdated WHERE Lat1 = @Lat1 AND Lon1 = @Lon1 AND Lat2 = @Lat2 AND Lon2 = @Lon2 AND StepWidth = @StepWidth";
                 db.DBCommand.Parameters.Clear();
@@ -1158,6 +1356,8 @@ namespace ScoutBase.Elevation
         public void ElevationPathInsertOrUpdateIfNewer(ElevationPathDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return;
             DateTime dt = this.ElevationPathFindLastUpdated(path, model);
             if (dt == DateTime.MinValue)
                 this.ElevationPathInsert(path, model);
@@ -1171,51 +1371,120 @@ namespace ScoutBase.Elevation
             return ElevationPathCreateFromLatLon(caller, lat1, lon1, gp.Lat, gp.Lon, stepwidth, model);
         }
 
+
+
+        // simple moving average for elevation path
+        // the resulting average array is (periods - 1)  shorter than the source array
+        private short[] MovingAverage(short[] values, int periods)
+        {
+            // check for sufficient count of values
+            if (values.Length < periods)
+                return null;
+            short[] averages = new short[values.Length - periods + 1];
+            double sum = 0;
+            for (int i = 0; i < values.Length; i++)
+                if (i < periods)
+                {
+                    sum += values[i];
+                    //                    averages[i] = (short)((i == periods - 1) ? sum / (double)periods : 0);
+                    averages[0] = (short)((i == periods - 1) ? sum / (double)periods : 0);
+                }
+                else
+                {
+                    sum = sum - values[i - periods] + values[i];
+                    averages[i - periods + 1] = (short)(sum / (double)periods);
+                }
+            return averages;
+        }
+
         public ElevationPathDesignator ElevationPathCreateFromLatLon(BackgroundWorker caller, double lat1, double lon1, double lat2, double lon2, double stepwidth, ELEVATIONMODEL model, bool savetodatabase = true)
         {
             // calculate new elevation path
             // supports abort calculation if called from background worker and cancellation requested
             // report of status messages and single data points not needed so far
             ElevationPathDesignator ep = new ElevationPathDesignator(lat1, lon1, lat2, lon2, stepwidth);
-            double d = 0;
+            bool tilemissing = false;
             // convert stepwidth to [km]
             stepwidth = stepwidth / 1000.0;
-            // check if elevation database is complete before trying to retrieve elevation path
             bool complete = this.GetDBStatusBit(model, DATABASESTATUS.COMPLETE) & !this.GetDBStatusBit(model, DATABASESTATUS.ERROR);
-            bool tilemissing = false;
-            // create tile for cache
-            ElevationTileDesignator tile = new ElevationTileDesignator();
-            for (int i = 0; i < ep.Count; i++)
+            int avperiod = GetElevationPathAveragePeriod(model);
+            // check for any averaging
+            if (avperiod == 0)
             {
-                LatLon.GPoint gp = LatLon.DestinationPoint(lat1, lon1, ep.Bearing12, d);
-                // get elevation point with status
-                // tile will be cached locally for subsequent use
-                short e = GetElevation(model, gp.Lat, gp.Lon, false);
-                // set elevation point if valid, else set it to 0
-                if (e > TileMissingFlag)
-                    ep.Path[i] = e;
-                else
+                // no averaging --> create path direct into ep
+                double d = 0;
+                // check if elevation database is complete before trying to retrieve elevation path
+                for (int i = 0; i < ep.Count; i++)
                 {
-                    ep.Path[i] = 0;
-                    // set the tilemissing flag
-                    if (e == TileMissingFlag)
-                        tilemissing = true;
-                 }
-                 d += stepwidth;
-                // abort calculation if called from background worker and cancellation pending
-                if (caller != null)
-                {
-                    if (caller.CancellationPending)
-                        return null;
+                    LatLon.GPoint gp = LatLon.DestinationPoint(lat1, lon1, ep.Bearing12, d);
+                    // get elevation point with status
+                    // tile will be cached locally for subsequent use
+                    short e = GetElevation(model, gp.Lat, gp.Lon, false);
+                    // set elevation point if valid, else set it to 0
+                    if (e > TileMissingFlag)
+                    {
+                        ep.Path[i] = e;
+                    }
+                    else
+                    {
+                        ep.Path[i] = 0;
+                        // set the tilemissing flag
+                        if (e == TileMissingFlag)
+                            tilemissing = true;
+                    }
+                    d += stepwidth;
+                    // abort calculation if called from background worker and cancellation pending
+                    if (caller != null)
+                    {
+                        if (caller.CancellationPending)
+                            return null;
+                    }
                 }
             }
-            // check if database is still complete, could have benn changed during background calculation
+            else
+            {
+                // create raw elevation buffer first and copy the average to ep
+                short[] raw = new short[ep.Path.Length + avperiod - 1];
+                // put the start value at the half of avperiod back in opposite direction
+                double d = -(avperiod / 2) * stepwidth;
+                // check if elevation database is complete before trying to retrieve elevation path
+                for (int i = 0; i < raw.Length; i++)
+                {
+                    LatLon.GPoint gp = LatLon.DestinationPoint(lat1, lon1, ep.Bearing12, d);
+                    // get elevation point with status
+                    // tile will be cached locally for subsequent use
+                    short e = GetElevation(model, gp.Lat, gp.Lon, false);
+                    // set elevation point if valid, else set it to 0
+                    if (e > TileMissingFlag)
+                    {
+                        raw[i] = e;
+                    }
+                    else
+                    {
+                        raw[i] = 0;
+                        // set the tilemissing flag
+                        if (e == TileMissingFlag)
+                            tilemissing = true;
+                    }
+                    d += stepwidth;
+                    // abort calculation if called from background worker and cancellation pending
+                    if (caller != null)
+                    {
+                        if (caller.CancellationPending)
+                            return null;
+                    }
+                }
+                // calculate average and assign it to ep.Path
+                ep.Path = MovingAverage(raw, avperiod);
+            }
+            
+            // check if database is still complete, could have been changed during background calculation
             if (complete)
                 complete = GetDBStatusBit(model, DATABASESTATUS.COMPLETE) & !GetDBStatusBit(model, DATABASESTATUS.ERROR);
             // validate path according to completeness of database
             ep.Valid = complete;
-            // oops, tile is missing --> check if database status
-            // COMPLETE: check boounds --> path complete inside bounds --> assuming that missing tile is a "wet square" --> keep path valid
+            // oops, tile is missing --> check database status
+            // COMPLETE: check bounds --> path complete inside bounds --> assuming that missing tile is a "wet square" --> keep path valid
             // NOT COMPLETE: assuming that tile is missing --> invalidate path 
             if (tilemissing)
             { 
@@ -1262,13 +1531,18 @@ namespace ScoutBase.Elevation
             string tn = tablename;
             if (String.IsNullOrEmpty(tn))
                 tn = ElevationHorizonDesignator.TableName;
-            return GetElevationDatabase(model).TableExists(tn);
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return false;
+            return db.TableExists(tn);
         }
 
         public void ElevationHorizonCreateTable(ELEVATIONMODEL model, string tablename = "")
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return;
+            lock (db)
             {
                 // check for table name is null or empty --> use default tablename from type instead
                 string tn = tablename;
@@ -1289,7 +1563,9 @@ namespace ScoutBase.Elevation
         public bool ElevationHorizonExists(ElevationHorizonDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return false;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT EXISTS (SELECT LastUpdated FROM " + ElevationHorizonDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon AND Distance = @Distance AND StepWidth = @StepWidth)";
                 db.DBCommand.Parameters.Clear();
@@ -1313,7 +1589,9 @@ namespace ScoutBase.Elevation
         public ElevationHorizonDesignator ElevationHorizonFind(ElevationHorizonDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return null;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT * FROM " + ElevationHorizonDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon AND Distance = @Distance AND StepWidth = @StepWidth";
                 db.DBCommand.Parameters.Clear();
@@ -1337,7 +1615,9 @@ namespace ScoutBase.Elevation
         public DateTime ElevationHorizonFindLastUpdated(ElevationHorizonDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return DateTime.MinValue;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT LastUpdated FROM " + ElevationHorizonDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon AND Distance = @Distance AND StepWidth = @StepWidth";
                 db.DBCommand.Parameters.Clear();
@@ -1355,7 +1635,9 @@ namespace ScoutBase.Elevation
         public int ElevationHorizonInsert(ElevationHorizonDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "INSERT INTO " + ElevationHorizonDesignator.TableName + " (Lat, Lon, Distance, StepWidth, Count, Paths, LastUpdated) VALUES (@Lat, @Lon, @Distance, @StepWidth, @Count, @Paths, @LastUpdated)";
                 db.DBCommand.Parameters.Clear();
@@ -1373,7 +1655,9 @@ namespace ScoutBase.Elevation
         public int ElevationHorizonDelete(ElevationHorizonDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + ElevationHorizonDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon AND Distance = @Distance AND StepWidth = @StepWidth";
                 db.DBCommand.Parameters.Clear();
@@ -1388,7 +1672,9 @@ namespace ScoutBase.Elevation
         public int ElevationHorizonDeleteAll(ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + ElevationHorizonDesignator.TableName;
                 db.DBCommand.Parameters.Clear();
@@ -1399,7 +1685,9 @@ namespace ScoutBase.Elevation
         public int ElevationHorizonUpdate(ElevationHorizonDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+            lock (db)
             {
                 db.DBCommand.CommandText = "UPDATE " + ElevationHorizonDesignator.TableName + " SET Lat = @Lat, Lon = @Lon, Distance = @Distance, StepWidth = @StepWidth, Count = @Count, Paths = @Paths, LastUpdated = @LastUpdated WHERE Lat = @Lat AND Lon = @Lon AND Distance = @Distance AND StepWidth = @StepWidth";
                 db.DBCommand.Parameters.Clear();
@@ -1416,6 +1704,8 @@ namespace ScoutBase.Elevation
         public void ElevationHorizonInsertOrUpdateIfNewer(ElevationHorizonDesignator path, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return;
             DateTime dt = this.ElevationHorizonFindLastUpdated(path, model);
             if (dt == DateTime.MinValue)
                 this.ElevationHorizonInsert(path, model);
@@ -1487,13 +1777,18 @@ namespace ScoutBase.Elevation
             string tn = tablename;
             if (String.IsNullOrEmpty(tn))
                 tn = LocalObstructionDesignator.TableName;
-            return GetElevationDatabase(model).TableExists(tn);
+            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return false;
+            return db.TableExists(tn);
         }
 
         public void LocalObstructionCreateTable(ELEVATIONMODEL model, string tablename = "")
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return;
+            lock (db)
             {
                 // check for table name is null or empty --> use default tablename from type instead
                 string tn = tablename;
@@ -1514,7 +1809,9 @@ namespace ScoutBase.Elevation
         public bool LocalObstructionExists(LocalObstructionDesignator obstr, ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return false;
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT EXISTS (SELECT LastUpdated FROM " + LocalObstructionDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon)";
                 db.DBCommand.Parameters.Clear();
@@ -1547,8 +1844,14 @@ namespace ScoutBase.Elevation
 
         public LocalObstructionDesignator LocalObstructionFind(LocalObstructionDesignator obstr, ELEVATIONMODEL model)
         {
+            if (obstr == null)
+                return null;
+
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return null;
+
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT * FROM " + LocalObstructionDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon";
                 db.DBCommand.Parameters.Clear();
@@ -1569,8 +1872,14 @@ namespace ScoutBase.Elevation
 
         public DateTime LocalObstructionFindLastUpdated(LocalObstructionDesignator obstr, ELEVATIONMODEL model)
         {
+            if (obstr == null)
+                return DateTime.MinValue;
+
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return DateTime.MinValue;
+
+            lock (db)
             {
                 db.DBCommand.CommandText = "SELECT LastUpdated FROM " + LocalObstructionDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon";
                 db.DBCommand.Parameters.Clear();
@@ -1585,8 +1894,14 @@ namespace ScoutBase.Elevation
 
         public int LocalObstructionInsert(LocalObstructionDesignator obstr, ELEVATIONMODEL model)
         {
+            if (obstr == null)
+                return -1;
+
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+
+            lock (db)
             {
                 db.DBCommand.CommandText = "INSERT INTO " + LocalObstructionDesignator.TableName + " (Lat, Lon, Distance, Height, LastUpdated) VALUES (@Lat, @Lon, @Distance, @Height, @LastUpdated)";
                 db.DBCommand.Parameters.Clear();
@@ -1601,8 +1916,14 @@ namespace ScoutBase.Elevation
 
         public int LocalObstructionDelete(LocalObstructionDesignator obstr, ELEVATIONMODEL model)
         {
+            if (obstr == null)
+                return -1;
+
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+
+            lock (db)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + LocalObstructionDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon";
                 db.DBCommand.Parameters.Clear();
@@ -1615,7 +1936,10 @@ namespace ScoutBase.Elevation
         public int LocalObstructionDeleteAll(ELEVATIONMODEL model)
         {
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+
+            lock (db)
             {
                 db.DBCommand.CommandText = "DELETE FROM " + LocalObstructionDesignator.TableName;
                 db.DBCommand.Parameters.Clear();
@@ -1625,8 +1949,14 @@ namespace ScoutBase.Elevation
 
         public int LocalObstructionUpdate(LocalObstructionDesignator obstr, ELEVATIONMODEL model)
         {
+            if (obstr == null)
+                return -1;
+
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            lock (db.DBCommand)
+            if (db == null)
+                return -1;
+
+            lock (db)
             {
                 db.DBCommand.CommandText = "UPDATE " + LocalObstructionDesignator.TableName + " SET Lat = @Lat, Lon = @Lon, Distance = @Distance, Height = @Height, LastUpdated = @LastUpdated WHERE Lat = @Lat AND Lon = @Lon";
                 db.DBCommand.Parameters.Clear();
@@ -1639,15 +1969,23 @@ namespace ScoutBase.Elevation
                 return result;
             }
         }
+
         public void LocalObstructionInsertOrUpdateIfNewer(LocalObstructionDesignator obstr, ELEVATIONMODEL model)
         {
+            if (obstr == null)
+                return;
+
             System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+            if (db == null)
+                return;
+
             DateTime dt = this.LocalObstructionFindLastUpdated(obstr, model);
             if (dt == DateTime.MinValue)
                 this.LocalObstructionInsert(obstr, model);
             else if (dt < obstr.LastUpdated)
                 this.LocalObstructionUpdate(obstr, model);
         }
+
         #endregion
 
         #region ElevationCatalogue
@@ -1679,18 +2017,21 @@ namespace ScoutBase.Elevation
             int count = db.TableRowCount(tablename);
             // copy rows, if any
             // don't care about the column type --> SQLite can handle that
-            if (count > 0)
+            lock (db)
             {
-                db.Execute("UPDATE " + tablename + " SET LastUpdated = strftime('%s',LastUpdated)");
+                if (count > 0)
+                {
+                    db.Execute("UPDATE " + tablename + " SET LastUpdated = strftime('%s',LastUpdated)");
+                }
+                // change table's structure
+                // BE CAREFUL HERE!!!
+                int schema_version = db.GetSchemaVersion();
+                db.Execute("PRAGMA writable_schema = ON");
+                db.Execute("UPDATE sqlite_master SET sql = replace(sql, 'LastUpdated TEXT', 'LastUpdated INT32') WHERE type = 'table' AND name = '" + tablename + "'");
+                schema_version++;
+                db.SetSchemaVerion(schema_version);
+                db.Execute("PRAGMA writable_schema = OFF");
             }
-            // change table's structure
-            // BE CAREFUL HERE!!!
-            int schema_version = db.GetSchemaVersion();
-            db.Execute("PRAGMA writable_schema = ON");
-            db.Execute("UPDATE sqlite_master SET sql = replace(sql, 'LastUpdated TEXT', 'LastUpdated INT32') WHERE type = 'table' AND name = '" + tablename + "'");
-            schema_version++;
-            db.SetSchemaVerion(schema_version);
-            db.Execute("PRAGMA writable_schema = OFF");
         }
 
     }

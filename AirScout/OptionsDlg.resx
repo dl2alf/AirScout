@@ -240,7 +240,8 @@
 </value>
   </data>
   <data name="label61.Text" xml:space="preserve">
-    <value>You can select different map provider from the list below. Depending on your selection some maps may not be available for your choosen area.  Please note that the selection of maps is taken from Great Maps regardless of their legal status. Some of them might be copyrighted or otherwise restricted in use.  You were asked to agree with the terms of use first.
+    <value>You can select different map provider from the list below. Depending on your selection some maps may not be available for your choosen area.  Please note that the selection of maps is taken from Great Maps regardless of their legal status. Some of them might be copyrighted or otherwise restricted in use.  
+You were asked to agree with the terms of use first.
 Open Street Map is recommended as a default.</value>
   </data>
   <data name="label52.Text" xml:space="preserve">
@@ -266,6 +267,20 @@ See documentation for further details.</value>
   <data name="label65.Text" xml:space="preserve">
     <value>AirScout can get FFT data from Spectrum Lab software via Network. You must have Spectrum Lab software installed with default settings. Do not forget to activate http - server functionaltiy in Spectrum Lab.</value>
   </data>
+  <data name="richTextBox4.Text" xml:space="preserve">
+    <value>Rig must support a minimum of CAT control capabilities:
+- set frequency of VFO A and VFO B
+- set/reset Split Mode
+
+A restart of AirScout might be required after settings change, especially  when changing between different CAT engines.</value>
+  </data>
+  <data name="richTextBox1.Text" xml:space="preserve">
+    <value>CAT control is introduced for Doppler shift compensation (see "Track" tab for details). 
+AirScout is calculating tracking and Doppler shifts once per second by default. Each communication with rig must be completed within this period.  The  recommended settings for OmniRig are:
+
+- Polling interval:               100ms ...500ms
+- Timeout:                           500ms .. 1sec (essential for OmniRig)</value>
+  </data>
   <data name="label37.Text" xml:space="preserve">
     <value>Watchlist allows you to pick a number of stations out of your database. 
 This is very helpful especially when working in Multi-Path Mode. 
@@ -290,5 +305,11 @@ Watchlist can be synchronized with ON4KST chat user list instead of a local mana
   </metadata>
   <metadata name="bw_StationDataUpdater.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>890, 17</value>
+  </metadata>
+  <metadata name="bw_ASTER3_MapUpdater.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1071, 17</value>
+  </metadata>
+  <metadata name="bw_ASTER1_MapUpdater.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>1259, 17</value>
   </metadata>
 </root>

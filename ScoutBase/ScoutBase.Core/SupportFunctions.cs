@@ -566,7 +566,7 @@ namespace ScoutBase.Core
                 downloaddir = filename.Substring(0, filename.LastIndexOf("/"));
             // set path to calling assembly's path if not otherwise specified
             if (String.IsNullOrEmpty(downloaddir))
-                downloaddir = Assembly.GetCallingAssembly().Location;
+                downloaddir = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
             try
             {
                 Console.WriteLine("[UnzipFile: Trying to unzip file: " + filename);
@@ -697,25 +697,36 @@ namespace ScoutBase.Core
         /// <summary>
         /// Gets the creation time of a web resource.
         /// </summary>
-        /// <param name="address">The address URI of web resource.</param>
+        /// <param name="address">The address URI of web/file resource.</param>
         /// <param name="allowredirect">Allows redirection of requested source.</param>
         /// <returns>The creation time in UTC if successful. DateTime.MinValue if not.</returns>
         public DateTime GetWebCreationTimeUtc(Uri address, bool allowredirect = true)
         {
-            // get the last modified time of the website
+            // get the last modified time of the website/file
             // returns DateTime.MinValue if address not found
             try
             {
+
                 DateTime webcreationtime = DateTime.MinValue;
-                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(address);
-                // allow redirect 2017/12/06 DL2ALF
-                req.AllowAutoRedirect = allowredirect;
-                using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
+                if (address.IsFile)
                 {
-                    webcreationtime = res.LastModified.ToUniversalTime();
+                    if (File.Exists(address.LocalPath))
+                    {
+                        webcreationtime = File.GetLastWriteTimeUtc(address.LocalPath);
+                    }
                 }
-                Console.WriteLine("[GetWebCreationTime] Getting web creation time from address: " + address + " = " + webcreationtime.ToString("yyyy-MM-dd HH:mm:ss"));
-                return webcreationtime;
+                else
+                {
+                    HttpWebRequest req = (HttpWebRequest)WebRequest.Create(address);
+                    // allow redirect 2017/12/06 DL2ALF
+                    req.AllowAutoRedirect = allowredirect;
+                    using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
+                    {
+                        webcreationtime = res.LastModified.ToUniversalTime();
+                    }
+                    Console.WriteLine("[GetWebCreationTime] Getting web creation time from address: " + address + " = " + webcreationtime.ToString("yyyy-MM-dd HH:mm:ss"));
+                }
+                 return webcreationtime;
             }
             catch (Exception ex)
             {
@@ -726,44 +737,62 @@ namespace ScoutBase.Core
 
         private bool DownloadFileFromWeb(string address, string filename, bool allowredirect, bool autounzip, string password = "")
         {
-            // donwloads file from a web resource
+            // donwloads file from a web/file resource
             try
             {
-                // get web cration time
-                DateTime webcreationtime = GetWebCreationTimeUtc(address, allowredirect);
-                // download file and check for errors and uri identical to request
-                // do not use WebClient.Download for this!
-                var request = (HttpWebRequest)WebRequest.Create(address);
-                // allow redirect 2017/12/06 DL2ALF
-                request.AllowAutoRedirect = allowredirect;
-                request.Method = "GET";
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                Uri uri = new Uri(address);
+                if (uri.IsFile)
                 {
-                    HttpStatusCode status = response.StatusCode;
-                    if ((status == HttpStatusCode.OK) && (response.ResponseUri == new Uri(address)))
+                    if (File.Exists(uri.LocalPath))
                     {
-                        using (var responseStream = response.GetResponseStream())
+                        File.Copy(uri.LocalPath, filename, true);
+                        if (autounzip && Path.GetExtension(filename).ToLower() == ".zip")
                         {
-                            using (var fileToDownload = new System.IO.FileStream(filename, System.IO.FileMode.Create, System.IO.FileAccess.ReadWrite))
+                            Console.WriteLine("[DownloadFileFromWeb] Trying to unzip downloaded file: " + filename);
+                            return ZIP.UncompressFile(filename, 60, password);
+                        }
+                        Console.WriteLine("[DownloadFileFromWeb] Downloading file from address finished: " + address);
+                        return true;
+                    }
+                }
+                else
+                {
+                    // get web cration time
+                    DateTime webcreationtime = GetWebCreationTimeUtc(address, allowredirect);
+                    // download file and check for errors and uri identical to request
+                    // do not use WebClient.Download for this!
+                    var request = (HttpWebRequest)WebRequest.Create(address);
+                    // allow redirect 2017/12/06 DL2ALF
+                    request.AllowAutoRedirect = allowredirect;
+                    request.Method = "GET";
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        HttpStatusCode status = response.StatusCode;
+                        if ((status == HttpStatusCode.OK) && (response.ResponseUri == new Uri(address)))
+                        {
+                            using (var responseStream = response.GetResponseStream())
                             {
-                                responseStream.CopyTo(fileToDownload);
+                                using (var fileToDownload = new System.IO.FileStream(filename, System.IO.FileMode.Create, System.IO.FileAccess.ReadWrite))
+                                {
+                                    responseStream.CopyTo(fileToDownload);
+                                }
                             }
                         }
                     }
-                }
-                // set creation time
-                if (File.Exists(filename))
-                {
-                    File.SetCreationTime(filename, webcreationtime);
-                    File.SetLastWriteTime(filename, webcreationtime);
-                    // unzip the file content if enabled
-                    if (autounzip && (Path.GetExtension(filename).ToLower() == ".zip"))
+                    // set creation time
+                    if (File.Exists(filename))
                     {
-                        Console.WriteLine("[DownloadFileFromWeb] Trying to unzip downloaded file: " + filename);
-                        return ZIP.UncompressFile(filename, 60, password);
+                        File.SetCreationTime(filename, webcreationtime);
+                        File.SetLastWriteTime(filename, webcreationtime);
+                        // unzip the file content if enabled
+                        if (autounzip && (Path.GetExtension(filename).ToLower() == ".zip"))
+                        {
+                            Console.WriteLine("[DownloadFileFromWeb] Trying to unzip downloaded file: " + filename);
+                            return ZIP.UncompressFile(filename, 60, password);
+                        }
+                        Console.WriteLine("[DownloadFileFromWeb] Downloading file from address finished: " + address);
+                        return true;
                     }
-                    Console.WriteLine("[DownloadFileFromWeb] Downloading file from address finished: " + address);
-                    return true;
                 }
             }
             catch (Exception ex)

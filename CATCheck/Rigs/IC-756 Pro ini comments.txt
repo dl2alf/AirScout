@@ -1,0 +1,51 @@
+Comments from K6JJ for the ICOM IC-756 Pro.ini file, version 29 MAY 05:
+
+1. This rig does not support the function to turn the CI-V Transceive mode on and off, which apparently
+the IC-756 Pro II can do. I found no difference in the operation of Omni-Rig Client (the .ini testing
+program) or Band Master with the mode on or off. However, when using the IC-756 Pro with a rig control
+program such as TRX-Manager, I had to turn this mode on or changes made at the rig would not show
+up in the software program display. Depending upon your station configuration, you may find the need
+to manually adjust this function to on or off in the rig set/others menu.
+
+2. The IC-756 Pro has a smaller set of commands when compared to the IC-756 Pro II command set. Thus,
+certain commands that Omni-Rig supports are not supported by the IC-756 Pro.
+
+3. The commands for setting and reading the CW Pitch Frequency were copied from the IC-756 Pro II.ini file.
+They seem to work when changes were made to them so that the IC-756 Pro would recognize the control codes,
+but they seem to need some refinement, as mentioned in the .ini file remarks for both rigs.
+
+4. When using the Band Master program, the following mode conversions apply:
+
+Band Master Mode   IC-756 Pro Mode
+CW-U		   CW
+CW-L		   CW-R
+USB		   USB
+LSB		   LSB
+DIG-U		   RTTY
+DIG-L		   RTTY-R
+AM		   AM
+FM		   FM
+
+Selecting the wanted Band Master mode will set-up the IC-756 Pro for the corresponding mode.
+
+5. When using the Band Master program, the following function buttons do not operate with the IC-756 Pro,
+and are grayed out:
+
+SPLIT (see #6 below)
+RIT
+XIT
+
+6. The Band Master program TX offset button, when clicked, sets the IC-756 Pro to the Split mode and
+sets the transmit VFO to the frequency of the receive VFO. No transmit frequency offset is added.
+Double clicking this button makes the same change. To disable the Split mode, click on the band in-use
+button.
+
+7. If you can improve on the IC-756 Pro.ini file and/or these comments, please do so. I knew nothing
+about the IC-756 Pro rig control functions, Omni-Rig and Band Master, when I started to develop the .ini
+file. I appreciated having the IC-756 Pro II.ini file already developed, which aided me greatly. I also
+appreciate the Omni-Rig concept.
+
+73,
+John
+K6JJ
+

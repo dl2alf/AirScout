@@ -29,16 +29,26 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            ScoutBase.Core.LatLon.GPoint gPoint5 = new ScoutBase.Core.LatLon.GPoint();
-            ScoutBase.Core.LatLon.GPoint gPoint6 = new ScoutBase.Core.LatLon.GPoint();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapViewDlg));
+            ScoutBase.Core.LatLon.GPoint gPoint1 = new ScoutBase.Core.LatLon.GPoint();
+            ScoutBase.Core.LatLon.GPoint gPoint2 = new ScoutBase.Core.LatLon.GPoint();
             this.mnu_Main = new System.Windows.Forms.MenuStrip();
             this.tsi_Exit = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnu_Settings = new System.Windows.Forms.ToolStripMenuItem();
             this.tsi_Info = new System.Windows.Forms.ToolStripMenuItem();
             this.ss_Main = new System.Windows.Forms.StatusStrip();
             this.tsl_Status = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsl_ConnectionStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.gb_Info = new System.Windows.Forms.GroupBox();
+            this.gb_Map_Zoom = new System.Windows.Forms.GroupBox();
+            this.pa_Map_Zoom = new System.Windows.Forms.Panel();
+            this.cb_Map_AutoCenter = new System.Windows.Forms.CheckBox();
+            this.tb_Map_Zoom = new System.Windows.Forms.TextBox();
+            this.btn_Map_Zoom_Out = new System.Windows.Forms.Button();
+            this.btn_Map_Zoom_In = new System.Windows.Forms.Button();
+            this.gb_Control = new System.Windows.Forms.GroupBox();
+            this.btn_Map_PlayPause = new System.Windows.Forms.Button();
+            this.il_Main = new System.Windows.Forms.ImageList(this.components);
             this.cb_DXLoc = new ScoutBase.Core.LocatorComboBox();
             this.cb_MyLoc = new ScoutBase.Core.LocatorComboBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -67,34 +77,24 @@
             this.il_Airports = new System.Windows.Forms.ImageList(this.components);
             this.il_Planes_M = new System.Windows.Forms.ImageList(this.components);
             this.ti_ShowLegends = new System.Windows.Forms.Timer(this.components);
-            this.btn_Map_PlayPause = new System.Windows.Forms.Button();
-            this.gb_Control = new System.Windows.Forms.GroupBox();
-            this.il_Main = new System.Windows.Forms.ImageList(this.components);
-            this.gb_Map_Zoom = new System.Windows.Forms.GroupBox();
-            this.pa_Map_Zoom = new System.Windows.Forms.Panel();
-            this.tb_Map_Zoom = new System.Windows.Forms.TextBox();
-            this.btn_Map_Zoom_Out = new System.Windows.Forms.Button();
-            this.btn_Map_Zoom_In = new System.Windows.Forms.Button();
-            this.tsl_ConnectionStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.cb_Map_AutoCenter = new System.Windows.Forms.CheckBox();
             this.mnu_Main.SuspendLayout();
             this.ss_Main.SuspendLayout();
             this.gb_Info.SuspendLayout();
+            this.gb_Map_Zoom.SuspendLayout();
+            this.pa_Map_Zoom.SuspendLayout();
+            this.gb_Control.SuspendLayout();
             this.gb_Map.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spc_Main)).BeginInit();
             this.spc_Main.Panel1.SuspendLayout();
             this.spc_Main.Panel2.SuspendLayout();
             this.spc_Main.SuspendLayout();
-            this.gb_Control.SuspendLayout();
-            this.gb_Map_Zoom.SuspendLayout();
-            this.pa_Map_Zoom.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnu_Main
             // 
             this.mnu_Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsi_Exit,
-            this.settingsToolStripMenuItem,
+            this.mnu_Settings,
             this.tsi_Info});
             this.mnu_Main.Location = new System.Drawing.Point(0, 0);
             this.mnu_Main.Name = "mnu_Main";
@@ -105,15 +105,16 @@
             // tsi_Exit
             // 
             this.tsi_Exit.Name = "tsi_Exit";
-            this.tsi_Exit.Size = new System.Drawing.Size(37, 20);
+            this.tsi_Exit.Size = new System.Drawing.Size(38, 20);
             this.tsi_Exit.Text = "E&xit";
             this.tsi_Exit.Click += new System.EventHandler(this.tsi_Exit_Click);
             // 
-            // settingsToolStripMenuItem
+            // mnu_Settings
             // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem.Text = "&Settings";
+            this.mnu_Settings.Name = "mnu_Settings";
+            this.mnu_Settings.Size = new System.Drawing.Size(61, 20);
+            this.mnu_Settings.Text = "&Settings";
+            this.mnu_Settings.Click += new System.EventHandler(this.mnu_Settings_Click);
             // 
             // tsi_Info
             // 
@@ -140,6 +141,12 @@
             this.tsl_Status.Spring = true;
             this.tsl_Status.Text = "Status";
             this.tsl_Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tsl_ConnectionStatus
+            // 
+            this.tsl_ConnectionStatus.Name = "tsl_ConnectionStatus";
+            this.tsl_ConnectionStatus.Size = new System.Drawing.Size(39, 17);
+            this.tsl_ConnectionStatus.Text = "Status";
             // 
             // gb_Info
             // 
@@ -170,6 +177,105 @@
             this.gb_Info.TabStop = false;
             this.gb_Info.Text = "Info";
             // 
+            // gb_Map_Zoom
+            // 
+            this.gb_Map_Zoom.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gb_Map_Zoom.Controls.Add(this.pa_Map_Zoom);
+            this.gb_Map_Zoom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.gb_Map_Zoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gb_Map_Zoom.Location = new System.Drawing.Point(3, 357);
+            this.gb_Map_Zoom.Name = "gb_Map_Zoom";
+            this.gb_Map_Zoom.Size = new System.Drawing.Size(139, 79);
+            this.gb_Map_Zoom.TabIndex = 66;
+            this.gb_Map_Zoom.TabStop = false;
+            this.gb_Map_Zoom.Text = "Map Zoom";
+            // 
+            // pa_Map_Zoom
+            // 
+            this.pa_Map_Zoom.Controls.Add(this.cb_Map_AutoCenter);
+            this.pa_Map_Zoom.Controls.Add(this.tb_Map_Zoom);
+            this.pa_Map_Zoom.Controls.Add(this.btn_Map_Zoom_Out);
+            this.pa_Map_Zoom.Controls.Add(this.btn_Map_Zoom_In);
+            this.pa_Map_Zoom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pa_Map_Zoom.Location = new System.Drawing.Point(3, 16);
+            this.pa_Map_Zoom.Name = "pa_Map_Zoom";
+            this.pa_Map_Zoom.Size = new System.Drawing.Size(133, 60);
+            this.pa_Map_Zoom.TabIndex = 65;
+            // 
+            // cb_Map_AutoCenter
+            // 
+            this.cb_Map_AutoCenter.AutoSize = true;
+            this.cb_Map_AutoCenter.Checked = global::AirScoutViewClient.Properties.Settings.Default.Map_AutoCenter;
+            this.cb_Map_AutoCenter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cb_Map_AutoCenter.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScoutViewClient.Properties.Settings.Default, "Map_AutoCenter", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_Map_AutoCenter.Location = new System.Drawing.Point(12, 37);
+            this.cb_Map_AutoCenter.Name = "cb_Map_AutoCenter";
+            this.cb_Map_AutoCenter.Size = new System.Drawing.Size(93, 17);
+            this.cb_Map_AutoCenter.TabIndex = 24;
+            this.cb_Map_AutoCenter.Text = "Auto Center";
+            this.cb_Map_AutoCenter.UseVisualStyleBackColor = true;
+            // 
+            // tb_Map_Zoom
+            // 
+            this.tb_Map_Zoom.BackColor = System.Drawing.Color.FloralWhite;
+            this.tb_Map_Zoom.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tb_Map_Zoom.Location = new System.Drawing.Point(45, 9);
+            this.tb_Map_Zoom.Name = "tb_Map_Zoom";
+            this.tb_Map_Zoom.Size = new System.Drawing.Size(41, 22);
+            this.tb_Map_Zoom.TabIndex = 23;
+            // 
+            // btn_Map_Zoom_Out
+            // 
+            this.btn_Map_Zoom_Out.Location = new System.Drawing.Point(92, 8);
+            this.btn_Map_Zoom_Out.Name = "btn_Map_Zoom_Out";
+            this.btn_Map_Zoom_Out.Size = new System.Drawing.Size(30, 23);
+            this.btn_Map_Zoom_Out.TabIndex = 22;
+            this.btn_Map_Zoom_Out.Text = "-";
+            this.btn_Map_Zoom_Out.UseVisualStyleBackColor = true;
+            this.btn_Map_Zoom_Out.Click += new System.EventHandler(this.btn_Map_Zoom_Out_Click);
+            // 
+            // btn_Map_Zoom_In
+            // 
+            this.btn_Map_Zoom_In.Location = new System.Drawing.Point(9, 8);
+            this.btn_Map_Zoom_In.Name = "btn_Map_Zoom_In";
+            this.btn_Map_Zoom_In.Size = new System.Drawing.Size(30, 23);
+            this.btn_Map_Zoom_In.TabIndex = 21;
+            this.btn_Map_Zoom_In.Text = "+";
+            this.btn_Map_Zoom_In.UseVisualStyleBackColor = true;
+            this.btn_Map_Zoom_In.Click += new System.EventHandler(this.btn_Map_Zoom_In_Click);
+            // 
+            // gb_Control
+            // 
+            this.gb_Control.Controls.Add(this.btn_Map_PlayPause);
+            this.gb_Control.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.gb_Control.Location = new System.Drawing.Point(3, 436);
+            this.gb_Control.Name = "gb_Control";
+            this.gb_Control.Size = new System.Drawing.Size(139, 55);
+            this.gb_Control.TabIndex = 64;
+            this.gb_Control.TabStop = false;
+            // 
+            // btn_Map_PlayPause
+            // 
+            this.btn_Map_PlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_Map_PlayPause.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_Map_PlayPause.ImageIndex = 1;
+            this.btn_Map_PlayPause.ImageList = this.il_Main;
+            this.btn_Map_PlayPause.Location = new System.Drawing.Point(14, 17);
+            this.btn_Map_PlayPause.Name = "btn_Map_PlayPause";
+            this.btn_Map_PlayPause.Size = new System.Drawing.Size(114, 29);
+            this.btn_Map_PlayPause.TabIndex = 64;
+            this.btn_Map_PlayPause.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btn_Map_PlayPause.UseVisualStyleBackColor = true;
+            this.btn_Map_PlayPause.Click += new System.EventHandler(this.btn_Map_PlayPause_Click);
+            // 
+            // il_Main
+            // 
+            this.il_Main.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("il_Main.ImageStream")));
+            this.il_Main.TransparentColor = System.Drawing.Color.Transparent;
+            this.il_Main.Images.SetKeyName(0, "PauseHS.png");
+            this.il_Main.Images.SetKeyName(1, "PlayHS.png");
+            this.il_Main.Images.SetKeyName(2, "RecordHS.png");
+            // 
             // cb_DXLoc
             // 
             this.cb_DXLoc.AutoLength = false;
@@ -180,7 +286,7 @@
             this.cb_DXLoc.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cb_DXLoc.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cb_DXLoc.FormattingEnabled = true;
-            this.cb_DXLoc.GeoLocation = gPoint5;
+            this.cb_DXLoc.GeoLocation = gPoint1;
             this.cb_DXLoc.Location = new System.Drawing.Point(6, 243);
             this.cb_DXLoc.Name = "cb_DXLoc";
             this.cb_DXLoc.Precision = 3;
@@ -200,7 +306,7 @@
             this.cb_MyLoc.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cb_MyLoc.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cb_MyLoc.FormattingEnabled = true;
-            this.cb_MyLoc.GeoLocation = gPoint6;
+            this.cb_MyLoc.GeoLocation = gPoint2;
             this.cb_MyLoc.Location = new System.Drawing.Point(6, 161);
             this.cb_MyLoc.Name = "cb_MyLoc";
             this.cb_MyLoc.Precision = 3;
@@ -411,6 +517,7 @@
             this.gm_Main.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Main.Name = "gm_Main";
             this.gm_Main.NegativeMode = false;
+            this.gm_Main.Opacity = 1D;
             this.gm_Main.PolygonsEnabled = true;
             this.gm_Main.RetryLoadTile = 0;
             this.gm_Main.RoutesEnabled = true;
@@ -481,111 +588,6 @@
             this.ti_ShowLegends.Interval = 5000;
             this.ti_ShowLegends.Tick += new System.EventHandler(this.ti_ShowLegends_Tick);
             // 
-            // btn_Map_PlayPause
-            // 
-            this.btn_Map_PlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_Map_PlayPause.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_Map_PlayPause.ImageIndex = 1;
-            this.btn_Map_PlayPause.ImageList = this.il_Main;
-            this.btn_Map_PlayPause.Location = new System.Drawing.Point(14, 17);
-            this.btn_Map_PlayPause.Name = "btn_Map_PlayPause";
-            this.btn_Map_PlayPause.Size = new System.Drawing.Size(114, 29);
-            this.btn_Map_PlayPause.TabIndex = 64;
-            this.btn_Map_PlayPause.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btn_Map_PlayPause.UseVisualStyleBackColor = true;
-            this.btn_Map_PlayPause.Click += new System.EventHandler(this.btn_Map_PlayPause_Click);
-            // 
-            // gb_Control
-            // 
-            this.gb_Control.Controls.Add(this.btn_Map_PlayPause);
-            this.gb_Control.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.gb_Control.Location = new System.Drawing.Point(3, 436);
-            this.gb_Control.Name = "gb_Control";
-            this.gb_Control.Size = new System.Drawing.Size(139, 55);
-            this.gb_Control.TabIndex = 64;
-            this.gb_Control.TabStop = false;
-            // 
-            // il_Main
-            // 
-            this.il_Main.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("il_Main.ImageStream")));
-            this.il_Main.TransparentColor = System.Drawing.Color.Transparent;
-            this.il_Main.Images.SetKeyName(0, "PauseHS.png");
-            this.il_Main.Images.SetKeyName(1, "PlayHS.png");
-            this.il_Main.Images.SetKeyName(2, "RecordHS.png");
-            // 
-            // gb_Map_Zoom
-            // 
-            this.gb_Map_Zoom.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gb_Map_Zoom.Controls.Add(this.pa_Map_Zoom);
-            this.gb_Map_Zoom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.gb_Map_Zoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gb_Map_Zoom.Location = new System.Drawing.Point(3, 357);
-            this.gb_Map_Zoom.Name = "gb_Map_Zoom";
-            this.gb_Map_Zoom.Size = new System.Drawing.Size(139, 79);
-            this.gb_Map_Zoom.TabIndex = 66;
-            this.gb_Map_Zoom.TabStop = false;
-            this.gb_Map_Zoom.Text = "Map Zoom";
-            // 
-            // pa_Map_Zoom
-            // 
-            this.pa_Map_Zoom.Controls.Add(this.cb_Map_AutoCenter);
-            this.pa_Map_Zoom.Controls.Add(this.tb_Map_Zoom);
-            this.pa_Map_Zoom.Controls.Add(this.btn_Map_Zoom_Out);
-            this.pa_Map_Zoom.Controls.Add(this.btn_Map_Zoom_In);
-            this.pa_Map_Zoom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pa_Map_Zoom.Location = new System.Drawing.Point(3, 16);
-            this.pa_Map_Zoom.Name = "pa_Map_Zoom";
-            this.pa_Map_Zoom.Size = new System.Drawing.Size(133, 60);
-            this.pa_Map_Zoom.TabIndex = 65;
-            // 
-            // tb_Map_Zoom
-            // 
-            this.tb_Map_Zoom.BackColor = System.Drawing.Color.FloralWhite;
-            this.tb_Map_Zoom.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tb_Map_Zoom.Location = new System.Drawing.Point(45, 9);
-            this.tb_Map_Zoom.Name = "tb_Map_Zoom";
-            this.tb_Map_Zoom.Size = new System.Drawing.Size(41, 22);
-            this.tb_Map_Zoom.TabIndex = 23;
-            // 
-            // btn_Map_Zoom_Out
-            // 
-            this.btn_Map_Zoom_Out.Location = new System.Drawing.Point(92, 8);
-            this.btn_Map_Zoom_Out.Name = "btn_Map_Zoom_Out";
-            this.btn_Map_Zoom_Out.Size = new System.Drawing.Size(30, 23);
-            this.btn_Map_Zoom_Out.TabIndex = 22;
-            this.btn_Map_Zoom_Out.Text = "-";
-            this.btn_Map_Zoom_Out.UseVisualStyleBackColor = true;
-            this.btn_Map_Zoom_Out.Click += new System.EventHandler(this.btn_Map_Zoom_Out_Click);
-            // 
-            // btn_Map_Zoom_In
-            // 
-            this.btn_Map_Zoom_In.Location = new System.Drawing.Point(9, 8);
-            this.btn_Map_Zoom_In.Name = "btn_Map_Zoom_In";
-            this.btn_Map_Zoom_In.Size = new System.Drawing.Size(30, 23);
-            this.btn_Map_Zoom_In.TabIndex = 21;
-            this.btn_Map_Zoom_In.Text = "+";
-            this.btn_Map_Zoom_In.UseVisualStyleBackColor = true;
-            this.btn_Map_Zoom_In.Click += new System.EventHandler(this.btn_Map_Zoom_In_Click);
-            // 
-            // tsl_ConnectionStatus
-            // 
-            this.tsl_ConnectionStatus.Name = "tsl_ConnectionStatus";
-            this.tsl_ConnectionStatus.Size = new System.Drawing.Size(39, 17);
-            this.tsl_ConnectionStatus.Text = "Status";
-            // 
-            // cb_Map_AutoCenter
-            // 
-            this.cb_Map_AutoCenter.AutoSize = true;
-            this.cb_Map_AutoCenter.Checked = global::AirScoutViewClient.Properties.Settings.Default.Map_AutoCenter;
-            this.cb_Map_AutoCenter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cb_Map_AutoCenter.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScoutViewClient.Properties.Settings.Default, "Map_AutoCenter", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cb_Map_AutoCenter.Location = new System.Drawing.Point(12, 37);
-            this.cb_Map_AutoCenter.Name = "cb_Map_AutoCenter";
-            this.cb_Map_AutoCenter.Size = new System.Drawing.Size(93, 17);
-            this.cb_Map_AutoCenter.TabIndex = 24;
-            this.cb_Map_AutoCenter.Text = "Auto Center";
-            this.cb_Map_AutoCenter.UseVisualStyleBackColor = true;
-            // 
             // MapViewDlg
             // 
             this.AcceptButton = this.btn_Map_PlayPause;
@@ -608,15 +610,15 @@
             this.ss_Main.PerformLayout();
             this.gb_Info.ResumeLayout(false);
             this.gb_Info.PerformLayout();
+            this.gb_Map_Zoom.ResumeLayout(false);
+            this.pa_Map_Zoom.ResumeLayout(false);
+            this.pa_Map_Zoom.PerformLayout();
+            this.gb_Control.ResumeLayout(false);
             this.gb_Map.ResumeLayout(false);
             this.spc_Main.Panel1.ResumeLayout(false);
             this.spc_Main.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.spc_Main)).EndInit();
             this.spc_Main.ResumeLayout(false);
-            this.gb_Control.ResumeLayout(false);
-            this.gb_Map_Zoom.ResumeLayout(false);
-            this.pa_Map_Zoom.ResumeLayout(false);
-            this.pa_Map_Zoom.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -629,7 +631,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsi_Info;
         private System.Windows.Forms.StatusStrip ss_Main;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Status;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mnu_Settings;
         private System.Windows.Forms.GroupBox gb_Info;
         private System.Windows.Forms.GroupBox gb_Map;
         private System.Windows.Forms.Timer ti_Progress;

@@ -45,6 +45,22 @@
             this.btn_PictureFromTiles = new System.Windows.Forms.Button();
             this.btn_Delete = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.lbl_Diff_Mean = new System.Windows.Forms.Label();
+            this.pb_Diff = new System.Windows.Forms.PictureBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lbl_Diff_Voids = new System.Windows.Forms.Label();
+            this.tb_Show_Diff = new System.Windows.Forms.TextBox();
+            this.lbl_Diff_Max = new System.Windows.Forms.Label();
+            this.lbl_Diff_Total = new System.Windows.Forms.Label();
+            this.lbl_Diff_Min = new System.Windows.Forms.Label();
+            this.lbl_Diff_Dimensions = new System.Windows.Forms.Label();
+            this.btn_ShowDiff = new System.Windows.Forms.Button();
+            this.tb_Diff = new System.Windows.Forms.TextBox();
             this.btn_Compare = new System.Windows.Forms.Button();
             this.btn_Compare_Tile2 = new System.Windows.Forms.Button();
             this.btn_Compare_Tile1 = new System.Windows.Forms.Button();
@@ -52,24 +68,9 @@
             this.tb_Tile1 = new System.Windows.Forms.TextBox();
             this.tb_DestDir = new System.Windows.Forms.TextBox();
             this.tb_SourceDir = new System.Windows.Forms.TextBox();
-            this.tb_Diff = new System.Windows.Forms.TextBox();
-            this.btn_ShowDiff = new System.Windows.Forms.Button();
-            this.lbl_Diff_Dimensions = new System.Windows.Forms.Label();
-            this.lbl_Diff_Min = new System.Windows.Forms.Label();
-            this.lbl_Diff_Total = new System.Windows.Forms.Label();
-            this.lbl_Diff_Max = new System.Windows.Forms.Label();
-            this.tb_Show_Diff = new System.Windows.Forms.TextBox();
-            this.lbl_Diff_Voids = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.pb_Diff = new System.Windows.Forms.PictureBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.lbl_Diff_Mean = new System.Windows.Forms.Label();
             this.btn_PictureFromZIP = new System.Windows.Forms.Button();
             this.btn_ConvertSRTM1ToSRTM3 = new System.Windows.Forms.Button();
+            this.btn_Coverage = new System.Windows.Forms.Button();
             this.ss_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Picture)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -261,6 +262,150 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "TileCompare";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(12, 225);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(87, 13);
+            this.label8.TabIndex = 35;
+            this.label8.Text = "Mean difference:";
+            // 
+            // lbl_Diff_Mean
+            // 
+            this.lbl_Diff_Mean.AutoSize = true;
+            this.lbl_Diff_Mean.Location = new System.Drawing.Point(175, 225);
+            this.lbl_Diff_Mean.Name = "lbl_Diff_Mean";
+            this.lbl_Diff_Mean.Size = new System.Drawing.Size(22, 13);
+            this.lbl_Diff_Mean.TabIndex = 34;
+            this.lbl_Diff_Mean.Text = "xxx";
+            // 
+            // pb_Diff
+            // 
+            this.pb_Diff.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.pb_Diff.Location = new System.Drawing.Point(15, 260);
+            this.pb_Diff.Name = "pb_Diff";
+            this.pb_Diff.Size = new System.Drawing.Size(181, 163);
+            this.pb_Diff.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pb_Diff.TabIndex = 33;
+            this.pb_Diff.TabStop = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(11, 208);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(104, 13);
+            this.label7.TabIndex = 32;
+            this.label7.Text = "Maximum difference:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(11, 192);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(101, 13);
+            this.label6.TabIndex = 31;
+            this.label6.Text = "Minimum difference:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 175);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(62, 13);
+            this.label5.TabIndex = 30;
+            this.label5.Text = "Total voids:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 157);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(89, 13);
+            this.label4.TabIndex = 29;
+            this.label4.Text = "Total differences:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 140);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(64, 13);
+            this.label3.TabIndex = 28;
+            this.label3.Text = "Dimensions:";
+            // 
+            // lbl_Diff_Voids
+            // 
+            this.lbl_Diff_Voids.AutoSize = true;
+            this.lbl_Diff_Voids.Location = new System.Drawing.Point(176, 175);
+            this.lbl_Diff_Voids.Name = "lbl_Diff_Voids";
+            this.lbl_Diff_Voids.Size = new System.Drawing.Size(22, 13);
+            this.lbl_Diff_Voids.TabIndex = 27;
+            this.lbl_Diff_Voids.Text = "xxx";
+            // 
+            // tb_Show_Diff
+            // 
+            this.tb_Show_Diff.Location = new System.Drawing.Point(7, 107);
+            this.tb_Show_Diff.Name = "tb_Show_Diff";
+            this.tb_Show_Diff.ReadOnly = true;
+            this.tb_Show_Diff.Size = new System.Drawing.Size(230, 20);
+            this.tb_Show_Diff.TabIndex = 26;
+            // 
+            // lbl_Diff_Max
+            // 
+            this.lbl_Diff_Max.AutoSize = true;
+            this.lbl_Diff_Max.Location = new System.Drawing.Point(174, 208);
+            this.lbl_Diff_Max.Name = "lbl_Diff_Max";
+            this.lbl_Diff_Max.Size = new System.Drawing.Size(22, 13);
+            this.lbl_Diff_Max.TabIndex = 25;
+            this.lbl_Diff_Max.Text = "xxx";
+            // 
+            // lbl_Diff_Total
+            // 
+            this.lbl_Diff_Total.AutoSize = true;
+            this.lbl_Diff_Total.Location = new System.Drawing.Point(176, 157);
+            this.lbl_Diff_Total.Name = "lbl_Diff_Total";
+            this.lbl_Diff_Total.Size = new System.Drawing.Size(22, 13);
+            this.lbl_Diff_Total.TabIndex = 24;
+            this.lbl_Diff_Total.Text = "xxx";
+            // 
+            // lbl_Diff_Min
+            // 
+            this.lbl_Diff_Min.AutoSize = true;
+            this.lbl_Diff_Min.Location = new System.Drawing.Point(176, 192);
+            this.lbl_Diff_Min.Name = "lbl_Diff_Min";
+            this.lbl_Diff_Min.Size = new System.Drawing.Size(22, 13);
+            this.lbl_Diff_Min.TabIndex = 23;
+            this.lbl_Diff_Min.Text = "xxx";
+            // 
+            // lbl_Diff_Dimensions
+            // 
+            this.lbl_Diff_Dimensions.AutoSize = true;
+            this.lbl_Diff_Dimensions.Location = new System.Drawing.Point(176, 140);
+            this.lbl_Diff_Dimensions.Name = "lbl_Diff_Dimensions";
+            this.lbl_Diff_Dimensions.Size = new System.Drawing.Size(22, 13);
+            this.lbl_Diff_Dimensions.TabIndex = 22;
+            this.lbl_Diff_Dimensions.Text = "xxx";
+            // 
+            // btn_ShowDiff
+            // 
+            this.btn_ShowDiff.Location = new System.Drawing.Point(243, 105);
+            this.btn_ShowDiff.Name = "btn_ShowDiff";
+            this.btn_ShowDiff.Size = new System.Drawing.Size(69, 23);
+            this.btn_ShowDiff.TabIndex = 21;
+            this.btn_ShowDiff.Text = "Show Diff";
+            this.btn_ShowDiff.UseVisualStyleBackColor = true;
+            this.btn_ShowDiff.Click += new System.EventHandler(this.btn_ShowDiff_Click);
+            // 
+            // tb_Diff
+            // 
+            this.tb_Diff.Location = new System.Drawing.Point(7, 78);
+            this.tb_Diff.Name = "tb_Diff";
+            this.tb_Diff.ReadOnly = true;
+            this.tb_Diff.Size = new System.Drawing.Size(230, 20);
+            this.tb_Diff.TabIndex = 20;
+            // 
             // btn_Compare
             // 
             this.btn_Compare.Location = new System.Drawing.Point(243, 76);
@@ -329,150 +474,6 @@
             this.tb_SourceDir.TabIndex = 3;
             this.tb_SourceDir.Text = global::ElevationTileGenerator.Properties.Settings.Default.SourceDir;
             // 
-            // tb_Diff
-            // 
-            this.tb_Diff.Location = new System.Drawing.Point(7, 78);
-            this.tb_Diff.Name = "tb_Diff";
-            this.tb_Diff.ReadOnly = true;
-            this.tb_Diff.Size = new System.Drawing.Size(230, 20);
-            this.tb_Diff.TabIndex = 20;
-            // 
-            // btn_ShowDiff
-            // 
-            this.btn_ShowDiff.Location = new System.Drawing.Point(243, 105);
-            this.btn_ShowDiff.Name = "btn_ShowDiff";
-            this.btn_ShowDiff.Size = new System.Drawing.Size(69, 23);
-            this.btn_ShowDiff.TabIndex = 21;
-            this.btn_ShowDiff.Text = "Show Diff";
-            this.btn_ShowDiff.UseVisualStyleBackColor = true;
-            this.btn_ShowDiff.Click += new System.EventHandler(this.btn_ShowDiff_Click);
-            // 
-            // lbl_Diff_Dimensions
-            // 
-            this.lbl_Diff_Dimensions.AutoSize = true;
-            this.lbl_Diff_Dimensions.Location = new System.Drawing.Point(176, 140);
-            this.lbl_Diff_Dimensions.Name = "lbl_Diff_Dimensions";
-            this.lbl_Diff_Dimensions.Size = new System.Drawing.Size(22, 13);
-            this.lbl_Diff_Dimensions.TabIndex = 22;
-            this.lbl_Diff_Dimensions.Text = "xxx";
-            // 
-            // lbl_Diff_Min
-            // 
-            this.lbl_Diff_Min.AutoSize = true;
-            this.lbl_Diff_Min.Location = new System.Drawing.Point(176, 192);
-            this.lbl_Diff_Min.Name = "lbl_Diff_Min";
-            this.lbl_Diff_Min.Size = new System.Drawing.Size(22, 13);
-            this.lbl_Diff_Min.TabIndex = 23;
-            this.lbl_Diff_Min.Text = "xxx";
-            // 
-            // lbl_Diff_Total
-            // 
-            this.lbl_Diff_Total.AutoSize = true;
-            this.lbl_Diff_Total.Location = new System.Drawing.Point(176, 157);
-            this.lbl_Diff_Total.Name = "lbl_Diff_Total";
-            this.lbl_Diff_Total.Size = new System.Drawing.Size(22, 13);
-            this.lbl_Diff_Total.TabIndex = 24;
-            this.lbl_Diff_Total.Text = "xxx";
-            // 
-            // lbl_Diff_Max
-            // 
-            this.lbl_Diff_Max.AutoSize = true;
-            this.lbl_Diff_Max.Location = new System.Drawing.Point(174, 208);
-            this.lbl_Diff_Max.Name = "lbl_Diff_Max";
-            this.lbl_Diff_Max.Size = new System.Drawing.Size(22, 13);
-            this.lbl_Diff_Max.TabIndex = 25;
-            this.lbl_Diff_Max.Text = "xxx";
-            // 
-            // tb_Show_Diff
-            // 
-            this.tb_Show_Diff.Location = new System.Drawing.Point(7, 107);
-            this.tb_Show_Diff.Name = "tb_Show_Diff";
-            this.tb_Show_Diff.ReadOnly = true;
-            this.tb_Show_Diff.Size = new System.Drawing.Size(230, 20);
-            this.tb_Show_Diff.TabIndex = 26;
-            // 
-            // lbl_Diff_Voids
-            // 
-            this.lbl_Diff_Voids.AutoSize = true;
-            this.lbl_Diff_Voids.Location = new System.Drawing.Point(176, 175);
-            this.lbl_Diff_Voids.Name = "lbl_Diff_Voids";
-            this.lbl_Diff_Voids.Size = new System.Drawing.Size(22, 13);
-            this.lbl_Diff_Voids.TabIndex = 27;
-            this.lbl_Diff_Voids.Text = "xxx";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 140);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 13);
-            this.label3.TabIndex = 28;
-            this.label3.Text = "Dimensions:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 157);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(89, 13);
-            this.label4.TabIndex = 29;
-            this.label4.Text = "Total differences:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 175);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(62, 13);
-            this.label5.TabIndex = 30;
-            this.label5.Text = "Total voids:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(11, 192);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(101, 13);
-            this.label6.TabIndex = 31;
-            this.label6.Text = "Minimum difference:";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(11, 208);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(104, 13);
-            this.label7.TabIndex = 32;
-            this.label7.Text = "Maximum difference:";
-            // 
-            // pb_Diff
-            // 
-            this.pb_Diff.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.pb_Diff.Location = new System.Drawing.Point(15, 260);
-            this.pb_Diff.Name = "pb_Diff";
-            this.pb_Diff.Size = new System.Drawing.Size(181, 163);
-            this.pb_Diff.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pb_Diff.TabIndex = 33;
-            this.pb_Diff.TabStop = false;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 225);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(87, 13);
-            this.label8.TabIndex = 35;
-            this.label8.Text = "Mean difference:";
-            // 
-            // lbl_Diff_Mean
-            // 
-            this.lbl_Diff_Mean.AutoSize = true;
-            this.lbl_Diff_Mean.Location = new System.Drawing.Point(175, 225);
-            this.lbl_Diff_Mean.Name = "lbl_Diff_Mean";
-            this.lbl_Diff_Mean.Size = new System.Drawing.Size(22, 13);
-            this.lbl_Diff_Mean.TabIndex = 34;
-            this.lbl_Diff_Mean.Text = "xxx";
-            // 
             // btn_PictureFromZIP
             // 
             this.btn_PictureFromZIP.Location = new System.Drawing.Point(310, 449);
@@ -493,11 +494,22 @@
             this.btn_ConvertSRTM1ToSRTM3.UseVisualStyleBackColor = true;
             this.btn_ConvertSRTM1ToSRTM3.Click += new System.EventHandler(this.btn_ConvertSRTM1ToSRTM3_Click);
             // 
+            // btn_Coverage
+            // 
+            this.btn_Coverage.Location = new System.Drawing.Point(421, 507);
+            this.btn_Coverage.Name = "btn_Coverage";
+            this.btn_Coverage.Size = new System.Drawing.Size(75, 23);
+            this.btn_Coverage.TabIndex = 20;
+            this.btn_Coverage.Text = "Coverage";
+            this.btn_Coverage.UseVisualStyleBackColor = true;
+            this.btn_Coverage.Click += new System.EventHandler(this.btn_Coverage_Click);
+            // 
             // MainDlg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1001, 556);
+            this.Controls.Add(this.btn_Coverage);
             this.Controls.Add(this.btn_ConvertSRTM1ToSRTM3);
             this.Controls.Add(this.btn_PictureFromZIP);
             this.Controls.Add(this.groupBox1);
@@ -577,6 +589,7 @@
         private System.Windows.Forms.Label lbl_Diff_Mean;
         private System.Windows.Forms.Button btn_PictureFromZIP;
         private System.Windows.Forms.Button btn_ConvertSRTM1ToSRTM3;
+        private System.Windows.Forms.Button btn_Coverage;
     }
 }
 

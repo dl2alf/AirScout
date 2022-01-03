@@ -27,8 +27,7 @@ namespace AirScout
             Remove = false;
         }
 
-        public WatchlistItem(string call, string loc, bool oor) : this(call, loc, oor, false, false) { }
-        public WatchlistItem(string call, string loc, bool oor, bool check, bool selected)
+        public WatchlistItem(string call, string loc, bool oor, bool check = false, bool selected = false)
         {
             Call = call;
             Loc = loc;

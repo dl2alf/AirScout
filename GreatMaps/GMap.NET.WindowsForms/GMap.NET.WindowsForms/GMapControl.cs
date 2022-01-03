@@ -513,6 +513,9 @@ namespace GMap.NET.WindowsForms
         // internal stuff
         internal readonly Core Core = new Core();
 
+        // internal stuff
+        internal readonly Core Core = new Core();
+
         internal readonly Font CopyrightFont = new Font(FontFamily.GenericSansSerif, 7, FontStyle.Regular);
 #if !PocketPC
         internal readonly Font MissingDataFont = new Font(FontFamily.GenericSansSerif, 11, FontStyle.Bold);
@@ -544,12 +547,13 @@ namespace GMap.NET.WindowsForms
 #if !PocketPC
                 Manager.SQLitePing();
 
-                this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-                this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-                this.SetStyle(ControlStyles.UserPaint, true);
+
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
                 //            this.SetStyle(ControlStyles.Opaque, true);
-                this.SetStyle(ControlStyles.Opaque, false);
-                ResizeRedraw = true;
+            this.SetStyle(ControlStyles.Opaque, false);
+            ResizeRedraw = true;
 
                 TileFlipXYAttributes.SetWrapMode(WrapMode.TileFlipXY);
 
@@ -678,12 +682,78 @@ namespace GMap.NET.WindowsForms
         /// </summary>
         /// <param name="g"></param>
         void DrawMap(Graphics g)
+      {
+         if(Core.updatingBounds || MapProvider == EmptyProvider.Instance || MapProvider == null)
+         {
+            Debug.WriteLine("Core.updatingBounds");
+            return;
+         }
+
+        /// <summary>  
+        /// method for changing the opacity of an image  
+        /// </summary>  
+        /// <param name="image">image to set opacity on</param>  
+        /// <param name="opacity">percentage of opacity</param>  
+        /// <returns></returns>  
+        public Image SetImageOpacity(Image image, double opacity)
         {
-            if (Core.updatingBounds || MapProvider == EmptyProvider.Instance || MapProvider == null)
+            try
             {
-                Debug.WriteLine("Core.updatingBounds");
-                return;
-            }
+                //create a Bitmap the size of the image provided  
+                Bitmap bmp = new Bitmap(image.Width, image.Height);
+
+                //create a graphics object from the image  
+                using (Graphics gfx = Graphics.FromImage(bmp))
+                {
+
+                    //create a color matrix object  
+                    ColorMatrix matrix = new ColorMatrix();
+                    if(!img.IsParent)
+                    {
+#if !PocketPC
+                                    // change opacity if < 1.0
+                                    if (Opacity < 1)
+                                    {
+                                        Image im = SetImageOpacity(img.Img, Opacity);
+                                        g.DrawImage(im, Core.tileRect.X, Core.tileRect.Y, Core.tileRectBearing.Width, Core.tileRectBearing.Height);
+                                    }
+                                    else
+                                    {
+                                        g.DrawImage(img.Img, Core.tileRect.X, Core.tileRect.Y, Core.tileRectBearing.Width, Core.tileRectBearing.Height);
+                                    }
+#else
+                                    g.DrawImage(img.Img, (int) Core.tileRect.X, (int) Core.tileRect.Y);
+#endif
+                                 }
+#if !PocketPC
+                                 else
+                                 {
+                                    // TODO: move calculations to loader thread
+                                    System.Drawing.RectangleF srcRect = new System.Drawing.RectangleF((float)(img.Xoff * (img.Img.Width / img.Ix)), (float)(img.Yoff * (img.Img.Height / img.Ix)), (img.Img.Width / img.Ix), (img.Img.Height / img.Ix));
+                                    System.Drawing.Rectangle dst = new System.Drawing.Rectangle((int)Core.tileRect.X, (int)Core.tileRect.Y, (int)Core.tileRect.Width, (int)Core.tileRect.Height);
+                                    // change opacity if < 1.0
+                                    if (Opacity < 1)
+                                    {
+                                        Image im = SetImageOpacity(img.Img, Opacity);
+                                        g.DrawImage(im, dst, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
+                                    }
+                                    else
+                                    {
+                                        g.DrawImage(img.Img, dst, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, TileFlipXYAttributes);
+                                    }
+                                 }
+#endif
+                              }
+                           }
+                        }
+                     }
+#if !PocketPC
+                     else if(FillEmptyTiles && MapProvider.Projection is MercatorProjection)
+                     {
+                        #region -- fill empty lines --
+                        int zoomOffset = 1;
+                        Tile parentTile = Tile.Empty;
+                        long Ix = 0;
 
             Core.tileDrawingListLock.AcquireReaderLock();
             Core.Matrix.EnterReadLock();

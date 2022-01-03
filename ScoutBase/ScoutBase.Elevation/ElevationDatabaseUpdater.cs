@@ -43,7 +43,7 @@ namespace ScoutBase.Elevation
         ElevationDatabaseUpdaterStartOptions StartOptions;
 
         // Temp directory to save downloaded files
-        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp").TrimEnd(Path.DirectorySeparatorChar);
+        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp", "ElevationData").TrimEnd(Path.DirectorySeparatorChar);
 
         public ElevationDatabaseUpdater() : base()
         {
@@ -296,6 +296,10 @@ namespace ScoutBase.Elevation
                 dt = Properties.Settings.Default.Elevation_SRTM3_TimeStamp;
             else if ((StartOptions.Model == ELEVATIONMODEL.SRTM1) && (Properties.Settings.Default.Elevation_SRTM1_TimeStamp != null))
                 dt = Properties.Settings.Default.Elevation_SRTM1_TimeStamp;
+            else if ((StartOptions.Model == ELEVATIONMODEL.ASTER3) && (Properties.Settings.Default.Elevation_ASTER3_TimeStamp != null))
+                dt = Properties.Settings.Default.Elevation_ASTER3_TimeStamp;
+            else if ((StartOptions.Model == ELEVATIONMODEL.ASTER1) && (Properties.Settings.Default.Elevation_ASTER1_TimeStamp != null))
+                dt = Properties.Settings.Default.Elevation_ASTER1_TimeStamp;
             // change kind to UTC as it is not specified in settings
             dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
             return dt;
@@ -309,6 +313,10 @@ namespace ScoutBase.Elevation
                 return Properties.Settings.Default.Elevation_SRTM3_Status;
             else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
                 return Properties.Settings.Default.Elevation_SRTM1_Status;
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER3)
+                return Properties.Settings.Default.Elevation_ASTER3_Status;
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER1)
+                return Properties.Settings.Default.Elevation_ASTER1_Status;
             return DATABASESTATUS.UNDEFINED;
         }
 
@@ -321,6 +329,10 @@ namespace ScoutBase.Elevation
                 dt = Properties.Settings.Default.Elevation_SRTM3_Update_TimeStamp;
             else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
                 dt = Properties.Settings.Default.Elevation_SRTM1_Update_TimeStamp;
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER3)
+                dt = Properties.Settings.Default.Elevation_ASTER3_Update_TimeStamp;
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER1)
+                dt = Properties.Settings.Default.Elevation_ASTER1_Update_TimeStamp;
             // change kind to UTC as it is not specified in settings
             dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
             return dt;
@@ -334,6 +346,10 @@ namespace ScoutBase.Elevation
                 Properties.Settings.Default.Elevation_SRTM3_TimeStamp = GetDatabaseTimeStamp();
             else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
                 Properties.Settings.Default.Elevation_SRTM1_TimeStamp = GetDatabaseTimeStamp();
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER3)
+                Properties.Settings.Default.Elevation_ASTER3_TimeStamp = GetDatabaseTimeStamp();
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER1)
+                Properties.Settings.Default.Elevation_ASTER1_TimeStamp = GetDatabaseTimeStamp();
         }
 
         private void SaveDatabaseStatus()
@@ -344,6 +360,10 @@ namespace ScoutBase.Elevation
                 Properties.Settings.Default.Elevation_SRTM3_Status = GetDatabaseStatus();
             else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
                 Properties.Settings.Default.Elevation_SRTM1_Status = GetDatabaseStatus();
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER3)
+                Properties.Settings.Default.Elevation_ASTER3_Status = GetDatabaseStatus();
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER1)
+                Properties.Settings.Default.Elevation_ASTER1_Status = GetDatabaseStatus();
         }
 
         private void SaveUpdateTimeStamp()
@@ -354,6 +374,10 @@ namespace ScoutBase.Elevation
                 Properties.Settings.Default.Elevation_SRTM3_Update_TimeStamp = GetUpdateTimeStamp();
             else if (StartOptions.Model == ELEVATIONMODEL.SRTM1)
                 Properties.Settings.Default.Elevation_SRTM1_Update_TimeStamp = GetUpdateTimeStamp();
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER3)
+                Properties.Settings.Default.Elevation_ASTER3_Update_TimeStamp = GetUpdateTimeStamp();
+            else if (StartOptions.Model == ELEVATIONMODEL.ASTER1)
+                Properties.Settings.Default.Elevation_ASTER1_Update_TimeStamp = GetUpdateTimeStamp();
         }
 
         private void SaveBounds()
@@ -440,8 +464,8 @@ namespace ScoutBase.Elevation
                         }
                         Stopwatch st = new Stopwatch();
                         st.Start();
-                        // check last change of database file
-                        if (HasDatabaseChanged() || HasUpdateChanged() || HaveBoundsChanged())
+                        // check last change of database file and no errors
+                        if (HasDatabaseChanged() || HasUpdateChanged() || HaveBoundsChanged() || ((GetSavedDatabaseStatus() &  DATABASESTATUS.ERROR) > 0))
                         {
                             // database and/or update has changed --> full check necessary
                             // check if database is complete

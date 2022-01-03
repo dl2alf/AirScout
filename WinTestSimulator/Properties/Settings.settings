@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WinTestSimulator.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Message" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ASADDWATCH</Value>
+    </Setting>
+    <Setting Name="From" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Test</Value>
+    </Setting>
+    <Setting Name="Port" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">9872</Value>
+    </Setting>
+    <Setting Name="To" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AS</Value>
+    </Setting>
+    <Setting Name="Data" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

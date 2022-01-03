@@ -31,6 +31,7 @@ using ScoutBase;
 using Newtonsoft.Json;
 using static ScoutBase.Core.ZIP;
 using AirScout.PlaneFeeds.Plugin.MEFContract;
+using AirScout.CAT;
 
 namespace AirScout
 {
@@ -41,6 +42,8 @@ namespace AirScout
         GMapOverlay GLOBEpolygons = new GMapOverlay("GLOBEpolygons");
         GMapOverlay SRTM3polygons = new GMapOverlay("SRTM3polygons");
         GMapOverlay SRTM1polygons = new GMapOverlay("SRTM1polygons");
+        GMapOverlay ASTER3polygons = new GMapOverlay("ASTER3polygons");
+        GMapOverlay ASTER1polygons = new GMapOverlay("ASTER1polygons");
 
         MapDlg ParentDlg;
 
@@ -49,6 +52,8 @@ namespace AirScout
         private LocalObstructionDesignator LocalObstructions;
 
         private LogWriter Log = LogWriter.Instance;
+
+        private bool LoadingTab = false;
 
         public OptionsDlg(MapDlg parentDlg)
         {
@@ -145,6 +150,35 @@ namespace AirScout
             gm_Options_SRTM1.SelectionPen = null;
             gm_Options_SRTM1.MapScaleInfoEnabled = true;
             gm_Options_SRTM1.Overlays.Add(SRTM1polygons);
+
+            // set initial settings for ASTER3Map
+            gm_Options_ASTER3.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
+            gm_Options_ASTER3.IgnoreMarkerOnMouseWheel = true;
+            gm_Options_ASTER3.MinZoom = 0;
+            gm_Options_ASTER3.MaxZoom = 20;
+            gm_Options_ASTER3.Zoom = 6;
+            gm_Options_ASTER3.DragButton = System.Windows.Forms.MouseButtons.Left;
+            gm_Options_ASTER3.CanDragMap = true;
+            gm_Options_ASTER3.ScalePen = new Pen(Color.Black, 3);
+            gm_Options_ASTER3.HelperLinePen = null;
+            gm_Options_ASTER3.SelectionPen = null;
+            gm_Options_ASTER3.MapScaleInfoEnabled = true;
+            gm_Options_ASTER3.Overlays.Add(ASTER3polygons);
+
+            // set initial settings for ASTER1Map
+            gm_Options_ASTER1.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
+            gm_Options_ASTER1.IgnoreMarkerOnMouseWheel = true;
+            gm_Options_ASTER1.MinZoom = 0;
+            gm_Options_ASTER1.MaxZoom = 20;
+            gm_Options_ASTER1.Zoom = 6;
+            gm_Options_ASTER1.DragButton = System.Windows.Forms.MouseButtons.Left;
+            gm_Options_ASTER1.CanDragMap = true;
+            gm_Options_ASTER1.ScalePen = new Pen(Color.Black, 3);
+            gm_Options_ASTER1.HelperLinePen = null;
+            gm_Options_ASTER1.SelectionPen = null;
+            gm_Options_ASTER1.MapScaleInfoEnabled = true;
+            gm_Options_ASTER1.Overlays.Add(ASTER1polygons);
+
             Log.WriteMessage("Finished.");
         }
 
@@ -180,6 +214,10 @@ namespace AirScout
 
         private ELEVATIONMODEL GetElevationModel()
         {
+            if (Properties.Settings.Default.Elevation_ASTER1_Enabled)
+                return ELEVATIONMODEL.ASTER1;
+            if (Properties.Settings.Default.Elevation_ASTER3_Enabled)
+                return ELEVATIONMODEL.ASTER3;
             if (Properties.Settings.Default.Elevation_SRTM1_Enabled)
                 return ELEVATIONMODEL.SRTM1;
             if (Properties.Settings.Default.Elevation_SRTM3_Enabled)
@@ -195,7 +233,7 @@ namespace AirScout
 
         private void tab_Options_General_Enter(object sender, EventArgs e)
         {
-            tab_Options_General_Update(this,null);
+            tab_Options_General_Update(this, null);
         }
 
         private void tab_Options_General_Validating(object sender, CancelEventArgs e)
@@ -290,7 +328,7 @@ namespace AirScout
                 PropagationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1) +
                 ElevationData.Database.GetDBSize(ELEVATIONMODEL.GLOBE) +
                 ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM3) +
-                ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1) + 
+                ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1) +
                 MapData.Database.GetDBSize();
             lbl_Options_Database_TotalSize.Text = total.ToString("F0");
             rb_Options_Database_Update_Never.Checked = !Properties.Settings.Default.Background_Update_OnStartup && !Properties.Settings.Default.Background_Update_Periodically;
@@ -1424,7 +1462,7 @@ namespace AirScout
                 p.Fill = new SolidBrush(Color.FromArgb(50, Color.Red));
                 SRTM3polygons.Polygons.Add(p);
             }
-            else 
+            else
             {
                 Say((string)e.UserState);
             }
@@ -1596,6 +1634,246 @@ namespace AirScout
 
         #endregion
 
+        #region tab_Options_ASTER3
+
+        private void bw_ASTER3_MapUpdater_DoWork(object sender, DoWorkEventArgs e)
+        {
+            bw_ASTER3_MapUpdater.ReportProgress(0, "ASTER3: Creating elevation tile catalogue...");
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_ASTER3_MapUpdater, ELEVATIONMODEL.ASTER3, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            bw_ASTER3_MapUpdater.ReportProgress(0, "ASTER3: Processing tiles...");
+            int missing = 0;
+            int found = 0;
+            foreach (string tilename in availabletiles.Files.Keys)
+            {
+                if (ElevationData.Database.ElevationTileExists(tilename.Substring(0, 6), ELEVATIONMODEL.ASTER3))
+                {
+                    bw_ASTER3_MapUpdater.ReportProgress(1, tilename);
+                    found++;
+                }
+                else
+                {
+                    bw_ASTER3_MapUpdater.ReportProgress(-1, tilename);
+                    missing++;
+                }
+                if (bw_ASTER3_MapUpdater.CancellationPending)
+                {
+                    bw_ASTER3_MapUpdater.ReportProgress(0, "ASTER3: Processing cancelled...");
+                    return;
+                }
+            }
+            bw_ASTER3_MapUpdater.ReportProgress(0, "ASTER3: " + found.ToString() + " tile(s) found, " + missing.ToString() + " more tile(s) available and missing.");
+        }
+
+        private void bw_ASTER3_MapUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 1)
+            {
+                // add a tile found in database to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Green));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Green));
+                ASTER3polygons.Polygons.Add(p);
+            }
+            else if (e.ProgressPercentage == -1)
+            {
+                // add missing tile to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Red));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Red));
+                ASTER3polygons.Polygons.Add(p);
+            }
+            else
+            {
+                Say((string)e.UserState);
+            }
+        }
+
+        private void bw_ASTER3_MapUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        private void tab_Options_ASTER3_Enter(object sender, EventArgs e)
+        {
+            // clear map polygons
+            ASTER3polygons.Clear();
+            // add coverage to map polygons
+            List<PointLatLng> cl = new List<PointLatLng>();
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MinLon));
+            GMapPolygon c = new GMapPolygon(cl, "Coverage");
+            c.Stroke = new Pen(Color.FromArgb(255, Color.Magenta), 3);
+            c.Fill = new SolidBrush(Color.FromArgb(0, Color.Magenta));
+            ASTER3polygons.Polygons.Add(c);
+            // zoom the map initally
+            gm_Options_ASTER3.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon, Properties.Settings.Default.MinLat));
+            // start map updater
+            if (!bw_ASTER3_MapUpdater.IsBusy)
+                bw_ASTER3_MapUpdater.RunWorkerAsync();
+            // zoom the map
+            gm_Options_Coverage.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon - 1, Properties.Settings.Default.MaxLat + 1, Properties.Settings.Default.MaxLon + 1, Properties.Settings.Default.MinLat - 1));
+        }
+
+        private void tab_Options_ASTER3_Leave(object sender, EventArgs e)
+        {
+            // stop map updater
+            bw_ASTER3_MapUpdater.CancelAsync();
+            // clear map polygons
+            ASTER3polygons.Clear();
+            // do garbage collection
+            GC.Collect();
+            Say("");
+        }
+
+
+        private void btn_Options_ASTER3_Copyright_Click(object sender, EventArgs e)
+        {
+            ElevationCopyrightDlg Dlg = new ElevationCopyrightDlg();
+            Dlg.Text = "ASTER3 Copyright Information";
+            Dlg.rtb_Copyright.Text = Properties.Settings.Default.Elevation_ASTER3_Copyright;
+            Dlg.ShowDialog();
+        }
+
+        #endregion
+
+        #region tab_Options_ASTER1
+
+        private void bw_ASTER1_MapUpdater_DoWork(object sender, DoWorkEventArgs e)
+        {
+            bw_ASTER1_MapUpdater.ReportProgress(0, "ASTER1: Creating elevation tile catalogue...");
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_ASTER1_MapUpdater, ELEVATIONMODEL.ASTER1, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            bw_ASTER1_MapUpdater.ReportProgress(0, "ASTER1: Processing tiles...");
+            int missing = 0;
+            int found = 0;
+            foreach (string tilename in availabletiles.Files.Keys)
+            {
+                if (ElevationData.Database.ElevationTileExists(tilename.Substring(0, 6), ELEVATIONMODEL.ASTER1))
+                {
+                    bw_ASTER1_MapUpdater.ReportProgress(1, tilename);
+                    found++;
+                }
+                else
+                {
+                    bw_ASTER1_MapUpdater.ReportProgress(-1, tilename);
+                    missing++;
+                }
+                if (bw_ASTER1_MapUpdater.CancellationPending)
+                {
+                    bw_ASTER1_MapUpdater.ReportProgress(0, "ASTER1: Processing cancelled...");
+                    return;
+                }
+            }
+            bw_ASTER1_MapUpdater.ReportProgress(0, "ASTER1: " + found.ToString() + " tile(s) found, " + missing.ToString() + " more tile(s) available and missing.");
+        }
+
+        private void bw_ASTER1_MapUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 1)
+            {
+                // add a tile found in database to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Green));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Green));
+                ASTER1polygons.Polygons.Add(p);
+            }
+            else if (e.ProgressPercentage == -1)
+            {
+                // add missing tile to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Red));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Red));
+                ASTER1polygons.Polygons.Add(p);
+            }
+            else
+            {
+                Say((string)e.UserState);
+            }
+        }
+
+        private void bw_ASTER1_MapUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        private void tba_Option_ASTER1_Enter(object sender, EventArgs e)
+        {
+            // clear map polygons
+            ASTER1polygons.Clear();
+            // add coverage to map polygons
+            List<PointLatLng> cl = new List<PointLatLng>();
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MinLon));
+            GMapPolygon c = new GMapPolygon(cl, "Coverage");
+            c.Stroke = new Pen(Color.FromArgb(255, Color.Magenta), 3);
+            c.Fill = new SolidBrush(Color.FromArgb(0, Color.Magenta));
+            ASTER1polygons.Polygons.Add(c);
+            // zoom the map initally
+            gm_Options_ASTER1.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon, Properties.Settings.Default.MinLat));
+            // start map updater
+            if (!bw_ASTER1_MapUpdater.IsBusy)
+                bw_ASTER1_MapUpdater.RunWorkerAsync();
+            // zoom the map
+            gm_Options_Coverage.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon - 1, Properties.Settings.Default.MaxLat + 1, Properties.Settings.Default.MaxLon + 1, Properties.Settings.Default.MinLat - 1));
+        }
+
+        private void tba_Option_ASTER1_Leave(object sender, EventArgs e)
+        {
+            // stop map updater
+            bw_ASTER1_MapUpdater.CancelAsync();
+            // clear map polygons
+            ASTER1polygons.Clear();
+            // do garbage collection
+            GC.Collect();
+            Say("");
+        }
+
+        private void btn_Options_ASTER1_Copyright_Click(object sender, EventArgs e)
+        {
+            ElevationCopyrightDlg Dlg = new ElevationCopyrightDlg();
+            Dlg.Text = "ASTER1 Copyright Information";
+            Dlg.rtb_Copyright.Text = Properties.Settings.Default.Elevation_ASTER1_Copyright;
+            Dlg.ShowDialog();
+        }
+
+
+        #endregion
+
         #region tab_Options_Path
 
         private void tab_Options_Path_Enter(object sender, EventArgs e)
@@ -1718,7 +1996,6 @@ namespace AirScout
             }
             return ld;
         }
-
         private void btn_Options_Path_Export_Click(object sender, EventArgs e)
         {
             // check and update station database
@@ -1733,7 +2010,7 @@ namespace AirScout
             if (myqrv.AntennaGain == 0)
                 myqrv.AntennaGain = StationData.Database.QRVGetDefaultAntennaGain(Properties.Settings.Default.Band);
             if (myqrv.Power == 0)
-            myqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
+                myqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
             // check if there are a valid DX settings
             if (!Callsign.Check(Properties.Settings.Default.DXCall) ||
                 !GeographicalPoint.Check(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon))
@@ -1778,7 +2055,7 @@ namespace AirScout
             SaveFileDialog Dlg = new SaveFileDialog();
             Dlg.AddExtension = true;
             Dlg.DefaultExt = "csv";
-            Dlg.Filter = "Comma Separated Values *.csv |csv";
+            Dlg.Filter = "Comma Separated Values *.csv |*.csv";
             Dlg.FileName = "Path Information " + Properties.Settings.Default.MyCall.Replace("/", "_") + " to " + Properties.Settings.Default.DXCall.Replace("/", "_");
             Dlg.InitialDirectory = Application.StartupPath;
             Dlg.OverwritePrompt = true;
@@ -1788,21 +2065,26 @@ namespace AirScout
                 {
                     using (StreamWriter sw = new StreamWriter(Dlg.FileName))
                     {
+                        int est = 10;
                         sw.WriteLine("Distance[km];Lat[deg];Lon[deg];Elevation[m]");
                         for (int i = 0; i < epath.Path.Length; i++)
                         {
-                            double distance = (double)i * epath.StepWidth / 1000.0;
-                            LatLon.GPoint p = LatLon.DestinationPoint(myloc.Lat, myloc.Lon, epath.Bearing12, distance);
-                            sw.WriteLine(distance.ToString("F8") + ";" +
-                                p.Lat.ToString("F8") + ";" +
-                                p.Lon.ToString("F8") + ";" +
-                                epath.Path[i].ToString());
+                            for (int j = 0; j < epath.StepWidth / est; j++)
+                            {
+                                double distance = (double)(i + j * est /  epath.StepWidth) * epath.StepWidth / 1000.0;
+                                LatLon.GPoint p = LatLon.DestinationPoint(myloc.Lat, myloc.Lon, epath.Bearing12, distance);
+                                sw.WriteLine(distance.ToString("F8") + ";" +
+                                    p.Lat.ToString("F8") + ";" +
+                                    p.Lon.ToString("F8") + ";" +
+                                    epath.Path[i].ToString());
+                            }
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // do nothing, if export is going wrong
+                    MessageBox.Show("Error while exporting path: " + ex.Message, "Export Path to CSV");
+                    Log.WriteMessage(ex.ToString());
                 }
             }
         }
@@ -2209,7 +2491,7 @@ namespace AirScout
         {
             try
             {
-                Properties.Settings.Default.Planes_Filter_Min_Category = PlaneCategories.ParseStringValue((string) cb_Options_Planes_Filter_Min_Cat.SelectedItem);
+                Properties.Settings.Default.Planes_Filter_Min_Category = PlaneCategories.ParseStringValue((string)cb_Options_Planes_Filter_Min_Cat.SelectedItem);
             }
             catch (Exception ex)
             {
@@ -2265,7 +2547,45 @@ namespace AirScout
 
         private void tab_Options_Track_Enter(object sender, EventArgs e)
         {
+            if (AirScout.CAT.Properties.Settings.Default.CAT_Activate)
+            {
+                gb_Options_Doppler.Enabled = true;
+            }
+            else
+            {
+                gb_Options_Doppler.Enabled = false;
+            }
 
+            // check/uncheck radio buttons
+            // do not use property binding here!
+            if (Properties.Settings.Default.Track_Serial_None) { rb_Options_Track_Serial_None.Checked = true; }
+            else if (Properties.Settings.Default.Track_Serial_GS232_AZ) { rb_Options_Track_Serial_GS232_AZ.Checked = true; }
+            else if (Properties.Settings.Default.Track_Serial_GS232_AZEL) { rb_Options_Track_Serial_GS232_AZEL.Checked = true; }
+
+            if (Properties.Settings.Default.Track_DDE_None) { rb_Options_Track_DDE_None.Checked = true; }
+            else if (Properties.Settings.Default.Track_DDE_HRD) { rb_Options_Track_DDE_HRD.Checked = true; }
+
+            if (Properties.Settings.Default.Track_UDP_None) { rb_Options_Track_UDP_None.Checked = true; }
+            else if (Properties.Settings.Default.Track_UDP_WinTest) { rb_Options_Track_UDP_WinTest.Checked = true; }
+            else if (Properties.Settings.Default.Track_UDP_AirScout) { rb_Options_Track_UDP_AirScout.Checked = true; }
+
+            if (Properties.Settings.Default.Track_File_None) { rb_Options_Track_File_None.Checked = true; }
+            else if (Properties.Settings.Default.Track_File_Native) { rb_Options_Track_File_Native.Checked = true; }
+            else if (Properties.Settings.Default.Track_File_WSJT) { rb_Options_Track_File_WSJT.Checked = true; }
+
+            if (Properties.Settings.Default.Doppler_Strategy_None) { rb_Options_Doppler_Strategy_None.Checked = true; }
+            else if (Properties.Settings.Default.Doppler_Strategy_A) { rb_Options_Doppler_Strategy_A.Checked = true; }
+            else if (Properties.Settings.Default.Doppler_Strategy_B) { rb_Options_Doppler_Strategy_B.Checked = true; }
+            else if (Properties.Settings.Default.Doppler_Strategy_C) { rb_Options_Doppler_Strategy_C.Checked = true; }
+            else if (Properties.Settings.Default.Doppler_Strategy_D) { rb_Options_Doppler_Strategy_D.Checked = true; }
+
+            ud_Options_CAT_Update.Value = AirScout.CAT.Properties.Settings.Default.CAT_Update;
+            tb_Options_Track_DialFreq.SilentValue = Properties.Settings.Default.Doppler_DialFreq;
+            cb_Options_Track_Activate_CheckedChanged(this, null);
+        }
+
+        private void tb_Options_CAT_DialFreq_TextChanged(object sender, EventArgs e)
+        {
         }
 
         private void tc_Track_Validating(object sender, CancelEventArgs e)
@@ -2287,7 +2607,402 @@ namespace AirScout
             }
         }
 
+        private void cb_Options_Track_Activate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb_Options_Track_Activate.Checked)
+            {
+                gb_Options_Track_Serial.Enabled = true;
+                gb_Options_Track_UDP.Enabled = true;
+                gb_Options_Track_DDE.Enabled = true;
+                gb_Options_Track_File.Enabled = true;
+                if (AirScout.CAT.Properties.Settings.Default.CAT_Activate)
+                {
+                    gb_Options_Doppler.Enabled = true;
+                }
+            }
+            else
+            {
+                gb_Options_Track_Serial.Enabled = false;
+                gb_Options_Track_UDP.Enabled = false;
+                gb_Options_Track_DDE.Enabled = false;
+                gb_Options_Track_File.Enabled = false;
+                gb_Options_Doppler.Enabled = false;
+            }
+        }
+
+        private void gb_Options_Track_Serial_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Track_Serial_None = rb_Options_Track_Serial_None.Checked;
+            Properties.Settings.Default.Track_Serial_GS232_AZ = rb_Options_Track_Serial_GS232_AZ.Checked;
+            Properties.Settings.Default.Track_Serial_GS232_AZEL = rb_Options_Track_Serial_GS232_AZEL.Checked;
+        }
+
+        private void gb_Options_Track_DDE_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Track_DDE_None = rb_Options_Track_DDE_None.Checked;
+            Properties.Settings.Default.Track_DDE_HRD = rb_Options_Track_DDE_HRD.Checked;
+        }
+
+        private void gb_Options_Track_UDP_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Track_UDP_None = rb_Options_Track_UDP_None.Checked;
+            Properties.Settings.Default.Track_UDP_WinTest = rb_Options_Track_UDP_WinTest.Checked;
+            Properties.Settings.Default.Track_UDP_AirScout = rb_Options_Track_UDP_AirScout.Checked;
+        }
+
+        private void gb_Options_Track_File_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Track_File_None = rb_Options_Track_File_None.Checked;
+            Properties.Settings.Default.Track_File_Native = rb_Options_Track_File_Native.Checked;
+            Properties.Settings.Default.Track_File_WSJT = rb_Options_Track_File_WSJT.Checked;
+        }
+
+        private void gb_Options_Doppler_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Doppler_Strategy_None = rb_Options_Doppler_Strategy_None.Checked;
+            Properties.Settings.Default.Doppler_Strategy_A = rb_Options_Doppler_Strategy_A.Checked;
+            Properties.Settings.Default.Doppler_Strategy_B = rb_Options_Doppler_Strategy_B.Checked;
+            Properties.Settings.Default.Doppler_Strategy_C = rb_Options_Doppler_Strategy_C.Checked;
+            Properties.Settings.Default.Doppler_Strategy_D = rb_Options_Doppler_Strategy_D.Checked;
+        }
+
+
         #endregion
+
+        #region tab_Options_CAT
+
+        private void tab_Options_CAT_Enter(object sender, EventArgs e)
+        {
+            LoadingTab = true;
+
+            cb_Options_CAT_Activate.Checked = AirScout.CAT.Properties.Settings.Default.CAT_Activate;
+
+
+            // get a list of supported rigs and add them to combo box
+            List<SupportedRig> rigs = CATWorker.SupportedRigs();
+            cb_Options_CAT_Rig.Items.Clear();
+            foreach (SupportedRig rig in rigs)
+            {
+                cb_Options_CAT_Rig.Items.Add(rig);
+            }
+
+            // try to select settings
+            if (AirScout.CAT.Properties.Settings.Default.CAT_RigType != null)
+            {
+                try
+                {
+                    int index = cb_Options_CAT_Rig.FindString(AirScout.CAT.Properties.Settings.Default.CAT_RigType);
+                    if (index >= 0)
+                    {
+                        cb_Options_CAT_Rig.SelectedIndex = index;
+                    }
+                }
+                catch
+                {
+                    // do nothing if something goes wrong
+                }
+            }
+            try
+            {
+                cb_Options_CAT_PortName.DataSource = System.IO.Ports.SerialPort.GetPortNames();
+                cb_Options_CAT_PortName.SelectedItem = AirScout.CAT.Properties.Settings.Default.CAT_PortName;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                cb_Options_CAT_Baudrate.DataSource = new string[] { "110", "300", "600", "1200", "2400", "4800", "9600", "14400", "19200", "38400", "56000", "57600", "115200", "128000", "256000" };
+                cb_Options_CAT_Baudrate.SelectedItem = AirScout.CAT.Properties.Settings.Default.CAT_Baudrate.ToString();
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                cb_Options_CAT_DataBits.DataSource = new string[] { "5", "6", "7", "8" };
+                cb_Options_CAT_DataBits.SelectedItem = AirScout.CAT.Properties.Settings.Default.CAT_DataBits.ToString();
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                EnumHelpers.BindToEnum<PARITY>(cb_Options_CAT_Parity);
+                cb_Options_CAT_Parity.SelectedValue = (int)AirScout.CAT.Properties.Settings.Default.CAT_Parity;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                EnumHelpers.BindToEnum<STOPBITS>(cb_Options_CAT_StopBits);
+                cb_Options_CAT_StopBits.SelectedValue = (int)AirScout.CAT.Properties.Settings.Default.CAT_StopBits;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                EnumHelpers.BindToEnum<FLOWCONTROL>(cb_Options_CAT_RTS);
+                cb_Options_CAT_RTS.SelectedValue = (int)AirScout.CAT.Properties.Settings.Default.CAT_RTS;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                EnumHelpers.BindToEnum<FLOWCONTROL>(cb_Options_CAT_DTR);
+                cb_Options_CAT_DTR.SelectedValue = (int)AirScout.CAT.Properties.Settings.Default.CAT_DTR;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                ud_Options_CAT_Poll.Value = AirScout.CAT.Properties.Settings.Default.CAT_Poll;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+            try
+            {
+                ud_Options_CAT_Timeout.Value = AirScout.CAT.Properties.Settings.Default.CAT_Timeout;
+            }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+
+            cb_Options_CAT_Activate_CheckedChanged(this, null);
+
+            LoadingTab = false;
+        }
+
+        private void cb_Options_CAT_Activate_CheckedChanged(object sender, EventArgs e)
+        {
+            AirScout.CAT.Properties.Settings.Default.CAT_Activate = cb_Options_CAT_Activate.Checked;
+
+            // check if port settings must be enabled (depending on rig type)
+            bool portenabled = true;
+            try
+            {
+                SupportedRig rig = (SupportedRig)cb_Options_CAT_Rig.SelectedItem;
+                if (rig.CATEngine == CATENGINE.OMNIRIGX)
+                    portenabled = false;
+            }
+            catch
+            {
+
+            }
+
+            if (cb_Options_CAT_Activate.Checked)
+            {
+                ud_Options_CAT_Update.Enabled = true;
+                gb_Options_CAT_RigType.Enabled = true;
+                if (portenabled)
+                    gb_Options_CAT_PortSettings.Enabled = true;
+                else
+                    gb_Options_CAT_PortSettings.Enabled = false;
+                gb_Options_CAT_OperatingInstructions.Enabled = true;
+                if (Properties.Settings.Default.Track_Activate)
+                {
+                    gb_Options_Doppler.Enabled = true;
+                }
+            }
+            else
+            {
+                ud_Options_CAT_Update.Enabled = false;
+                gb_Options_CAT_RigType.Enabled = false;
+                gb_Options_CAT_PortSettings.Enabled = false;
+                gb_Options_CAT_OperatingInstructions.Enabled = false;
+                gb_Options_Doppler.Enabled = false;
+            }
+        }
+
+        private void cb_Options_CAT_Rig_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                SupportedRig rig = (SupportedRig)cb_Options_CAT_Rig.SelectedItem;
+                if (rig != null)
+                {
+                    AirScout.CAT.Properties.Settings.Default.CAT_RigType = rig.Type;
+
+                    // disable port settings when using OmniRig ActiveX
+                    if (rig.CATEngine == CATENGINE.OMNIRIGX)
+                    {
+                        gb_Options_CAT_PortSettings.Enabled = false;
+                    }
+                    else
+                    {
+                        gb_Options_CAT_PortSettings.Enabled = true;
+                    }
+                }
+
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void ud_Options_CAT_Update_ValueChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            AirScout.CAT.Properties.Settings.Default.CAT_Update = (int)ud_Options_CAT_Update.Value;
+        }
+
+        private void cb_Options_CAT_PortName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_PortName = (string)cb_Options_CAT_PortName.SelectedItem;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_Baudrate_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_Baudrate = System.Convert.ToInt32(cb_Options_CAT_Baudrate.SelectedItem);
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_DataBits_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_DataBits = System.Convert.ToInt32(cb_Options_CAT_DataBits.SelectedItem);
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Parity_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_Parity = (PARITY)cb_Options_CAT_Parity.SelectedValue;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_Stopbits_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_StopBits = (STOPBITS)cb_Options_CAT_StopBits.SelectedValue;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_RTS_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_RTS = (FLOWCONTROL)cb_Options_CAT_RTS.SelectedValue;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void cb_Options_CAT_DTR_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_DTR = (FLOWCONTROL)cb_Options_CAT_DTR.SelectedValue;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        private void ud_Options_CAT_Poll_ValueChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_Poll = (int)ud_Options_CAT_Poll.Value;            }
+            catch
+            {
+                // do nothing if fails
+            }
+
+        }
+
+        private void ud_Options_CAT_Timeout_ValueChanged(object sender, EventArgs e)
+        {
+            if (LoadingTab)
+                return;
+
+            try
+            {
+                AirScout.CAT.Properties.Settings.Default.CAT_Timeout = (int)ud_Options_CAT_Timeout.Value;
+            }
+            catch
+            {
+                // do nothing if fails
+            }
+        }
+
+        #endregion
+
 
         #region tab_Options_Info
 
@@ -2554,14 +3269,13 @@ namespace AirScout
 
         #endregion
 
+
+        public class StationDataUpdaterDoWorkEventArgs
+        {
+            public LocationDesignator ld;
+            public List<QRVDesignator> qrvs;
+        }
+
     }
-
-    public class StationDataUpdaterDoWorkEventArgs
-    {
-        public LocationDesignator ld;
-        public List<QRVDesignator> qrvs;
-    }
-
-
 
 }

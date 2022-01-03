@@ -30,6 +30,8 @@ namespace AirScout
         GMapOverlay GLOBEpolygons = new GMapOverlay("GLOBEpolygons");
         GMapOverlay SRTM3polygons = new GMapOverlay("SRTM3polygons");
         GMapOverlay SRTM1polygons = new GMapOverlay("SRTM1polygons");
+        GMapOverlay ASTER3polygons = new GMapOverlay("ASTER3polygons");
+        GMapOverlay ASTER1polygons = new GMapOverlay("ASTER1polygons");
         GMapOverlay Callsignpolygons = new GMapOverlay("Callsignpolygons");
         GMapOverlay Callsignspositions = new GMapOverlay("Callsignpositions");
 
@@ -118,6 +120,40 @@ namespace AirScout
             gm_SRTM1.SelectionPen = null;
             gm_SRTM1.MapScaleInfoEnabled = true;
             gm_SRTM1.Overlays.Add(SRTM1polygons);
+
+            // set initial settings for ASTER3Map
+            GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_ASTER3.MapProvider.RefererUrl = "";
+            gm_ASTER3.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
+            gm_ASTER3.IgnoreMarkerOnMouseWheel = true;
+            gm_ASTER3.MinZoom = 0;
+            gm_ASTER3.MaxZoom = 20;
+            gm_ASTER3.Zoom = 1;
+            gm_ASTER3.DragButton = System.Windows.Forms.MouseButtons.Left;
+            gm_ASTER3.CanDragMap = true;
+            gm_ASTER3.ScalePen = new Pen(Color.Black, 3);
+            gm_ASTER3.HelperLinePen = null;
+            gm_ASTER3.SelectionPen = null;
+            gm_ASTER3.MapScaleInfoEnabled = true;
+            gm_ASTER3.Overlays.Add(ASTER3polygons);
+
+            // set initial settings for ASTER1Map
+            GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
+            // clearing referrer URL issue 2019-12-14
+            gm_ASTER1.MapProvider.RefererUrl = "";
+            gm_ASTER1.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
+            gm_ASTER1.IgnoreMarkerOnMouseWheel = true;
+            gm_ASTER1.MinZoom = 0;
+            gm_ASTER1.MaxZoom = 20;
+            gm_ASTER1.Zoom = 1;
+            gm_ASTER1.DragButton = System.Windows.Forms.MouseButtons.Left;
+            gm_ASTER1.CanDragMap = true;
+            gm_ASTER1.ScalePen = new Pen(Color.Black, 3);
+            gm_ASTER1.HelperLinePen = null;
+            gm_ASTER1.SelectionPen = null;
+            gm_ASTER1.MapScaleInfoEnabled = true;
+            gm_ASTER1.Overlays.Add(ASTER1polygons);
 
             // set initial settings for user details
             GMap.NET.MapProviders.GMapProvider.UserAgent = "AirScout";
@@ -257,12 +293,25 @@ namespace AirScout
 
         #endregion
 
+        #region wp_ElevationModel
+        private void wp_ElevationModel_Enter(object sender, EventArgs e)
+        {
+            cb_GLOBE.Checked = Properties.Settings.Default.Elevation_GLOBE_Enabled;
+            cb_SRTM3.Checked = Properties.Settings.Default.Elevation_SRTM3_Enabled;
+            cb_SRTM1.Checked = Properties.Settings.Default.Elevation_SRTM1_Enabled;
+            cb_ASTER3.Checked = Properties.Settings.Default.Elevation_ASTER3_Enabled;
+            cb_ASTER1.Checked = Properties.Settings.Default.Elevation_ASTER1_Enabled;
+            UpdateElevationPages();
+        }
+
         private void UpdateElevationPages()
         {
             wp_GLOBE.Suppress = !cb_GLOBE.Checked;
             wp_SRTM3.Suppress = !cb_SRTM3.Checked;
             wp_SRTM1.Suppress = !cb_SRTM1.Checked;
-            wp_ElevationModel.AllowNext = cb_GLOBE.Checked || cb_SRTM3.Checked || cb_SRTM1.Checked;
+            wp_ASTER3.Suppress = !cb_ASTER3.Checked;
+            wp_ASTER1.Suppress = !cb_ASTER1.Checked;
+            wp_ElevationModel.AllowNext = cb_GLOBE.Checked || cb_SRTM3.Checked || cb_SRTM1.Checked || cb_ASTER3.Checked || cb_ASTER1.Checked;
             this.Refresh();
         }
 
@@ -284,14 +333,19 @@ namespace AirScout
             UpdateElevationPages();
         }
 
-        #region wp_ElevationModel
-        private void wp_ElevationModel_Enter(object sender, EventArgs e)
+
+        private void cb_ASTER3_CheckedChanged(object sender, EventArgs e)
         {
-            cb_GLOBE.Checked = Properties.Settings.Default.Elevation_GLOBE_Enabled;
-            cb_SRTM3.Checked = Properties.Settings.Default.Elevation_SRTM3_Enabled;
-            cb_SRTM1.Checked = Properties.Settings.Default.Elevation_SRTM1_Enabled;
+            Properties.Settings.Default.Elevation_ASTER3_Enabled = cb_ASTER3.Checked;
             UpdateElevationPages();
         }
+
+        private void cb_ASTER1_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Elevation_ASTER1_Enabled = cb_ASTER1.Checked;
+            UpdateElevationPages();
+        }
+
         #endregion
 
         #region wp_GLOBE
@@ -643,7 +697,7 @@ namespace AirScout
                     // estimate disk space needed = tilecount * tilesize * 150%
                     long spaceneeded = (long)tilecount * (long)(100000 * 3 / 2);
                     string rootdrive = Path.GetPathRoot(ElevationData.Database.DefaultDatabaseDirectory(ELEVATIONMODEL.SRTM1));
-                    long spaceavailable = SupportFunctions.GetDriveAvailableFreeSpace(rootdrive); 
+                    long spaceavailable = SupportFunctions.GetDriveAvailableFreeSpace(rootdrive);
                     // check for available disk space, skip on zero (cannot determine)
                     if ((spaceavailable > 0) && (spaceavailable < spaceneeded))
                     {
@@ -739,6 +793,302 @@ namespace AirScout
             // do garbage collection
             GC.Collect();
             lbl_SRTM1_Status.Text = "";
+        }
+
+        #endregion
+
+        #region wp_ASTER3
+
+        private void bw_ASTER3_MapUpdater_DoWork(object sender, DoWorkEventArgs e)
+        {
+            bw_ASTER3_MapUpdater.ReportProgress(0, "Creating elevation tile catalogue (please wait)...");
+            // get all locs needed for covered area
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_ASTER3_MapUpdater, ELEVATIONMODEL.ASTER3, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            bw_ASTER3_MapUpdater.ReportProgress(0, "Processing tiles...");
+            // report tile count
+            bw_ASTER3_MapUpdater.ReportProgress(2, availabletiles.Files.Keys.Count);
+            int missing = 0;
+            int found = 0;
+            foreach (string tilename in availabletiles.Files.Keys)
+            {
+                if (ElevationData.Database.ElevationTileExists(tilename.Substring(0, 6), ELEVATIONMODEL.ASTER3))
+                {
+                    bw_ASTER3_MapUpdater.ReportProgress(1, tilename);
+                    found++;
+                }
+                else
+                {
+                    bw_ASTER3_MapUpdater.ReportProgress(-1, tilename);
+                    missing++;
+                }
+                if (bw_ASTER3_MapUpdater.CancellationPending)
+                {
+                    bw_ASTER3_MapUpdater.ReportProgress(0, "Processing cancelled...");
+                    return;
+                }
+            }
+            bw_ASTER3_MapUpdater.ReportProgress(0, found.ToString() + " tile(s) found, " + missing.ToString() + " more tile(s) available and missing.");
+        }
+
+        private void bw_ASTER3_MapUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 2)
+            {
+                try
+                {
+                    wp_ASTER3.AllowNext = true;
+                    // get tile count = available tiles - tiles already in data base
+                    long tilecount = (int)e.UserState - ElevationData.Database.ElevationTileCount(ELEVATIONMODEL.ASTER3);
+                    if (tilecount < 0)
+                        tilecount = 0;
+                    // check available disk space and file system
+                    // estimate disk space needed = tilecount * tilesize * 150%
+                    long spaceneeded = (long)tilecount * (long)(10000 * 3 / 2);
+                    string rootdrive = Path.GetPathRoot(ElevationData.Database.DefaultDatabaseDirectory(ELEVATIONMODEL.ASTER3));
+                    long spaceavailable = SupportFunctions.GetDriveAvailableFreeSpace(rootdrive);
+                    // check for available disk space, skip on zero (cannot determine)
+                    if ((spaceavailable > 0) && (spaceavailable < spaceneeded))
+                    {
+                        // show message box
+                        MessageBox.Show("Not enough disk space for elevation database.\n\nAvailable: " + spaceavailable + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or try to enlarge free space on disk.", "Not enough disk space");
+                        wp_ASTER3.AllowNext = false;
+                    }
+                    long maxfilesize = SupportFunctions.GetDriveMaxFileSize(rootdrive);
+                    if ((maxfilesize > 0) && (maxfilesize < spaceneeded))
+                    {
+                        // show message box
+                        MessageBox.Show("The elevation database will exceed maximum allowed filesize for this file system.\n\nAllowed: " + maxfilesize + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or change file system on disk.", "File size exceeded");
+                        wp_ASTER3.AllowNext = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+            }
+            else if (e.ProgressPercentage == 1)
+            {
+                // add a tile found in database to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Green));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Green));
+                ASTER3polygons.Polygons.Add(p);
+            }
+            else if (e.ProgressPercentage == -1)
+            {
+                // add missing tile to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Red));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Red));
+                ASTER3polygons.Polygons.Add(p);
+            }
+            else
+            {
+                lbl_ASTER3_Status.Text = (string)e.UserState;
+            }
+        }
+
+        private void bw_ASTER3_MapUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+        }
+
+        private void wp_ASTER3_Enter(object sender, EventArgs e)
+        {
+            wp_ASTER3.AllowNext = false;
+            // clear map polygons
+            ASTER3polygons.Clear();
+            // add coverage to map polygons
+            List<PointLatLng> cl = new List<PointLatLng>();
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MinLon));
+            GMapPolygon c = new GMapPolygon(cl, "Coverage");
+            c.Stroke = new Pen(Color.FromArgb(255, Color.Magenta), 3);
+            c.Fill = new SolidBrush(Color.FromArgb(0, Color.Magenta));
+            ASTER3polygons.Polygons.Add(c);
+            // zoom the map initally
+            gm_ASTER3.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon, Properties.Settings.Default.MinLat));
+            // start map updater
+            if (!bw_ASTER3_MapUpdater.IsBusy)
+                bw_ASTER3_MapUpdater.RunWorkerAsync();
+            // zoom the map
+            gm_ASTER3.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon - 1, Properties.Settings.Default.MaxLat + 1, Properties.Settings.Default.MaxLon + 1, Properties.Settings.Default.MinLat - 1));
+        }
+
+        private void wp_ASTER3_Leave(object sender, EventArgs e)
+        {
+            // stop map updater
+            bw_ASTER3_MapUpdater.CancelAsync();
+            // clear map polygons
+            ASTER3polygons.Clear();
+            // do garbage collection
+            GC.Collect();
+            lbl_ASTER3_Status.Text = "";
+        }
+
+        #endregion
+
+        #region wp_ASTER1
+
+        private void bw_ASTER1_MapUpdater_DoWork(object sender, DoWorkEventArgs e)
+        {
+            bw_ASTER1_MapUpdater.ReportProgress(0, "Creating elevation tile catalogue (please wait)...");
+            // get all locs needed for covered area
+            ElevationCatalogue availabletiles = ElevationData.Database.ElevationCatalogueCreateCheckBoundsAndLastModified(bw_ASTER1_MapUpdater, ELEVATIONMODEL.ASTER1, Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon);
+            bw_ASTER1_MapUpdater.ReportProgress(0, "Processing tiles...");
+            // report tile count
+            bw_ASTER1_MapUpdater.ReportProgress(2, availabletiles.Files.Keys.Count);
+            int missing = 0;
+            int found = 0;
+            foreach (string tilename in availabletiles.Files.Keys)
+            {
+                if (ElevationData.Database.ElevationTileExists(tilename.Substring(0, 6), ELEVATIONMODEL.ASTER1))
+                {
+                    bw_ASTER1_MapUpdater.ReportProgress(1, tilename);
+                    found++;
+                }
+                else
+                {
+                    bw_ASTER1_MapUpdater.ReportProgress(-1, tilename);
+                    missing++;
+                }
+                if (bw_ASTER1_MapUpdater.CancellationPending)
+                {
+                    bw_ASTER1_MapUpdater.ReportProgress(0, "Processing cancelled...");
+                    return;
+                }
+            }
+            bw_ASTER1_MapUpdater.ReportProgress(0, found.ToString() + " tile(s) found, " + missing.ToString() + " more tile(s) available and missing.");
+        }
+
+        private void bw_ASTER1_MapUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 2)
+            {
+                try
+                {
+                    wp_ASTER1.AllowNext = true;
+                    // get tile count = available tiles - tiles already in data base
+                    long tilecount = (int)e.UserState - ElevationData.Database.ElevationTileCount(ELEVATIONMODEL.ASTER1);
+                    if (tilecount < 0)
+                        tilecount = 0;
+                    // check available disk space and file system
+                    // estimate disk space needed = tilecount * tilesize * 150%
+                    long spaceneeded = (long)tilecount * (long)(100000 * 3 / 2);
+                    string rootdrive = Path.GetPathRoot(ElevationData.Database.DefaultDatabaseDirectory(ELEVATIONMODEL.ASTER1));
+                    long spaceavailable = SupportFunctions.GetDriveAvailableFreeSpace(rootdrive);
+                    // check for available disk space, skip on zero (cannot determine)
+                    if ((spaceavailable > 0) && (spaceavailable < spaceneeded))
+                    {
+                        // show message box
+                        MessageBox.Show("Not enough disk space for elevation database.\n\nAvailable: " + spaceavailable + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or try to enlarge free space on disk.", "Not enough disk space");
+                        wp_ASTER1.AllowNext = false;
+                    }
+                    long maxfilesize = SupportFunctions.GetDriveMaxFileSize(rootdrive);
+                    if ((maxfilesize > 0) && (maxfilesize < spaceneeded))
+                    {
+                        // show message box
+                        MessageBox.Show("The elevation database will exceed maximum allowed filesize for this file system.\n\nAllowed: " + maxfilesize + " bytes.\nNeeded: " + spaceneeded + "bytes.\n\nUncheck this option or change file system on disk.", "File size exceeded");
+                        wp_ASTER1.AllowNext = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+            }
+            else if (e.ProgressPercentage == 1)
+            {
+                // add a tile found in database to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Green));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Green));
+                ASTER1polygons.Polygons.Add(p);
+            }
+            else if (e.ProgressPercentage == -1)
+            {
+                // add missing tile to map polygons
+                double baselat;
+                double baselon;
+                MaidenheadLocator.LatLonFromLoc(((string)e.UserState).Substring(0, 6), PositionInRectangle.BottomLeft, out baselat, out baselon);
+                List<PointLatLng> l = new List<PointLatLng>();
+                l.Add(new PointLatLng((decimal)baselat, (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)baselon));
+                l.Add(new PointLatLng((decimal)(baselat + 1 / 24.0), (decimal)(baselon + 2 / 24.0)));
+                l.Add(new PointLatLng((decimal)baselat, (decimal)(baselon + 2 / 24.0)));
+                GMapPolygon p = new GMapPolygon(l, (string)e.UserState);
+                p.Stroke = new Pen(Color.FromArgb(50, Color.Red));
+                p.Fill = new SolidBrush(Color.FromArgb(50, Color.Red));
+                ASTER1polygons.Polygons.Add(p);
+            }
+            else
+            {
+                lbl_ASTER1_Status.Text = (string)e.UserState;
+            }
+        }
+
+        private void bw_ASTER1_MapUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+        }
+
+        private void wp_ASTER1_Enter(object sender, EventArgs e)
+        {
+            wp_ASTER1.AllowNext = false;
+            // clear map polygons
+            ASTER1polygons.Clear();
+            // add coverage to map polygons
+            List<PointLatLng> cl = new List<PointLatLng>();
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon));
+            cl.Add(new PointLatLng(Properties.Settings.Default.MaxLat, Properties.Settings.Default.MinLon));
+            GMapPolygon c = new GMapPolygon(cl, "Coverage");
+            c.Stroke = new Pen(Color.FromArgb(255, Color.Magenta), 3);
+            c.Fill = new SolidBrush(Color.FromArgb(0, Color.Magenta));
+            ASTER1polygons.Polygons.Add(c);
+            // zoom the map initally
+            gm_ASTER1.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon, Properties.Settings.Default.MinLat));
+            // start map updater
+            if (!bw_ASTER1_MapUpdater.IsBusy)
+                bw_ASTER1_MapUpdater.RunWorkerAsync();
+            // zoom the map
+            gm_ASTER1.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon - 1, Properties.Settings.Default.MaxLat + 1, Properties.Settings.Default.MaxLon + 1, Properties.Settings.Default.MinLat - 1));
+        }
+
+        private void wp_ASTER1_Leave(object sender, EventArgs e)
+        {
+            // stop map updater
+            bw_ASTER1_MapUpdater.CancelAsync();
+            // clear map polygons
+            ASTER1polygons.Clear();
+            // do garbage collection
+            GC.Collect();
+            lbl_ASTER1_Status.Text = "";
         }
 
         #endregion
@@ -1268,6 +1618,7 @@ namespace AirScout
             while (bw_SRTM1_MapUpdater.IsBusy)
                 Application.DoEvents();
         }
+
     }
 
 

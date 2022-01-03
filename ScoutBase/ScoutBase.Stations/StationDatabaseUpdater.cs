@@ -48,7 +48,7 @@ namespace ScoutBase.Stations
         StationDatabaseUpdaterStartOptions StartOptions;
 
         // Temp directory to save downloaded files
-        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp").TrimEnd(Path.DirectorySeparatorChar);
+        string TmpDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.CompanyName, Application.ProductName, "Tmp", "StationData").TrimEnd(Path.DirectorySeparatorChar);
 
         public StationDatabaseUpdater() : base()
         {

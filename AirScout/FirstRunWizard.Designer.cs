@@ -46,6 +46,8 @@
             this.ud_MinLon = new System.Windows.Forms.NumericUpDown();
             this.gm_Coverage = new GMap.NET.WindowsForms.GMapControl();
             this.wp_ElevationModel = new AeroWizard.WizardPage();
+            this.cb_ASTER1 = new System.Windows.Forms.CheckBox();
+            this.cb_ASTER3 = new System.Windows.Forms.CheckBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.cb_SRTM1 = new System.Windows.Forms.CheckBox();
             this.cb_SRTM3 = new System.Windows.Forms.CheckBox();
@@ -65,6 +67,16 @@
             this.label7 = new System.Windows.Forms.Label();
             this.cb_SRTM1_EnableCache = new System.Windows.Forms.CheckBox();
             this.gm_SRTM1 = new GMap.NET.WindowsForms.GMapControl();
+            this.wp_ASTER3 = new AeroWizard.WizardPage();
+            this.lbl_ASTER3_Status = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.cb_ASTER3_EnableCache = new System.Windows.Forms.CheckBox();
+            this.gm_ASTER3 = new GMap.NET.WindowsForms.GMapControl();
+            this.wp_ASTER1 = new AeroWizard.WizardPage();
+            this.lbl_ASTER1_Status = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.cb_ASTER1_EnableCache = new System.Windows.Forms.CheckBox();
+            this.gm_ASTER1 = new GMap.NET.WindowsForms.GMapControl();
             this.wp_UserDetails = new AeroWizard.WizardPage();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
@@ -98,6 +110,8 @@
             this.bw_SRTM1_MapUpdater = new System.ComponentModel.BackgroundWorker();
             this.ss_Main = new System.Windows.Forms.StatusStrip();
             this.tsl_Status = new System.Windows.Forms.ToolStripStatusLabel();
+            this.bw_ASTER3_MapUpdater = new System.ComponentModel.BackgroundWorker();
+            this.bw_ASTER1_MapUpdater = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.sw_FirstRun)).BeginInit();
             this.wp_TermsAndConditions.SuspendLayout();
             this.wp_GeneralCoverage.SuspendLayout();
@@ -109,6 +123,8 @@
             this.wp_GLOBE.SuspendLayout();
             this.wp_SRTM3.SuspendLayout();
             this.wp_SRTM1.SuspendLayout();
+            this.wp_ASTER3.SuspendLayout();
+            this.wp_ASTER1.SuspendLayout();
             this.wp_UserDetails.SuspendLayout();
             this.wp_PlaneFeeds.SuspendLayout();
             this.wp_Finish.SuspendLayout();
@@ -128,6 +144,8 @@
             this.sw_FirstRun.Pages.Add(this.wp_GLOBE);
             this.sw_FirstRun.Pages.Add(this.wp_SRTM3);
             this.sw_FirstRun.Pages.Add(this.wp_SRTM1);
+            this.sw_FirstRun.Pages.Add(this.wp_ASTER3);
+            this.sw_FirstRun.Pages.Add(this.wp_ASTER1);
             this.sw_FirstRun.Pages.Add(this.wp_UserDetails);
             this.sw_FirstRun.Pages.Add(this.wp_PlaneFeeds);
             this.sw_FirstRun.Pages.Add(this.wp_Finish);
@@ -341,6 +359,7 @@
             this.gm_Coverage.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Coverage.Name = "gm_Coverage";
             this.gm_Coverage.NegativeMode = false;
+            this.gm_Coverage.Opacity = 1D;
             this.gm_Coverage.PolygonsEnabled = true;
             this.gm_Coverage.RetryLoadTile = 0;
             this.gm_Coverage.RoutesEnabled = true;
@@ -353,6 +372,8 @@
             // 
             // wp_ElevationModel
             // 
+            this.wp_ElevationModel.Controls.Add(this.cb_ASTER1);
+            this.wp_ElevationModel.Controls.Add(this.cb_ASTER3);
             this.wp_ElevationModel.Controls.Add(this.richTextBox2);
             this.wp_ElevationModel.Controls.Add(this.cb_SRTM1);
             this.wp_ElevationModel.Controls.Add(this.cb_SRTM3);
@@ -363,6 +384,30 @@
             this.wp_ElevationModel.TabIndex = 7;
             this.wp_ElevationModel.Text = "Elevation Model";
             this.wp_ElevationModel.Enter += new System.EventHandler(this.wp_ElevationModel_Enter);
+            // 
+            // cb_ASTER1
+            // 
+            this.cb_ASTER1.AutoSize = true;
+            this.cb_ASTER1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_ASTER1.Location = new System.Drawing.Point(85, 355);
+            this.cb_ASTER1.Name = "cb_ASTER1";
+            this.cb_ASTER1.Size = new System.Drawing.Size(332, 25);
+            this.cb_ASTER1.TabIndex = 6;
+            this.cb_ASTER1.Text = "Use ASTER1 Elevation Model (experimental)";
+            this.cb_ASTER1.UseVisualStyleBackColor = true;
+            this.cb_ASTER1.CheckedChanged += new System.EventHandler(this.cb_ASTER1_CheckedChanged);
+            // 
+            // cb_ASTER3
+            // 
+            this.cb_ASTER3.AutoSize = true;
+            this.cb_ASTER3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cb_ASTER3.Location = new System.Drawing.Point(85, 329);
+            this.cb_ASTER3.Name = "cb_ASTER3";
+            this.cb_ASTER3.Size = new System.Drawing.Size(332, 25);
+            this.cb_ASTER3.TabIndex = 5;
+            this.cb_ASTER3.Text = "Use ASTER3 Elevation Model (experimental)";
+            this.cb_ASTER3.UseVisualStyleBackColor = true;
+            this.cb_ASTER3.CheckedChanged += new System.EventHandler(this.cb_ASTER3_CheckedChanged);
             // 
             // richTextBox2
             // 
@@ -475,6 +520,7 @@
             this.gm_GLOBE.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_GLOBE.Name = "gm_GLOBE";
             this.gm_GLOBE.NegativeMode = false;
+            this.gm_GLOBE.Opacity = 1D;
             this.gm_GLOBE.PolygonsEnabled = true;
             this.gm_GLOBE.RetryLoadTile = 0;
             this.gm_GLOBE.RoutesEnabled = true;
@@ -546,6 +592,7 @@
             this.gm_SRTM3.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_SRTM3.Name = "gm_SRTM3";
             this.gm_SRTM3.NegativeMode = false;
+            this.gm_SRTM3.Opacity = 1D;
             this.gm_SRTM3.PolygonsEnabled = true;
             this.gm_SRTM3.RetryLoadTile = 0;
             this.gm_SRTM3.RoutesEnabled = true;
@@ -617,6 +664,7 @@
             this.gm_SRTM1.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_SRTM1.Name = "gm_SRTM1";
             this.gm_SRTM1.NegativeMode = false;
+            this.gm_SRTM1.Opacity = 1D;
             this.gm_SRTM1.PolygonsEnabled = true;
             this.gm_SRTM1.RetryLoadTile = 0;
             this.gm_SRTM1.RoutesEnabled = true;
@@ -625,6 +673,150 @@
             this.gm_SRTM1.Size = new System.Drawing.Size(480, 314);
             this.gm_SRTM1.TabIndex = 9;
             this.gm_SRTM1.Zoom = 0D;
+            // 
+            // wp_ASTER3
+            // 
+            this.wp_ASTER3.Controls.Add(this.lbl_ASTER3_Status);
+            this.wp_ASTER3.Controls.Add(this.label23);
+            this.wp_ASTER3.Controls.Add(this.cb_ASTER3_EnableCache);
+            this.wp_ASTER3.Controls.Add(this.gm_ASTER3);
+            this.wp_ASTER3.Name = "wp_ASTER3";
+            this.wp_ASTER3.Size = new System.Drawing.Size(586, 398);
+            this.sw_FirstRun.SetStepText(this.wp_ASTER3, "ASTER3");
+            this.wp_ASTER3.TabIndex = 12;
+            this.wp_ASTER3.Text = "ASTER3";
+            this.wp_ASTER3.Enter += new System.EventHandler(this.wp_ASTER3_Enter);
+            this.wp_ASTER3.Leave += new System.EventHandler(this.wp_ASTER3_Leave);
+            // 
+            // lbl_ASTER3_Status
+            // 
+            this.lbl_ASTER3_Status.AutoSize = true;
+            this.lbl_ASTER3_Status.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_ASTER3_Status.Location = new System.Drawing.Point(54, 60);
+            this.lbl_ASTER3_Status.Name = "lbl_ASTER3_Status";
+            this.lbl_ASTER3_Status.Size = new System.Drawing.Size(40, 15);
+            this.lbl_ASTER3_Status.TabIndex = 9;
+            this.lbl_ASTER3_Status.Text = "Status";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.label23.ForeColor = System.Drawing.Color.SteelBlue;
+            this.label23.Location = new System.Drawing.Point(53, 8);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(459, 19);
+            this.label23.TabIndex = 8;
+            this.label23.Text = "(A)dvanced (S)paceborne (T)hermal (E)mission and (R)eflection 3 arcsec";
+            // 
+            // cb_ASTER3_EnableCache
+            // 
+            this.cb_ASTER3_EnableCache.AutoSize = true;
+            this.cb_ASTER3_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM3_EnableCache;
+            this.cb_ASTER3_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM3_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_ASTER3_EnableCache.Location = new System.Drawing.Point(57, 38);
+            this.cb_ASTER3_EnableCache.Name = "cb_ASTER3_EnableCache";
+            this.cb_ASTER3_EnableCache.Size = new System.Drawing.Size(243, 19);
+            this.cb_ASTER3_EnableCache.TabIndex = 7;
+            this.cb_ASTER3_EnableCache.Text = "Keep downloaded elevation tiles in cache";
+            this.cb_ASTER3_EnableCache.UseVisualStyleBackColor = true;
+            // 
+            // gm_ASTER3
+            // 
+            this.gm_ASTER3.Bearing = 0F;
+            this.gm_ASTER3.CanDragMap = true;
+            this.gm_ASTER3.EmptyTileColor = System.Drawing.Color.Navy;
+            this.gm_ASTER3.GrayScaleMode = false;
+            this.gm_ASTER3.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
+            this.gm_ASTER3.LevelsKeepInMemmory = 5;
+            this.gm_ASTER3.Location = new System.Drawing.Point(53, 79);
+            this.gm_ASTER3.MarkersEnabled = true;
+            this.gm_ASTER3.MaxZoom = 2;
+            this.gm_ASTER3.MinZoom = 2;
+            this.gm_ASTER3.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
+            this.gm_ASTER3.Name = "gm_ASTER3";
+            this.gm_ASTER3.NegativeMode = false;
+            this.gm_ASTER3.Opacity = 1D;
+            this.gm_ASTER3.PolygonsEnabled = true;
+            this.gm_ASTER3.RetryLoadTile = 0;
+            this.gm_ASTER3.RoutesEnabled = true;
+            this.gm_ASTER3.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
+            this.gm_ASTER3.ShowTileGridLines = false;
+            this.gm_ASTER3.Size = new System.Drawing.Size(480, 311);
+            this.gm_ASTER3.TabIndex = 6;
+            this.gm_ASTER3.Zoom = 0D;
+            // 
+            // wp_ASTER1
+            // 
+            this.wp_ASTER1.Controls.Add(this.lbl_ASTER1_Status);
+            this.wp_ASTER1.Controls.Add(this.label25);
+            this.wp_ASTER1.Controls.Add(this.cb_ASTER1_EnableCache);
+            this.wp_ASTER1.Controls.Add(this.gm_ASTER1);
+            this.wp_ASTER1.Name = "wp_ASTER1";
+            this.wp_ASTER1.Size = new System.Drawing.Size(586, 398);
+            this.sw_FirstRun.SetStepText(this.wp_ASTER1, "ASTER1");
+            this.wp_ASTER1.TabIndex = 13;
+            this.wp_ASTER1.Text = "ASTER1";
+            this.wp_ASTER1.Enter += new System.EventHandler(this.wp_ASTER1_Enter);
+            this.wp_ASTER1.Leave += new System.EventHandler(this.wp_ASTER1_Leave);
+            // 
+            // lbl_ASTER1_Status
+            // 
+            this.lbl_ASTER1_Status.AutoSize = true;
+            this.lbl_ASTER1_Status.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_ASTER1_Status.Location = new System.Drawing.Point(54, 60);
+            this.lbl_ASTER1_Status.Name = "lbl_ASTER1_Status";
+            this.lbl_ASTER1_Status.Size = new System.Drawing.Size(40, 15);
+            this.lbl_ASTER1_Status.TabIndex = 9;
+            this.lbl_ASTER1_Status.Text = "Status";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.label25.ForeColor = System.Drawing.Color.SteelBlue;
+            this.label25.Location = new System.Drawing.Point(53, 8);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(458, 19);
+            this.label25.TabIndex = 8;
+            this.label25.Text = "(A)dvanced (S)paceborne (T)hermal (E)mission and (R)eflection 1 arcsec";
+            // 
+            // cb_ASTER1_EnableCache
+            // 
+            this.cb_ASTER1_EnableCache.AutoSize = true;
+            this.cb_ASTER1_EnableCache.Checked = global::AirScout.Properties.Settings.Default.Elevation_SRTM3_EnableCache;
+            this.cb_ASTER1_EnableCache.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::AirScout.Properties.Settings.Default, "Elevation_SRTM3_EnableCache", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cb_ASTER1_EnableCache.Location = new System.Drawing.Point(57, 38);
+            this.cb_ASTER1_EnableCache.Name = "cb_ASTER1_EnableCache";
+            this.cb_ASTER1_EnableCache.Size = new System.Drawing.Size(243, 19);
+            this.cb_ASTER1_EnableCache.TabIndex = 7;
+            this.cb_ASTER1_EnableCache.Text = "Keep downloaded elevation tiles in cache";
+            this.cb_ASTER1_EnableCache.UseVisualStyleBackColor = true;
+            // 
+            // gm_ASTER1
+            // 
+            this.gm_ASTER1.Bearing = 0F;
+            this.gm_ASTER1.CanDragMap = true;
+            this.gm_ASTER1.EmptyTileColor = System.Drawing.Color.Navy;
+            this.gm_ASTER1.GrayScaleMode = false;
+            this.gm_ASTER1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
+            this.gm_ASTER1.LevelsKeepInMemmory = 5;
+            this.gm_ASTER1.Location = new System.Drawing.Point(53, 79);
+            this.gm_ASTER1.MarkersEnabled = true;
+            this.gm_ASTER1.MaxZoom = 2;
+            this.gm_ASTER1.MinZoom = 2;
+            this.gm_ASTER1.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
+            this.gm_ASTER1.Name = "gm_ASTER1";
+            this.gm_ASTER1.NegativeMode = false;
+            this.gm_ASTER1.Opacity = 1D;
+            this.gm_ASTER1.PolygonsEnabled = true;
+            this.gm_ASTER1.RetryLoadTile = 0;
+            this.gm_ASTER1.RoutesEnabled = true;
+            this.gm_ASTER1.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
+            this.gm_ASTER1.ShowTileGridLines = false;
+            this.gm_ASTER1.Size = new System.Drawing.Size(480, 311);
+            this.gm_ASTER1.TabIndex = 6;
+            this.gm_ASTER1.Zoom = 0D;
             // 
             // wp_UserDetails
             // 
@@ -767,6 +959,7 @@
             this.gm_Callsign.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Callsign.Name = "gm_Callsign";
             this.gm_Callsign.NegativeMode = false;
+            this.gm_Callsign.Opacity = 1D;
             this.gm_Callsign.PolygonsEnabled = true;
             this.gm_Callsign.RetryLoadTile = 0;
             this.gm_Callsign.RoutesEnabled = true;
@@ -996,6 +1189,22 @@
             this.tsl_Status.Size = new System.Drawing.Size(42, 17);
             this.tsl_Status.Text = "Status.";
             // 
+            // bw_ASTER3_MapUpdater
+            // 
+            this.bw_ASTER3_MapUpdater.WorkerReportsProgress = true;
+            this.bw_ASTER3_MapUpdater.WorkerSupportsCancellation = true;
+            this.bw_ASTER3_MapUpdater.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_ASTER3_MapUpdater_DoWork);
+            this.bw_ASTER3_MapUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_ASTER3_MapUpdater_ProgressChanged);
+            this.bw_ASTER3_MapUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_ASTER3_MapUpdater_RunWorkerCompleted);
+            // 
+            // bw_ASTER1_MapUpdater
+            // 
+            this.bw_ASTER1_MapUpdater.WorkerReportsProgress = true;
+            this.bw_ASTER1_MapUpdater.WorkerSupportsCancellation = true;
+            this.bw_ASTER1_MapUpdater.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_ASTER1_MapUpdater_DoWork);
+            this.bw_ASTER1_MapUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_ASTER1_MapUpdater_ProgressChanged);
+            this.bw_ASTER1_MapUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_ASTER1_MapUpdater_RunWorkerCompleted);
+            // 
             // FirstRunWizard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1027,6 +1236,10 @@
             this.wp_SRTM3.PerformLayout();
             this.wp_SRTM1.ResumeLayout(false);
             this.wp_SRTM1.PerformLayout();
+            this.wp_ASTER3.ResumeLayout(false);
+            this.wp_ASTER3.PerformLayout();
+            this.wp_ASTER1.ResumeLayout(false);
+            this.wp_ASTER1.PerformLayout();
             this.wp_UserDetails.ResumeLayout(false);
             this.wp_UserDetails.PerformLayout();
             this.wp_PlaneFeeds.ResumeLayout(false);
@@ -1110,5 +1323,19 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox cb_SRTM1_EnableCache;
         private System.Windows.Forms.Label label6;
+        private AeroWizard.WizardPage wp_ASTER3;
+        private System.Windows.Forms.Label lbl_ASTER3_Status;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.CheckBox cb_ASTER3_EnableCache;
+        private GMap.NET.WindowsForms.GMapControl gm_ASTER3;
+        private AeroWizard.WizardPage wp_ASTER1;
+        private System.Windows.Forms.Label lbl_ASTER1_Status;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.CheckBox cb_ASTER1_EnableCache;
+        private GMap.NET.WindowsForms.GMapControl gm_ASTER1;
+        private System.ComponentModel.BackgroundWorker bw_ASTER3_MapUpdater;
+        private System.ComponentModel.BackgroundWorker bw_ASTER1_MapUpdater;
+        private System.Windows.Forms.CheckBox cb_ASTER1;
+        private System.Windows.Forms.CheckBox cb_ASTER3;
     }
 }

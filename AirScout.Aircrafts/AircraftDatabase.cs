@@ -167,33 +167,45 @@ namespace AirScout.Aircrafts
 
         public long AircraftCount()
         {
-            object count = db.ExecuteScalar("SELECT COUNT(*) FROM " + AircraftDesignator.TableName);
-            if (IsValid(count))
-                return (long)count;
+            lock (db)
+            {
+                object count = db.ExecuteScalar("SELECT COUNT(*) FROM " + AircraftDesignator.TableName);
+                if (IsValid(count))
+                    return (long)count;
+            }
             return 0;
         }
 
         public long AircraftCountUnknownCall()
         {
-            object count = db.ExecuteScalar("SELECT COUNT(*) FROM " + AircraftDesignator.TableName + " WHERE Call = '[unknown]'");
-            if (IsValid(count))
-                return (long)count;
+            lock (db)
+            {
+                object count = db.ExecuteScalar("SELECT COUNT(*) FROM " + AircraftDesignator.TableName + " WHERE Call = '[unknown]'");
+                if (IsValid(count))
+                    return (long)count;
+            }
             return 0;
         }
 
         public long AircraftCountUnknownHex()
         {
-            object count = db.ExecuteScalar("SELECT COUNT(*) FROM " + AircraftDesignator.TableName + " WHERE Hex = '[unknown]'");
-            if (IsValid(count))
-                return (long)count;
+            lock (db)
+            {
+                object count = db.ExecuteScalar("SELECT COUNT(*) FROM " + AircraftDesignator.TableName + " WHERE Hex = '[unknown]'");
+                if (IsValid(count))
+                    return (long)count;
+            }
             return 0;
         }
 
         public long AircraftCountUnknownType()
         {
-            object count = db.ExecuteScalar("SELECT COUNT(*) FROM " + AircraftDesignator.TableName + " WHERE TypeCode = '[unknown]'");
-            if (IsValid(count))
-                return (long)count;
+            lock (db)
+            {
+                object count = db.ExecuteScalar("SELECT COUNT(*) FROM " + AircraftDesignator.TableName + " WHERE TypeCode = '[unknown]'");
+                if (IsValid(count))
+                    return (long)count;
+            }
             return 0;
         }
 
@@ -2433,6 +2445,11 @@ namespace AirScout.Aircrafts
                         info.Lon = newpos.Lon;
                         info.Time = at;
 
+                        // Test!!!
+                        if (info.Call.StartsWith("xxx"))
+                        {
+                            int k = 3;
+                        }
 
                         // calculate four possible intersections
                         // i1 -->       plane heading
@@ -2465,7 +2482,7 @@ namespace AirScout.Aircrafts
                         if ((i4 != null) && ((imin == null) || (i4.QRB < imin.QRB)))
                             imin = i4;
                         // check hot planes which are very near the path first
-                        if ((imin != null) && (imin.QRB <= maxdist))
+                        if ((imin != null) && (imin.QRB <= maxdist) && (imin.Dist1 <= ppath.Distance))
                         {
                             // plane is near path
                             // use the minimum qrb info
@@ -2506,7 +2523,7 @@ namespace AirScout.Aircrafts
                         else
                         {
                             // plane is far from path --> check only intersection i1 = planes moves towards path
-                            if ((i1 != null) && (i1.Min_H <= maxalt))
+                            if ((i1 != null) && (i1.Min_H <= maxalt) && (i1.Dist1 <= ppath.Distance))
                             {
                                 plane.IntPoint = new LatLon.GPoint(i1.Lat, i1.Lon);
                                 plane.IntQRB = i1.QRB;

@@ -51,11 +51,12 @@ namespace GMap.NET.WindowsForms.Markers
       red_pushpin,
       red_big_stop,
       black_small,
-      white_small,
-   }
+        white_small,
+        white_dot,      // 2021_05_17 DL2ALF
+    }
 
 #if !PocketPC
-   [Serializable]
+    [Serializable]
    public class GMarkerGoogle : GMapMarker, ISerializable, IDeserializationCallback
 #else
    public class GMarkerGoogle : GMapMarker
@@ -121,6 +122,7 @@ namespace GMap.NET.WindowsForms.Markers
             case GMarkerGoogleType.purple_dot:
             case GMarkerGoogleType.red:
             case GMarkerGoogleType.red_dot:
+            case GMarkerGoogleType.white_dot:
             {
                Offset = new Point(-Size.Width / 2 + 1, -Size.Height + 1);
 

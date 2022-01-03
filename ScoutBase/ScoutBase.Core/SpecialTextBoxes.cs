@@ -96,6 +96,176 @@ namespace ScoutBase.Core
         }
     }
 
+    public class LongTextBox : SilentTextBox
+    {
+        string formatspecifier = "F0";
+        /// <summary>
+        /// String format specifier for numeric value
+        /// </summary>
+        public string FormatSpecifier
+        {
+            get
+            {
+                return formatspecifier;
+            }
+            set
+            {
+                try
+                {
+                    // try a ToString call to verfiy the format specifier
+                    string s = this.value.ToString(formatspecifier, CultureInfo.InvariantCulture);
+                    formatspecifier = value;
+                    Text = s;
+                }
+                catch
+                {
+                    throw new ArgumentException("Invalid string format specifier: " + value);
+                }
+            }
+        }
+
+        double minvalue = double.NaN;
+        /// <summary>
+        /// Minimum allowed value
+        /// </summary>
+        public long MinValue
+        {
+            get
+            {
+                if (double.IsNaN(minvalue))
+                    return 0;
+                return (long)minvalue;
+            }
+            set
+            {
+                // checking for min/max 
+                if (!double.IsNaN(maxvalue) && (value > maxvalue))
+                    throw new ArgumentOutOfRangeException("MinValue must be less or equal than MaxValue: " + value.ToString());
+                minvalue = value;
+            }
+        }
+
+        double maxvalue = double.NaN;
+        /// <summary>
+        /// Maximum allowed value
+        /// </summary>
+        public long MaxValue
+        {
+            get
+            {
+                if (double.IsNaN(maxvalue))
+                    return 0;
+                return (long)maxvalue;
+            }
+            set
+            {
+                // checking for min/max 
+                if (!double.IsNaN(minvalue) && (value < minvalue))
+                    throw new ArgumentOutOfRangeException("MaxValue must be greater or equal than MinValue: " + value.ToString());
+                maxvalue = value;
+            }
+        }
+
+        double value = double.NaN;
+        /// <summary>
+        /// Value
+        /// </summary>
+        public long Value
+        {
+            get
+            {
+                if (double.IsNaN(value))
+                    return 0;
+                return (long)value;
+            }
+            set
+            {
+                if (double.IsNaN(value) || CheckBounds(value))
+                {
+                    this.value = value;
+                    if (!double.IsNaN(value))
+                        this.Text = value.ToString(FormatSpecifier, CultureInfo.InvariantCulture);
+                    else this.Text = "";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set the value without firing a TextChanged event
+        /// </summary>
+        public long SilentValue
+        {
+            set
+            {
+                if (double.IsNaN(value) || CheckBounds(value))
+                {
+                    this.value = value;
+                    this.SilentText = value.ToString(FormatSpecifier, CultureInfo.InvariantCulture);
+                }
+            }
+        }
+
+        private string CharsAllowed = "0123456789-\b";
+
+        private bool CheckBounds(double v)
+        {
+            // no range check when min == max
+            if (minvalue == maxvalue)
+                return true;
+            // range checking only when min/max are set
+            if (!double.IsNaN(minvalue) && (v < minvalue))
+                return false;
+            if (!double.IsNaN(maxvalue) && (v > maxvalue))
+                return false;
+            return true;
+        }
+
+        private void UndoText()
+        {
+            // simulate an Undo() --> Undo() does not work inside Keypressed or TextChanged
+            Console.Beep();
+            int start = OldSelectionStart;
+            int length = OldSelectionLength;
+            SilentText = OldText;
+            Select(start, length);
+        }
+
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
+
+            // check for valid numeric input
+            if (!char.IsControl(e.KeyChar) && (CharsAllowed.IndexOf(e.KeyChar) < 0))
+            {
+                Console.Beep();
+                e.Handled = true;
+            }
+        }
+
+        protected override void OnTextChanged(EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(Text))
+            {
+                // do checks and reset Text to old value in case of error
+                // check '-' is allowed only once and only on 1st position
+                if (Text.LastIndexOf('-') > 0)
+                    UndoText();
+                // check bounds
+                try
+                {
+                    value = System.Convert.ToDouble(Text, CultureInfo.InvariantCulture);
+                }
+                catch
+                {
+                    value = double.NaN;
+                }
+                if (!double.IsNaN(value) && !CheckBounds(value))
+                    UndoText();
+                base.OnTextChanged(e);
+            }
+        }
+    }
+
     public class Int32TextBox : SilentTextBox
     {
         string formatspecifier = "F0";

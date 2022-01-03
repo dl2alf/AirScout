@@ -154,11 +154,13 @@ To view complete license information please refer to "Options/Info".</value>
   </data>
   <data name="richTextBox2.Text" xml:space="preserve">
     <value>Elevation models are essential for work with AirScout. They are needed for calculating radio horizons and propagation paths.
-The software can handle the three most common models available for the public:
+The software can handle the most common models available for the public:
 
 GLOBE: 1km x 1km resolution, covers whole earth
-SRTM3: 90m x 90m resolution, covers only -60° ... +60°
+SRTM3: 90m x 90m resolution, covers only -60° ... +60° (with some inoffical extensions to Norh)
 SRTM1: 30m x 30m resolution, covers only -60° ... +60°
+ASTER3: 90m x 90m resolution, covers -83° ... +83° (aggregated from ASTER1, very raw data )
+ASTER1: 30m x 30m resolution, covers -83° ... +83° (very raw data)
 
 Elevation data are provided in files. AirScout is trying to download and stores them locally. If you have them already somewhere on your computer, you can select a user specific path.
 
@@ -7398,6 +7400,12 @@ Please enter at least one plane feed to continue.</value>
   </metadata>
   <metadata name="ss_Main.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>481, 17</value>
+  </metadata>
+  <metadata name="bw_ASTER3_MapUpdater.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>575, 17</value>
+  </metadata>
+  <metadata name="bw_ASTER1_MapUpdater.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>763, 17</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>50</value>
