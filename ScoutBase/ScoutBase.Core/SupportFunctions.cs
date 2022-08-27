@@ -579,6 +579,7 @@ namespace ScoutBase.Core
                     // based on entry name, size, date, checkbox status, etc.  
                     foreach (ZipEntry ze in zip)
                     {
+                        Console.WriteLine("[UnzipFile: unzipping entry: " + ze.FileName + " to: " + downloaddir);
                         ze.Extract(downloaddir, ExtractExistingFileAction.OverwriteSilently);
                         string fname = Path.Combine(downloaddir, ze.FileName);
                         // wait for extraction to finish
@@ -588,7 +589,9 @@ namespace ScoutBase.Core
                             Thread.Sleep(1000);
                             i++;
                             if (i > timeout)
+                            {
                                 throw new TimeoutException("Timeout while waiting for extraction is complete: " + fname);
+                            }
                         }
                         File.SetLastWriteTime(fname, ze.LastModified);
                     }
@@ -720,17 +723,18 @@ namespace ScoutBase.Core
                     HttpWebRequest req = (HttpWebRequest)WebRequest.Create(address);
                     // allow redirect 2017/12/06 DL2ALF
                     req.AllowAutoRedirect = allowredirect;
+                    Console.WriteLine("[GetWebCreationTime] Waiting for response from address: " + address);
                     using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
                     {
                         webcreationtime = res.LastModified.ToUniversalTime();
+                        Console.WriteLine("[GetWebCreationTime] Getting web creation time from address: " + address + " = " + webcreationtime.ToString("yyyy-MM-dd HH:mm:ss"));
                     }
-                    Console.WriteLine("[GetWebCreationTime] Getting web creation time from address: " + address + " = " + webcreationtime.ToString("yyyy-MM-dd HH:mm:ss"));
                 }
                  return webcreationtime;
             }
             catch (Exception ex)
             {
-//                Console.WriteLine("[GetWebCreationTime] Error while reading address: " + address + "\n" + ex.ToString());
+                Console.WriteLine("[GetWebCreationTime] Error while reading address: " + address + "\n" + ex.ToString());
             }
             return DateTime.MinValue;
         }

@@ -249,7 +249,7 @@ namespace GMap.NET.WindowsForms
 
                     foreach (GMapPolygon obj in Polygons)
                     {
-                        if (obj.IsVisible)
+                        if ((obj != null) && (obj.IsVisible))
                         {
                             Control.UpdatePolygonLocalPosition(obj);
                         }
@@ -295,7 +295,7 @@ namespace GMap.NET.WindowsForms
                 {
                     foreach(GMapPolygon r in Polygons)
                     {
-                        if(r.IsVisible)
+                        if ((r != null) && (r.IsVisible))
                         {
                             r.OnRender(g);
                         }

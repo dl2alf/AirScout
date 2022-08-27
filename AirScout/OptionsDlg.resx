@@ -240,9 +240,13 @@
 </value>
   </data>
   <data name="label61.Text" xml:space="preserve">
-    <value>You can select different map provider from the list below. Depending on your selection some maps may not be available for your choosen area.  Please note that the selection of maps is taken from Great Maps regardless of their legal status. Some of them might be copyrighted or otherwise restricted in use.  
+    <value>You can select different map provider from the list below. Please note that the selection of maps is taken from Great Maps regardless of their legal status. Some of them might be copyrighted or otherwise restricted in use.  
 You were asked to agree with the terms of use first.
 Open Street Map is recommended as a default.</value>
+  </data>
+  <data name="btn_Options_LocalObstructions.ToolTip" xml:space="preserve">
+    <value>Manages local obstructions near own location which are not covered by the choosen Digital Elevation Model, e.g. higher buildings or hill sites.
+You can set a minimal possibile elevation for each single direction manually here.</value>
   </data>
   <data name="label52.Text" xml:space="preserve">
     <value>Information from callsign database and other sources are used to prefill fields. You can overwrite and complete entries here. Your local database is updated. If you want to share the information with the AirScout community please use the "Send Update!" buttons.</value>

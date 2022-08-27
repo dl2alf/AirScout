@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapDlg));
-            ScoutBase.Core.LatLon.GPoint gPoint1 = new ScoutBase.Core.LatLon.GPoint();
-            ScoutBase.Core.LatLon.GPoint gPoint2 = new ScoutBase.Core.LatLon.GPoint();
+            ScoutBase.Core.LatLon.GPoint gPoint7 = new ScoutBase.Core.LatLon.GPoint();
+            ScoutBase.Core.LatLon.GPoint gPoint8 = new ScoutBase.Core.LatLon.GPoint();
             this.il_Main = new System.Windows.Forms.ImageList(this.components);
             this.ti_Progress = new System.Windows.Forms.Timer(this.components);
             this.sc_Map = new System.Windows.Forms.SplitContainer();
@@ -181,6 +181,7 @@
             this.bw_Analysis_FileSaver = new System.ComponentModel.BackgroundWorker();
             this.bw_Analysis_FileLoader = new System.ComponentModel.BackgroundWorker();
             this.bw_AirportMapper = new System.ComponentModel.BackgroundWorker();
+            this.bw_LocatorGridUpdater = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.sc_Map)).BeginInit();
             this.sc_Map.Panel1.SuspendLayout();
             this.sc_Map.Panel2.SuspendLayout();
@@ -306,6 +307,7 @@
             this.ag_Azimuth.MinValue = 0F;
             this.ag_Azimuth.Name = "ag_Azimuth";
             this.ag_Azimuth.NoOfDivisions = 12;
+            this.ag_Azimuth.NoOfSubDivisions = 5;
             this.ag_Azimuth.RecommendedValue = 0F;
             this.ag_Azimuth.Size = new System.Drawing.Size(175, 175);
             this.ag_Azimuth.TabIndex = 27;
@@ -325,7 +327,8 @@
             this.ag_Elevation.MaxValue = 90F;
             this.ag_Elevation.MinValue = 0F;
             this.ag_Elevation.Name = "ag_Elevation";
-            this.ag_Elevation.NoOfDivisions = 4;
+            this.ag_Elevation.NoOfDivisions = 6;
+            this.ag_Elevation.NoOfSubDivisions = 2;
             this.ag_Elevation.RecommendedValue = 0F;
             this.ag_Elevation.Size = new System.Drawing.Size(175, 175);
             this.ag_Elevation.TabIndex = 28;
@@ -1698,7 +1701,7 @@
             this.cb_DXLoc.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cb_DXLoc.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cb_DXLoc.FormattingEnabled = true;
-            this.cb_DXLoc.GeoLocation = gPoint1;
+            this.cb_DXLoc.GeoLocation = gPoint7;
             this.cb_DXLoc.Location = new System.Drawing.Point(3, 154);
             this.cb_DXLoc.Name = "cb_DXLoc";
             this.cb_DXLoc.Precision = 3;
@@ -1722,7 +1725,7 @@
             this.cb_MyLoc.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cb_MyLoc.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cb_MyLoc.FormattingEnabled = true;
-            this.cb_MyLoc.GeoLocation = gPoint2;
+            this.cb_MyLoc.GeoLocation = gPoint8;
             this.cb_MyLoc.Location = new System.Drawing.Point(3, 71);
             this.cb_MyLoc.Name = "cb_MyLoc";
             this.cb_MyLoc.Precision = 3;
@@ -2051,6 +2054,14 @@
             this.bw_AirportMapper.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_AirportMapper_ProgressChanged);
             this.bw_AirportMapper.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_AirportMapper_RunWorkerCompleted);
             // 
+            // bw_LocatorGridUpdater
+            // 
+            this.bw_LocatorGridUpdater.WorkerReportsProgress = true;
+            this.bw_LocatorGridUpdater.WorkerSupportsCancellation = true;
+            this.bw_LocatorGridUpdater.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_LocatorGridUpdater_DoWork);
+            this.bw_LocatorGridUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_LocatorGridUpdater_ProgressChanged);
+            this.bw_LocatorGridUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_LocatorGridUpdater_RunWorkerCompleted);
+            // 
             // MapDlg
             // 
             this.AcceptButton = this.btn_Map_PlayPause;
@@ -2270,6 +2281,7 @@
         private System.Windows.Forms.ToolStripStatusLabel tsl_CAT;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Rot;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Track;
+        private System.ComponentModel.BackgroundWorker bw_LocatorGridUpdater;
     }
 }
 

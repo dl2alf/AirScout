@@ -132,7 +132,7 @@
       <Value Profile="(Default)">[none]</Value>
     </Setting>
     <Setting Name="Planes_PlaneFeed1" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[WebFeed]           Virtual Radar Server</Value>
+      <Value Profile="(Default)">[WebFeed]           OpenSky</Value>
     </Setting>
     <Setting Name="Planes_Position_TTL" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
@@ -605,8 +605,8 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
       <Value Profile="(Default)">11</Value>
     </Setting>
     <Setting Name="StationsMap_OverlayElevation" Type="System.Boolean" Scope="User">
-	  <Value Profile="(Default)">False</Value>
-	</Setting>
+      <Value Profile="(Default)">False</Value>
+    </Setting>
     <Setting Name="Elevation_ASTER3_Copyright" Type="System.String" Scope="User">
       <Value Profile="(Default)">Maidenhead locator system elvation tiles calculated by DL2ALF based on elevation data of the ASTER  project:
 
@@ -723,6 +723,36 @@ NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team (2019). AST
     </Setting>
     <Setting Name="Map_ShowDistances" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Map_TrackingGaugeWidth" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">175</Value>
+    </Setting>
+    <Setting Name="Map_TrackingGaugeColor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="InfoWin_MyAzimuth" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_MyElevation" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_MyDoppler" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_DXAzimuth" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_DXElevation" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_DXDoppler" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InfoWin_AlwaysDetailed" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Map_TrackingGaugesShow" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

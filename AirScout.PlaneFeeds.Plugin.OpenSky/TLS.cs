@@ -3,6 +3,7 @@ using Org.BouncyCastle.Security;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -51,17 +52,21 @@ namespace System.Net
             string resp = "";
             int count = 0;
             // assign buffer
-            byte[] buff = new byte[1];
+            byte[] buff = new byte[1024];
             int bytesread = 0;
-            // read content bytewise
+            // read content blockwise
             while (bytesread < contentlength)
             {
+                int bytestoread = buff.Length - bytesread;
+                if (bytestoread > buff.Length)
+                    bytestoread = buff.Length;
                 bytesread += stream.Read(buff, 0, buff.Length);
                 // add it to response
                 resp += Encoding.ASCII.GetString(buff, 0, buff.Length);
                 if (st.ElapsedMilliseconds > timeout)
                     throw new TimeoutException("Connection timed out.");
             }
+            /*
             string trailer = "";
             // reassign buffer
             buff = new byte[1];
@@ -74,6 +79,7 @@ namespace System.Net
                     throw new TimeoutException("Connection timed out.");
             }
             while (!trailer.Contains("\r\n"));
+            */
             Console.WriteLine("Reading content [" + contentlength.ToString() + " bytes]: " + resp);
             response += resp;
             return true;
@@ -89,52 +95,68 @@ namespace System.Net
             int count = 0;
             string strcontentlength = "";
             int contentlength = 0;
+            int bytesread = 0;
             // chunked transfer, first line should contain content length
             // read stream bytewise until CRLF is detected
-            do
+            try
             {
-                count = stream.Read(buff, 0, buff.Length);
-                strcontentlength += Encoding.ASCII.GetString(buff, 0, buff.Length);
-                if (st.ElapsedMilliseconds > timeout)
-                    throw new TimeoutException("Connection timed out.");
+                do
+                {
+                    count = stream.Read(buff, 0, buff.Length);
+                    strcontentlength += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                    if (st.ElapsedMilliseconds > timeout)
+                        throw new TimeoutException("Connection timed out.");
+                }
+                while (!strcontentlength.Contains("\r\n"));
+                strcontentlength = strcontentlength.Replace("\r\n", "");
+                contentlength = int.Parse(strcontentlength, System.Globalization.NumberStyles.HexNumber);
+                // finished reading all chunks
+                if (contentlength == 0)
+                {
+                    Console.WriteLine("Reading chunked content finished");
+                    return true;
+                }
+
+                // re-assign buffer
+                buff = new byte[contentlength];
+
+                // read content in 1kByte chunks until contentlength is reached
+                while (bytesread < contentlength)
+                {
+                    int bytestoread = buff.Length - bytesread;
+                    if (bytestoread > buff.Length)
+                        bytestoread = buff.Length;
+                    bytesread += stream.Read(buff, bytesread, bytestoread);
+                    // add it to response
+                    if (st.ElapsedMilliseconds > timeout)
+                        throw new TimeoutException("Connection timed out.");
+                }
+                resp += Encoding.ASCII.GetString(buff, 0, buff.Length);
+
+                string trailer = "";
+                // reassign buffer
+                buff = new byte[1];
+                // read stream bytewise until CRLFCRLF is detected, should be the next two bytes
+                do
+                {
+                    count = stream.Read(buff, 0, buff.Length);
+                    trailer += Encoding.ASCII.GetString(buff, 0, buff.Length);
+                    if (st.ElapsedMilliseconds > timeout)
+                        throw new TimeoutException("Connection timed out.");
+                }
+                while (!trailer.Contains("\r\n"));
             }
-            while (!strcontentlength.Contains("\r\n"));
-            strcontentlength = strcontentlength.Replace("\r\n", "");
-            contentlength = int.Parse(strcontentlength, System.Globalization.NumberStyles.HexNumber);
-            // finished reading all chunks
-            if (contentlength == 0)
+            catch (Exception ex)
             {
-                Console.WriteLine("Reading chunked content finished");
+                Console.WriteLine("Error while reading chunked content: " + ex.Message);
                 return true;
             }
-            int bytesread = 0;
-            // read content bytewise
-            while (bytesread < contentlength)
-            {
-                bytesread += stream.Read(buff, 0, buff.Length);
-                // add it to response
-                resp += Encoding.ASCII.GetString(buff, 0, buff.Length);
-                if (st.ElapsedMilliseconds > timeout)
-                    throw new TimeoutException("Connection timed out.");
-            }
-            string trailer = "";
-            // reassign buffer
-            buff = new byte[1];
-            // read stream bytewise until CRLFCRLF is detected, should be the next two bytes
-            do
-            {
-                count = stream.Read(buff, 0, buff.Length);
-                trailer += Encoding.ASCII.GetString(buff, 0, buff.Length);
-                if (st.ElapsedMilliseconds > timeout)
-                    throw new TimeoutException("Connection timed out.");
-            }
-            while (!trailer.Contains("\r\n"));
-            Console.WriteLine("Reading chunked content [" + contentlength.ToString() + " bytes]: " + resp);
+            // Console.WriteLine("Reading chunked content [" + contentlength.ToString() + " bytes]: " + resp);
             response += resp;
             return false;
         }
 
-        public static string DownloadFile(string url, int timeout)
+        public static string DownloadFile(string url, int timeout, string username, string password)
         {
             string response = "";
             Uri uri = null;
@@ -162,6 +184,14 @@ namespace System.Net
                     hdr.AppendLine("Host: " + uri.Host);
                     hdr.AppendLine("Content-Type: text/json; charset=utf-8");
                     hdr.AppendLine("Connection: close");
+
+                    // include authorization if username/password are not empty
+                    if (!String.IsNullOrEmpty(username) && !String.IsNullOrEmpty(password))
+                    {
+                        // Base64 encode username:password
+                        string s = Convert.ToBase64String(Encoding.UTF8.GetBytes(username + ":" + password));
+                        hdr.AppendLine("Authorization: Basic " + s);
+                    }
                     hdr.AppendLine();
 
                     var dataToSend = Encoding.ASCII.GetBytes(hdr.ToString());

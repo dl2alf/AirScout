@@ -338,7 +338,7 @@ namespace AquaControls
 
                 //Draw Colored Rim
                 Pen colorPen = new Pen(Color.FromArgb(190, Color.Gainsboro), this.Width / 40);
-                Pen blackPen = new Pen(Color.FromArgb(250, Color.Black), this.Width / 200);
+                Pen blackPen = new Pen(Color.FromArgb(250, this.ForeColor), this.Width / 200);
 //                int gap = (int)(this.Width * 0.03F);
                 int gap = 0;
                 Rectangle rectg = new Rectangle(rectImg.X + gap, rectImg.Y + gap, rectImg.Width - gap * 2, rectImg.Height - gap * 2);
@@ -440,7 +440,7 @@ namespace AquaControls
             pts[3].X = (float)(cx + (this.Width * .09F) * Math.Cos(angle));
             pts[3].Y = (float)(cy + (this.Width * .09F) * Math.Sin(angle));
 
-            Brush pointer = new SolidBrush(Color.Black);
+            Brush pointer = new SolidBrush(this.ForeColor);
             g.FillPolygon(pointer, pts);
 
             PointF[] shinePts = new PointF[3];
@@ -455,7 +455,7 @@ namespace AquaControls
             shinePts[2].X = cx;
             shinePts[2].Y = cy;
 
-            LinearGradientBrush gpointer = new LinearGradientBrush(shinePts[0], shinePts[2], Color.SlateGray, Color.Black);
+            LinearGradientBrush gpointer = new LinearGradientBrush(shinePts[0], shinePts[2], Color.SlateGray, this.ForeColor);
             g.FillPolygon(gpointer, shinePts);
 
             Rectangle rect = new Rectangle(x, y, width, height);
@@ -512,11 +512,11 @@ namespace AquaControls
             float shift = Width / 5;
             Rectangle rect = new Rectangle(this.x, this.y, width, height);
             RectangleF rectangle = new RectangleF(cX - (shift / 2), cY - (shift / 2), shift, shift);
-            LinearGradientBrush brush = new LinearGradientBrush(rect, Color.Black, Color.FromArgb(100,this.dialColor), LinearGradientMode.Vertical);
+            LinearGradientBrush brush = new LinearGradientBrush(rect, this.ForeColor, Color.FromArgb(100,this.dialColor), LinearGradientMode.Vertical);
             g.FillEllipse(brush, rectangle);
             shift = Width / 7;
             rectangle = new RectangleF(cX - (shift / 2), cY - (shift / 2), shift, shift);
-            brush = new LinearGradientBrush(rect, Color.SlateGray, Color.Black, LinearGradientMode.ForwardDiagonal);
+            brush = new LinearGradientBrush(rect, Color.SlateGray, this.ForeColor, LinearGradientMode.ForwardDiagonal);
             g.FillEllipse(brush, rectangle);
         }
 
@@ -546,8 +546,8 @@ namespace AquaControls
             float totalAngle = toAngle - fromAngle;
             float incr = GetRadian(((totalAngle) / ((noOfParts - 1) * (noOfIntermediates + 1))));
             
-            Pen thickPen = new Pen(Color.Black, Width/50);
-            Pen thinPen = new Pen(Color.Black, Width/100);
+            Pen thickPen = new Pen(this.ForeColor, Width/50);
+            Pen thinPen = new Pen(this.ForeColor, Width/100);
             float rulerValue = MinValue;
             for (int i = 0; i <= noOfParts; i++)
             {
@@ -660,63 +660,98 @@ namespace AquaControls
         /// <param name="height"></param>
         private void DrawDigit(Graphics g, int number, PointF position, bool dp, float height)
         {
-            float width;
-            width = 10F * height/13;
-            
-            Pen outline = new Pen(Color.FromArgb(40, this.dialColor));
-            Pen fillPen = new Pen(Color.Black);
+            // calculate widths and heights
+            float width, thickwidth, halfthickwidth, thickheight, halfthickheight;
+            width = 10F * height/13.0F;
+            thickwidth = 1.6F;
+            halfthickwidth = thickwidth / 2.0F;
+            thickheight = thickwidth * width / height;
+            halfthickheight = thickheight / 2.0F;
+
+            // get pens
+            Pen outline = new Pen(Color.FromArgb(30, this.ForeColor));
+            Pen fillPen = new Pen(this.ForeColor);
+
+            // keep old graphics settings
+            Matrix oldtrans = g.Transform;
+            SmoothingMode oldsmooth = g.SmoothingMode;
+            PixelOffsetMode oldpixel = g.PixelOffsetMode;
+
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.PixelOffsetMode = PixelOffsetMode.Default;
 
             #region Form Polygon Points
-            //Segment A
-            PointF[] segmentA = new PointF[5];
-            segmentA[0] = segmentA[4] = new PointF(position.X + GetX(2.8F, width), position.Y + GetY(1F, height));
-            segmentA[1] = new PointF(position.X + GetX(10, width), position.Y + GetY(1F, height));
-            segmentA[2] = new PointF(position.X + GetX(8.8F, width), position.Y + GetY(2F, height));
-            segmentA[3] = new PointF(position.X + GetX(3.8F, width), position.Y + GetY(2F, height));            
+
+            PointF[] segmentA = new PointF[7];
+            segmentA[0] = segmentA[6] = new PointF(position.X + GetX(1.2F + halfthickwidth, width), position.Y + GetY(1F + halfthickwidth, height));
+            segmentA[1] = new PointF(position.X + GetX(1.2F + thickwidth, width), position.Y + GetY(1F, height));
+            segmentA[2] = new PointF(position.X + GetX(7.8F - thickwidth, width), position.Y + GetY(1F, height));
+            segmentA[3] = new PointF(position.X + GetX(7.8F - halfthickwidth, width), position.Y + GetY(1F + halfthickheight, height));
+            segmentA[4] = new PointF(position.X + GetX(7.8F - thickwidth, width), position.Y + GetY(1F + thickheight, height));
+            segmentA[5] = new PointF(position.X + GetX(1.2F + thickwidth, width), position.Y + GetY(1F + thickheight, height));
 
             //Segment B
-            PointF[] segmentB = new PointF[5];
-            segmentB[0] = segmentB[4] = new PointF(position.X + GetX(10, width), position.Y + GetY(1.4F, height));
-            segmentB[1] = new PointF(position.X + GetX(9.3F, width), position.Y + GetY(6.8F, height));
-            segmentB[2] = new PointF(position.X + GetX(8.4F, width), position.Y + GetY(6.4F, height));
-            segmentB[3] = new PointF(position.X + GetX(9F, width), position.Y + GetY(2.2F, height)); 
+            PointF[] segmentB = new PointF[7];
+            segmentB[0] = segmentB[6] = new PointF(position.X + GetX(8F - thickwidth, width), position.Y + GetY(1.2F + thickheight, height));
+            segmentB[1] = new PointF(position.X + GetX(8F - halfthickwidth, width), position.Y + GetY(1.2F + halfthickheight, height));
+            segmentB[2] = new PointF(position.X + GetX(8F, width), position.Y + GetY(1.2F + thickheight, height));
+            segmentB[3] = new PointF(position.X + GetX(8F, width), position.Y + GetY(6.8F, height));
+            segmentB[4] = new PointF(position.X + GetX(8F - halfthickwidth, width), position.Y + GetY(6.8F, height));
+            segmentB[5] = new PointF(position.X + GetX(8F - thickwidth, width), position.Y + GetY(6.8F - halfthickheight, height));
 
             //Segment C
-            PointF[] segmentC = new PointF[5];
-            segmentC[0] = segmentC[4] = new PointF(position.X + GetX(9.2F, width), position.Y + GetY(7.2F, height));
-            segmentC[1] = new PointF(position.X + GetX(8.7F, width), position.Y + GetY(12.7F, height));
-            segmentC[2] = new PointF(position.X + GetX(7.6F, width), position.Y + GetY(11.9F, height));
-            segmentC[3] = new PointF(position.X + GetX(8.2F, width), position.Y + GetY(7.7F, height)); 
+            PointF[] segmentC = new PointF[7];
+            segmentC[0] = segmentC[6] = new PointF(position.X + GetX(8F - thickwidth, width), position.Y + GetY(7.2F + halfthickheight, height));
+            segmentC[1] = new PointF(position.X + GetX(8F - halfthickwidth, width), position.Y + GetY(7.2F, height));
+            segmentC[2] = new PointF(position.X + GetX(8F, width), position.Y + GetY(7.2F, height));
+            segmentC[3] = new PointF(position.X + GetX(8F, width), position.Y + GetY(12.8F - thickheight, height));
+            segmentC[4] = new PointF(position.X + GetX(8F - halfthickwidth, width), position.Y + GetY(12.8F - halfthickheight, height));
+            segmentC[5] = new PointF(position.X + GetX(8F - thickwidth, width), position.Y + GetY(12.8F - thickheight, height));
 
             //Segment D
-            PointF[] segmentD = new PointF[5];
-            segmentD[0] = segmentD[4] = new PointF(position.X + GetX(7.4F, width), position.Y + GetY(12.1F, height));
-            segmentD[1] = new PointF(position.X + GetX(8.4F, width), position.Y + GetY(13F, height));
-            segmentD[2] = new PointF(position.X + GetX(1.3F, width), position.Y + GetY(13F, height));
-            segmentD[3] = new PointF(position.X + GetX(2.2F, width), position.Y + GetY(12.1F, height)); 
+            PointF[] segmentD = new PointF[7];
+            segmentD[0] = segmentD[6] = new PointF(position.X + GetX(1.2F + halfthickwidth, width), position.Y + GetY(13F - halfthickheight, height));
+            segmentD[1] = new PointF(position.X + GetX(1.2F + thickwidth, width), position.Y + GetY(13F - thickheight, height));
+            segmentD[2] = new PointF(position.X + GetX(7.8F - thickwidth, width), position.Y + GetY(13F - thickheight, height));
+            segmentD[3] = new PointF(position.X + GetX(7.8F - halfthickwidth, width), position.Y + GetY(13F - halfthickheight, height));
+            segmentD[4] = new PointF(position.X + GetX(7.8F - thickwidth, width), position.Y + GetY(13F, height));
+            segmentD[5] = new PointF(position.X + GetX(1.2F + thickwidth, width), position.Y + GetY(13F, height));
 
             //Segment E
-            PointF[] segmentE = new PointF[5];
-            segmentE[0] = segmentE[4] = new PointF(position.X + GetX(2.2F, width), position.Y + GetY(11.8F, height));
-            segmentE[1] = new PointF(position.X + GetX(1F, width), position.Y + GetY(12.7F, height));
-            segmentE[2] = new PointF(position.X + GetX(1.7F, width), position.Y + GetY(7.2F, height));
-            segmentE[3] = new PointF(position.X + GetX(2.8F, width), position.Y + GetY(7.7F, height)); 
+            PointF[] segmentE = new PointF[7];
+            segmentE[0] = segmentE[6] = new PointF(position.X + GetX(1F, width), position.Y + GetY(7.2F, height));
+            segmentE[1] = new PointF(position.X + GetX(1F + halfthickwidth, width), position.Y + GetY(7.2F, height));
+            segmentE[2] = new PointF(position.X + GetX(1F + thickwidth, width), position.Y + GetY(7.2F + halfthickheight, height));
+            segmentE[3] = new PointF(position.X + GetX(1F + thickwidth, width), position.Y + GetY(12.8F - thickheight, height));
+            segmentE[4] = new PointF(position.X + GetX(1F + halfthickwidth, width), position.Y + GetY(12.8F - halfthickheight, height));
+            segmentE[5] = new PointF(position.X + GetX(1F, width), position.Y + GetY(12.8F - thickheight, height));
 
             //Segment F
-            PointF[] segmentF = new PointF[5];
-            segmentF[0] = segmentF[4] = new PointF(position.X + GetX(3F, width), position.Y + GetY(6.4F, height));
-            segmentF[1] = new PointF(position.X + GetX(1.8F, width), position.Y + GetY(6.8F, height));
-            segmentF[2] = new PointF(position.X + GetX(2.6F, width), position.Y + GetY(1.3F, height));
-            segmentF[3] = new PointF(position.X + GetX(3.6F, width), position.Y + GetY(2.2F, height));
+            PointF[] segmentF = new PointF[7];
+            segmentF[0] = segmentF[6] = new PointF(position.X + GetX(1F, width), position.Y + GetY(1.2F + thickheight, height));
+            segmentF[1] = new PointF(position.X + GetX(1F + halfthickwidth, width), position.Y + GetY(1.2F + halfthickheight, height));
+            segmentF[2] = new PointF(position.X + GetX(1F + thickwidth, width), position.Y + GetY(1.2F + thickheight, height));
+            segmentF[3] = new PointF(position.X + GetX(1F + thickwidth, width), position.Y + GetY(6.8F - halfthickheight, height));
+            segmentF[4] = new PointF(position.X + GetX(1F + halfthickwidth, width), position.Y + GetY(7F, height));
+            segmentF[5] = new PointF(position.X + GetX(1F, width), position.Y + GetY(7F, height));
 
             //Segment G
             PointF[] segmentG = new PointF[7];
-            segmentG[0] = segmentG[6] = new PointF(position.X + GetX(2F, width), position.Y + GetY(7F, height));
-            segmentG[1] = new PointF(position.X + GetX(3.1F, width), position.Y + GetY(6.5F, height));
-            segmentG[2] = new PointF(position.X + GetX(8.3F, width), position.Y + GetY(6.5F, height));
-            segmentG[3] = new PointF(position.X + GetX(9F, width), position.Y + GetY(7F, height));
-            segmentG[4] = new PointF(position.X + GetX(8.2F, width), position.Y + GetY(7.5F, height));
-            segmentG[5] = new PointF(position.X + GetX(2.9F, width), position.Y + GetY(7.5F, height));
+            segmentG[0] = segmentG[6] = new PointF(position.X + GetX(1F + halfthickwidth, width), position.Y + GetY(7F, height));
+            segmentG[1] = new PointF(position.X + GetX(1F + thickwidth, width), position.Y + GetY(7F - halfthickheight, height));
+            segmentG[2] = new PointF(position.X + GetX(8F - thickwidth, width), position.Y + GetY(7F - halfthickheight, height));
+            segmentG[3] = new PointF(position.X + GetX(8F - halfthickwidth, width), position.Y + GetY(7F, height));
+            segmentG[4] = new PointF(position.X + GetX(8F - thickwidth, width), position.Y + GetY(7F + halfthickheight, height));
+            segmentG[5] = new PointF(position.X + GetX(1F + thickwidth, width), position.Y + GetY(7F + halfthickheight, height));
+
+            // Shear display
+            using (Matrix m = new Matrix())
+            {
+                m.Translate(position.X, position.Y);
+                m.Shear(-0.15F, 0.0F);
+                m.Translate(-position.X, -position.Y);
+                g.Transform = m;
+            }
 
             //Segment DP
             #endregion
@@ -784,6 +819,11 @@ namespace AquaControls
                     width/7, 
                     width/7));
             }
+
+            // restore graphics settings
+            g.Transform = oldtrans;
+            g.SmoothingMode = oldsmooth;
+            g.PixelOffsetMode = oldpixel;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using ScoutBase.Core;
+﻿using Newtonsoft.Json.Linq;
+using ScoutBase.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -148,6 +149,21 @@ namespace AirScout.Core
                     return setting;
                 }
             }
+        }
+
+        public static BandSettings FromJSON(JArray ar)
+        {
+            BandSettings settings = new BandSettings(true);
+            for (int i = 0; i < ar.Count; i++)
+            {
+                JToken row = ar.ElementAt(i);
+                for (int j = 0; j < row.Count(); j++)
+                {
+                    object col = row[settings.Columns[j].ColumnName];
+                    settings.Rows[i][j] = col;
+                }
+            }
+            return settings;
         }
     }
 }

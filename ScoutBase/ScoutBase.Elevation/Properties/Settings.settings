@@ -84,7 +84,7 @@
       <Value Profile="(Default)">ASTER3</Value>
     </Setting>
     <Setting Name="Elevation_ASTER3_UpdateURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">file://E:\\ElevationData\\ASTER\\V3\\ASTER3\\Locs</Value>
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/ScoutBase/1/ElevationData/ASTER3</Value>
     </Setting>
     <Setting Name="Elevation_ASTER3_JSONFile" Type="System.String" Scope="User">
       <Value Profile="(Default)">aster3.json</Value>
@@ -99,7 +99,7 @@
       <Value Profile="(Default)">ASTER1</Value>
     </Setting>
     <Setting Name="Elevation_ASTER1_UpdateURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">file://E:\\ElevationData\\ASTER\\V3\\ASTER1\\Locs</Value>
+      <Value Profile="(Default)">http://www.airscout.eu/downloads/ScoutBase/1/ElevationData/ASTER1</Value>
     </Setting>
     <Setting Name="Elevation_ASTER1_JSONFile" Type="System.String" Scope="User">
       <Value Profile="(Default)">aster1.json</Value>

@@ -696,12 +696,15 @@ namespace ScoutBase.Elevation
                     // maintain cache size --> remove 
                     if (cache.Count > GetCacheSize(model))
                     {
-                        cache.RemoveAt(0);
+                        // maintain cache size --> remove 
+                        if (cache.Count > GetCacheSize(model))
+                        {
+                            cache.RemoveAt(0);
+                        }
+                        cache.Add(loc, td);
                     }
-                    cache.Add(loc, td);
                 }
             }
-
             // keep tile in cache
             if (td != null)
             {
@@ -977,18 +980,10 @@ namespace ScoutBase.Elevation
                 return DateTime.MinValue;
             lock (db)
             {
-                object result = null;
-                try
-                {
-                    db.DBCommand.CommandText = "SELECT LastUpdated FROM " + ElevationTileDesignator.TableName + " WHERE TileIndex = @TileIndex";
-                    db.DBCommand.Parameters.Clear();
-                    db.DBCommand.Parameters.Add(tile.AsString("TileIndex"));
-                    result = db.ExecuteScalar(db.DBCommand);
-                }
-                catch (Exception ex)
-                {
-
-                }
+                db.DBCommand.CommandText = "SELECT LastUpdated FROM " + ElevationTileDesignator.TableName + " WHERE TileIndex = @TileIndex";
+                db.DBCommand.Parameters.Clear();
+                db.DBCommand.Parameters.Add(tile.AsString("TileIndex"));
+                object result = db.ExecuteScalar(db.DBCommand);
                 if (result != null)
                     return (SQLiteEntry.UNIXTimeToDateTime((int)result));
             }
@@ -1406,6 +1401,7 @@ namespace ScoutBase.Elevation
             bool tilemissing = false;
             // convert stepwidth to [km]
             stepwidth = stepwidth / 1000.0;
+            // check if elevation database is complete before trying to retrieve elevation path
             bool complete = this.GetDBStatusBit(model, DATABASESTATUS.COMPLETE) & !this.GetDBStatusBit(model, DATABASESTATUS.ERROR);
             int avperiod = GetElevationPathAveragePeriod(model);
             // check for any averaging
@@ -1844,23 +1840,31 @@ namespace ScoutBase.Elevation
 
         public LocalObstructionDesignator LocalObstructionFind(LocalObstructionDesignator obstr, ELEVATIONMODEL model)
         {
-            if (obstr == null)
-                return null;
-
-            System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
-            if (db == null)
-                return null;
-
-            lock (db)
+            try
             {
-                db.DBCommand.CommandText = "SELECT * FROM " + LocalObstructionDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon";
-                db.DBCommand.Parameters.Clear();
-                db.DBCommand.Parameters.Add(obstr.AsDouble("Lat"));
-                db.DBCommand.Parameters.Add(obstr.AsDouble("Lon"));
-                DataTable Result = db.Select(db.DBCommand);
-                if ((Result != null) && (Result.Rows.Count > 0))
-                    return new LocalObstructionDesignator(Result.Rows[0]);
+                if (obstr == null)
+                    return null;
+
+                System.Data.SQLite.SQLiteDatabase db = GetElevationDatabase(model);
+                if (db == null)
+                    return null;
+
+                lock (db)
+                {
+                    db.DBCommand.CommandText = "SELECT * FROM " + LocalObstructionDesignator.TableName + " WHERE Lat = @Lat AND Lon = @Lon";
+                    db.DBCommand.Parameters.Clear();
+                    db.DBCommand.Parameters.Add(obstr.AsDouble("Lat"));
+                    db.DBCommand.Parameters.Add(obstr.AsDouble("Lon"));
+                    DataTable Result = db.Select(db.DBCommand);
+                    if ((Result != null) && (Result.Rows.Count > 0))
+                        return new LocalObstructionDesignator(Result.Rows[0]);
+                }
             }
+            catch (Exception ex)
+            {
+                // do nothing if fails
+            }
+
             return null;
         }
 

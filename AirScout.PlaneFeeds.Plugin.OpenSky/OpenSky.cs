@@ -60,8 +60,21 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
 
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
+        [DescriptionAttribute("Username for Authentication (blank for anonymous)")]
+        [DefaultValue("")]
+        public string Username { get; set; }
+
+        [Browsable(true)]
+        [CategoryAttribute("Web Feed")]
+        [DescriptionAttribute("Password for Authentication (blank for anonymous)")]
+        [DefaultValue("")]
+        [PasswordPropertyText(true)]
+        public string Password { get; set; }
+
+        [Browsable(true)]
+        [CategoryAttribute("Web Feed")]
         [DescriptionAttribute("Timeout for loading the site.")]
-        [DefaultValue(60)]
+        [DefaultValue(90)]
         [XmlIgnore]
         public int Timeout { get; set; }
 
@@ -236,8 +249,8 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                 return "Web feed from the OpenSky Network.\n" +
                     "For details see https://opensky-network.org.\n\n" +
                     "As this is a community network, please consider to run a personal ADSB-receiver and to contribute your data to this network.\n\n" +
-                    "This webfeed forces TLS1.2 transport layer security. Though this plugin is compiled for .NET4.0 it needs .NET4.5 or higher installed on this machine to work.\n\n" +
-                    "This webfeed will probably not work on Windows XP and Linux/Mono systems";
+                    "The daily limit for anonymous requests to OpenSky Network is 100. You can extend the limit to 1000 if you are an registerd user.\n" +
+                    "For this, please enter your username & password here.";
             }
         }
         public bool HasSettings
@@ -354,7 +367,16 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
             //           {
             //                json = sr.ReadToEnd();
             //            }
-            json = OSNTlsClient.DownloadFile(url, Settings.Timeout * 1000);
+            DateTime downloadstart = DateTime.UtcNow;
+            json = OSNTlsClient.DownloadFile(url, Settings.Timeout * 1000, Settings.Username, Settings.Password);
+            Console.WriteLine("[" + this.GetType().Name + "]: Content downloaded, " + (DateTime.UtcNow - downloadstart).TotalMilliseconds.ToString("F0") + "ms.");
+
+            // check for errors
+            if (!json.StartsWith("{"))
+            {
+                // report the first characters of response
+                throw new Exception("Response: " + json.Substring(0, 80));
+            }
             // save raw data to file if enabled
             if (Settings.SaveToFile)
             {
@@ -385,9 +407,9 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                             continue;
                         PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
                         // get hex first
-                        plane.Hex = ReadPropertyString(ac, 0).ToUpper();
+                        plane.Hex = ReadPropertyString(ac, 0).ToUpper().Trim();
                         // get callsign
-                        plane.Call = ReadPropertyString(ac, 1);
+                        plane.Call = ReadPropertyString(ac, 1).ToUpperInvariant().Trim();
                         // get position
                         plane.Lon = ReadPropertyDouble(ac, 5);
                         plane.Lat = ReadPropertyDouble(ac, 6);
@@ -414,6 +436,16 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                         }
                         // get type info
                         plane.Type = ReadPropertyString(ac, 5);
+
+                        // discard planes on ground
+                        bool onground = ReadPropertyBool(ac, 8);
+                        if (onground)
+                            continue;
+
+                        // discard planes stopped
+                        if (plane.Speed <= 0)
+                            continue;
+
                         planes.Add(plane);
                     }
                     catch (Exception ex)
@@ -442,7 +474,6 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
 
         // ************************************* Helpers ****************************************************
 
-        [System.Diagnostics.DebuggerNonUserCode]
         private string ReadPropertyString(dynamic o, int propertyindex)
         {
             string s = null;
@@ -450,55 +481,58 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
             {
                 s = o[propertyindex];
             }
-            catch
+            catch (Exception ex)
             {
                 // do nothing if something went wrong
+                Console.WriteLine("[ReadPropertyString]: " + ex.ToString());
             }
             return s;
         }
 
-        [System.Diagnostics.DebuggerNonUserCode]
         private int ReadPropertyInt(dynamic o, int propertyindex)
         {
             int i = int.MinValue;
-            double d = ReadPropertyDouble(o, propertyindex);
-            if ((d != double.MinValue) && (d >= int.MinValue) && (d <= int.MaxValue))
-                i = (int)d;
+            try
+            {
+                double d = ReadPropertyDouble(o, propertyindex);
+                if ((d != double.MinValue) && (d >= int.MinValue) && (d <= int.MaxValue))
+                    i = (int)d;
+            }
+            catch
+            {
+                // do nothing if something went wrong
+            }
             return i;
         }
 
-        [System.Diagnostics.DebuggerNonUserCode]
         private double ReadPropertyDouble(dynamic o, int propertyindex)
         {
             double d = double.MinValue;
             try
             {
-                string s = o[propertyindex].ToString(CultureInfo.InvariantCulture);
-                d = double.Parse(s, CultureInfo.InvariantCulture);
+                string s = o[propertyindex].ToString(CultureInfo.InvariantCulture).Trim();
+                // check for special values
+                if (String.IsNullOrEmpty(s))
+                    d = double.MinValue;
+                else if (s.ToUpperInvariant().StartsWith("-INF"))
+                    d = double.MinValue;
+                else if (s.ToUpperInvariant().StartsWith("+INF"))
+                    d = double.MaxValue;
+                else if (s.ToUpperInvariant().StartsWith("NAN"))
+                    d = double.NaN;
+                else if (s.ToUpperInvariant().StartsWith("NULL"))
+                    d = double.NaN;
+                else
+                    d = double.Parse(s, CultureInfo.InvariantCulture);
             }
-            catch
+            catch (Exception ex)
             {
                 // do nothing if something went wrong
+                Console.WriteLine("[ReadPropertyDouble] got invalid value = \"" + o[propertyindex].ToString() + "\": " + ex.ToString());
             }
             return d;
         }
 
-        [System.Diagnostics.DebuggerNonUserCode]
-        private long ReadPropertyLong(dynamic o, int propertyindex)
-        {
-            long l = long.MinValue;
-            try
-            {
-                l = long.Parse(o[propertyindex].ToString());
-            }
-            catch
-            {
-                // do nothing if something went wrong
-            }
-            return l;
-        }
-
-        [System.Diagnostics.DebuggerNonUserCode]
         private bool ReadPropertyBool(dynamic o, int propertyindex)
         {
             bool b = false;
@@ -507,9 +541,10 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                 string s = o[propertyindex].ToString();
                 b = s.ToLower() == "true";
             }
-            catch
+            catch (Exception ex)
             {
                 // do nothing if something went wrong
+                Console.WriteLine("[ReadPropertyBool]: " + ex.ToString());
             }
             return b;
         }

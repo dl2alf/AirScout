@@ -46,6 +46,7 @@
             this.pb_Main.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pb_Main.TabIndex = 0;
             this.pb_Main.TabStop = false;
+            this.pb_Main.Click += new System.EventHandler(this.pb_Main_Click);
             this.pb_Main.Paint += new System.Windows.Forms.PaintEventHandler(this.pb_Main_Paint);
             // 
             // ti_Close

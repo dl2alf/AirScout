@@ -80,6 +80,14 @@ namespace AirScout
             // name the thread for debugging
             if (String.IsNullOrEmpty(Thread.CurrentThread.Name))
                 Thread.CurrentThread.Name = this.GetType().Name;
+
+            string tmpdir = Application.StartupPath;
+            // get temp directory from arguments
+            if (e != null)
+            {
+                tmpdir = (string)e.Argument;
+            }
+
             Log.WriteMessage("started.");
             // run simple web server
             string hosturl = "http://+:" + Properties.Settings.Default.Webserver_Port.ToString() + "/";
@@ -119,6 +127,7 @@ namespace AirScout
                         // send response from a background thread
                         WebServerDelivererArgs args = new WebServerDelivererArgs();
                         args.ID = id;
+                        args.TmpDirectory = tmpdir;
                         args.Context = context;
                         args.AllPlanes = allplanes;
                         WebserverDeliver bw = new WebserverDeliver();
@@ -141,6 +150,9 @@ namespace AirScout
 
                         Process.Start(psi).WaitForExit();
                     }
+                    // do almost nothing
+                    // wait 10 seconds and restart the listener
+                    Thread.Sleep(10000);
                 }
                 catch (Exception ex)
                 {
@@ -173,6 +185,7 @@ namespace AirScout
 
     public class WebserverDeliver : BackgroundWorker
     {
+        string TmpDirectory = Application.StartupPath;
 
         public short GetElevation(double lat, double lon)
         {
@@ -314,10 +327,10 @@ namespace AirScout
         }
 
 
-        private string DeliverPlanes()
+        private string DeliverPlanes(string tmpdir)
         {
             string json = "";
-            var fs = File.OpenRead(Application.StartupPath + Path.DirectorySeparatorChar + "planes.json");
+            var fs = File.OpenRead(tmpdir + Path.DirectorySeparatorChar + "planes.json");
             using (StreamReader sr = new StreamReader(fs))
             {
                 json = sr.ReadToEnd();
@@ -801,7 +814,7 @@ namespace AirScout
             // check for content delivery request
             if (request.RawUrl.ToLower() == "/planes.json")
             {
-                responsestring = DeliverPlanes();
+                responsestring = DeliverPlanes(args.TmpDirectory);
             }
             else if (request.RawUrl.ToLower().StartsWith("/version.json"))
             {
@@ -846,6 +859,7 @@ namespace AirScout
     public class WebServerDelivererArgs
     {
         public int ID;
+        public string TmpDirectory = "";
         public HttpListenerContext Context;
         public List<PlaneInfo> AllPlanes;
     }

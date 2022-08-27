@@ -104,7 +104,7 @@ namespace AirScout
 
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
-            Font font = new Font("Arial", polyrect.Height / 10);
+            Font font = new Font("Arial", polyrect.Width / 10);
             StringFormat format = new StringFormat();
             format.LineAlignment = StringAlignment.Center;
             format.Alignment = StringAlignment.Center;

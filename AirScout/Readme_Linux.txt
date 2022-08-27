@@ -10,12 +10,17 @@ There is no special installation package or archive to download.
 
 Nevertheless some precautions are necessary depending on the your Linux system.
 Linux support remains experimental, I simply cannot verify all existing configurations.
-AirScout was tested with a 64bit SUSE Linux (Leap 42.3) with KDE-Desktop and Mono 4.6.1 in a VMWare virtual machine.
+Latest tests with AirScout were made on a 64bit Ubuntu Linux (21.10) with KDE-Desktop and Mono 6.8.0.105 in a VMWare virtual machine.
 
 To get ist running on your system, please follow the steps below
 
 1. Check if your version of Linux is up to date 
-2. Install the full Mono package by running:
+2. Get the latest Mono version information and install the full Mono package by running (see https://www.mono-project.com/):
+
+	sudo apt install gnupg ca-certificates
+	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+	echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+	sudo apt update
 
 	sudo apt-get install mono-complete	(on most systems)
 
@@ -25,7 +30,7 @@ To get ist running on your system, please follow the steps below
 
 3. Unzip archive or simple copy all unpacked files in a directory of your choice, e.g. /home/[Linux Username]/AirScout
 4. Open a terminal window there
-5. Run AirScout by typing "mono AirScout.exe"
+5. Run AirScout by typing "mono AirScout.exe", if you have problems with language settings "LANG=en-EN mono AirScout.exe"
 6. Have fun with AirScout running on Linux with 99% functionality
 
 
@@ -50,10 +55,11 @@ VERY IMPORTANT!!! ON SOME OLDER/SMALLER SYSTEMS THE SSL ENCRYPTED CONNECTIONS ("
 IN THIS CASE YOU HAVE TO IMPORT SSL CERTIFICATES TO THE MONO CERTIFICATE STORE MANUALLY!!!
 
 Mono is using its own certificate store different from system or Mozilla's web browser.
-The synchronisation should be done automatically but I found it not working sometimes after downloading the Mono package. 	
+The synchronisation should be done automatically but I found it not working sometimes after downloading the Mono package. 
+In this case you will see a lot of Error messages in the Terminal window like "Error while reading chunked content: Cannot read application data on failed TLS connection"
 
-1. Install the "ca-certificates-mozilla" package to get SSL certificates
-2. Import the certificates into the Mono certificate store by typing "sudo cert-sync /etc/ssl/ca-bundle.pem"	(can be a different location on other versions!)
+1. Install the "ca-certificates-mono" package to get SSL certificates
+2. Import the certificates into the Mono certificate store by typing "cert-sync /etc/ssl/certs/ca-certificates.crt"	(can be a different location on other versions!)
 
 
 

@@ -79,6 +79,7 @@ namespace ScoutBase.Elevation
                     if (!File.Exists(filename))
                     {
                         this.ReportProgress(0, StartOptions.Name + ": downloading " + Path.GetFileName(zipfilename) + "...");
+                        Console.WriteLine(StartOptions.Name + ": downloading " + zipurl + " --> " + zipfilename);
                         try
                         {
                             // download zipfile if newer

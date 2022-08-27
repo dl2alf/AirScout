@@ -51,6 +51,8 @@ namespace AirScout
                 AirScout.Aircrafts.Properties.Settings.Default.Reset();
                 ScoutBase.Elevation.Properties.Settings.Default.Reset();
                 ScoutBase.Stations.Properties.Settings.Default.Reset();
+                ScoutBase.CAT.Properties.Settings.Default.Reset();
+                AirScout.CAT.Properties.Settings.Default.Reset();
             }
             if (cb_AirScout_Database.Checked)
                 DeleteDirectory(Properties.Settings.Default.AircraftDatabase_Directory);
