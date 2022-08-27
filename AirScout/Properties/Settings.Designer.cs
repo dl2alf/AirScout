@@ -541,7 +541,7 @@ namespace AirScout.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[WebFeed]           Virtual Radar Server")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[WebFeed]           OpenSky")]
         public string Planes_PlaneFeed1 {
             get {
                 return ((string)(this["Planes_PlaneFeed1"]));
@@ -2308,7 +2308,6 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-
         public bool StationsMap_OverlayElevation {
             get {
                 return ((bool)(this["StationsMap_OverlayElevation"]));
@@ -2694,6 +2693,126 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
             }
             set {
                 this["Map_ShowDistances"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("175")]
+        public decimal Map_TrackingGaugeWidth {
+            get {
+                return ((decimal)(this["Map_TrackingGaugeWidth"]));
+            }
+            set {
+                this["Map_TrackingGaugeWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Black")]
+        public string Map_TrackingGaugeColor {
+            get {
+                return ((string)(this["Map_TrackingGaugeColor"]));
+            }
+            set {
+                this["Map_TrackingGaugeColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool InfoWin_MyAzimuth {
+            get {
+                return ((bool)(this["InfoWin_MyAzimuth"]));
+            }
+            set {
+                this["InfoWin_MyAzimuth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool InfoWin_MyElevation {
+            get {
+                return ((bool)(this["InfoWin_MyElevation"]));
+            }
+            set {
+                this["InfoWin_MyElevation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool InfoWin_MyDoppler {
+            get {
+                return ((bool)(this["InfoWin_MyDoppler"]));
+            }
+            set {
+                this["InfoWin_MyDoppler"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool InfoWin_DXAzimuth {
+            get {
+                return ((bool)(this["InfoWin_DXAzimuth"]));
+            }
+            set {
+                this["InfoWin_DXAzimuth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool InfoWin_DXElevation {
+            get {
+                return ((bool)(this["InfoWin_DXElevation"]));
+            }
+            set {
+                this["InfoWin_DXElevation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool InfoWin_DXDoppler {
+            get {
+                return ((bool)(this["InfoWin_DXDoppler"]));
+            }
+            set {
+                this["InfoWin_DXDoppler"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool InfoWin_AlwaysDetailed {
+            get {
+                return ((bool)(this["InfoWin_AlwaysDetailed"]));
+            }
+            set {
+                this["InfoWin_AlwaysDetailed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Map_TrackingGaugesShow {
+            get {
+                return ((bool)(this["Map_TrackingGaugesShow"]));
+            }
+            set {
+                this["Map_TrackingGaugesShow"] = value;
             }
         }
     }

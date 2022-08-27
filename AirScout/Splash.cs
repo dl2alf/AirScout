@@ -116,5 +116,11 @@ namespace AirScout
                 e.Graphics.DrawString(text, myFont, Brushes.White, new Point(140-2, 10-2));
             }
         }
+
+        private void pb_Main_Click(object sender, EventArgs e)
+        {
+            // hide the splash window when clicking on it
+            this.Visible = false;
+        }
     }
 }

@@ -32,6 +32,7 @@ using Newtonsoft.Json;
 using static ScoutBase.Core.ZIP;
 using AirScout.PlaneFeeds.Plugin.MEFContract;
 using AirScout.CAT;
+using System.Reflection;
 
 namespace AirScout
 {
@@ -1186,6 +1187,28 @@ namespace AirScout
                 cb_Options_Map_Provider.Items.Add(GMapProviders.Find("OpenStreetMap"));
             }
             cb_Options_Map_Provider.SelectedItem = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
+
+            // populate color picker dropdwon
+            foreach(var colorValue in Enum.GetValues(typeof(KnownColor)))
+            {
+                cb_Options_Gauges_ForeColor.Items.Add(Color.FromKnownColor((KnownColor)colorValue));
+            }
+
+            // select Color from Properties
+            try
+            {
+                cb_Options_Gauges_ForeColor.SelectedItem = Color.FromName(Properties.Settings.Default.Map_TrackingGaugeColor);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            cb_Options_Gauges_ForeColor.MaxDropDownItems = 10;
+            cb_Options_Gauges_ForeColor.IntegralHeight = false;
+            cb_Options_Gauges_ForeColor.DrawMode = DrawMode.OwnerDrawFixed;
+            cb_Options_Gauges_ForeColor.DropDownStyle = ComboBoxStyle.DropDownList;
+            cb_Options_Gauges_ForeColor.DrawItem += cb_Options_Gauges_ForeColor_DrawItem;
         }
 
         private void tab_Options_Map_Validating(object sender, CancelEventArgs e)
@@ -1276,6 +1299,34 @@ namespace AirScout
             }
         }
 
+        private void cb_Options_Gauges_ForeColor_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+            if (e.Index >= 0)
+            {
+                var txt = cb_Options_Gauges_ForeColor.GetItemText(cb_Options_Gauges_ForeColor.Items[e.Index]);
+                var color = (Color)cb_Options_Gauges_ForeColor.Items[e.Index];
+                var r1 = new Rectangle(e.Bounds.Left + 1, e.Bounds.Top + 1,
+                    2 * (e.Bounds.Height - 2), e.Bounds.Height - 2);
+                var r2 = Rectangle.FromLTRB(r1.Right + 2, e.Bounds.Top,
+                    e.Bounds.Right, e.Bounds.Bottom);
+                using (var b = new SolidBrush(color))
+                    e.Graphics.FillRectangle(b, r1);
+                e.Graphics.DrawRectangle(Pens.Black, r1);
+                TextRenderer.DrawText(e.Graphics, txt, cb_Options_Gauges_ForeColor.Font, r2,
+                    cb_Options_Gauges_ForeColor.ForeColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+            }
+        }
+
+        private void cb_Options_Gauges_ForeColor_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Color c = (Color)cb_Options_Gauges_ForeColor.SelectedItem;
+
+            if (c == null)
+                return;
+
+            Properties.Settings.Default.Map_TrackingGaugeColor = c.ToKnownColor().ToString();
+        }
 
         #endregion
 
@@ -2595,7 +2646,7 @@ namespace AirScout
                 MessageBox.Show("Win-Test port and AirScout port must have different values.", "Parameter Error");
                 e.Cancel = true;
             }
-            List<int> baudrates = new List<int>(new int[] { 50, 100, 110, 150, 300, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 });
+            List<int> baudrates = new List<int>(new int[] { 50, 100, 110, 150, 300, 600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 });
             if (!baudrates.Contains(tb_Options_Track_Serial_Baudrate.Value))
             {
                 string s = "";
@@ -2796,8 +2847,11 @@ namespace AirScout
             try
             {
                 SupportedRig rig = (SupportedRig)cb_Options_CAT_Rig.SelectedItem;
-                if (rig.CATEngine == CATENGINE.OMNIRIGX)
-                    portenabled = false;
+                if (rig != null)
+                {
+                    if (rig.CATEngine == CATENGINE.OMNIRIGX)
+                        portenabled = false;
+                }
             }
             catch
             {

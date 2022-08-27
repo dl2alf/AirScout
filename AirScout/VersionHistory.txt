@@ -1,4 +1,61 @@
-﻿2021-12-23: V1.3.3.6
+﻿2022-01-03: V1.4.1.0
+====================
+
+- Bugfix:  RIT on rig is reset when tracking started --> fixed
+- Bugfix:  Exceptions while accessing elevation database from background processes and more than one elevation model was ticked --> database status shows "Error" --> fixed
+- Bugfix:  Exceptions while accessing elevation database and local obstructions have NULL values --> fixed
+- Bugfix:  Database update was not started when last status was "Error" and no other changes occured
+- Bugfix:  Exceptions were thrown sometimes on concurrent database access from different threads, missing database locks --> fixed
+- Bugfix:  Planefeeeds with TLS (https://...) were hanging sometimes in an inifinite loop --> fixed
+- Bugfix:  AirScout does not deliver planes on web request
+- Remove:  Planefinder feed removed due to copyright issues (by request of the website owner)
+- Feature: configurable update rate for tracking
+- Feature: configurable time offset for tracking
+- Feature: optional show a locator grid on map
+- Feature: optional show distance circles around own location
+- Feature: new UDP commands "ASADDWATCH qrg, call, [loc], checked (0/1), ... " and "ASREMOVEWATCH qrg, call, ..." for easier watchlist control
+- Feature: common and reworked TLS client for all feeds
+- Feature: hide the splash window on startup when clicking on it
+- Feature: enhanced tracking gauges and rig display, you can set size and color now in Options/Settings/Map for better visibility (tnx W8BYA)	
+- Feature: enhanced info window with optional tracking & Doppler information for both stations (when tracking) (tnx KV4PC)
+- Feature: always show a detailed info window regardless if the plane is heading towards path (for sidescatter and other purpose) (tnx KV4PC)
+
+2021-04-13: V1.4.0.2
+====================
+
+- Feature: complete rework of tracking module with Status visualization
+- Feature: CAT now handles OmniRi V1.19 or V2.x dynamically
+- Feature: refined extrapolation of plane positions
+- Bugfix:  Planes were shown as hot when crossing path "behind" the DX station --> fixed
+
+2021-04-5: V1.4.0.1 
+====================
+
+- Feature:	introducing CAT Interface with OmniRig V2.1
+- Feature:	introducing Doppler shift compensation with CAT
+
+2021-xx-xx: V1.4.0.0 (not published)
+====================
+
+- Feature:	introducing ASTER Digital Elevation Model covering earth surface almost complete, but data are very raw and have to filtered, only useful when coverage > 60° needed
+- Feature:	new OpenTopoMap provider, not really suitable for supervising aircraft travel but has very nice contour levels (based on SRTM)
+- Feature:	adjust main map opacity via "Options/Map" which is helpful in case map colors are very prominent
+
+2022-08-27: V1.3.3.7
+====================
+
+- Bugfix:  Removal of all non working plane feeds
+- Bugfix:  RTL1090 plane feed remains in deadlock if no TCP server was found --> fixed
+- Bugfix:  OpenSky plane feed remains in deadlock if any error during reading occurs --> fixed
+- Bugfix:  Browser window does not suppress JavaScript errors (if lots) making AirScout nearly unusable --> fixed (tnx OK1VUM)
+- Bugfix:  planes.json was not properly created and therefore not properly delivered by webserver --> fixed
+- Bugfix:  does not run on recent Linux distributions (like Ubuntu 22.x, 64bit) anymore --> fixed
+- Bugfix:  Export of horizon data was malformatted --> fixed
+- Bugfix:  Program settings were not handled properly on Linux --> fixed by reading and writing as JSON on Linux
+- Feature: OpenSky plane feed now allows the input of username/password for registered users (extendig the limit of daily requests)
+- Feature: new AirScout Server plane feed gets planes from another AirScout instance (>= V1.3.3.7) or (maybe) AirScout web service in future
+
+2021-12-23: V1.3.3.6
 ====================
 
 - Feature:  Elevation grid overlay on "Optionms/Stations/Map" to better understand elevation resolution issues and local situation (for zoom levels >= 17)

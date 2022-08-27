@@ -34,7 +34,7 @@
             ScoutBase.Core.LatLon.GPoint gPoint2 = new ScoutBase.Core.LatLon.GPoint();
             this.mnu_Main = new System.Windows.Forms.MenuStrip();
             this.tsi_Exit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnu_Settings = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsi_Settings = new System.Windows.Forms.ToolStripMenuItem();
             this.tsi_Info = new System.Windows.Forms.ToolStripMenuItem();
             this.ss_Main = new System.Windows.Forms.StatusStrip();
             this.tsl_Status = new System.Windows.Forms.ToolStripStatusLabel();
@@ -94,7 +94,7 @@
             // 
             this.mnu_Main.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsi_Exit,
-            this.mnu_Settings,
+            this.tsi_Settings,
             this.tsi_Info});
             this.mnu_Main.Location = new System.Drawing.Point(0, 0);
             this.mnu_Main.Name = "mnu_Main";
@@ -109,12 +109,12 @@
             this.tsi_Exit.Text = "E&xit";
             this.tsi_Exit.Click += new System.EventHandler(this.tsi_Exit_Click);
             // 
-            // mnu_Settings
+            // tsi_Settings
             // 
-            this.mnu_Settings.Name = "mnu_Settings";
-            this.mnu_Settings.Size = new System.Drawing.Size(61, 20);
-            this.mnu_Settings.Text = "&Settings";
-            this.mnu_Settings.Click += new System.EventHandler(this.mnu_Settings_Click);
+            this.tsi_Settings.Name = "tsi_Settings";
+            this.tsi_Settings.Size = new System.Drawing.Size(61, 20);
+            this.tsi_Settings.Text = "&Settings";
+            this.tsi_Settings.Click += new System.EventHandler(this.tsi_Settings_Click);
             // 
             // tsi_Info
             // 
@@ -631,7 +631,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsi_Info;
         private System.Windows.Forms.StatusStrip ss_Main;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Status;
-        private System.Windows.Forms.ToolStripMenuItem mnu_Settings;
+        private System.Windows.Forms.ToolStripMenuItem tsi_Settings;
         private System.Windows.Forms.GroupBox gb_Info;
         private System.Windows.Forms.GroupBox gb_Map;
         private System.Windows.Forms.Timer ti_Progress;

@@ -418,18 +418,26 @@ namespace AirScout.PlaneFeeds.Plugin.FlexJSON
             if (Settings.Timeout <= 0)
                 throw new ArgumentException("The value for Timout is invalid: " + Settings.Timeout.ToString());
             Console.WriteLine("[" + this.GetType().Name + "]: Creating web request: " + url);
-            HttpWebRequest webrequest = (HttpWebRequest)HttpWebRequest.Create(url);
-            webrequest.Referer = "";
-            webrequest.Timeout = (int)Settings.Timeout * 1000;
-            webrequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0";
-            webrequest.Accept = "application/json, text/javascript, */*;q=0.01";
-            webrequest.AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip;
-            Console.WriteLine("[" + this.GetType().Name + "]: Getting web response");
-            HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
-            Console.WriteLine("[" + this.GetType().Name + "]: Reading stream");
-            using (StreamReader sr = new StreamReader(webresponse.GetResponseStream()))
+            // check url and choose the according download mode
+            if (!url.ToLowerInvariant().StartsWith("https://"))
             {
-                json = sr.ReadToEnd();
+                HttpWebRequest webrequest = (HttpWebRequest)HttpWebRequest.Create(url);
+                webrequest.Referer = "";
+                webrequest.Timeout = (int)Settings.Timeout * 1000;
+                webrequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0";
+                webrequest.Accept = "application/json, text/javascript, */*;q=0.01";
+                webrequest.AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip;
+                Console.WriteLine("[" + this.GetType().Name + "]: Getting web response");
+                HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
+                Console.WriteLine("[" + this.GetType().Name + "]: Reading stream");
+                using (StreamReader sr = new StreamReader(webresponse.GetResponseStream()))
+                {
+                    json = sr.ReadToEnd();
+                }
+            }
+            else
+            {
+                json = TlsClient.DownloadFile(url, Settings.Timeout * 1000);
             }
             // save raw data to file if enabled
             if (Settings.SaveToFile)

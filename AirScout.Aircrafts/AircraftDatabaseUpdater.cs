@@ -62,7 +62,7 @@ namespace AirScout.Aircrafts
                 else if (((status & DOWNLOADFILESTATUS.NEWER) > 0) || ((status & DOWNLOADFILESTATUS.NOTNEWER) > 0))
                 {
                     string json = "";
-                    using (StreamReader sr = new StreamReader(filename))
+                    using (StreamReader sr = new StreamReader(filename.Replace(".zip", ".json")))
                         json = sr.ReadToEnd();
                     List<AirScout.Aircrafts.AircraftDesignator> ads = AircraftData.Database.AircraftFromJSON(json);
                     // check for invalid entries
@@ -111,7 +111,7 @@ namespace AirScout.Aircrafts
                 else if (((status & DOWNLOADFILESTATUS.NEWER) > 0) || ((status & DOWNLOADFILESTATUS.NOTNEWER) > 0))
                 {
                     string json = "";
-                    using (StreamReader sr = new StreamReader(filename))
+                    using (StreamReader sr = new StreamReader(filename.Replace(".zip", ".json")))
                         json = sr.ReadToEnd();
                     List<AirScout.Aircrafts.AircraftTypeDesignator> tds = AircraftData.Database.AircraftTypeFromJSON(json);
                     // check for empty database
@@ -150,7 +150,7 @@ namespace AirScout.Aircrafts
                 else if (((status & DOWNLOADFILESTATUS.NEWER) > 0) || ((status & DOWNLOADFILESTATUS.NOTNEWER) > 0))
                 {
                     string json = "";
-                    using (StreamReader sr = new StreamReader(filename))
+                    using (StreamReader sr = new StreamReader(filename.Replace(".zip", ".json")))
                         json = sr.ReadToEnd();
                     List<AirScout.Aircrafts.AircraftRegistrationDesignator> rds = AircraftData.Database.AircraftRegistrationFromJSON(json);
                     // check for empty database
@@ -189,7 +189,7 @@ namespace AirScout.Aircrafts
                 else if (((status & DOWNLOADFILESTATUS.NEWER) > 0) || ((status & DOWNLOADFILESTATUS.NOTNEWER) > 0))
                 {
                     string json = "";
-                    using (StreamReader sr = new StreamReader(filename))
+                    using (StreamReader sr = new StreamReader(filename.Replace(".zip", ".json")))
                         json = sr.ReadToEnd();
                     List<AirScout.Aircrafts.AirportDesignator> pds = AircraftData.Database.AirportFromJSON(json);
                     // check for empty database
@@ -228,7 +228,7 @@ namespace AirScout.Aircrafts
                 else if (((status & DOWNLOADFILESTATUS.NEWER) > 0) || ((status & DOWNLOADFILESTATUS.NOTNEWER) > 0))
                 {
                     string json = "";
-                    using (StreamReader sr = new StreamReader(filename))
+                    using (StreamReader sr = new StreamReader(filename.Replace(".zip", ".json")))
                         json = sr.ReadToEnd();
                     List<AirScout.Aircrafts.AirlineDesignator> lds = AircraftData.Database.AirlineFromJSON(json);
                     // check for empty database
@@ -302,27 +302,27 @@ namespace AirScout.Aircrafts
                         this.ReportProgress(1, AircraftData.Database.GetDBStatus());
                         // update aircraft database
                         this.ReportProgress(0, "Updating aircraft types from web database...");
-                        if (!ReadAircraftTypesFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "AircraftTypes.json", Path.Combine(TmpDirectory, "AircraftTypes.json")))
+                        if (!ReadAircraftTypesFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "AircraftTypes.zip", Path.Combine(TmpDirectory, "AircraftTypes.zip")))
                             errors++;
                         if (this.CancellationPending)
                             break;
                         this.ReportProgress(0, "Updating airports from web database...");
-                        if (!ReadAirportsFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "Airports.json", Path.Combine(TmpDirectory, "Airports.json")))
+                        if (!ReadAirportsFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "Airports.zip", Path.Combine(TmpDirectory, "Airports.zip")))
                             errors++;
                         if (this.CancellationPending)
                             break;
                         this.ReportProgress(0, "Updating aircrafts from web database...");
-                        if (!ReadAircraftsFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "Aircrafts.json", Path.Combine(TmpDirectory, "Aircrafts.json")))
+                        if (!ReadAircraftsFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "Aircrafts.zip", Path.Combine(TmpDirectory, "Aircrafts.zip")))
                             errors++;
                         if (this.CancellationPending)
                             break;
                         this.ReportProgress(0, "Updating aircraft registrations from web database...");
-                        if (!ReadAircraftRegistrationsFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "AircraftRegistrations.json", Path.Combine(TmpDirectory, "AircraftRegistrations.json")))
+                        if (!ReadAircraftRegistrationsFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "AircraftRegistrations.zip", Path.Combine(TmpDirectory, "AircraftRegistrations.zip")))
                             errors++;
                         if (this.CancellationPending)
                             break;
                         this.ReportProgress(0, "Updating airlines from web database...");
-                        if (!ReadAirlinesFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "Airlines.json", Path.Combine(TmpDirectory, "Airlines.json")))
+                        if (!ReadAirlinesFromURL(Properties.Settings.Default.Aircrafts_UpdateURL + "Airlines.zip", Path.Combine(TmpDirectory, "Airlines.zip")))
                             errors++;
 
                         st.Stop();

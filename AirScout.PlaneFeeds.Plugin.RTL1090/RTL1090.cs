@@ -29,7 +29,7 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
         public virtual string Server { get; set; }
 
         [Browsable(true)]
-        [DescriptionAttribute("Server port for raw ADS-B data.\nRTLSharp.exe: Port 47806\nRTL1090: Port 31001")]
+        [DescriptionAttribute("Server port for raw ADS-B data.\nRTL1090: Port 31001, Dump1090: 30005, ADSBSharp: 47806")]
         [DefaultValue(31001)]
         public virtual int Port { get; set; }
 
@@ -43,9 +43,9 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
         [DefaultValue(true)]
         public virtual bool ReportMessages { get; set; }
 
-        [Browsable(true)]
+        [Browsable(false)]
         [DescriptionAttribute("Marks locally received aircrafts by adding '@' to the call sign")]
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public virtual bool MarkLocal { get; set; }
 
         [Browsable(false)]
@@ -57,6 +57,16 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
         [DescriptionAttribute("Save received aircraft positions to file")]
         [DefaultValue(false)]
         public virtual bool SaveToFile { get; set; }
+
+        [Browsable(true)]
+        [DescriptionAttribute("Log all received messages to file")]
+        [DefaultValue(false)]
+        public virtual bool LogMessagesToFile { get; set; }
+
+        [Browsable(false)]
+        [DefaultValue("RTL1090Messages.log")]
+        [XmlIgnore]
+        public string LogFileName { get; set; }
 
         public RTL1090Settings()
         {
@@ -214,7 +224,11 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                 return "Raw data feed from simple ADS-B receivers (DVB-T dongles).\n\n" +
                        "(c) AirScout(www.airscout.eu)\n\n" +
                        "Use this feed together with RTL1090.exe or similar software.\n" +
-                       "Feed software must output raw data either binary or ASCII format via TCP.";
+                       "Feed software must output raw data either binary or ASCII format via TCP.\n" +
+                       "Use the follwing settings as default:\n\n" +
+                       "RTL1090:    port=31001/binary=true\n" +
+                       "Dump1090:   port=30005/binary=true\n" + 
+                       "ADSBSharp:  port=47806/binary=false"  ;
             }
         }
 
@@ -305,7 +319,18 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
             // start receiver thread
             if (!bw_Receciver.IsBusy)
             {
-                bw_Receciver.RunWorkerAsync();
+                if (Settings.LogMessagesToFile)
+                {
+                    try
+                    {
+                        File.WriteAllText(Path.Combine(args.TmpDirectory, Settings.LogFileName), "RTL1090 logging started: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+                bw_Receciver.RunWorkerAsync(args);
             }
         }
 
@@ -374,6 +399,8 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
 
         private void bw_Receiver_DoWork(object sender, DoWorkEventArgs e)
         {
+            PlaneFeedPluginArgs args = (PlaneFeedPluginArgs)e.Argument;
+
             Thread.CurrentThread.Priority = ThreadPriority.Highest;
             StreamReader sr = null;
             TcpClient client = null;
@@ -385,6 +412,8 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                 {
                     // setup TCP listener
                     client = new TcpClient();
+                    // set receive timeout to 1s
+                    client.ReceiveTimeout = 1000;
                     string server = Settings.Server;
                     client.Connect(server, Settings.Port);
                     sr = new StreamReader(client.GetStream());
@@ -401,16 +430,32 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                         {
                             // try to decode the message
                             string info = "";
+                            string line = "";
                             try
                             {
-                                Console.Write("[" + this.GetType().Name + "]: " + msg.RawMessage + "-- > ");
+                                info = "[" + this.GetType().Name + "]: " + msg.RawMessage + "-- > ";
+                                Console.Write(info);
+                                line = info;    
                                 info = Decoder.DecodeMessage(msg.RawMessage, msg.TimeStamp);
+                                line = line + info + "\n";
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine(ex.Message);
                             }
                             Console.WriteLine(info);
+                            
+                            if (Settings.LogMessagesToFile)
+                            {
+                                try
+                                {
+                                    File.AppendAllText(Path.Combine(args.TmpDirectory, Settings.LogFileName), line);
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+                            }
                         }
                     }
                     while ((msg != null) && !bw_Receciver.CancellationPending);

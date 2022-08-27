@@ -141,7 +141,7 @@ namespace AirScoutViewClient
         SortedList<string, PlaneInfo> ActivePlanes = new SortedList<string, PlaneInfo>();
         private List<string> SelectedPlanes = new List<string>();
 
-        private VIEWCLIENTSTATUS ViewClientStatus = VIEWCLIENTSTATUS.NONE;
+        private VIEWCLIENTSTATUS VieClientStatus = VIEWCLIENTSTATUS.NONE;
 
         [CategoryAttribute("Directories")]
         [DescriptionAttribute("Application Directory")]
@@ -268,7 +268,7 @@ namespace AirScoutViewClient
             BAND band = Properties.Settings.Default.Band;
             cb_Band.SelectedItem = Bands.GetStringValue(band);
             PlayMode = AIRSCOUTPLAYMODE.PAUSE;
-            ViewClientStatus = VIEWCLIENTSTATUS.CONNECTED;
+            VieClientStatus = VIEWCLIENTSTATUS.CONNECTED;
             UpdateStatus();
             Say("");
         }
@@ -630,7 +630,7 @@ namespace AirScoutViewClient
                 json = GetJSONFromURL(GetServerURL(Properties.Settings.Default.Server_URL, (int)Properties.Settings.Default.Server_Port, "settings.json"));
                 if (String.IsNullOrEmpty(json))
                 {
-                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return false; 
                 }
                 if (json.StartsWith("Error:"))
@@ -696,7 +696,7 @@ namespace AirScoutViewClient
                 json = GetJSONFromURL(url);
                 if (String.IsNullOrEmpty(json))
                 {
-                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -734,7 +734,7 @@ namespace AirScoutViewClient
                 json = GetJSONFromURL(url);
                 if (String.IsNullOrEmpty(json))
                 {
-                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -767,7 +767,7 @@ namespace AirScoutViewClient
                 json = GetJSONFromURL(url);
                 if (String.IsNullOrEmpty(json))
                 {
-                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -805,7 +805,7 @@ namespace AirScoutViewClient
                 json = GetJSONFromURL(url);
                 if (String.IsNullOrEmpty(json))
                 {
-                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -838,7 +838,7 @@ namespace AirScoutViewClient
                     "&dxloc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3)));
                 if (String.IsNullOrEmpty(json))
                 {
-                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -871,7 +871,7 @@ namespace AirScoutViewClient
                     "&dxloc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3)));
                 if (String.IsNullOrEmpty(json))
                 {
-                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -905,7 +905,7 @@ namespace AirScoutViewClient
                 "&dxloc=" + MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3)));
                 if (String.IsNullOrEmpty(json))
                 {
-                    ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+                    VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
                     return null;
                 }
                 if (json.StartsWith("Error:"))
@@ -1385,8 +1385,8 @@ namespace AirScoutViewClient
 
         private void ti_Progress_Tick(object sender, EventArgs e)
         {
-            tsl_ConnectionStatus.Text = ViewClientStatus.ToString();
-            switch (ViewClientStatus)
+            tsl_ConnectionStatus.Text = VieClientStatus.ToString();
+            switch (VieClientStatus)
             {
                 case VIEWCLIENTSTATUS.CONNECTING:
                     {
@@ -1423,13 +1423,21 @@ namespace AirScoutViewClient
 
         private void MapViewDlg_Load(object sender, EventArgs e)
         {
-            ViewClientStatus = VIEWCLIENTSTATUS.INIT;
-            InitializeIcons();
-            InitializeCharts();
             this.Text = "AirScout View Client V" + Application.ProductVersion;
             this.Show();
+            this.Restart();
+        }
+
+        private void Restart()
+        {
+            ti_Progress.Stop();
+            ti_Startup.Stop();
+
+            VieClientStatus = VIEWCLIENTSTATUS.INIT;
+            InitializeIcons();
+            InitializeCharts();
             ti_Progress.Start();
-            ViewClientStatus = VIEWCLIENTSTATUS.CONNECTING;
+            VieClientStatus = VIEWCLIENTSTATUS.CONNECTING;
         }
 
         private void tsi_Exit_Click(object sender, EventArgs e)
@@ -1724,18 +1732,13 @@ namespace AirScoutViewClient
 
         }
 
-        private void mnu_Settings_Click(object sender, EventArgs e)
+        private void tsi_Settings_Click(object sender, EventArgs e)
         {
             SettingsDlg Dlg = new SettingsDlg();
             if (Dlg.ShowDialog() == DialogResult.OK)
             {
                 Properties.Settings.Default.Save();
-                ViewClientStatus = VIEWCLIENTSTATUS.INIT;
-                InitializeSettings();
-            }
-            else
-            {
-                Properties.Settings.Default.Reload();
+                this.Restart();
             }
         }
     }

@@ -370,6 +370,7 @@ namespace AirScout
         GMapOverlay gmo_NearestPlanes = new GMapOverlay("Planes");
         GMapOverlay gmo_Locators = new GMapOverlay("Locators");
         GMapOverlay gmo_Distances = new GMapOverlay("Distances");
+        GMapOverlay gmo_CallsignDetails = new GMapOverlay("CallsignDetails");
 
         // Routes
         GMapRoute gmr_FullPath;
@@ -522,11 +523,12 @@ namespace AirScout
         ROTSTATUS RotStatus = ROTSTATUS.NONE;
         TrackValues TrackValues = null;
 
-        // Track display
-        public Font TrackDisplayFont;
-        public Brush TrackDisplayBrush;
-        public Pen TrackDisplayPen;
+        // Gauges display
+        public Color GaugesColor = Color.Black;
+        public Font TrackDisplayFont = new Font("Courier New", 16, FontStyle.Bold);
 
+        // Location grid updating
+        public bool UpdateLocationGrid = false;
 
         #region Startup & Initialization
 
@@ -544,6 +546,15 @@ namespace AirScout
 
             InitializeComponent();
 
+            // Running on Windows or Linux/Mono?
+            if (SupportFunctions.IsMono)
+            {
+                Console.WriteLine("Checking system: Running on Linux/Mono.");
+            }
+            else
+            {
+                Console.WriteLine("Checking system: Running on Windows.");
+            }
             // do basic initialization
             this.Text = "AirScout - Aircraft Scatter Prediction V" + Application.ProductVersion + " (c) 2013-2020 DL2ALF";
 
@@ -552,8 +563,10 @@ namespace AirScout
 
             // initialize settings
             InitializeSettings();
+
             // initialize charting
             InitializeCharts();
+
             // Initilialize Webbrowser
             InitializeWebbrowser();
 
@@ -920,9 +933,15 @@ namespace AirScout
                     try
                     {
                         // try to call plaugin constructor and add the value to Planefeeds list
+                        // 2022_04_24 check plugin version against program version: do not load older plugins
                         var plugin = lazyplugin.Value;
                         if (plugin != null)
-                            PlaneFeedPlugins.Add(plugin);
+                        {
+                            if (plugin.Version.StartsWith(mainversion))
+                            {
+                                PlaneFeedPlugins.Add(plugin);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -944,9 +963,37 @@ namespace AirScout
         /// <returns>The property value.</returns>
         public static dynamic GetPropertyDefaultValue(string propertyname)
         {
-            string p = (string)Properties.Settings.Default.Properties[propertyname].DefaultValue;
+            SettingsProperty prop = Properties.Settings.Default.Properties[propertyname];
+            if (prop == null)
+                return null;
+
+            object def = prop.DefaultValue; 
+            if (def == null)
+                return null;
+
+            Type t = Properties.Settings.Default.Properties[propertyname].PropertyType;
+            if (t == null)
+                return null;
+
+            try
+            {
+                TypeConverter tc = TypeDescriptor.GetConverter(t);
+                object value = tc.ConvertFromString(null, CultureInfo.InvariantCulture, (string)def);
+                
+                return value;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return null;
+            /*
+            string p = prop.DefaultValue.ToString();
             Type t = Properties.Settings.Default.Properties[propertyname].PropertyType;
             return Convert.ChangeType(p, t);
+            */
+
         }
 
         private string QualifyDatabaseDirectory(string databasedir)
@@ -967,6 +1014,10 @@ namespace AirScout
 
         private void InitializeSettings()
         {
+
+            // Load user settings
+            LoadUserSettings();
+
             // check for invalid settings
             // check if band is BNONE --> set to 1.2G
             if (Properties.Settings.Default.Band == BAND.BNONE)
@@ -1007,6 +1058,27 @@ namespace AirScout
             Properties.Settings.Default.StationsDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.StationsDatabase_Directory);
             Properties.Settings.Default.ElevationDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.StationsDatabase_Directory);
             Properties.Settings.Default.PropagationDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.PropagationDatabase_Directory);
+        }
+
+        private void DumpSettingsToLog(string name, SettingsPropertyValueCollection settings)
+        {
+            foreach (SettingsPropertyValue p in settings)
+            {
+                try
+                {
+                    if ((p != null) && (p.Name != null))
+                    {
+                        string value = p.PropertyValue != null ? p.PropertyValue.ToString() : "[null]";
+                        string default_value = GetPropertyDefaultValue(p.Name) != null ? "[Default = " + GetPropertyDefaultValue(p.Name) + "]" : "[Default = null]";
+                        Log.WriteMessage(name + "." + p.Name + " = " + value + default_value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error while checking property + " + p.Name + ": " + ex.ToString());
+                }
+            }
+
         }
 
         private void CheckSettings()
@@ -1163,6 +1235,7 @@ namespace AirScout
 
         private void CreateDistances()
         {
+            gmo_Distances.Clear();
             for (int dist = 100; dist <= 1000; dist += 100)
             {
                 GMapRoute circle = new GMapRoute("Distance: " + dist.ToString());
@@ -1171,9 +1244,9 @@ namespace AirScout
                 {
                     LatLon.GPoint p = LatLon.DestinationPoint(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon, i, dist);
                     circle.Points.Add(new PointLatLng(p.Lat, p.Lon));
-                    gmo_Distances.Routes.Add(circle);
 
                 }
+                gmo_Distances.Routes.Add(circle);
             }
 
         }
@@ -1212,10 +1285,11 @@ namespace AirScout
             gm_Main.Overlays.Add(gmo_Distances);
             gm_Main.Overlays.Add(gmo_Airports);
             gm_Main.Overlays.Add(gmo_PropagationPaths);
-            gm_Main.Overlays.Add(gmo_Routes);
             gm_Main.Overlays.Add(gmo_Objects);
+            gm_Main.Overlays.Add(gmo_Routes);
             gm_Main.Overlays.Add(gmo_Planes);
             gm_Main.Overlays.Add(gmo_Callsigns);
+            gm_Main.Overlays.Add(gmo_CallsignDetails);
 
             gm_Main.Opacity = (double)Properties.Settings.Default.Map_Opacity;
 
@@ -1313,8 +1387,17 @@ namespace AirScout
         }
         private void InitializeLocators()
         {
-            // clear locator overlay anyway
-            gmo_Locators.Clear();
+            // NASTY!! still throws execption sometimes
+            // when restoring cursor
+            try
+            {
+                // clear locator overlay anyway
+                gmo_Locators.Clear();
+            }
+            catch (Exception ex)
+            {
+                // do all most nothing
+            }
 
             // return if not activated
             if (!Properties.Settings.Default.Map_ShowLocators)
@@ -1479,12 +1562,6 @@ namespace AirScout
                 ag_Elevation.fromAngle = 180;
                 ag_Elevation.toAngle = 270;
 
-                // set up track display
-                Color trackcolor = Color.FromArgb(128, 0, 0, 0);
-                TrackDisplayBrush = new SolidBrush(trackcolor);
-                TrackDisplayPen = new Pen(TrackDisplayBrush, 3);
-                TrackDisplayFont = new Font("Courier New", 16, FontStyle.Bold);
-
                 // install additional mouse events
                 gb_Map_Info.MouseClick += new MouseEventHandler(this.gb_Map_Info_MouseClick);
                 gb_Map_Zoom.MouseClick += new MouseEventHandler(this.gb_Map_Zoom_MouseClick);
@@ -1525,16 +1602,13 @@ namespace AirScout
                     if (FirstRun)
                     {
                         Log.WriteMessage("Preparing for first run.");
+
+                        // Reload settings
+                        LoadUserSettings();
+
                         // try to ugrade settings when not started with /CLEAN option
                         if (!CleanRun)
                         {
-                            // Mono hack to assure that default values were initilaized
-                            if (SupportFunctions.IsMono)
-                            {
-                                Properties.Settings.Default.Reset();
-                                SaveUserSettings();
-                                Properties.Settings.Default.Reload();
-                            }
                             Log.WriteMessage("Upgrading settings.");
                             Properties.Settings.Default.Upgrade();
                             // handle skip to version 1.3.3.1
@@ -1562,6 +1636,7 @@ namespace AirScout
                             }
                             AirScout.PlaneFeeds.Properties.Settings.Default.Upgrade();
                         }
+
                         CheckDirectories();
                         CheckSettings();
                         // reset topmost state
@@ -1594,6 +1669,7 @@ namespace AirScout
                                 // reset FirstRun property
                                 Properties.Settings.Default.FirstRun = false;
                                 Properties.Settings.Default.FirstRun = Properties.Settings.Default.FirstRun;
+
                                 // set privacy statements (for legacy)
                                 Properties.Settings.Default.First_Agree = true;
                                 Properties.Settings.Default.First_Disagree = false;
@@ -1710,10 +1786,19 @@ namespace AirScout
                 cb_DXLoc.AutoLength = Properties.Settings.Default.Locator_AutoLength;
                 // populate watchlist
                 RefreshWatchlistView();
-                // Linux/Mon Hack: cycle control tab view to ensure that all elements are drawn
-                tc_Control.SelectedTab = tp_Control_Options;
-                tc_Control.SelectedTab = tp_Control_Multi;
-                tc_Control.SelectedTab = tp_Control_Single;
+                // Linux/Mon Hacks for layout
+                if (SupportFunctions.IsMono)
+                {
+                    // cycle control tab view to ensure that all elements are drawn
+                    tc_Control.SelectedTab = tp_Control_Options;
+                    tc_Control.SelectedTab = tp_Control_Multi;
+                    tc_Control.SelectedTab = tp_Control_Single;
+
+                    btn_Map_PlayPause.Image = null;
+                    btn_Map_PlayPause.Text = "Play";
+                    btn_Map_PlayPause.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                    btn_Map_PlayPause.Font = new Font(btn_Map_PlayPause.Font, FontStyle.Bold);
+                }
                 // set players bounds
                 sb_Analysis_Play.Minimum = 0;
                 sb_Analysis_Play.Maximum = int.MaxValue;
@@ -1768,6 +1853,22 @@ namespace AirScout
                 Properties.Settings.Default.MainSplitter_Distance = -1;
                 Properties.Settings.Default.MapSplitter_Distance = -1;
             }
+
+            // dump all properties to log
+            Log.WriteMessage("============================= Application Settings ==================================");
+            DumpSettingsToLog("Properties.Settings.Default", Properties.Settings.Default.PropertyValues);
+            DumpSettingsToLog("AirScout.PlaneFeeds.Properties.Settings.Default", AirScout.PlaneFeeds.Properties.Settings.Default.PropertyValues);
+            DumpSettingsToLog("ScoutBase.Elevation.Properties.Settings.Default", ScoutBase.Elevation.Properties.Settings.Default.PropertyValues);
+            DumpSettingsToLog("ScoutBase.Stations.Properties.Settings.Default", ScoutBase.Stations.Properties.Settings.Default.PropertyValues);
+            DumpSettingsToLog("ScoutBase.Propagation.Properties.Settings.Default", ScoutBase.Propagation.Properties.Settings.Default.PropertyValues);
+            DumpSettingsToLog("ScoutBase.CAT.Properties.Settings.Default", ScoutBase.CAT.Properties.Settings.Default.PropertyValues);
+            DumpSettingsToLog("AirScout.Aircrafts.Properties.Settings.Default", AirScout.Aircrafts.Properties.Settings.Default.PropertyValues);
+            DumpSettingsToLog("AirScout.CAT.Properties.Settings.Default", AirScout.CAT.Properties.Settings.Default.PropertyValues);
+            Log.WriteMessage("=====================================================================================");
+
+            // set Pause Mode
+ //           Pause();
+
         }
 
         private void FinishStartup()
@@ -1848,6 +1949,8 @@ namespace AirScout
             // start all background workers
             // check if the thread is not NULL and not activated
             Say("Starting background threads...");
+            if ((bw_LocatorGridUpdater != null) && !bw_LocatorGridUpdater.IsBusy)
+                bw_LocatorGridUpdater.RunWorkerAsync();
             if ((bw_AirportMapper != null) && !bw_AirportMapper.IsBusy)
                 bw_AirportMapper.RunWorkerAsync();
             if ((bw_JSONWriter != null) && !bw_JSONWriter.IsBusy)
@@ -2084,7 +2187,7 @@ namespace AirScout
                 if ((bw_WinTestReceive != null) && (!bw_WinTestReceive.IsBusy))
                     bw_WinTestReceive.RunWorkerAsync();
                 if ((bw_Webserver != null) && (!bw_Webserver.IsBusy))
-                    bw_Webserver.RunWorkerAsync();
+                    bw_Webserver.RunWorkerAsync(TmpDirectory);
             }
             if (Properties.Settings.Default.SpecLab_Enabled)
             {
@@ -2133,11 +2236,14 @@ namespace AirScout
                 return;
             worker.CancelAsync();
             // waiting for background threads to finish
+            int timeout = 10000;    // timeout in ms 
             Stopwatch st = new Stopwatch();
             st.Start();
             Say("Stopping background thread " + count.ToString() + " of " + total.ToString() + " [" + name + "]...");
             while ((worker != null) && worker.IsBusy)
+            {
                 Application.DoEvents();
+            }
             st.Stop();
             Log.WriteMessage("Stopping " + name + ", " + st.ElapsedMilliseconds.ToString() + " ms.");
         }
@@ -2173,6 +2279,8 @@ namespace AirScout
         private void CancelAllBackgroundWorkers()
         {
             // cancel all background workers, don't wait for finish
+            if (bw_LocatorGridUpdater != null)
+                bw_LocatorGridUpdater.CancelAsync();
             if (bw_AirportMapper != null)
                 bw_AirportMapper.CancelAsync();
             if (bw_PlaneFeed1 != null)
@@ -2522,6 +2630,7 @@ namespace AirScout
             this.wb_News.Name = "wb_News";
             this.wb_News.Size = new System.Drawing.Size(844, 197);
             this.wb_News.TabIndex = 0;
+            this.wb_News.ScriptErrorsSuppressed = true;
             this.wb_News.Url = global::AirScout.Properties.Settings.Default.News_URL;
             this.tp_News.Controls.Add(this.wb_News);
         }
@@ -2568,6 +2677,7 @@ namespace AirScout
         {
             if (!SupportFunctions.IsMono)
                 return ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;
+
             // try to build a path to user specific settings under Linux/Mono
             string usersettingspath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             usersettingspath = Path.Combine(usersettingspath, Application.CompanyName, AppDomain.CurrentDomain.FriendlyName);
@@ -2595,133 +2705,108 @@ namespace AirScout
             return usersettingspath;
         }
 
-        private XmlElement CreateUserSection(XmlDocument doc, SettingsBase settings)
+        private void LoadSettingsFromJSON(ApplicationSettingsBase settings)
         {
-            XmlElement usersection = doc.CreateElement(string.Empty, "section", string.Empty);
-            XmlAttribute sectionname = doc.CreateAttribute(string.Empty, "name", string.Empty);
-            sectionname.Value = settings.GetType().FullName;
-            usersection.Attributes.Append(sectionname);
-            XmlAttribute sectiontype = doc.CreateAttribute(string.Empty, "type", string.Empty);
-            Assembly assembly = Assembly.GetAssembly(typeof(System.Configuration.ClientSettingsSection));
-            //            sectiontype.Value = "System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
-            sectiontype.Value = typeof(System.Configuration.ClientSettingsSection).FullName + ", " + assembly.FullName;
-            usersection.Attributes.Append(sectiontype);
-            XmlAttribute sectionallowexedefinition = doc.CreateAttribute(string.Empty, "allowExeDefinition", string.Empty);
-            sectionallowexedefinition.Value = "MachineToLocalUser";
-            usersection.Attributes.Append(sectionallowexedefinition);
-            XmlAttribute sectionrequirepermission = doc.CreateAttribute(string.Empty, "requirePermission", string.Empty);
-            sectionrequirepermission.Value = "false";
-            usersection.Attributes.Append(sectionrequirepermission);
-            return usersection;
-        }
+            string filename = GetUserSettingsPath().Replace("user.config", settings.GetType().FullName + ".json");
 
-        private XmlElement SerializeSettings(XmlDocument doc, SettingsBase settings)
-        {
-            XmlElement properties = doc.CreateElement(string.Empty, settings.ToString(), string.Empty);
-            foreach (SettingsPropertyValue p in settings.PropertyValues)
+            if (!File.Exists(filename))
+                return;
+            JsonSerializerSettings serializersettings = new JsonSerializerSettings();
+            Dictionary<string, string> props =
+                JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(filename));
+            foreach (string key in props.Keys)
             {
-                if ((p != null) && (p.Name != null) && (p.PropertyValue != null) && !p.UsingDefaultValue)
+                try
                 {
-                    //                    Console.WriteLine("Appending " + p.Name + " = " + p.PropertyValue.ToString());
-                    XmlElement setting = doc.CreateElement(string.Empty, "setting", string.Empty);
-                    XmlAttribute name = doc.CreateAttribute(string.Empty, "name", string.Empty);
-                    name.Value = p.Name.ToString();
-                    setting.Attributes.Append(name);
-                    XmlAttribute serializeas = doc.CreateAttribute(string.Empty, "serializeAs", string.Empty);
-                    serializeas.Value = p.Property.SerializeAs.ToString();
-                    setting.Attributes.Append(serializeas);
-                    XmlElement value = doc.CreateElement(string.Empty, "value", string.Empty);
-                    if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.String)
-                    {
-                        XmlText text = doc.CreateTextNode(p.SerializedValue.ToString());
-                        value.AppendChild(text);
-                    }
-                    else
-                    {
-                        if (p.PropertyValue != null && p.Property.SerializeAs == SettingsSerializeAs.Xml)
-                        {
-                            MemoryStream ms = new MemoryStream();
-                            XmlWriter writer = XmlWriter.Create(ms, new XmlWriterSettings
-                            {
-                                NewLineOnAttributes = true,
-                                OmitXmlDeclaration = true
-                            });
-                            XmlSerializer serializer = new XmlSerializer(p.PropertyValue.GetType());
-                            serializer.Serialize(writer, p.PropertyValue);
-                            byte[] text2 = new byte[ms.ToArray().Length - 3];
-                            Array.Copy(ms.ToArray(), 3, text2, 0, text2.Length);
-                            XmlText xml = doc.CreateTextNode(Encoding.UTF8.GetString(text2.ToArray<byte>()));
-                            value.AppendChild(xml);
-                            value.InnerXml = WebUtility.HtmlDecode(value.InnerXml);
-                        }
-                    }
-                    setting.AppendChild(value);
-                    properties.AppendChild(setting);
+                    settings[key] = JsonConvert.DeserializeObject(props[key], settings.Properties[key].PropertyType);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error while loading user setting: " + ex.ToString());
                 }
             }
-            return properties;
+        }
+
+        private void LoadUserSettings()
+        {
+            try
+            {
+                Console.WriteLine("Loading user settings...");
+
+                if (!SupportFunctions.IsMono)
+                {
+                    // use Windows standard Properties.Settings.Default behavoir
+                    AirScout.PlaneFeeds.Properties.Settings.Default.Reload();
+                    ScoutBase.Elevation.Properties.Settings.Default.Reload();
+                    ScoutBase.Stations.Properties.Settings.Default.Reload();
+                    ScoutBase.Propagation.Properties.Settings.Default.Reload();
+                    AirScout.Aircrafts.Properties.Settings.Default.Reload();
+                    Properties.Settings.Default.Reload();
+
+                    return;
+                }
+
+                // Mono hack to assure that default values were initilaized
+                AirScout.PlaneFeeds.Properties.Settings.Default.Reset();
+                ScoutBase.Elevation.Properties.Settings.Default.Reset();
+                ScoutBase.Stations.Properties.Settings.Default.Reset();
+                ScoutBase.Propagation.Properties.Settings.Default.Reset();
+                AirScout.Aircrafts.Properties.Settings.Default.Reset();
+                Properties.Settings.Default.Reset();
+
+                // Rather load settings as JSON
+                LoadSettingsFromJSON(ScoutBase.Elevation.Properties.Settings.Default);
+                LoadSettingsFromJSON(ScoutBase.Stations.Properties.Settings.Default);
+                LoadSettingsFromJSON(ScoutBase.Propagation.Properties.Settings.Default);
+                LoadSettingsFromJSON(AirScout.Aircrafts.Properties.Settings.Default);
+                LoadSettingsFromJSON(Properties.Settings.Default);
+
+                Console.WriteLine("Loading user settings finished successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error while loading user settings: " + ex.ToString(), LogLevel.Error);
+            }
+        }
+
+        private void SaveSettingsToJSON(ApplicationSettingsBase settings)
+        {
+            string filename = GetUserSettingsPath().Replace("user.config", settings.GetType().FullName + ".json");
+
+            Dictionary<string, object> props = new Dictionary<string, object>();
+            foreach (SettingsProperty prop in settings.Properties)
+            {
+                props.Add(prop.Name, JsonConvert.SerializeObject(settings[prop.Name]));
+            }
+            File.WriteAllText(filename, JsonConvert.SerializeObject(props, Newtonsoft.Json.Formatting.Indented));
         }
 
         private void SaveUserSettings()
         {
             try
             {
+                Console.WriteLine("Saving configuration, FirstRun = " + Properties.Settings.Default.FirstRun);
                 Log.WriteMessage("Saving configuration...");
-                // save all settings
-                ScoutBase.Elevation.Properties.Settings.Default.Save();
-                ScoutBase.Stations.Properties.Settings.Default.Save();
-                ScoutBase.Propagation.Properties.Settings.Default.Save();
-                AirScout.Aircrafts.Properties.Settings.Default.Save();
-                AirScout.CAT.Properties.Settings.Default.Save();
-                Properties.Settings.Default.Save();
+
                 if (!SupportFunctions.IsMono)
+                {
+                    // save all settings
+                    ScoutBase.Elevation.Properties.Settings.Default.Save();
+                    ScoutBase.Stations.Properties.Settings.Default.Save();
+                    ScoutBase.Propagation.Properties.Settings.Default.Save();
+                    AirScout.Aircrafts.Properties.Settings.Default.Save();
+                    Properties.Settings.Default.Save();
+
                     return;
-                // Linux/Mono hack to save all properties in a correct manner
-                Console.WriteLine("Creating XML document...");
-                XmlDocument doc = new XmlDocument();
-                XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
-                XmlElement root = doc.DocumentElement;
-                doc.InsertBefore(xmlDeclaration, root);
-                XmlElement configuration = doc.CreateElement(string.Empty, "configuration", string.Empty);
-                doc.AppendChild(configuration);
-                XmlElement configsections = doc.CreateElement(string.Empty, "configSections", string.Empty);
-                configuration.AppendChild(configsections);
-                XmlElement usersettingsgroup = doc.CreateElement(string.Empty, "sectionGroup", string.Empty);
-                XmlAttribute usersettingsname = doc.CreateAttribute(string.Empty, "name", string.Empty);
-                usersettingsname.Value = "userSettings";
-                usersettingsgroup.Attributes.Append(usersettingsname);
-                usersettingsgroup.AppendChild(CreateUserSection(doc, AirScout.PlaneFeeds.Properties.Settings.Default));
-                usersettingsgroup.AppendChild(CreateUserSection(doc, ScoutBase.Elevation.Properties.Settings.Default));
-                usersettingsgroup.AppendChild(CreateUserSection(doc, ScoutBase.Stations.Properties.Settings.Default));
-                usersettingsgroup.AppendChild(CreateUserSection(doc, ScoutBase.Propagation.Properties.Settings.Default));
-                usersettingsgroup.AppendChild(CreateUserSection(doc, ScoutBase.CAT.Properties.Settings.Default));
-                usersettingsgroup.AppendChild(CreateUserSection(doc, AirScout.Aircrafts.Properties.Settings.Default));
-                usersettingsgroup.AppendChild(CreateUserSection(doc, AirScout.CAT.Properties.Settings.Default));
-                configsections.AppendChild(usersettingsgroup);
-                XmlElement usersettings = doc.CreateElement(string.Empty, "userSettings", string.Empty);
-                configuration.AppendChild(usersettings);
-                Console.WriteLine("Writing user settings...");
-                // append AirScout.PlaneFeeds properties
-                Console.WriteLine("Appending AirScout.PlaneFeeds.Properties.Settings.Default node...");
-                usersettings.AppendChild(SerializeSettings(doc, AirScout.PlaneFeeds.Properties.Settings.Default));
-                // append ScoutBase properties
-                Console.WriteLine("Appending ScoutBase.Elevation.Properties.Settings.Default node...");
-                usersettings.AppendChild(SerializeSettings(doc, ScoutBase.Elevation.Properties.Settings.Default));
-                Console.WriteLine("Appending ScoutBase.Stations.Properties.Settings.Default node...");
-                usersettings.AppendChild(SerializeSettings(doc, ScoutBase.Stations.Properties.Settings.Default));
-                Console.WriteLine("Appending ScoutBase.Propagation.Properties.Settings.Default node...");
-                usersettings.AppendChild(SerializeSettings(doc, ScoutBase.Propagation.Properties.Settings.Default));
-                Console.WriteLine("Appending ScoutBase.CAT.Properties.Settings.Default node...");
-                usersettings.AppendChild(SerializeSettings(doc, ScoutBase.CAT.Properties.Settings.Default));
-                // append AirScout.Aircrafts properties
-                Console.WriteLine("Appending AirScout.Aircrafts.Settings.Default node...");
-                // append AirScout.CAT properties
-                Console.WriteLine("Appending AirScout.CAT.Settings.Default node...");
-                usersettings.AppendChild(SerializeSettings(doc, AirScout.CAT.Properties.Settings.Default));
-                // append AirScout properties
-                Console.WriteLine("Appending AirScout.Properties.Settings.Default node...");
-                usersettings.AppendChild(SerializeSettings(doc, Properties.Settings.Default));
-                doc.Save(GetUserSettingsPath());
+                }
+
+                // Rather save settings as JSON
+                SaveSettingsToJSON(Properties.Settings.Default);
+                SaveSettingsToJSON(AirScout.Aircrafts.Properties.Settings.Default);
+                SaveSettingsToJSON(ScoutBase.Propagation.Properties.Settings.Default);
+                SaveSettingsToJSON(ScoutBase.Stations.Properties.Settings.Default);
+                SaveSettingsToJSON(ScoutBase.Elevation.Properties.Settings.Default);
+
             }
             catch (Exception ex)
             {
@@ -2771,12 +2856,24 @@ namespace AirScout
                 Properties.Settings.Default.General_WindowLocation = this.RestoreBounds.Location;
             }
             Properties.Settings.Default.General_WindowState = this.WindowState;
+
+            // save properties to file
+            SaveUserSettings();
+
             Say("Waiting for background threads to close...");
             // close background threads, save database and settings
             try
             {
                 // cancel background workers
-                CancelAllBackgroundWorkers();
+                // causes ThreadAbortExceptions on Linux ?!?
+                try
+                {
+                    CancelAllBackgroundWorkers();
+                }
+                catch (Exception ex)
+                {
+
+                }
                 // save splitter positions
                 Properties.Settings.Default.MainSplitter_Distance = MainSplitterDistance;
                 Properties.Settings.Default.MapSplitter_Distance = MapSplitterDistance;
@@ -2853,8 +2950,7 @@ namespace AirScout
                     st.Stop();
                     Log.WriteMessage("Aircraft database saved, " + st.ElapsedMilliseconds.ToString() + " ms.");
                 }
-                // save properties to file
-                SaveUserSettings();
+
                 // flush the Log again in case of any exception to save all messages
                 Log.FlushLog();
             }
@@ -3514,6 +3610,8 @@ namespace AirScout
                         Properties.Settings.Default.DXLon,
                         MaidenheadLocator.IsPrecise(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, 3) ? GEOSOURCE.FROMUSER : GEOSOURCE.FROMLOC);
                 }
+                // update map provider
+                gm_Main.MapProvider = GMapProviders.Find(Properties.Settings.Default.Map_Provider);
 
                 // update ToolTipFont
                 ToolTipFont = CreateFontFromString(Properties.Settings.Default.Map_ToolTipFont);
@@ -3552,11 +3650,14 @@ namespace AirScout
                 AirScout.Aircrafts.Properties.Settings.Default.Database_BackgroundUpdate_Period = (int)Properties.Settings.Default.Background_Update_Period;
                 // update database path path and elevation model
                 InitializeDatabase();
+
+                // resize map window
+                gm_Main_SizeChanged(this, null);
             }
             else
             {
-                // nothing was changed
-                Properties.Settings.Default.Reload();
+                // nothing was changed --> reload settings
+                LoadUserSettings();
             }
 
             // (re)initialize maps
@@ -3583,7 +3684,7 @@ namespace AirScout
         #region Play & Pause
 
         private void Play()
-        {       
+        {  
             PlayMode = AIRSCOUTPLAYMODE.FORWARD;
             // switch tab control according to path mode
             if (PathMode == AIRSCOUTPATHMODE.SINGLE)
@@ -3613,8 +3714,22 @@ namespace AirScout
             {
                 Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
-            // change button image
-            btn_Map_PlayPause.Image = il_Main.Images[0];
+
+            // Linux/Mono hack to display text in button instead of symbols
+            if (SupportFunctions.IsMono)
+            {
+                btn_Map_PlayPause.Image = null;
+                btn_Map_PlayPause.Text = "Pause";
+                btn_Map_PlayPause.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                btn_Map_PlayPause.Font = new Font(btn_Map_PlayPause.Font, FontStyle.Bold);
+            }
+            else
+            {
+                // change button image
+                btn_Map_PlayPause.Text = "";
+                btn_Map_PlayPause.Image = il_Main.Images[0];
+            }
+
             // disable controls
             cb_Band.Enabled = false;
             btn_Options.Enabled = false;
@@ -3634,8 +3749,21 @@ namespace AirScout
         private void Pause()
         {
             PlayMode = AIRSCOUTPLAYMODE.PAUSE;
-            // change button image
-            btn_Map_PlayPause.Image = il_Main.Images[1];
+
+            // Linux/Mono hack to display text in button instead of symbols
+            if (SupportFunctions.IsMono)
+            {
+                btn_Map_PlayPause.Image = null;
+                btn_Map_PlayPause.Text = "Play";
+                btn_Map_PlayPause.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                btn_Map_PlayPause.Font = new Font(btn_Map_PlayPause.Font, FontStyle.Bold);
+            }
+            else
+            {
+                // change button image
+                btn_Map_PlayPause.Text = "";
+                btn_Map_PlayPause.Image = il_Main.Images[1];
+            }
             // update tab control
             tc_Control.Refresh();
             // enable controls
@@ -3688,19 +3816,21 @@ namespace AirScout
                 GMapMarker gmmid = new GMarkerGoogle(new PointLatLng(midpoint.Lat, midpoint.Lon), ToolTipFont, ((PathMode == AIRSCOUTPATHMODE.MULTI) && Properties.Settings.Default.Map_SmallMarkers) ? GMarkerGoogleType.blue_small : GMarkerGoogleType.blue_dot);
                 gmmid.ToolTipText = ppath.Location1.Call + " <> " + ppath.Location2.Call;
                 gmmid.ToolTipMode = MarkerTooltipMode.OnMouseOver;
-                gmo_Objects.Markers.Add(gmmid);
+                gmo_CallsignDetails.Markers.Add(gmmid);
                 // calculate dx end
                 gmm_DXLoc = new GMarkerGoogle(new PointLatLng(ppath.Lat2, ppath.Lon2), ToolTipFont, ((PathMode == AIRSCOUTPATHMODE.MULTI) && Properties.Settings.Default.Map_SmallMarkers) ? GMarkerGoogleType.yellow_small : GMarkerGoogleType.yellow_dot);
                 gmm_DXLoc.ToolTipText = ppath.Location2.Call + "\n" +
                     ppath.Location2.Lat.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
                     ppath.Location2.Lon.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
                     ppath.Location2.Loc + "\n" +
-                    GetElevation(ppath.Location2.Lat, ppath.Location2.Lon).ToString("F0") + "m";
+                    GetElevation(ppath.Location2.Lat, ppath.Location2.Lon).ToString("F0") + "m\n" +
+                    LatLon.Bearing(ppath.Location1.Lat, ppath.Location1.Lon, ppath.Location2.Lat, ppath.Location2.Lon).ToString("F0") + "°\n" +
+                    LatLon.Distance(ppath.Location1.Lat, ppath.Location1.Lon, ppath.Location2.Lat, ppath.Location2.Lon).ToString("F0") + "km";
                 if (Properties.Settings.Default.Track_Activate)
                     gmm_DXLoc.ToolTipText += "\nRight+Click to Turn Antenna";
                 gmm_DXLoc.ToolTipMode = MarkerTooltipMode.OnMouseOver;
                 gmm_DXLoc.Tag = ppath.Location2.Call;
-                gmo_Objects.Markers.Add(gmm_DXLoc);
+                gmo_CallsignDetails.Markers.Add(gmm_DXLoc);
                 // set three small points for hot path, if one
                 if (!Properties.Settings.Default.Map_SmallMarkers)
                 {
@@ -4336,21 +4466,56 @@ namespace AirScout
             }
             if (Properties.Settings.Default.InfoWin_Type)
                 m.ToolTipText += "\nType: " + info.Manufacturer + " " + info.Model + " [" + PlaneCategories.GetShortStringValue(info.Category) + "]";
-            if (Properties.Settings.Default.InfoWin_Dist)
+
+            if (info.Potential > 0)
             {
-                if (Properties.Settings.Default.InfoWin_Metric)
-                    m.ToolTipText += "\nDist: " + info.IntQRB.ToString("F0") + "km";
-                else
-                    m.ToolTipText += "\nDist: " + UnitConverter.km_mi(info.IntQRB).ToString("F0") + "mi";
+                if (Properties.Settings.Default.InfoWin_Dist)
+                {
+                    if (Properties.Settings.Default.InfoWin_Metric)
+                        m.ToolTipText += "\nDist: " + info.IntQRB.ToString("F0") + "km";
+                    else
+                        m.ToolTipText += "\nDist: " + UnitConverter.km_mi(info.IntQRB).ToString("F0") + "mi";
+                }
+                if (Properties.Settings.Default.InfoWin_Time)
+                    m.ToolTipText += "\nTime: " + (CurrentTime + new TimeSpan(0, mins, 0)).ToString("HH:mm") + " [ " + mins.ToString("") + "min]";
+                if (Properties.Settings.Default.InfoWin_Angle)
+                    m.ToolTipText += "\nAngle: " + (info.Angle / Math.PI * 180.0).ToString("F0") + "°";
+                if (Properties.Settings.Default.InfoWin_Epsilon)
+                    m.ToolTipText += "\nEps: " + (info.Eps1 / Math.PI * 180.0).ToString("00.00") + "° <> " + (info.Eps2 / Math.PI * 180.0).ToString("00.00") + "°";
+                if (Properties.Settings.Default.InfoWin_Squint)
+                    m.ToolTipText += "\nSquint: " + (info.Squint / Math.PI * 180).ToString("00.00") + "°";
             }
-            if (Properties.Settings.Default.InfoWin_Time)
-                m.ToolTipText += "\nTime: " + (CurrentTime + new TimeSpan(0, mins, 0)).ToString("HH:mm") + " [ " + mins.ToString("") + "min]";
-            if (Properties.Settings.Default.InfoWin_Angle)
-                m.ToolTipText += "\nAngle: " + (info.Angle / Math.PI * 180.0).ToString("F0") + "°";
-            if (Properties.Settings.Default.InfoWin_Epsilon)
-                m.ToolTipText += "\nEps: " + (info.Eps1 / Math.PI * 180.0).ToString("00.00") + "° <> " + (info.Eps2 / Math.PI * 180.0).ToString("00.00") + "°";
-            if (Properties.Settings.Default.InfoWin_Squint)
-                m.ToolTipText += "\nSquint: " + (info.Squint / Math.PI * 180).ToString("00.00") + "°";
+
+            if ((TrackMode == AIRSCOUTTRACKMODE.TRACK) && (TrackValues != null) && (
+                (Properties.Settings.Default.InfoWin_MyAzimuth) ||
+                (Properties.Settings.Default.InfoWin_MyElevation) ||
+                (Properties.Settings.Default.InfoWin_MyDoppler)
+                ))
+            {
+                m.ToolTipText += "\n--------------------";
+                if (Properties.Settings.Default.InfoWin_MyAzimuth)
+                    m.ToolTipText += "\nMyAzimuth: " + TrackValues.MyAzimuth.ToString("00.00") + "°";
+                if (Properties.Settings.Default.InfoWin_MyElevation)
+                    m.ToolTipText += "\nMyElevation: " + TrackValues.MyElevation.ToString("00.00") + "°";
+                if (Properties.Settings.Default.InfoWin_MyDoppler)
+                    m.ToolTipText += "\nMyDoppler: " + TrackValues.MyDoppler.ToString("F0") + "Hz";
+            }
+            if ((TrackMode == AIRSCOUTTRACKMODE.TRACK) && (TrackValues != null) && (
+                    (Properties.Settings.Default.InfoWin_DXAzimuth) ||
+                    (Properties.Settings.Default.InfoWin_DXElevation) ||
+                    (Properties.Settings.Default.InfoWin_DXDoppler)
+                    ))
+            {
+                m.ToolTipText += "\n--------------------";
+                if (Properties.Settings.Default.InfoWin_DXAzimuth)
+                    m.ToolTipText += "\nDXAzimuth: " + TrackValues.DXAzimuth.ToString("00.00") + "°";
+                if (Properties.Settings.Default.InfoWin_DXElevation)
+                    m.ToolTipText += "\nDXElevation: " + TrackValues.DXElevation.ToString("00.00") + "°";
+                if (Properties.Settings.Default.InfoWin_DXDoppler)
+                    m.ToolTipText += "\nDXDoppler: " + TrackValues.DXDoppler.ToString("F0") + "Hz";
+            }
+
+
             if (selected)
             {
                 m.ToolTipMode = MarkerTooltipMode.Always;
@@ -4413,7 +4578,14 @@ namespace AirScout
                                 gmo_Planes.Markers.Add(CreatePlaneDetailed(plane, isselected));
                                 break;
                             default:
-                                gmo_Planes.Markers.Add(CreatePlaneSimple(plane, isselected));
+                                if (Properties.Settings.Default.InfoWin_AlwaysDetailed)
+                                {
+                                    gmo_Planes.Markers.Add(CreatePlaneDetailed(plane, isselected));
+                                }
+                                else
+                                {
+                                    gmo_Planes.Markers.Add(CreatePlaneSimple(plane, isselected));
+                                }
                                 break;
                         }
 
@@ -4990,13 +5162,30 @@ namespace AirScout
 
         private void gm_Main_Paint(object sender, PaintEventArgs e)
         {
-            if ((TrackMode == AIRSCOUTTRACKMODE.TRACK) && (TrackValues != null))
+            if (Properties.Settings.Default.Map_TrackingGaugesShow && (TrackMode == AIRSCOUTTRACKMODE.TRACK) && (TrackValues != null))
             {
                 // paint gauges on top of the map if enabled
                 ag_Azimuth.Value = (float)TrackValues.MyAzimuth;
                 ag_Elevation.Value = (float)TrackValues.MyElevation;
 
-                e.Graphics.DrawRectangle(TrackDisplayPen, new Rectangle(ag_Azimuth.Left, ag_Azimuth.Top, ag_Azimuth.Width + ag_Elevation.Width + 20, ag_Elevation.Height));
+                // get gauges forecolor from properties
+                Color gaugescolor = Color.FromName(Properties.Settings.Default.Map_TrackingGaugeColor);
+                if (gaugescolor == null)
+                {
+                    // set to black if fails
+                    gaugescolor = Color.Black;
+                }
+
+                // get brushes, pens and fonts
+                Brush gaugesbrush = new SolidBrush(gaugescolor);
+                Pen gaugespen = new Pen(gaugesbrush, 3);
+                Font trackfont = new Font("Courier New", (int)((double)pa_Rig.Height / 7.0), FontStyle.Bold);
+
+                // set colors, brushes and pens
+                ag_Azimuth.ForeColor = gaugescolor;
+                ag_Elevation.ForeColor = gaugescolor;
+
+                e.Graphics.DrawRectangle(gaugespen, new Rectangle(ag_Azimuth.Left, ag_Azimuth.Top, ag_Azimuth.Width + ag_Elevation.Width + 20, ag_Elevation.Height));
 
                 // draw elements
                 int ofsX = ag_Azimuth.Left;
@@ -5021,32 +5210,51 @@ namespace AirScout
                     NumberFormatInfo info = new NumberFormatInfo();
                     info.NumberDecimalSeparator = ",";
                     info.NumberGroupSeparator = ".";
-                    int top = 10;
+                    int top = 0;
                     int left = 10;
-                    e.Graphics.DrawRectangle(TrackDisplayPen, new Rectangle(pa_Rig.Left, pa_Rig.Top, pa_Rig.Width, pa_Rig.Height));
-                    e.Graphics.DrawString("MyDop: " + TrackValues.MyDoppler.ToString("F0"), TrackDisplayFont, TrackDisplayBrush, new PointF(pa_Rig.Left + left, pa_Rig.Top + top));
-                    e.Graphics.DrawString("DXDop: " + TrackValues.DXDoppler.ToString("F0"), TrackDisplayFont, TrackDisplayBrush, new PointF(pa_Rig.Left + left + 180, pa_Rig.Top + top));
-                    e.Graphics.DrawString("Dial : " + Properties.Settings.Default.Doppler_DialFreq.ToString(info), TrackDisplayFont, TrackDisplayBrush, new PointF(pa_Rig.Left + left, pa_Rig.Top + top + 30));
-                    e.Graphics.DrawString("RX   : " + TrackValues.RXFrequency.ToString(info), TrackDisplayFont, TrackDisplayBrush, new PointF(pa_Rig.Left + left, pa_Rig.Top + top + 50));
-                    e.Graphics.DrawString("TX   : " + TrackValues.TXFrequency.ToString(info), TrackDisplayFont, TrackDisplayBrush, new PointF(pa_Rig.Left + left, pa_Rig.Top + top + 70));
+                    e.Graphics.DrawRectangle(gaugespen, new Rectangle(pa_Rig.Left, pa_Rig.Top, pa_Rig.Width, pa_Rig.Height));
+                    e.Graphics.DrawString("MyDop: " + TrackValues.MyDoppler.ToString("F0"), trackfont, gaugesbrush, new PointF(pa_Rig.Left + left, pa_Rig.Top + top));
+                    e.Graphics.DrawString("DXDop: " + TrackValues.DXDoppler.ToString("F0"), trackfont, gaugesbrush, new PointF(pa_Rig.Left + left + pa_Rig.Width / 2, pa_Rig.Top + top));
+                    e.Graphics.DrawString("Dial : " + Properties.Settings.Default.Doppler_DialFreq.ToString(info), trackfont, gaugesbrush, new PointF(pa_Rig.Left + left, pa_Rig.Top + top + pa_Rig.Height / 4 * 1));
+                    e.Graphics.DrawString("RX   : " + TrackValues.RXFrequency.ToString(info), trackfont, gaugesbrush, new PointF(pa_Rig.Left + left, pa_Rig.Top + top + pa_Rig.Height / 4 * 2));
+                    e.Graphics.DrawString("TX   : " + TrackValues.TXFrequency.ToString(info), trackfont, gaugesbrush, new PointF(pa_Rig.Left + left, pa_Rig.Top + top + pa_Rig.Height / 4 * 3));
                 }
             }
         }
 
         private void gm_Main_SizeChanged(object sender, EventArgs e)
         {
-            // adjust position of gauges
-            ag_Azimuth.Left = gm_Main.Right - ag_Azimuth.Width - ag_Elevation.Width - 40;
-            ag_Azimuth.Top = gm_Main.Bottom - ag_Azimuth.Height - 20;
+            try
+            {
+                // get width from properties
+                int width = (int)Properties.Settings.Default.Map_TrackingGaugeWidth;
 
-            ag_Elevation.Left = gm_Main.Right - ag_Elevation.Width - 20;
-            ag_Elevation.Top = gm_Main.Bottom - ag_Elevation.Height - 20;
 
-            // adjust position of rig panel
-            pa_Rig.Width = ag_Elevation.Right - ag_Azimuth.Left;
-            pa_Rig.Height = 120;
-            pa_Rig.Left = ag_Azimuth.Left;
-            pa_Rig.Top = gm_Main.Bottom - ag_Azimuth.Height - pa_Rig.Height - 30;
+                // check bounds
+                if (width < 175)
+                    width = 175;
+                if (width > this.Width / 2)
+                    width = this.Width / 2;
+
+                // adjust position and size of gauges
+                ag_Azimuth.Width = width;
+                ag_Elevation.Width = width;
+                ag_Azimuth.Left = gm_Main.Right - ag_Azimuth.Width - ag_Elevation.Width - 40;
+                ag_Azimuth.Top = gm_Main.Bottom - ag_Azimuth.Height - 20;
+
+                ag_Elevation.Left = gm_Main.Right - ag_Elevation.Width - 20;
+                ag_Elevation.Top = gm_Main.Bottom - ag_Elevation.Height - 20;
+
+                // adjust position and size of rig panel
+                pa_Rig.Width = ag_Elevation.Right - ag_Azimuth.Left;
+                pa_Rig.Height = ag_Azimuth.Height / 2;
+                pa_Rig.Left = ag_Azimuth.Left;
+                pa_Rig.Top = gm_Main.Bottom - ag_Azimuth.Height - pa_Rig.Height - 30;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void gm_Main_OnPositionChanged(PointLatLng point)
@@ -5055,8 +5263,18 @@ namespace AirScout
 
         private void gm_Main_OnTileLoadComplete(long ElapsedMilliseconds)
         {
-            // (re)initialize locator overlay
-            InitializeLocators();
+            // use thread safe call here!
+            /*
+            // use a backgroundworker to pump a message into the main window's message loop
+            while (bw_LocatorGridUpdater.IsBusy)
+            {
+                // wait until last run is finished
+                Application.DoEvents();
+            }
+            bw_LocatorGridUpdater.RunWorkerAsync();
+            */
+
+            UpdateLocationGrid = true;
         }
 
         #endregion
@@ -5068,8 +5286,10 @@ namespace AirScout
             if (cb_Band.SelectedItem != null)
                 Properties.Settings.Default.Band = Bands.ParseStringValue((string)cb_Band.SelectedItem);
             else Properties.Settings.Default.Band = BAND.BNONE;
-            SaveUserSettings();
-            Properties.Settings.Default.Reload();
+
+//            SaveUserSettings();
+//            Properties.Settings.Default.Reload();
+
         }
 
         #region Tab Control Control Panel
@@ -7784,65 +8004,68 @@ namespace AirScout
             {
                 // get planes each minute
                 List<PlaneInfo> list = Planes.GetAll(DateTime.UtcNow, Properties.Settings.Default.Planes_Position_TTL);
-                // write json file
-                try
+                if (list.Count > 0)
                 {
-                    using (StreamWriter sw = new StreamWriter(TmpDirectory + Path.DirectorySeparatorChar + "planes.json"))
+                    // write json file
+                    try
                     {
-                        int major = Assembly.GetExecutingAssembly().GetName().Version.Major;
-                        sw.Write("{\"full_count\":" + list.Count().ToString() + ",\"version\":" + major.ToString());
-                        int i = 0;
-                        foreach (PlaneInfo info in list)
+                        using (StreamWriter sw = new StreamWriter(TmpDirectory + Path.DirectorySeparatorChar + "planes.json"))
                         {
-                            string index = "\"" + i.ToString("x8") + "\"";
-                            string hex = "\"" + info.Hex + "\"";
-                            string lat = info.Lat.ToString("F4", CultureInfo.InvariantCulture);
-                            string lon = info.Lon.ToString("F4", CultureInfo.InvariantCulture);
-                            string track = info.Track.ToString();
-                            string alt = info.Alt.ToString();
-                            string speed = info.Speed.ToString();
-                            string squawk = "\"" + "" + "\"";
-                            string radar = "\"" + "" + "\"";
-                            string type = "\"" + info.Type + "\"";
-                            string reg = "\"" + info.Reg + "\"";
-                            DateTime sTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                            string time = ((long)(info.Time - sTime).TotalSeconds).ToString();
-                            string dep = "\"\"";
-                            string dest = "\"\"";
-                            string flight = "\"\"";
-                            string dummy1 = "0";
-                            string dummy2 = "0";
-                            string call = "\"" + info.Call + "\"";
-                            string dummy3 = "0";
-                            sw.WriteLine("," + index + ":[" +
-                                hex + "," +
-                                lat + "," +
-                                lon + "," +
-                                track + "," +
-                                alt + "," +
-                                speed + "," +
-                                squawk + "," +
-                                radar + "," +
-                                type + "," +
-                                reg + "," +
-                                time + "," +
-                                dep + "," +
-                                dest + "," +
-                                flight + "," +
-                                dummy1 + "," +
-                                dummy2 + "," +
-                                call + "," +
-                                dummy3 +
-                                "]");
+                            int major = Assembly.GetExecutingAssembly().GetName().Version.Major;
+                            sw.Write("{\"full_count\":" + list.Count().ToString() + ",\"version\":" + major.ToString());
+                            int i = 0;
+                            foreach (PlaneInfo info in list)
+                            {
+                                string index = "\"" + i.ToString("x8") + "\"";
+                                string hex = "\"" + info.Hex + "\"";
+                                string lat = info.Lat.ToString("F4", CultureInfo.InvariantCulture);
+                                string lon = info.Lon.ToString("F4", CultureInfo.InvariantCulture);
+                                string track = info.Track.ToString("F0", CultureInfo.InvariantCulture);
+                                string alt = info.Alt.ToString("F0", CultureInfo.InvariantCulture);
+                                string speed = info.Speed.ToString("F0", CultureInfo.InvariantCulture);
+                                string squawk = "\"" + "" + "\"";
+                                string radar = "\"" + "" + "\"";
+                                string type = "\"" + info.Type + "\"";
+                                string reg = "\"" + info.Reg + "\"";
+                                DateTime sTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                                string time = ((long)(info.Time - sTime).TotalSeconds).ToString();
+                                string dep = "\"\"";
+                                string dest = "\"\"";
+                                string flight = "\"\"";
+                                string dummy1 = "0";
+                                string dummy2 = "0";
+                                string call = "\"" + info.Call + "\"";
+                                string dummy3 = "0";
+                                sw.WriteLine("," + index + ":[" +
+                                    hex + "," +
+                                    lat + "," +
+                                    lon + "," +
+                                    track + "," +
+                                    alt + "," +
+                                    speed + "," +
+                                    squawk + "," +
+                                    radar + "," +
+                                    type + "," +
+                                    reg + "," +
+                                    time + "," +
+                                    dep + "," +
+                                    dest + "," +
+                                    flight + "," +
+                                    dummy1 + "," +
+                                    dummy2 + "," +
+                                    call + "," +
+                                    dummy3 +
+                                    "]");
+                                i++;
+                            }
+                            sw.WriteLine("}");
                         }
-                        sw.WriteLine("}");
-                        i++;
                     }
-                }
-                catch (Exception ex)
-                {
-                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
-                    // do nothing
+                    catch (Exception ex)
+                    {
+                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                        // do nothing
+                    }
                 }
                 int ii = 0;
                 while (!bw_JSONWriter.CancellationPending && (ii < interval))
@@ -9028,6 +9251,21 @@ namespace AirScout
                 e.Cancel = true;
         }
 
+        private void bw_LocatorGridUpdater_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // do almost nothing
+        }
+
+        private void bw_LocatorGridUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            // do almost nothing
+
+        }
+
+        private void bw_LocatorGridUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            InitializeLocators();
+        }
     }
 
 

@@ -12,7 +12,7 @@ namespace ScoutBase.Elevation.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -349,7 +349,7 @@ namespace ScoutBase.Elevation.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("file://E:\\\\ElevationData\\\\ASTER\\\\V3\\\\ASTER3\\\\Locs")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.airscout.eu/downloads/ScoutBase/1/ElevationData/ASTER3")]
         public string Elevation_ASTER3_UpdateURL {
             get {
                 return ((string)(this["Elevation_ASTER3_UpdateURL"]));
@@ -409,7 +409,7 @@ namespace ScoutBase.Elevation.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("file://E:\\\\ElevationData\\\\ASTER\\\\V3\\\\ASTER1\\\\Locs")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.airscout.eu/downloads/ScoutBase/1/ElevationData/ASTER1")]
         public string Elevation_ASTER1_UpdateURL {
             get {
                 return ((string)(this["Elevation_ASTER1_UpdateURL"]));

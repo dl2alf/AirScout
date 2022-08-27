@@ -457,6 +457,7 @@ namespace AirScout
 
         private void bw_GLOBE_MapUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            gm_GLOBE.Visible = true;
         }
 
         private void wp_GLOBE_Enter(object sender, EventArgs e)
@@ -464,6 +465,7 @@ namespace AirScout
             wp_GLOBE.AllowNext = false;
             // clear map polygons
             GLOBEpolygons.Clear();
+            gm_GLOBE.Visible = true;
             // add coverage to map polygons
             List<PointLatLng> cl = new List<PointLatLng>();
             cl.Add(new PointLatLng(Properties.Settings.Default.MinLat, Properties.Settings.Default.MinLon));
@@ -478,7 +480,14 @@ namespace AirScout
             gm_GLOBE.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon, Properties.Settings.Default.MinLat));
             // start map updater
             if (!bw_GLOBE_MapUpdater.IsBusy)
+            {
+                if (SupportFunctions.IsMono)
+                    gm_GLOBE.Visible = false;
+
                 bw_GLOBE_MapUpdater.RunWorkerAsync();
+
+            }
+
             // zoom the map
             gm_GLOBE.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon - 1, Properties.Settings.Default.MaxLat + 1, Properties.Settings.Default.MaxLon + 1, Properties.Settings.Default.MinLat - 1));
         }
@@ -610,6 +619,7 @@ namespace AirScout
 
         private void bw_SRTM3_MapUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            gm_SRTM3.Visible = true;
         }
 
         private void wp_SRTM3_Enter(object sender, EventArgs e)
@@ -631,7 +641,13 @@ namespace AirScout
             gm_SRTM3.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon, Properties.Settings.Default.MinLat));
             // start map updater
             if (!bw_SRTM3_MapUpdater.IsBusy)
+            {
+                if (SupportFunctions.IsMono)
+                    gm_SRTM3.Visible = false;
+
                 bw_SRTM3_MapUpdater.RunWorkerAsync();
+
+            }
             // zoom the map
             gm_SRTM3.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon - 1, Properties.Settings.Default.MaxLat + 1, Properties.Settings.Default.MaxLon + 1, Properties.Settings.Default.MinLat - 1));
         }
@@ -697,7 +713,7 @@ namespace AirScout
                     // estimate disk space needed = tilecount * tilesize * 150%
                     long spaceneeded = (long)tilecount * (long)(100000 * 3 / 2);
                     string rootdrive = Path.GetPathRoot(ElevationData.Database.DefaultDatabaseDirectory(ELEVATIONMODEL.SRTM1));
-                    long spaceavailable = SupportFunctions.GetDriveAvailableFreeSpace(rootdrive);
+                    long spaceavailable = SupportFunctions.GetDriveAvailableFreeSpace(rootdrive); 
                     // check for available disk space, skip on zero (cannot determine)
                     if ((spaceavailable > 0) && (spaceavailable < spaceneeded))
                     {
@@ -758,6 +774,7 @@ namespace AirScout
 
         private void bw_SRTM1_MapUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            gm_SRTM1.Visible = true;
         }
 
         private void wp_SRTM1_Enter(object sender, EventArgs e)
@@ -779,7 +796,14 @@ namespace AirScout
             gm_SRTM1.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon, Properties.Settings.Default.MaxLat, Properties.Settings.Default.MaxLon, Properties.Settings.Default.MinLat));
             // start map updater
             if (!bw_SRTM1_MapUpdater.IsBusy)
+            {
+                if (SupportFunctions.IsMono)
+                    gm_SRTM1.Visible = false;
+
                 bw_SRTM1_MapUpdater.RunWorkerAsync();
+
+            }
+
             // zoom the map
             gm_SRTM1.SetZoomToFitRect(RectLatLng.FromLTRB(Properties.Settings.Default.MinLon - 1, Properties.Settings.Default.MaxLat + 1, Properties.Settings.Default.MaxLon + 1, Properties.Settings.Default.MinLat - 1));
         }
