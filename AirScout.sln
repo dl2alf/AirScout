@@ -81,6 +81,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.CAT", "AirScout.CA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.AirScoutServer", "AirScout.PlaneFeeds.Plugin.AirScoutServer\AirScout.PlaneFeeds.Plugin.AirScoutServer.csproj", "{692CAF08-26D0-4D41-9CAC-BDA8D8BE6125}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.RadarVirtuel", "AirScout.PlaneFeeds.Plugin.RadarVirtuel\AirScout.PlaneFeeds.Plugin.RadarVirtuel.csproj", "{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.VRSWebServer", "AirScout.PlaneFeeds.Plugin.VRSWebServer\AirScout.PlaneFeeds.Plugin.VRSWebServer.csproj", "{5C096747-2BF0-4D36-BAA7-226CF71619A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -776,6 +780,42 @@ Global
 		{692CAF08-26D0-4D41-9CAC-BDA8D8BE6125}.WSL|Mixed Platforms.Build.0 = Debug|Any CPU
 		{692CAF08-26D0-4D41-9CAC-BDA8D8BE6125}.WSL|x86.ActiveCfg = Debug|Any CPU
 		{692CAF08-26D0-4D41-9CAC-BDA8D8BE6125}.WSL|x86.Build.0 = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Debug|x86.Build.0 = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Release|x86.ActiveCfg = Release|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.Release|x86.Build.0 = Release|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.WSL|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.WSL|Any CPU.Build.0 = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.WSL|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.WSL|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.WSL|x86.ActiveCfg = Debug|Any CPU
+		{1F2A3BE9-9349-4478-BA6E-0BC842615B3B}.WSL|x86.Build.0 = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.Release|x86.Build.0 = Release|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.WSL|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.WSL|Any CPU.Build.0 = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.WSL|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.WSL|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.WSL|x86.ActiveCfg = Debug|Any CPU
+		{5C096747-2BF0-4D36-BAA7-226CF71619A4}.WSL|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

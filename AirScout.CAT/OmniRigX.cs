@@ -86,6 +86,19 @@ namespace AirScout.CAT
 
         private static void StartOmniRig()
         {
+            // check for OmniRigEngine is accessible
+            try
+            {
+                if (OmniRigEngine == null)
+                {
+                    // do nothing
+                }
+            }
+            catch
+            {
+                OmniRigEngine = null;
+            }
+
             if (OmniRigEngine == null)
             {
                 try
@@ -1300,7 +1313,20 @@ namespace AirScout.CAT
         {
             List<SupportedRig> l = new List<SupportedRig>();
 
-            // try get OmniRig working
+            // check for OmniRigEngine is accessible
+            try
+            {
+                if (OmniRigEngine == null)
+                {
+                    // do nothing
+                }
+            }
+            catch
+            {
+                OmniRigEngine = null;
+            }
+
+            // start OmniRig engine
             if (OmniRigEngine == null)
             {
                 StartOmniRig();

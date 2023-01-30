@@ -12,6 +12,7 @@ namespace WinTest
         PKTRCVD = 2,
         SETAZIMUTH = 100,
         SETELEVATION = 101,
+        SETAZEL = 102,
         ASADDWATCH = 247,
         ASREMOVEWATCH = 248,
         ASWATCHLIST = 249,

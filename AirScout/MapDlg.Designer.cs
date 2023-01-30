@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapDlg));
-            ScoutBase.Core.LatLon.GPoint gPoint7 = new ScoutBase.Core.LatLon.GPoint();
-            ScoutBase.Core.LatLon.GPoint gPoint8 = new ScoutBase.Core.LatLon.GPoint();
+            ScoutBase.Core.LatLon.GPoint gPoint3 = new ScoutBase.Core.LatLon.GPoint();
+            ScoutBase.Core.LatLon.GPoint gPoint4 = new ScoutBase.Core.LatLon.GPoint();
             this.il_Main = new System.Windows.Forms.ImageList(this.components);
             this.ti_Progress = new System.Windows.Forms.Timer(this.components);
             this.sc_Map = new System.Windows.Forms.SplitContainer();
@@ -181,7 +181,7 @@
             this.bw_Analysis_FileSaver = new System.ComponentModel.BackgroundWorker();
             this.bw_Analysis_FileLoader = new System.ComponentModel.BackgroundWorker();
             this.bw_AirportMapper = new System.ComponentModel.BackgroundWorker();
-            this.bw_LocatorGridUpdater = new System.ComponentModel.BackgroundWorker();
+            this.tsl_Database_LED_Rig = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.sc_Map)).BeginInit();
             this.sc_Map.Panel1.SuspendLayout();
             this.sc_Map.Panel2.SuspendLayout();
@@ -1091,6 +1091,7 @@
             this.tsl_Database,
             this.tsl_Database_LED_Aircraft,
             this.tsl_Database_LED_Stations,
+            this.tsl_Database_LED_Rig,
             this.tsl_Database_LED_GLOBE,
             this.tsl_Database_LED_SRTM3,
             this.tsl_Database_LED_SRTM1,
@@ -1113,7 +1114,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.tsl_Status.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
             this.tsl_Status.Name = "tsl_Status";
-            this.tsl_Status.Size = new System.Drawing.Size(606, 19);
+            this.tsl_Status.Size = new System.Drawing.Size(561, 19);
             this.tsl_Status.Spring = true;
             this.tsl_Status.Text = "No Messages.";
             this.tsl_Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1220,8 +1221,8 @@
             this.tsl_Database_LED_ASTER3.Margin = new System.Windows.Forms.Padding(1, 5, 1, 5);
             this.tsl_Database_LED_ASTER3.Name = "tsl_Database_LED_ASTER3";
             this.tsl_Database_LED_ASTER3.Size = new System.Drawing.Size(12, 14);
-            this.tsl_Database_LED_ASTER3.Text = " SRTM3 database status LED";
-            this.tsl_Database_LED_ASTER3.ToolTipText = "SRTM3 database status LED";
+            this.tsl_Database_LED_ASTER3.Text = " ASTER3 database status LED";
+            this.tsl_Database_LED_ASTER3.ToolTipText = "ASTER3 database status LED";
             // 
             // tsl_Database_LED_ASTER1
             // 
@@ -1233,8 +1234,8 @@
             this.tsl_Database_LED_ASTER1.Margin = new System.Windows.Forms.Padding(1, 5, 1, 5);
             this.tsl_Database_LED_ASTER1.Name = "tsl_Database_LED_ASTER1";
             this.tsl_Database_LED_ASTER1.Size = new System.Drawing.Size(12, 14);
-            this.tsl_Database_LED_ASTER1.Text = " SRTM3 database status LED";
-            this.tsl_Database_LED_ASTER1.ToolTipText = "SRTM3 database status LED";
+            this.tsl_Database_LED_ASTER1.Text = "ASTER1 database status LED";
+            this.tsl_Database_LED_ASTER1.ToolTipText = "ASTER1 database status LED";
             // 
             // tsl_Track
             // 
@@ -1701,7 +1702,7 @@
             this.cb_DXLoc.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cb_DXLoc.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cb_DXLoc.FormattingEnabled = true;
-            this.cb_DXLoc.GeoLocation = gPoint7;
+            this.cb_DXLoc.GeoLocation = gPoint3;
             this.cb_DXLoc.Location = new System.Drawing.Point(3, 154);
             this.cb_DXLoc.Name = "cb_DXLoc";
             this.cb_DXLoc.Precision = 3;
@@ -1725,7 +1726,7 @@
             this.cb_MyLoc.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cb_MyLoc.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cb_MyLoc.FormattingEnabled = true;
-            this.cb_MyLoc.GeoLocation = gPoint8;
+            this.cb_MyLoc.GeoLocation = gPoint4;
             this.cb_MyLoc.Location = new System.Drawing.Point(3, 71);
             this.cb_MyLoc.Name = "cb_MyLoc";
             this.cb_MyLoc.Precision = 3;
@@ -2054,13 +2055,18 @@
             this.bw_AirportMapper.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_AirportMapper_ProgressChanged);
             this.bw_AirportMapper.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_AirportMapper_RunWorkerCompleted);
             // 
-            // bw_LocatorGridUpdater
+            // tsl_Database_LED_Rig
             // 
-            this.bw_LocatorGridUpdater.WorkerReportsProgress = true;
-            this.bw_LocatorGridUpdater.WorkerSupportsCancellation = true;
-            this.bw_LocatorGridUpdater.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_LocatorGridUpdater_DoWork);
-            this.bw_LocatorGridUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_LocatorGridUpdater_ProgressChanged);
-            this.bw_LocatorGridUpdater.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_LocatorGridUpdater_RunWorkerCompleted);
+            this.tsl_Database_LED_Rig.AutoSize = false;
+            this.tsl_Database_LED_Rig.BackColor = System.Drawing.Color.Plum;
+            this.tsl_Database_LED_Rig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
+            this.tsl_Database_LED_Rig.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsl_Database_LED_Rig.Image = ((System.Drawing.Image)(resources.GetObject("tsl_Database_LED_Rig.Image")));
+            this.tsl_Database_LED_Rig.Margin = new System.Windows.Forms.Padding(1, 5, 1, 5);
+            this.tsl_Database_LED_Rig.Name = "tsl_Database_LED_Rig";
+            this.tsl_Database_LED_Rig.Size = new System.Drawing.Size(12, 14);
+            this.tsl_Database_LED_Rig.Text = "Rig database status LED";
+            this.tsl_Database_LED_Rig.ToolTipText = "Rig database status LED";
             // 
             // MapDlg
             // 
@@ -2281,7 +2287,7 @@
         private System.Windows.Forms.ToolStripStatusLabel tsl_CAT;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Rot;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Track;
-        private System.ComponentModel.BackgroundWorker bw_LocatorGridUpdater;
+        private System.Windows.Forms.ToolStripStatusLabel tsl_Database_LED_Rig;
     }
 }
 

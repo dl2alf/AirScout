@@ -545,7 +545,7 @@ MEaSUREs data and products are available at no charge from the LP DAAC.See https
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Planes_ExtendedPlausibilityCheck_MaxErrorDist" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">30</Value>
     </Setting>
     <Setting Name="Planes_LogErrors" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -753,6 +753,18 @@ NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team (2019). AST
     </Setting>
     <Setting Name="Map_TrackingGaugesShow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="NewsFeed_Enabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RigDatabase_Status" Type="System.Data.SQLite.DATABASESTATUS" Scope="User">
+      <Value Profile="(Default)">UNDEFINED</Value>
+    </Setting>
+    <Setting Name="Planes_TracePositions" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Planes_PositionsDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PlanePositions</Value>
     </Setting>
   </Settings>
 </SettingsFile>

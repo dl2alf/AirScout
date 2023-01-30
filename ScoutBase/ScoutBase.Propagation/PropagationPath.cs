@@ -37,7 +37,6 @@ namespace ScoutBase.Propagation
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        [JsonIgnore]
         public double Bearing12
         {
             get
@@ -46,7 +45,6 @@ namespace ScoutBase.Propagation
             }
         }
 
-        [JsonIgnore]
         public double Bearing21
         {
             get
@@ -55,7 +53,6 @@ namespace ScoutBase.Propagation
             }
         }
 
-        [JsonIgnore]
 
         public double Distance
         {

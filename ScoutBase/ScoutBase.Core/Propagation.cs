@@ -50,8 +50,9 @@ namespace ScoutBase.Core
             h = h / 1000.0;
             H = H / 1000.0;
             // calculate alpha angle in [rad]
-            double alpha = dist / radius;
-            double d = Math.Sqrt((radius + h) * (radius + h) + (radius + H) * (radius + H) - 2.0 * (radius + h) * (radius + H) * Math.Cos(alpha));
+            double alpha = AlphaFromDistance(dist, radius);
+            //           double d = Math.Sqrt((radius + h) * (radius + h) + (radius + H) * (radius + H) - 2.0 * (radius + h) * (radius + H) * Math.Cos(alpha));
+            double d = Math.Sqrt((radius + H) * (radius + H) + (radius + h) * (radius + h) - (2.0 * (radius + H) * (radius + h) * Math.Cos(alpha)));
             return d;
         }
 
@@ -65,13 +66,17 @@ namespace ScoutBase.Core
         /// <returns>The elevation angle Epsilon [rad].</returns>
         public static double EpsilonFromHeights(double h, double dist, double H, double radius)
         {
+            // calculate alpha angle in [rad]
+            double alpha = dist / radius;
+            double d = SlantRangeFromHeights(h, dist, H, radius);
+
             // convert heights into [km]
             h = h / 1000.0;
             H = H / 1000.0;
-            // calculate alpha angle in [rad]
-            double d = SlantRangeFromHeights(h, dist, H, radius);
+
             double a = ((radius + H) * (radius + H) - (radius + h) * (radius + h) - d * d) / 2.0 / d;
-            return Math.Asin(a / (radius + h));
+            double eps = Math.Asin(a / (radius + h));
+            return eps;
         }
 
         /// <summary>
@@ -88,7 +93,7 @@ namespace ScoutBase.Core
             h = h / 1000.0;
             H = H / 1000.0;
             // calculate alpha angle in [rad]
-            double alpha = dist / radius;
+            double alpha = AlphaFromDistance(dist, radius);
             double d = Math.Sqrt((radius + h) * (radius + h) + (radius + H) * (radius + H) - 2.0 * (radius + h) * (radius + H) * Math.Cos(alpha));
             double a = ((radius + H) * (radius + H) - (radius + h) * (radius + h) - d * d) / 2.0 / d;
             return Math.Asin((a + d) / (radius + H));

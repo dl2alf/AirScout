@@ -394,63 +394,66 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                 // analyze json string for planes data
                 // get the planes position list
                 var aclist = root["states"];
-                foreach (var ac in aclist)
+                if (aclist != null)
                 {
-                    try
+                    foreach (var ac in aclist)
                     {
-                        // different handling of reading JSON between Windows (Array) & Linux (ArrayList)
-                        // access to data values itself is the same
-                        int len = 0;
-                        len = ac.Count;
-                        // skip if too few fields in record
-                        if (len < 17)
-                            continue;
-                        PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
-                        // get hex first
-                        plane.Hex = ReadPropertyString(ac, 0).ToUpper().Trim();
-                        // get callsign
-                        plane.Call = ReadPropertyString(ac, 1).ToUpperInvariant().Trim();
-                        // get position
-                        plane.Lon = ReadPropertyDouble(ac, 5);
-                        plane.Lat = ReadPropertyDouble(ac, 6);
-                        // get altitude (provided in m --> convert to ft)
-                        plane.Alt = UnitConverter.m_ft(ReadPropertyDouble(ac, 13));
-                        // get track
-                        plane.Track = ReadPropertyDouble(ac, 10);
-                        // get speed (provided in m/s --> convert to kts)
-                        plane.Speed = UnitConverter.ms_kts(ReadPropertyDouble(ac, 9));
-                        // registration is not provided
-                        plane.Reg = "";
-                        // get position timestamp in sec
-                        int l = ReadPropertyInt(ac, 3);
-                        if (l != int.MinValue)
+                        try
                         {
-                            DateTime timestamp = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
-                            timestamp = timestamp.AddSeconds(l);
-                            plane.Time = timestamp;
+                            // different handling of reading JSON between Windows (Array) & Linux (ArrayList)
+                            // access to data values itself is the same
+                            int len = 0;
+                            len = ac.Count;
+                            // skip if too few fields in record
+                            if (len < 17)
+                                continue;
+                            PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
+                            // get hex first
+                            plane.Hex = ReadPropertyString(ac, 0).ToUpper().Trim();
+                            // get callsign
+                            plane.Call = ReadPropertyString(ac, 1).ToUpperInvariant().Trim();
+                            // get position
+                            plane.Lon = ReadPropertyDouble(ac, 5);
+                            plane.Lat = ReadPropertyDouble(ac, 6);
+                            // get altitude (provided in m --> convert to ft)
+                            plane.Alt = UnitConverter.m_ft(ReadPropertyDouble(ac, 13));
+                            // get track
+                            plane.Track = ReadPropertyDouble(ac, 10);
+                            // get speed (provided in m/s --> convert to kts)
+                            plane.Speed = UnitConverter.ms_kts(ReadPropertyDouble(ac, 9));
+                            // registration is not provided
+                            plane.Reg = "";
+                            // get position timestamp in sec
+                            int l = ReadPropertyInt(ac, 3);
+                            if (l != int.MinValue)
+                            {
+                                DateTime timestamp = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+                                timestamp = timestamp.AddSeconds(l);
+                                plane.Time = timestamp;
+                            }
+                            else
+                            {
+                                // skip plane if no valid timestamp found
+                                continue;
+                            }
+                            // get type info
+                            plane.Type = ReadPropertyString(ac, 5);
+
+                            // discard planes on ground
+                            bool onground = ReadPropertyBool(ac, 8);
+                            if (onground)
+                                continue;
+
+                            // discard planes stopped
+                            if (plane.Speed <= 0)
+                                continue;
+
+                            planes.Add(plane);
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            // skip plane if no valid timestamp found
-                            continue;
+                            Console.WriteLine("[" + System.Reflection.MethodBase.GetCurrentMethod().Name + "]" + ex.Message);
                         }
-                        // get type info
-                        plane.Type = ReadPropertyString(ac, 5);
-
-                        // discard planes on ground
-                        bool onground = ReadPropertyBool(ac, 8);
-                        if (onground)
-                            continue;
-
-                        // discard planes stopped
-                        if (plane.Speed <= 0)
-                            continue;
-
-                        planes.Add(plane);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("[" + System.Reflection.MethodBase.GetCurrentMethod().Name + "]" + ex.Message);
                     }
                 }
             }

@@ -1,4 +1,22 @@
-﻿2022-01-03: V1.4.1.0
+﻿2023-xx-xx: V1.4.3.0
+====================
+
+
+2023-01-29: V1.4.2.0
+====================
+
+- Bugfix:  DXElevation was not calculated correctly when in track mode  --> fixed (tnx OE5VRL)
+- Bugfix:  CAT option is not properly checked on program start --> fixed, furthermore CAT rig is set to [None] by default (tnx OE5VRL)
+- Bugfix:  Program settigs are now saved as JSON on Linux/Mono to avoid problems with load/save Windows-style settings
+- Feature: new high precision tracking broadcast telegram is now sent simultaneous to legacy broadcast
+- Bugfix:  Split mode was not reset on program exit when in tracking mode --> fixed (tnx OE5VRL)
+- Bugfix:  dabatabase updates sometimes show errors and status LEDs were not displayed properly --> fixed
+- Bugfix:  Wrong calculation of Epsilon resulted in faulty display & tracking especially at small distances --> fixed (tnx OE5VRL)
+- Bugfix:  AirScout crashes when OmniRig CAT is activated and OmniRig instance disappears during AirScout run --> fixed
+- Bugfix:  Planes with numeric values reported as "not a number" for lat/lon/alt/speed/track were considered as good --> fixed
+- Bugfix:  Extended plane feed plausibility check gives a lot of errors on VRS Web Server feed --> fixed (tnx OV3T)
+
+2022-01-03: V1.4.1.0
 ====================
 
 - Bugfix:  RIT on rig is reset when tracking started --> fixed

@@ -82,6 +82,7 @@ using AirScout.Signals;
 using AirScout.PlaneFeeds.Plugin.MEFContract;
 using AirScout.CAT;
 using System.Security.RightsManagement;
+using System.Web;
 
 namespace AirScout
 {
@@ -289,6 +290,49 @@ namespace AirScout
                 if (!rigdir.Contains(Path.VolumeSeparatorChar))
                     rigdir = Path.Combine(AppDataDirectory, rigdir);
                 return rigdir;
+            }
+        }
+
+        [CategoryAttribute("Directories")]
+        [DescriptionAttribute("Plane Positions Directory")]
+        public string PlanePositionsDirectory
+        {
+            get
+            {
+                // get Property
+                string posdir = Properties.Settings.Default.Planes_PositionsDirectory;
+                // replace Windows/Linux directory spearator chars
+                posdir = posdir.Replace('\\', Path.DirectorySeparatorChar);
+                posdir = posdir.Replace('/', Path.DirectorySeparatorChar);
+                // set to default value if empty
+                if (String.IsNullOrEmpty(posdir))
+                    posdir = "PlanePositions";
+                // replace variables, if any
+                posdir = VC.ReplaceAllVars(posdir);
+                // remove directory separator chars at begin and end
+                posdir = posdir.TrimStart(Path.DirectorySeparatorChar);
+                posdir = posdir.TrimEnd(Path.DirectorySeparatorChar);
+                // fully qualify path
+                if (!posdir.Contains(Path.VolumeSeparatorChar))
+                    posdir = Path.Combine(AppDataDirectory, TmpDirectory, posdir);
+                return posdir;
+            }
+        }
+
+        [CategoryAttribute("Directories")]
+        [DescriptionAttribute("Web Server Directory")]
+        public string WebserverDirectory
+        {
+            get
+            {
+                if (Debugger.IsAttached)
+                {
+                    // use source code directory when in debug mode
+                    string dir = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "wwwroot");
+                    return dir;
+                }
+                else
+                    return Path.Combine(Application.StartupPath, "wwwroot");
             }
         }
 
@@ -771,6 +815,22 @@ namespace AirScout
                 Directory.CreateDirectory(PluginDirectory);
             if (!Directory.Exists(RigDirectory))
                 Directory.CreateDirectory(RigDirectory);
+            if (!Directory.Exists(PlanePositionsDirectory))
+                Directory.CreateDirectory(PlanePositionsDirectory);
+
+            // cleanup plane positions directory
+            string[] files = Directory.GetFiles(PlanePositionsDirectory, "*.*", SearchOption.TopDirectoryOnly);
+            foreach (string file in files)
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch
+                {
+                    // do nothing
+                }
+            }
         }
 
         private void CopyPluginWithPDB(string src, string dst)
@@ -1923,6 +1983,7 @@ namespace AirScout
             feedargs.LogDirectory = LogDirectory;
             feedargs.TmpDirectory = TmpDirectory;
             feedargs.DatabaseDirectory = DatabaseDirectory;
+            feedargs.PlanePositionsDirectory = PlanePositionsDirectory;
             feedargs.MaxLat = Properties.Settings.Default.MaxLat;
             feedargs.MinLon = Properties.Settings.Default.MinLon;
             feedargs.MinLat = Properties.Settings.Default.MinLat;
@@ -1941,6 +2002,7 @@ namespace AirScout
             feedargs.InstanceID = Properties.Settings.Default.AirScout_Instance_ID;
             feedargs.SessionKey = SessionKey;
             feedargs.GetKeyURL = Properties.Settings.Default.AirScout_GetKey_URL;
+            feedargs.LogPlanePositions = Properties.Settings.Default.Planes_TracePositions;
             return feedargs;
         }
 
@@ -1949,8 +2011,6 @@ namespace AirScout
             // start all background workers
             // check if the thread is not NULL and not activated
             Say("Starting background threads...");
-            if ((bw_LocatorGridUpdater != null) && !bw_LocatorGridUpdater.IsBusy)
-                bw_LocatorGridUpdater.RunWorkerAsync();
             if ((bw_AirportMapper != null) && !bw_AirportMapper.IsBusy)
                 bw_AirportMapper.RunWorkerAsync();
             if ((bw_JSONWriter != null) && !bw_JSONWriter.IsBusy)
@@ -2176,29 +2236,37 @@ namespace AirScout
                 if (Properties.Settings.Default.Map_Preloader_Enabled && (bw_MapPreloader != null) && !bw_MapPreloader.IsBusy)
                     bw_MapPreloader.RunWorkerAsync(BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY);
             }
+            
             if ((bw_PlaneFeed1 != null) && (!bw_PlaneFeed1.IsBusy))
                 bw_PlaneFeed1.RunWorkerAsync(CreatePlaneFeedWorkEventArgs(Properties.Settings.Default.Planes_PlaneFeed1));
             if ((bw_PlaneFeed2 != null) && (!bw_PlaneFeed2.IsBusy))
                 bw_PlaneFeed2.RunWorkerAsync(CreatePlaneFeedWorkEventArgs(Properties.Settings.Default.Planes_PlaneFeed2));
             if ((bw_PlaneFeed3 != null) && (!bw_PlaneFeed3.IsBusy))
                 bw_PlaneFeed3.RunWorkerAsync(CreatePlaneFeedWorkEventArgs(Properties.Settings.Default.Planes_PlaneFeed3));
-                if (Properties.Settings.Default.Server_Activate)
+            
+            if (Properties.Settings.Default.Server_Activate)
             {
                 if ((bw_WinTestReceive != null) && (!bw_WinTestReceive.IsBusy))
                     bw_WinTestReceive.RunWorkerAsync();
+                WebserverStartArgs args = new WebserverStartArgs();
+                args.TmpDirectory = TmpDirectory;
+                args.WebserverDirectory = WebserverDirectory;
                 if ((bw_Webserver != null) && (!bw_Webserver.IsBusy))
-                    bw_Webserver.RunWorkerAsync(TmpDirectory);
+                    bw_Webserver.RunWorkerAsync(args);
             }
+            
             if (Properties.Settings.Default.SpecLab_Enabled)
             {
                 if ((bw_SpecLab_Receive != null) && (!bw_SpecLab_Receive.IsBusy))
                     bw_SpecLab_Receive.RunWorkerAsync();
             }
+            
             if (Properties.Settings.Default.Track_Activate)
             {
                 if ((bw_Track != null) && (!bw_Track.IsBusy))
                     bw_Track.RunWorkerAsync();
             }
+            
             if (AirScout.CAT.Properties.Settings.Default.CAT_Activate)
             {
                 CATUpdaterStartOptions startoptions = new CATUpdaterStartOptions();
@@ -2279,8 +2347,6 @@ namespace AirScout
         private void CancelAllBackgroundWorkers()
         {
             // cancel all background workers, don't wait for finish
-            if (bw_LocatorGridUpdater != null)
-                bw_LocatorGridUpdater.CancelAsync();
             if (bw_AirportMapper != null)
                 bw_AirportMapper.CancelAsync();
             if (bw_PlaneFeed1 != null)
@@ -2454,6 +2520,59 @@ namespace AirScout
                 il_Planes_S.Images.Add(CreatePlaneIcon(Color.Magenta));
                 bmindex_magenta = il_Planes_M.Images.Count - 1;
                 il_Airports.Images.Add(CreateAirportIcon(255));
+
+                // save icons to Icons directory
+                il_Planes_L.Images[bmindex_gray].Save(
+                        Path.Combine(IconDirectory, "plane_l_gray.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_M.Images[bmindex_gray].Save(
+                        Path.Combine(IconDirectory, "plane_m_gray.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_H.Images[bmindex_gray].Save(
+                        Path.Combine(IconDirectory, "plane_h_gray.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_S.Images[bmindex_gray].Save(
+                        Path.Combine(IconDirectory, "plane_s_gray.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+
+                il_Planes_L.Images[bmindex_darkorange].Save(
+                        Path.Combine(IconDirectory, "plane_l_darkorange.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_M.Images[bmindex_darkorange].Save(
+                        Path.Combine(IconDirectory, "plane_m_darkorange.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_H.Images[bmindex_darkorange].Save(
+                        Path.Combine(IconDirectory, "plane_h_darkorange.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_S.Images[bmindex_darkorange].Save(
+                        Path.Combine(IconDirectory, "plane_s_darkorange.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+
+                il_Planes_L.Images[bmindex_red].Save(
+                        Path.Combine(IconDirectory, "plane_l_red.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_M.Images[bmindex_red].Save(
+                        Path.Combine(IconDirectory, "plane_m_red.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_H.Images[bmindex_red].Save(
+                        Path.Combine(IconDirectory, "plane_h_red.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_S.Images[bmindex_red].Save(
+                        Path.Combine(IconDirectory, "plane_s_red.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+
+                il_Planes_L.Images[bmindex_magenta].Save(
+                        Path.Combine(IconDirectory, "plane_l_magenta.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_M.Images[bmindex_magenta].Save(
+                        Path.Combine(IconDirectory, "plane_m_magenta.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_H.Images[bmindex_magenta].Save(
+                        Path.Combine(IconDirectory, "plane_h_magenta.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
+                il_Planes_S.Images[bmindex_magenta].Save(
+                        Path.Combine(IconDirectory, "plane_s_magenta.png"),
+                        System.Drawing.Imaging.ImageFormat.Png);
             }
             catch (Exception ex)
             {
@@ -2736,29 +2855,36 @@ namespace AirScout
                 if (!SupportFunctions.IsMono)
                 {
                     // use Windows standard Properties.Settings.Default behavoir
-                    AirScout.PlaneFeeds.Properties.Settings.Default.Reload();
                     ScoutBase.Elevation.Properties.Settings.Default.Reload();
                     ScoutBase.Stations.Properties.Settings.Default.Reload();
                     ScoutBase.Propagation.Properties.Settings.Default.Reload();
+                    ScoutBase.CAT.Properties.Settings.Default.Reload();
                     AirScout.Aircrafts.Properties.Settings.Default.Reload();
+                    AirScout.PlaneFeeds.Properties.Settings.Default.Reload();
+                    AirScout.CAT.Properties.Settings.Default.Reload();
                     Properties.Settings.Default.Reload();
 
                     return;
                 }
 
                 // Mono hack to assure that default values were initilaized
-                AirScout.PlaneFeeds.Properties.Settings.Default.Reset();
                 ScoutBase.Elevation.Properties.Settings.Default.Reset();
                 ScoutBase.Stations.Properties.Settings.Default.Reset();
                 ScoutBase.Propagation.Properties.Settings.Default.Reset();
+                ScoutBase.CAT.Properties.Settings.Default.Reset();
                 AirScout.Aircrafts.Properties.Settings.Default.Reset();
+                AirScout.PlaneFeeds.Properties.Settings.Default.Reset();
+                AirScout.CAT.Properties.Settings.Default.Reset();
                 Properties.Settings.Default.Reset();
 
                 // Rather load settings as JSON
                 LoadSettingsFromJSON(ScoutBase.Elevation.Properties.Settings.Default);
                 LoadSettingsFromJSON(ScoutBase.Stations.Properties.Settings.Default);
                 LoadSettingsFromJSON(ScoutBase.Propagation.Properties.Settings.Default);
+                LoadSettingsFromJSON(ScoutBase.CAT.Properties.Settings.Default);
                 LoadSettingsFromJSON(AirScout.Aircrafts.Properties.Settings.Default);
+                LoadSettingsFromJSON(AirScout.PlaneFeeds.Properties.Settings.Default);
+                LoadSettingsFromJSON(AirScout.CAT.Properties.Settings.Default);
                 LoadSettingsFromJSON(Properties.Settings.Default);
 
                 Console.WriteLine("Loading user settings finished successfully.");
@@ -2791,10 +2917,12 @@ namespace AirScout
                 if (!SupportFunctions.IsMono)
                 {
                     // save all settings
+                    ScoutBase.CAT.Properties.Settings.Default.Save();
                     ScoutBase.Elevation.Properties.Settings.Default.Save();
                     ScoutBase.Stations.Properties.Settings.Default.Save();
                     ScoutBase.Propagation.Properties.Settings.Default.Save();
                     AirScout.Aircrafts.Properties.Settings.Default.Save();
+                    AirScout.CAT.Properties.Settings.Default.Save();
                     Properties.Settings.Default.Save();
 
                     return;
@@ -2803,9 +2931,11 @@ namespace AirScout
                 // Rather save settings as JSON
                 SaveSettingsToJSON(Properties.Settings.Default);
                 SaveSettingsToJSON(AirScout.Aircrafts.Properties.Settings.Default);
+                SaveSettingsToJSON(AirScout.CAT.Properties.Settings.Default);
                 SaveSettingsToJSON(ScoutBase.Propagation.Properties.Settings.Default);
                 SaveSettingsToJSON(ScoutBase.Stations.Properties.Settings.Default);
                 SaveSettingsToJSON(ScoutBase.Elevation.Properties.Settings.Default);
+                SaveSettingsToJSON(ScoutBase.CAT.Properties.Settings.Default);
 
             }
             catch (Exception ex)
@@ -2835,11 +2965,6 @@ namespace AirScout
                 Log.FlushLog();
             }
 
-            // stop tracking when in TRACK mode
-            if (TrackMode == AIRSCOUTTRACKMODE.TRACK)
-            {
-                TrackMode = AIRSCOUTTRACKMODE.NONE;
-            }
             // stop playing when in PLAY mode
             if (PlayMode != AIRSCOUTPLAYMODE.PAUSE)
                 Pause();
@@ -2877,8 +3002,14 @@ namespace AirScout
                 // save splitter positions
                 Properties.Settings.Default.MainSplitter_Distance = MainSplitterDistance;
                 Properties.Settings.Default.MapSplitter_Distance = MapSplitterDistance;
+
                 // stop tracking
+                if (ConnectedRig != null)
+                {
+                    ConnectedRig.LeaveDoppler();
+                }
                 TrackMode = AIRSCOUTTRACKMODE.NONE;
+                
             }
             catch (Exception ex)
             {
@@ -3897,170 +4028,86 @@ namespace AirScout
         private void UpdatePaths()
         {
             // updates all current path to calculate
-
-            Log.WriteMessage("UpdatePath started.");
-            Stopwatch st = new Stopwatch();
-            st.Start();
-
-            // check if there are a valid home settings
-            if (!Callsign.Check(Properties.Settings.Default.MyCall) ||
-                !GeographicalPoint.Check(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon))
-                return;
-
-            // OK valid, lets continue
-
-            // slow down background calculations
-            Properties.Settings.Default.Background_Calculations_ThreadWait = 1000;
-
-            //clear map overlays
-            gmo_PropagationPaths.Clear();
-            gmo_NearestPaths.Clear();
-            gmo_Objects.Clear();
-
-            // clear all planes and tooltips
-            gmo_Planes.Clear();
-
-            // clear paths
-            ElevationPaths.Clear();
-            PropagationPaths.Clear();
-
-            // clear charts
-            ClearCharts();
-
-            // put call on MyCalls last recent collection if not already in
-            if (Properties.Settings.Default.MyCalls.IndexOf(Properties.Settings.Default.MyCall) < 0)
+            try
             {
-                Properties.Settings.Default.MyCalls.Insert(0, Properties.Settings.Default.MyCall);
-            }
+                Log.WriteMessage("UpdatePath started.");
+                Stopwatch st = new Stopwatch();
+                st.Start();
 
-            // keep the MyCalls list small
-            while (Properties.Settings.Default.MyCalls.Count > 10)
-            {
-                Properties.Settings.Default.MyCalls.RemoveAt(Properties.Settings.Default.MyCalls.Count - 1);
-            }
-
-
-            // check and update station database
-            LocationDesignator myloc = LocationFindOrUpdateOrCreate(Properties.Settings.Default.MyCall, Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon);
-            Properties.Settings.Default.MyElevation = myloc.Elevation;
-
-            // get qrv info or create default
-            QRVDesignator myqrv = StationData.Database.QRVFindOrCreateDefault(myloc.Call, myloc.Loc, Properties.Settings.Default.Band);
-            // set qrv defaults if zero
-            if (myqrv.AntennaHeight == 0)
-                myqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(Properties.Settings.Default.Band);
-            if (myqrv.AntennaGain == 0)
-                myqrv.AntennaGain = StationData.Database.QRVGetDefaultAntennaGain(Properties.Settings.Default.Band);
-            if (myqrv.Power == 0)
-                myqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
-            // draw my end on the map
-            gmm_MyLoc = new GMarkerGoogle(new PointLatLng(myloc.Lat, myloc.Lon), ToolTipFont, ((PathMode == AIRSCOUTPATHMODE.MULTI) && Properties.Settings.Default.Map_SmallMarkers) ? GMarkerGoogleType.red_small : GMarkerGoogleType.red_dot);
-            gmm_MyLoc.ToolTipText = myloc.Call + "\n" +
-                myloc.Lat.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
-                myloc.Lon.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
-                myloc.Loc + "\n" +
-                GetElevation(myloc.Lat, myloc.Lon).ToString("F0") + "m";
-            gmm_MyLoc.ToolTipMode = MarkerTooltipMode.OnMouseOver;
-            gmm_MyLoc.Tag = myloc.Call;
-            gmo_Objects.Markers.Add(gmm_MyLoc);
-
-            // do single path mode
-            if (PathMode == AIRSCOUTPATHMODE.SINGLE)
-            {
-                // check if there are a valid DX settings
-                if (!Callsign.Check(Properties.Settings.Default.DXCall) ||
-                    !GeographicalPoint.Check(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon))
+                // check if there are a valid home settings
+                if (!Callsign.Check(Properties.Settings.Default.MyCall) ||
+                    !GeographicalPoint.Check(Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon))
                     return;
 
                 // OK valid, lets continue
+
+                // slow down background calculations
+                Properties.Settings.Default.Background_Calculations_ThreadWait = 1000;
+
+                //clear map overlays
+                gmo_PropagationPaths.Clear();
+                gmo_NearestPaths.Clear();
+                gmo_Objects.Clear();
+
+                // clear all planes and tooltips
+                gmo_Planes.Clear();
+
+                // clear paths
+                ElevationPaths.Clear();
+                PropagationPaths.Clear();
+
+                // clear charts
+                ClearCharts();
+
+                // put call on MyCalls last recent collection if not already in
+                if (Properties.Settings.Default.MyCalls.IndexOf(Properties.Settings.Default.MyCall) < 0)
+                {
+                    Properties.Settings.Default.MyCalls.Insert(0, Properties.Settings.Default.MyCall);
+                }
+
+                // keep the MyCalls list small
+                while (Properties.Settings.Default.MyCalls.Count > 10)
+                {
+                    Properties.Settings.Default.MyCalls.RemoveAt(Properties.Settings.Default.MyCalls.Count - 1);
+                }
+
+
                 // check and update station database
-                LocationDesignator dxloc = LocationFindOrUpdateOrCreate(Properties.Settings.Default.DXCall, Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon);
-                Properties.Settings.Default.DXElevation = dxloc.Elevation;
+                LocationDesignator myloc = LocationFindOrUpdateOrCreate(Properties.Settings.Default.MyCall, Properties.Settings.Default.MyLat, Properties.Settings.Default.MyLon);
+                Properties.Settings.Default.MyElevation = myloc.Elevation;
 
                 // get qrv info or create default
-                QRVDesignator dxqrv = StationData.Database.QRVFindOrCreateDefault(dxloc.Call, dxloc.Loc, Properties.Settings.Default.Band);
+                QRVDesignator myqrv = StationData.Database.QRVFindOrCreateDefault(myloc.Call, myloc.Loc, Properties.Settings.Default.Band);
                 // set qrv defaults if zero
-                if (dxqrv.AntennaHeight == 0)
-                    dxqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(Properties.Settings.Default.Band);
-                if (dxqrv.AntennaGain == 0)
-                    dxqrv.AntennaGain = StationData.Database.QRVGetDefaultAntennaGain(Properties.Settings.Default.Band);
-                if (dxqrv.Power == 0)
-                    dxqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
+                if (myqrv.AntennaHeight == 0)
+                    myqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(Properties.Settings.Default.Band);
+                if (myqrv.AntennaGain == 0)
+                    myqrv.AntennaGain = StationData.Database.QRVGetDefaultAntennaGain(Properties.Settings.Default.Band);
+                if (myqrv.Power == 0)
+                    myqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
+                // draw my end on the map
+                gmm_MyLoc = new GMarkerGoogle(new PointLatLng(myloc.Lat, myloc.Lon), ToolTipFont, ((PathMode == AIRSCOUTPATHMODE.MULTI) && Properties.Settings.Default.Map_SmallMarkers) ? GMarkerGoogleType.red_small : GMarkerGoogleType.red_dot);
+                gmm_MyLoc.ToolTipText = myloc.Call + "\n" +
+                    myloc.Lat.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
+                    myloc.Lon.ToString("F8", CultureInfo.InvariantCulture) + "\n" +
+                    myloc.Loc + "\n" +
+                    GetElevation(myloc.Lat, myloc.Lon).ToString("F0") + "m";
+                gmm_MyLoc.ToolTipMode = MarkerTooltipMode.OnMouseOver;
+                gmm_MyLoc.Tag = myloc.Call;
+                gmo_Objects.Markers.Add(gmm_MyLoc);
 
-                // find local obstruction, if any
-                LocalObstructionDesignator o = ElevationData.Database.LocalObstructionFind(myloc.Lat, myloc.Lon, Properties.Settings.Default.ElevationModel);
-                double mybearing = LatLon.Bearing(myloc.Lat, myloc.Lon, dxloc.Lat, dxloc.Lon);
-                double myobstr = (o != null) ? o.GetObstruction(myqrv.AntennaHeight, mybearing) : double.MinValue;
-
-                // try to find elevation path in database or create new one and store
-                ElevationPathDesignator epath = ElevationData.Database.ElevationPathFindOrCreateFromLatLon(
-                    null,
-                    myloc.Lat,
-                    myloc.Lon,
-                    dxloc.Lat,
-                    dxloc.Lon,
-                    ElevationData.Database.GetDefaultStepWidth(Properties.Settings.Default.ElevationModel),
-                    Properties.Settings.Default.ElevationModel);
-                // add additional info to ppath
-                epath.Location1 = myloc;
-                epath.Location2 = dxloc;
-                epath.QRV1 = myqrv;
-                epath.QRV2 = dxqrv;
-
-                // try to find propagation path in database or create new one and store
-                PropagationPathDesignator ppath = PropagationData.Database.PropagationPathFindOrCreateFromLatLon(
-                    null,
-                    myloc.Lat,
-                    myloc.Lon,
-                    GetElevation(myloc.Lat, myloc.Lon) + myqrv.AntennaHeight,
-                    dxloc.Lat,
-                    dxloc.Lon,
-                    GetElevation(dxloc.Lat, dxloc.Lon) + dxqrv.AntennaHeight,
-                    Bands.ToGHz(Properties.Settings.Default.Band),
-                    LatLon.Earth.Radius * Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].K_Factor,
-                    Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].F1_Clearance,
-                    ElevationData.Database.GetDefaultStepWidth(Properties.Settings.Default.ElevationModel),
-                    Properties.Settings.Default.ElevationModel,
-                    myobstr);
-
-                // add additional info to ppath
-                ppath.Location1 = myloc;
-                ppath.Location2 = dxloc;
-                ppath.QRV1 = myqrv;
-                ppath.QRV2 = dxqrv;
-
-                // add single path to paths list
-                ElevationPaths.Add(epath);
-                PropagationPaths.Add(ppath);
-                // put DXCall on the watchlist if not already in
-                if (Properties.Settings.Default.Watchlist.IndexOf(Properties.Settings.Default.DXCall, MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3)) < 0)
+                // do single path mode
+                if (PathMode == AIRSCOUTPATHMODE.SINGLE)
                 {
-                    Properties.Settings.Default.Watchlist.Insert(0, new WatchlistItem(Properties.Settings.Default.DXCall, MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3), ppath.Distance > Properties.Settings.Default.Path_MaxLength));
-                }
-                // keep the watchlist small
-                while (Properties.Settings.Default.Watchlist.Count() > Properties.Settings.Default.Watchlist_MaxCount)
-                {
-                    Properties.Settings.Default.Watchlist.RemoveAt(Properties.Settings.Default.Watchlist.Count() - 1);
-                }
+                    // check if there are a valid DX settings
+                    if (!Callsign.Check(Properties.Settings.Default.DXCall) ||
+                        !GeographicalPoint.Check(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon))
+                        return;
 
-            }
-            else if (PathMode == AIRSCOUTPATHMODE.MULTI)
-            {
-                // iterate through watchlist and add selected
-                foreach (ListViewItem item in lv_Control_Watchlist.Items)
-                {
-                    // use only selected items
-                    if (!item.Checked)
-                        continue;
-                    string call = item.Text;
-                    string loc = item.SubItems[1].Text;
-
-                    // check if call & loc are valid
-                    if (!Callsign.Check(call) || !MaidenheadLocator.Check(loc))
-                        continue;
-
+                    // OK valid, lets continue
                     // check and update station database
-                    LocationDesignator dxloc = LocationFindOrCreate(call, loc);
+                    LocationDesignator dxloc = LocationFindOrUpdateOrCreate(Properties.Settings.Default.DXCall, Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon);
+                    Properties.Settings.Default.DXElevation = dxloc.Elevation;
 
                     // get qrv info or create default
                     QRVDesignator dxqrv = StationData.Database.QRVFindOrCreateDefault(dxloc.Call, dxloc.Loc, Properties.Settings.Default.Band);
@@ -4086,6 +4133,12 @@ namespace AirScout
                         dxloc.Lon,
                         ElevationData.Database.GetDefaultStepWidth(Properties.Settings.Default.ElevationModel),
                         Properties.Settings.Default.ElevationModel);
+                    // add additional info to ppath
+                    epath.Location1 = myloc;
+                    epath.Location2 = dxloc;
+                    epath.QRV1 = myqrv;
+                    epath.QRV2 = dxqrv;
+
                     // try to find propagation path in database or create new one and store
                     PropagationPathDesignator ppath = PropagationData.Database.PropagationPathFindOrCreateFromLatLon(
                         null,
@@ -4101,74 +4154,159 @@ namespace AirScout
                         ElevationData.Database.GetDefaultStepWidth(Properties.Settings.Default.ElevationModel),
                         Properties.Settings.Default.ElevationModel,
                         myobstr);
+
                     // add additional info to ppath
                     ppath.Location1 = myloc;
                     ppath.Location2 = dxloc;
                     ppath.QRV1 = myqrv;
                     ppath.QRV2 = dxqrv;
-                    // add path to paths list
 
+                    // add single path to paths list
                     ElevationPaths.Add(epath);
                     PropagationPaths.Add(ppath);
+                    // put DXCall on the watchlist if not already in
+                    if (Properties.Settings.Default.Watchlist.IndexOf(Properties.Settings.Default.DXCall, MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3)) < 0)
+                    {
+                        Properties.Settings.Default.Watchlist.Insert(0, new WatchlistItem(Properties.Settings.Default.DXCall, MaidenheadLocator.LocFromLatLon(Properties.Settings.Default.DXLat, Properties.Settings.Default.DXLon, false, 3), ppath.Distance > Properties.Settings.Default.Path_MaxLength));
+                    }
+                    // keep the watchlist small
+                    while (Properties.Settings.Default.Watchlist.Count() > Properties.Settings.Default.Watchlist_MaxCount)
+                    {
+                        Properties.Settings.Default.Watchlist.RemoveAt(Properties.Settings.Default.Watchlist.Count() - 1);
+                    }
+
                 }
+                else if (PathMode == AIRSCOUTPATHMODE.MULTI)
+                {
+                    // iterate through watchlist and add selected
+                    foreach (ListViewItem item in lv_Control_Watchlist.Items)
+                    {
+                        // use only selected items
+                        if (!item.Checked)
+                            continue;
+                        string call = item.Text;
+                        string loc = item.SubItems[1].Text;
+
+                        // check if call & loc are valid
+                        if (!Callsign.Check(call) || !MaidenheadLocator.Check(loc))
+                            continue;
+
+                        // check and update station database
+                        LocationDesignator dxloc = LocationFindOrCreate(call, loc);
+
+                        // get qrv info or create default
+                        QRVDesignator dxqrv = StationData.Database.QRVFindOrCreateDefault(dxloc.Call, dxloc.Loc, Properties.Settings.Default.Band);
+                        // set qrv defaults if zero
+                        if (dxqrv.AntennaHeight == 0)
+                            dxqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(Properties.Settings.Default.Band);
+                        if (dxqrv.AntennaGain == 0)
+                            dxqrv.AntennaGain = StationData.Database.QRVGetDefaultAntennaGain(Properties.Settings.Default.Band);
+                        if (dxqrv.Power == 0)
+                            dxqrv.Power = StationData.Database.QRVGetDefaultPower(Properties.Settings.Default.Band);
+
+                        // find local obstruction, if any
+                        LocalObstructionDesignator o = ElevationData.Database.LocalObstructionFind(myloc.Lat, myloc.Lon, Properties.Settings.Default.ElevationModel);
+                        double mybearing = LatLon.Bearing(myloc.Lat, myloc.Lon, dxloc.Lat, dxloc.Lon);
+                        double myobstr = (o != null) ? o.GetObstruction(myqrv.AntennaHeight, mybearing) : double.MinValue;
+
+                        // try to find elevation path in database or create new one and store
+                        ElevationPathDesignator epath = ElevationData.Database.ElevationPathFindOrCreateFromLatLon(
+                            null,
+                            myloc.Lat,
+                            myloc.Lon,
+                            dxloc.Lat,
+                            dxloc.Lon,
+                            ElevationData.Database.GetDefaultStepWidth(Properties.Settings.Default.ElevationModel),
+                            Properties.Settings.Default.ElevationModel);
+                        // try to find propagation path in database or create new one and store
+                        PropagationPathDesignator ppath = PropagationData.Database.PropagationPathFindOrCreateFromLatLon(
+                            null,
+                            myloc.Lat,
+                            myloc.Lon,
+                            GetElevation(myloc.Lat, myloc.Lon) + myqrv.AntennaHeight,
+                            dxloc.Lat,
+                            dxloc.Lon,
+                            GetElevation(dxloc.Lat, dxloc.Lon) + dxqrv.AntennaHeight,
+                            Bands.ToGHz(Properties.Settings.Default.Band),
+                            LatLon.Earth.Radius * Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].K_Factor,
+                            Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].F1_Clearance,
+                            ElevationData.Database.GetDefaultStepWidth(Properties.Settings.Default.ElevationModel),
+                            Properties.Settings.Default.ElevationModel,
+                            myobstr);
+                        // add additional info to ppath
+                        ppath.Location1 = myloc;
+                        ppath.Location2 = dxloc;
+                        ppath.QRV1 = myqrv;
+                        ppath.QRV2 = dxqrv;
+                        // add path to paths list
+
+                        ElevationPaths.Add(epath);
+                        PropagationPaths.Add(ppath);
+                    }
+                }
+
+                // calculate the area to show in map
+                // initially set to my location
+                double minlat = myloc.Lat;
+                double minlon = myloc.Lon;
+                double maxlat = myloc.Lat;
+                double maxlon = myloc.Lon;
+
+                double centerlat = myloc.Lat;
+                double centerlon = myloc.Lon;
+
+                // now do the drawing
+                foreach (PropagationPathDesignator ppath in PropagationPaths)
+                {
+                    DrawPath(ppath);
+
+                    // maintain Min/Max values
+                    minlat = Math.Min(minlat, ppath.Lat2);
+                    minlon = Math.Min(minlon, ppath.Lon2);
+                    maxlat = Math.Max(maxlat, ppath.Lat2);
+                    maxlon = Math.Max(maxlon, ppath.Lon2);
+                }
+
+                // show diagram when in SINGLE mode
+                if (PathMode == AIRSCOUTPATHMODE.SINGLE)
+                {
+                    // both Elevationpaths & PropagationPaths should contain only one entry
+                    if ((ElevationPaths.Count > 0) && (PropagationPaths.Count > 0))
+                        UpdateCharts(ElevationPaths[ElevationPaths.Count - 1], PropagationPaths[PropagationPaths.Count - 1]);
+                }
+
+                // calculate center
+                centerlat = LatLon.MidPoint(minlat, minlon, maxlat, maxlon).Lat;
+                centerlon = LatLon.MidPoint(minlat, minlon, maxlat, maxlon).Lon;
+
+                // ensure that whole path is visible and optionally centered
+                gm_Main.SetZoomToFitRect(RectLatLng.FromLTRB(minlon, maxlat, maxlon, minlat));
+                if (Properties.Settings.Default.Map_AutoCenter)
+                    gm_Main.Position = new PointLatLng(centerlat, centerlon);
+
+                // clear all selections
+                SelectedPlanes.Clear();
+
+                // update watchlist locations in map
+                UpdateWatchlistInMap();
+
+                // update status window
+                UpdateStatus();
+
+                // stop tracking
+                //TrackMode = AIRSCOUTTRACKMODE.NONE;
+
+                // speed up background calculations
+                Properties.Settings.Default.Background_Calculations_ThreadWait = 0;
+
+                st.Stop();
+                Log.WriteMessage("UpdatePath finished, " + st.ElapsedMilliseconds.ToString() + "ms.");
             }
-
-            // calculate the area to show in map
-            // initially set to my location
-            double minlat = myloc.Lat;
-            double minlon = myloc.Lon;
-            double maxlat = myloc.Lat;
-            double maxlon = myloc.Lon;
-
-            double centerlat = myloc.Lat;
-            double centerlon = myloc.Lon;
-
-            // now do the drawing
-            foreach (PropagationPathDesignator ppath in PropagationPaths)
+            catch (Exception ex)
             {
-                DrawPath(ppath);
-
-                // maintain Min/Max values
-                minlat = Math.Min(minlat, ppath.Lat2);
-                minlon = Math.Min(minlon, ppath.Lon2);
-                maxlat = Math.Max(maxlat, ppath.Lat2);
-                maxlon = Math.Max(maxlon, ppath.Lon2);
+                Say("Error while updating path: " + ex.Message);
+                Log.WriteMessage("Error while updating path: " + ex.ToString());
             }
-
-            // show diagram when in SINGLE mode
-            if (PathMode == AIRSCOUTPATHMODE.SINGLE)
-            {
-                // both Elevationpaths & PropagationPaths should contain only one entry
-                if ((ElevationPaths.Count > 0) && (PropagationPaths.Count > 0))
-                    UpdateCharts(ElevationPaths[ElevationPaths.Count - 1], PropagationPaths[PropagationPaths.Count - 1]);
-            }
-
-            // calculate center
-            centerlat = LatLon.MidPoint(minlat, minlon, maxlat, maxlon).Lat;
-            centerlon = LatLon.MidPoint(minlat, minlon, maxlat, maxlon).Lon;
-
-            // ensure that whole path is visible and optionally centered
-            gm_Main.SetZoomToFitRect(RectLatLng.FromLTRB(minlon, maxlat, maxlon, minlat));
-            if (Properties.Settings.Default.Map_AutoCenter)
-                gm_Main.Position = new PointLatLng(centerlat, centerlon);
-
-            // clear all selections
-            SelectedPlanes.Clear();
-
-            // update watchlist locations in map
-            UpdateWatchlistInMap();
-
-            // update status window
-            UpdateStatus();
-
-            // stop tracking
-            //TrackMode = AIRSCOUTTRACKMODE.NONE;
-
-            // speed up background calculations
-            Properties.Settings.Default.Background_Calculations_ThreadWait = 0;
-
-            st.Stop();
-            Log.WriteMessage("UpdatePath finished, " + st.ElapsedMilliseconds.ToString() + "ms.");
         }
 
         #endregion
@@ -4359,7 +4497,7 @@ namespace AirScout
                 bm = new Bitmap(il_Planes_L.Images[bmindex]);
             else
                 bm = new Bitmap(il_Planes_M.Images[bmindex]);
-            GMarkerGoogle m = new GMarkerGoogle(new PointLatLng(info.Lat, info.Lon), ToolTipFont, RotateImageByAngle(bm, (float)info.Track));
+            GMarkerGoogle m = new GMarkerGoogle(new PointLatLng(info.Lat, info.Lon), ToolTipFont, RotateImageByAngle(bm, ((info.Track >= 0) && (info.Track <= 360))? (float)info.Track : 0));
             m.Tag = info.Hex;
             string lat = "";
             if (info.Lat >= 0)
@@ -4429,7 +4567,7 @@ namespace AirScout
                 bm = new Bitmap(il_Planes_L.Images[bmindex]);
             else
                 bm = new Bitmap(il_Planes_M.Images[bmindex]);
-            GMarkerGoogle m = new GMarkerGoogle(new PointLatLng(info.Lat, info.Lon), ToolTipFont, RotateImageByAngle(bm, (float)info.Track));
+            GMarkerGoogle m = new GMarkerGoogle(new PointLatLng(info.Lat, info.Lon), ToolTipFont, RotateImageByAngle(bm, ((info.Track >= 0) && (info.Track <= 360)) ? (float)info.Track : 0));
             m.Tag = info.Hex;
             string lat = "";
             if (info.Lat >= 0)
@@ -5264,17 +5402,10 @@ namespace AirScout
         private void gm_Main_OnTileLoadComplete(long ElapsedMilliseconds)
         {
             // use thread safe call here!
-            /*
-            // use a backgroundworker to pump a message into the main window's message loop
-            while (bw_LocatorGridUpdater.IsBusy)
+            this.BeginInvoke((Action)delegate ()
             {
-                // wait until last run is finished
-                Application.DoEvents();
-            }
-            bw_LocatorGridUpdater.RunWorkerAsync();
-            */
-
-            UpdateLocationGrid = true;
+                InitializeLocators();
+            });
         }
 
         #endregion
@@ -7427,6 +7558,10 @@ namespace AirScout
             msg = new wtMessage(WTMESSAGES.SETELEVATION, Properties.Settings.Default.Server_Name, "", "AUTO", " 00 " + el.ToString("000"));
             bytes = msg.ToBytes();
             client.Send(bytes, bytes.Length, ip);
+            // new: high precision az/el
+            msg = new wtMessage(WTMESSAGES.SETAZEL, Properties.Settings.Default.Server_Name, "", "AUTO", " 00 " + az.ToString("F8", CultureInfo.InvariantCulture) + " " + el.ToString("F8", CultureInfo.InvariantCulture));
+            bytes = msg.ToBytes();
+            client.Send(bytes, bytes.Length, ip);
             return true;
         }
 
@@ -7642,7 +7777,7 @@ namespace AirScout
                                                             H,
                                                             LatLon.Earth.Radius * Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].K_Factor);
                                     trackvalues.DXElevation = Propagation.EpsilonFromHeights(dxh,
-                                                                trackvalues.MyDistance,
+                                                                trackvalues.DXDistance,
                                                                 H,
                                                                 LatLon.Earth.Radius * Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].K_Factor)
                                                                 / Math.PI * 180;
@@ -8092,26 +8227,30 @@ namespace AirScout
             int interval = Properties.Settings.Default.News_Interval;
             while (!bw_NewsFeed.CancellationPending)
             {
-                try
+                if (Properties.Settings.Default.NewsFeed_Enabled)
                 {
-                    // get the last modified time of the website
-                    AutoDecompressionWebClient cl = new AutoDecompressionWebClient();
-                    DateTime dt = cl.GetWebCreationTimeUtc(Properties.Settings.Default.News_URL);
-                    Log.WriteMessage("Checking news page: " + dt.ToString("yyyy-MM-dd HH:mm:ss") + "<> " + Properties.Settings.Default.News_LastUpdate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    Console.WriteLine("Checking news page: " + dt.ToString("yyyy-MM-dd HH:mm:ss") + "<> " + Properties.Settings.Default.News_LastUpdate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    // report latest news if updated
-                    if (dt > Properties.Settings.Default.News_LastUpdate)
+                    try
                     {
-                        // report news to main window
-                        bw_NewsFeed.ReportProgress(1, dt);
+                        // get the last modified time of the website
+                        AutoDecompressionWebClient cl = new AutoDecompressionWebClient();
+                        DateTime dt = cl.GetWebCreationTimeUtc(Properties.Settings.Default.News_URL);
+                        Log.WriteMessage("Checking news page: " + dt.ToString("yyyy-MM-dd HH:mm:ss") + "<> " + Properties.Settings.Default.News_LastUpdate.ToString("yyyy-MM-dd HH:mm:ss"));
+                        Console.WriteLine("Checking news page: " + dt.ToString("yyyy-MM-dd HH:mm:ss") + "<> " + Properties.Settings.Default.News_LastUpdate.ToString("yyyy-MM-dd HH:mm:ss"));
+                        // report latest news if updated
+                        if (dt > Properties.Settings.Default.News_LastUpdate)
+                        {
+                            // report news to main window
+                            bw_NewsFeed.ReportProgress(1, dt);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // report error
+                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                        bw_NewsFeed.ReportProgress(-1, DateTime.UtcNow.ToString("[" + "HH:mm:ss") + "] Error while reading the website " + uri.ToString() + ": " + ex.Message);
                     }
                 }
-                catch (Exception ex)
-                {
-                    // report error
-                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
-                    bw_NewsFeed.ReportProgress(-1, DateTime.UtcNow.ToString("[" + "HH:mm:ss") + "] Error while reading the website " + uri.ToString() + ": " + ex.Message);
-                }
+
                 int i = 0;
                 while (!bw_NewsFeed.CancellationPending && (i < interval))
                 {
@@ -8132,7 +8271,12 @@ namespace AirScout
             else
             {
                 // stop background thread
-                bw_NewsFeed.CancelAsync();
+                while (bw_NewsFeed.IsBusy)
+                {
+                    bw_NewsFeed.CancelAsync();
+                    Application.DoEvents();
+                }
+
                 // report website changes
                 DateTime dt = (DateTime)e.UserState;
                 if (!SupportFunctions.IsMono)
@@ -8160,8 +8304,10 @@ namespace AirScout
                     Properties.Settings.Default.News_LastUpdate = dt;
 
                 }
+
                 // restart background thread
-                bw_NewsFeed.RunWorkerAsync();
+                if (!bw_NewsFeed.IsBusy)
+                    bw_NewsFeed.RunWorkerAsync();
             }
         }
 
@@ -8724,9 +8870,45 @@ namespace AirScout
 
         private void bw_CATUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage <= 0)
+            try
             {
-                Say((string)e.UserState);
+                if (e.ProgressPercentage < 0)
+                {
+                    // error message received
+                    string msg = (string)e.UserState;
+                    Log.WriteMessage(msg, LogLevel.Error);
+                }
+                else if (e.ProgressPercentage == 0)
+                {
+                    // status message received
+                    string msg = (string)e.UserState;
+                    Log.WriteMessage(msg);
+                    // redirect output to splash screen on first run
+                    if (FirstRun && SplashDlg != null)
+                        Splash("Preparing database for first run: " + msg + " (please wait)", Color.Yellow);
+                    else
+                    {
+                        SayDatabase(msg);
+                    }
+                }
+                else if (e.ProgressPercentage == 1)
+                {
+                    Properties.Settings.Default.RigDatabase_Status = (DATABASESTATUS)e.UserState;
+                    Color color = DatabaseStatus.GetDatabaseStatusColor(Properties.Settings.Default.RigDatabase_Status);
+                    if (tsl_Database_LED_Rig.BackColor != color)
+                    {
+                        tsl_Database_LED_Rig.BackColor = color;
+                    }
+                    string text = "Rig Database Status\n\n" + DatabaseStatus.GetDatabaseStatusText(Properties.Settings.Default.RigDatabase_Status);
+                    if (tsl_Database_LED_Rig.ToolTipText != text)
+                        tsl_Database_LED_Rig.ToolTipText = text;
+                }
+                if (!this.Disposing && (ss_Main != null))
+                    ss_Main.Update();
+            }
+            catch (Exception ex)
+            {
+                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
         }
 
@@ -8737,73 +8919,80 @@ namespace AirScout
 
         private void bw_CAT_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage <= 0)
+            try
             {
-                Say((string)e.UserState);
-            }
-            else if (e.ProgressPercentage == 1)
-            {
-                // new rig status received
-                RIGSTATUS status = (RIGSTATUS)e.UserState;
-                switch (status)
+                if (e.ProgressPercentage <= 0)
                 {
-                    case RIGSTATUS.ONLINE:
-                        SayCAT("CAT", Color.White, Color.DarkGreen);
-                        break;
-                    case RIGSTATUS.ERROR:
-                    case RIGSTATUS.NOCAT:
-                    case RIGSTATUS.NOPORT:
-                    case RIGSTATUS.NORIG:
-                    case RIGSTATUS.NOTSUITABLE:
-                        SayCAT("CAT", Color.Yellow, Color.Red);
-                        break;
-                    case RIGSTATUS.OFFLINE:
-                        SayCAT("CAT", Color.White, Color.DarkOrange);
-                        break;
-                    default:
-                        SayCAT("CAT", Color.DarkGray, SystemColors.Control);
-                        break;
+                    Say((string)e.UserState);
                 }
-
-                RigStatus = status;
-            }
-            else if (e.ProgressPercentage == 2)
-            {
-                // new rig info received
-                IRig rig = (IRig)e.UserState;
-
-                // save info if a valid tracking is not going on
-                if (TrackStatus != TRACKSTATUS.TRACKING)
+                else if (e.ProgressPercentage == 1)
                 {
-                    if (rig != null)
+                    // new rig status received
+                    RIGSTATUS status = (RIGSTATUS)e.UserState;
+                    switch (status)
                     {
-                        ConnectedRig = rig;
-                        // save latest rig settings to switch back after tracking
-                        Properties.Settings.Default.Doppler_DialFreq = rig.GetRxFrequency();
-                        Properties.Settings.Default.Doppler_DialMode = rig.GetMode();
-                        Properties.Settings.Default.Doppler_DialSplit = rig.GetSplit();
-                        Properties.Settings.Default.Doppler_DialRit = rig.GetRit();
+                        case RIGSTATUS.ONLINE:
+                            SayCAT("CAT", Color.White, Color.DarkGreen);
+                            break;
+                        case RIGSTATUS.ERROR:
+                        case RIGSTATUS.NOCAT:
+                        case RIGSTATUS.NOPORT:
+                        case RIGSTATUS.NORIG:
+                        case RIGSTATUS.NOTSUITABLE:
+                            SayCAT("CAT", Color.Yellow, Color.Red);
+                            break;
+                        case RIGSTATUS.OFFLINE:
+                            SayCAT("CAT", Color.White, Color.DarkOrange);
+                            break;
+                        default:
+                            SayCAT("CAT", Color.DarkGray, SystemColors.Control);
+                            break;
                     }
+
+                    RigStatus = status;
+                }
+                else if (e.ProgressPercentage == 2)
+                {
+                    // new rig info received
+                    IRig rig = (IRig)e.UserState;
+
+                    // save info if a valid tracking is not going on
+                    if (TrackStatus != TRACKSTATUS.TRACKING)
+                    {
+                        if (rig != null)
+                        {
+                            ConnectedRig = rig;
+                            // save latest rig settings to switch back after tracking
+                            Properties.Settings.Default.Doppler_DialFreq = rig.GetRxFrequency();
+                            Properties.Settings.Default.Doppler_DialMode = rig.GetMode();
+                            Properties.Settings.Default.Doppler_DialSplit = rig.GetSplit();
+                            Properties.Settings.Default.Doppler_DialRit = rig.GetRit();
+                        }
+                    }
+
+                    // report to status bar
+                    NumberFormatInfo info = new NumberFormatInfo();
+                    info.NumberDecimalSeparator = ";";
+                    info.NumberGroupSeparator = ".";
+                    Say("Rig reports RX: " + rig.GetRxFrequency().ToString(info) + ", TX: " + rig.GetTxFrequency().ToString(info) + "Hz, Mode: " + rig.GetMode().ToString() + ", RIT: " + ((rig.GetRit() == RIGRIT.RITON) ? "ON" : "OFF") + ", Split: " + ((rig.GetSplit() == RIGSPLIT.SPLITON) ? "ON" : "OFF"));
                 }
 
-                // report to status bar
-                NumberFormatInfo info = new NumberFormatInfo();
-                info.NumberDecimalSeparator = ";";
-                info.NumberGroupSeparator = ".";
-                Say("Rig reports RX: " + rig.GetRxFrequency().ToString(info) + ", TX: " + rig.GetTxFrequency().ToString(info) + "Hz, Mode: " + rig.GetMode().ToString() + ", RIT: " + ((rig.GetRit() == RIGRIT.RITON) ? "ON" : "OFF") +", Split: " + ((rig.GetSplit() == RIGSPLIT.SPLITON)? "ON" : "OFF"));
+                // set Tooltip
+                if (ConnectedRig != null)
+                {
+                    tsl_CAT.ToolTipText = ConnectedRig.CatVersion + "\n" + ConnectedRig.Settings.Type + "\n\n";
+                }
+                else
+                {
+                    tsl_CAT.ToolTipText = "CAT error!" + "\n\n";
+                }
+                tsl_CAT.ToolTipText = tsl_CAT.ToolTipText + RigStatus.ToString();
             }
-
-            // set Tooltip
-            if (ConnectedRig != null)
+            catch (Exception ex)
             {
-                tsl_CAT.ToolTipText = ConnectedRig.CatVersion + "\n" + ConnectedRig.Settings.Type + "\n\n";
+                RigStatus = RIGSTATUS.ERROR;
+                tsl_CAT.ToolTipText = "CAT error: " + ex.Message;
             }
-            else
-            {
-                tsl_CAT.ToolTipText = "CAT error!" + "\n\n";
-            }
-            tsl_CAT.ToolTipText = tsl_CAT.ToolTipText + RigStatus.ToString();
-
         }
 
 
@@ -9249,22 +9438,6 @@ namespace AirScout
             // cancel tab change when in PLAY mode
             if (PlayMode == AIRSCOUTPLAYMODE.FORWARD)
                 e.Cancel = true;
-        }
-
-        private void bw_LocatorGridUpdater_DoWork(object sender, DoWorkEventArgs e)
-        {
-            // do almost nothing
-        }
-
-        private void bw_LocatorGridUpdater_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            // do almost nothing
-
-        }
-
-        private void bw_LocatorGridUpdater_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            InitializeLocators();
         }
     }
 

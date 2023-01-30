@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using ScoutBase.Core;
+using System.Data.SQLite;
+
 
 namespace ScoutBase.CAT
 {
@@ -138,28 +140,32 @@ namespace ScoutBase.CAT
                     if ((StartOptions.Options == BACKGROUNDUPDATERSTARTOPTIONS.RUNONCE) || (StartOptions.Options == BACKGROUNDUPDATERSTARTOPTIONS.RUNPERIODICALLY))
                     {
                         // reset database status
+                        this.ReportProgress(1, System.Data.SQLite.DATABASESTATUS.UNDEFINED);
                         Stopwatch st = new Stopwatch();
                         st.Start();
                         // clear temporary files
                         try
                         {
-                            SupportFunctions.DeleteFilesFromDirectory(TmpDirectory, new string[] { "*" + FileExtension, "*.PendingOverwrite" });
+                            SupportFunctions.DeleteFilesFromDirectory(TmpDirectory, new string[] { "*.tmp", "*.PendingOverwrite" });
                         }
                         catch (Exception ex)
                         {
                             this.ReportProgress(-1, ex.ToString());
                         }
                         // update rig database
+                        this.ReportProgress(1, System.Data.SQLite.DATABASESTATUS.UPDATING);
                         this.ReportProgress(0, "Updating rig definitions from web database...");
                         // get update from url
                         if (ReadRigsFromURL(Properties.Settings.Default.Rigs_UpdateURL + "rigs.zip", Path.Combine(TmpDirectory, "rigs.zip")))
                         {
                             st.Stop();
+                            this.ReportProgress(1, System.Data.SQLite.DATABASESTATUS.UPTODATE);
                             this.ReportProgress(0, " Rig database update completed: " + st.Elapsed.ToString(@"hh\:mm\:ss"));
                         }
                         else
                         {
                             st.Stop();
+                            this.ReportProgress(1, System.Data.SQLite.DATABASESTATUS.ERROR);
                             this.ReportProgress(0, " Rig database update completed with errors: " + st.Elapsed.ToString(@"hh\:mm\:ss"));
                         }
 

@@ -298,6 +298,16 @@ namespace AirScout.Aircrafts
                         this.ReportProgress(1, AircraftData.Database.GetDBStatus());
                         Stopwatch st = new Stopwatch();
                         st.Start();
+                        // clear temporary files
+                        try
+                        {
+                            SupportFunctions.DeleteFilesFromDirectory(TmpDirectory, new string[] { "*.tmp", "*.PendingOverwrite" });
+                        }
+                        catch (Exception ex)
+                        {
+                            this.ReportProgress(-1, ex.ToString());
+                        }
+                        // set database status to updating
                         AircraftData.Database.SetDBStatus(DATABASESTATUS.UPDATING);
                         this.ReportProgress(1, AircraftData.Database.GetDBStatus());
                         // update aircraft database

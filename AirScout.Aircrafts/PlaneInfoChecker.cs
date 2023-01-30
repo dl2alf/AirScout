@@ -77,13 +77,15 @@ namespace AirScout.Aircrafts
             reg = reg.Replace("\"", String.Empty).ToUpper().Trim();
             if (reg.Length < AircraftData.Database.AircraftRegistrationMinLength + 1)
                 return false;
-            if (!reg.Contains('-') && !reg.StartsWith("N"))
+            if (!reg.Contains('-') && !reg.StartsWith("N") && !reg.StartsWith("H"))
                 return false;
             return true;
         }
 
         public static bool Check_Lat(double lat)
         {
+            if (double.IsNaN(lat))
+                return false;
             if (lat < -90)
                 return false;
             if (lat > 90)
@@ -93,6 +95,8 @@ namespace AirScout.Aircrafts
 
         public static bool Check_Lon(double lon)
         {
+            if (double.IsNaN(lon))
+                return false;
             if (lon < -180)
                 return false;
             if (lon > 180)
@@ -102,6 +106,8 @@ namespace AirScout.Aircrafts
 
         public static bool Check_Alt(double alt)
         {
+            if (double.IsNaN(alt))
+                return false;
             if (alt < 0)
                 return false;
             if (alt > 100000.0)
@@ -111,6 +117,8 @@ namespace AirScout.Aircrafts
 
         public static bool Check_Track(double track)
         {
+            if (double.IsNaN(track))
+                return false;
             if (track < 0)
                 return false;
             if (track >= 360)
@@ -121,6 +129,8 @@ namespace AirScout.Aircrafts
 
         public static bool Check_Speed(double speed)
         {
+            if (double.IsNaN(speed))
+                return false;
             if (speed < 0)
                 return false;
             if (speed > 800)

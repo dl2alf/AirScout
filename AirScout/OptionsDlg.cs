@@ -2732,6 +2732,11 @@ namespace AirScout
             // get a list of supported rigs and add them to combo box
             List<SupportedRig> rigs = CATWorker.SupportedRigs();
             cb_Options_CAT_Rig.Items.Clear();
+            // add a [None] rig
+            SupportedRig none = new SupportedRig();
+            none.Model = "[None]";
+            none.Type = "[None]";
+            cb_Options_CAT_Rig.Items.Add(none);
             foreach (SupportedRig rig in rigs)
             {
                 cb_Options_CAT_Rig.Items.Add(rig);

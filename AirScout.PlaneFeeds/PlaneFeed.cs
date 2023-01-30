@@ -96,6 +96,7 @@ namespace AirScout.PlaneFeeds
                             feedargs.LogDirectory = Arguments.LogDirectory;
                             feedargs.TmpDirectory = Arguments.TmpDirectory;
                             feedargs.DatabaseDirectory = Arguments.DatabaseDirectory;
+                            feedargs.PlanePositionsDirectory = Arguments.PlanePositionsDirectory;
                             feedargs.MaxLat = Arguments.MaxLat;
                             feedargs.MinLon = Arguments.MinLon;
                             feedargs.MinLat = Arguments.MinLat;
@@ -110,6 +111,7 @@ namespace AirScout.PlaneFeeds
                             feedargs.InstanceID = Arguments.InstanceID;
                             feedargs.SessionKey = Arguments.SessionKey;
                             feedargs.GetKeyURL = Arguments.GetKeyURL;
+                            feedargs.LogPlanePositions = Arguments.LogPlanePositions;
 
                             // do start procedure
                             Arguments.Feed.Start(feedargs);
@@ -124,9 +126,13 @@ namespace AirScout.PlaneFeeds
                                     // get plane raw data and do addtional checks
                                     PlaneFeedPluginPlaneInfoList acs = Arguments.Feed.GetPlanes(feedargs);
                                     PlaneInfoList planes = new PlaneInfoList();
+                                    PlaneInfoList invalids = new PlaneInfoList();
                                     int total = acs.Count;
                                     int count = 0;
                                     int errors = 0;
+                                    double track = 0;
+                                    double dist = 0;
+
                                     foreach (PlaneFeedPluginPlaneInfo ac in acs)
                                     {
                                         // skip without error when on ground
@@ -167,6 +173,7 @@ namespace AirScout.PlaneFeeds
                                             {
                                                 if (Arguments.LogErrors)
                                                     Log.WriteMessage("Incorrect aircraft data received [Hex]: " + plane.Hex, LogLevel.Warning);
+                                                invalids.Add(plane);
                                                 errors++;
                                                 continue;
                                             }
@@ -174,7 +181,8 @@ namespace AirScout.PlaneFeeds
                                             if (ad == null)
                                             {
                                                 if (Arguments.LogErrors)
-                                                    Log.WriteMessage("Incorrect aircraft data received [Hex]: " + plane.Hex, LogLevel.Warning);
+                                                    Log.WriteMessage("Incorrect aircraft data received [Reg]: " + plane.Reg, LogLevel.Warning);
+                                                invalids.Add(plane);
                                                 errors++;
                                                 continue;
                                             }
@@ -185,6 +193,7 @@ namespace AirScout.PlaneFeeds
                                         {
                                             if (Arguments.LogErrors)
                                                 Log.WriteMessage("Incorrect aircraft data received [Lat]: " + plane.Lat.ToString("F8", CultureInfo.InvariantCulture), LogLevel.Warning);
+                                            invalids.Add(plane);
                                             errors++;
                                             continue;
                                         }
@@ -196,6 +205,7 @@ namespace AirScout.PlaneFeeds
                                         {
                                             if (Arguments.LogErrors)
                                                 Log.WriteMessage("Incorrect aircraft data received [Lon]: " + plane.Lon.ToString("F8", CultureInfo.InvariantCulture), LogLevel.Warning);
+                                            invalids.Add(plane);
                                             errors++;
                                             continue;
                                         }
@@ -215,6 +225,7 @@ namespace AirScout.PlaneFeeds
                                             {
                                                 if (Arguments.LogErrors)
                                                     Log.WriteMessage("Incorrect aircraft data received [Alt]: " + plane.Alt.ToString("F8", CultureInfo.InvariantCulture), LogLevel.Warning);
+                                                invalids.Add(plane);
                                                 errors++;
                                                 continue;
                                             }
@@ -275,6 +286,7 @@ namespace AirScout.PlaneFeeds
                                         {
                                             if (Arguments.LogErrors)
                                                 Log.WriteMessage("Incorrect aircraft data received [Track]: " + plane.Track.ToString("F8", CultureInfo.InvariantCulture), LogLevel.Warning);
+                                            invalids.Add(plane);
                                             errors++;
                                             continue;
                                         }
@@ -291,6 +303,7 @@ namespace AirScout.PlaneFeeds
                                             {
                                                 if (Arguments.LogErrors)
                                                     Log.WriteMessage("Incorrect aircraft data received [Speed]: " + plane.Speed.ToString("F8", CultureInfo.InvariantCulture), LogLevel.Warning);
+                                                invalids.Add(plane);
                                                 errors++;
                                                 continue;
                                             }
@@ -334,17 +347,118 @@ namespace AirScout.PlaneFeeds
                                         // remove manufacturer info if part of model description
                                         if (plane.Model.StartsWith(plane.Manufacturer))
                                             plane.Model = plane.Model.Remove(0, plane.Manufacturer.Length).Trim();
+
                                         // check position against estimated position from last konwn if possible
-                                        PlaneInfo oldplane = PlanePositions.Get(plane.Hex, plane.Time, 5);
-                                        double dist = 0;
-                                        if (Arguments.ExtendedPlausibilityCheck_Enable && (oldplane != null) && ((dist = LatLon.Distance(oldplane.Lat, oldplane.Lon, plane.Lat, plane.Lon)) > Arguments.ExtendedPlausiblityCheck_MaxErrorDist))
+                                        PlaneInfo estplane = null;
+                                        PlaneInfo lastplane = null;
+                                        if (PlanePositions.ContainsKey(plane.Hex))
                                         {
-                                            // report error
-                                            if (Arguments.LogErrors)
-                                                Log.WriteMessage("Incorrect aircraft position received [(" + oldplane.Lat.ToString("F8") + "," + oldplane.Lon.ToString("F8") + ")<" + dist.ToString("F0") + "km>(" + plane.Lat.ToString("F8") + "," + plane.Lon.ToString("F8") + ")]: " + plane.ToString(), LogLevel.Warning);
-                                            errors++;
-                                            continue;
+                                            lastplane = PlanePositions[plane.Hex];
+                                            if ((plane.Time - lastplane.Time).TotalSeconds > 300)
+                                                lastplane = null;
+                                            estplane = PlanePositions.Get(plane.Hex, plane.Time, 5);
                                         }
+                                        if (Arguments.ExtendedPlausibilityCheck_Enable && (lastplane != null) && (estplane != null))
+                                        {
+                                            // estimate the track value from location change
+                                            track = LatLon.Bearing(lastplane.Lat, lastplane.Lon, plane.Lat, plane.Lon);
+
+                                            // estimate the distance between estimated position and reported position
+                                            dist = LatLon.Distance(estplane.Lat, estplane.Lon, plane.Lat, plane.Lon);
+
+                                            // Check track
+                                            if (Math.Abs(((track <= 180) ? track : 360 - track) - ((plane.Track <= 180) ? plane.Track : 360 - plane.Track)) > 45)
+                                            {
+
+                                                plane.Track = track;
+
+                                                // report error
+                                                if (Arguments.LogErrors)
+                                                    Log.WriteMessage("Incorrect aircraft track received [(" + lastplane.Track.ToString("F0") + "<>" + plane.Track.ToString("F0"), LogLevel.Warning);
+                                                
+                                                invalids.Add(plane);
+
+                                                errors++;
+                                                continue;
+                                            }
+
+                                            // check distance
+                                            if (Math.Abs(dist) > Arguments.ExtendedPlausiblityCheck_MaxErrorDist * (plane.Time - lastplane.Time).TotalMinutes)
+                                            {
+                                                Console.WriteLine("[Error " + errors + "] : Distance " + dist);
+                                                // report error
+                                                if (Arguments.LogErrors)
+                                                {
+                                                    invalids.Add(plane);
+                                                    Log.WriteMessage("Incorrect aircraft position received [(" + lastplane.Lat.ToString("F8") + "," + lastplane.Lon.ToString("F8") + ")<" + dist.ToString("F0") + "km>(" + plane.Lat.ToString("F8") + "," + plane.Lon.ToString("F8") + ")]: " + plane.ToString(), LogLevel.Warning);
+                                                }
+
+                                                invalids.Add(plane);
+
+                                                errors++;
+                                                continue;
+                                            }
+
+                                        }
+
+                                        if (feedargs.LogPlanePositions)
+                                        {
+                                            // extended logging
+                                            string filename = Path.Combine(feedargs.PlanePositionsDirectory, plane.Hex + ".csv");
+
+                                            if (!File.Exists(filename))
+                                            {
+                                                File.WriteAllText(filename, "Time;TimeD;Hex;Lat;LatD;Lon;LonD;Alt;AltD;Track;TrackD;Speed;SpeedD;Call;Reg;From;To;VSpeed;CalcTrack;CalcDist" + Environment.NewLine);
+                                            }
+                                            try
+                                            {
+                                                double timed = 0;
+                                                double latd = 0;
+                                                double lond = 0;
+                                                double altd = 0;
+                                                double spdd = 0;
+                                                double trkd = 0;
+
+                                                if (lastplane != null)
+                                                {
+                                                    timed = (lastplane.Time - plane.Time).TotalSeconds;
+                                                    latd = lastplane.Lat - plane.Lat;
+                                                    lond = lastplane.Lon - plane.Lon;
+                                                    altd = lastplane.Alt - plane.Alt;
+                                                    spdd = lastplane.Speed - plane.Speed;
+                                                    trkd = lastplane.Track - plane.Track;
+                                                }
+
+                                                string csv = plane.Time + ";" +
+                                                    timed + ";" + 
+                                                    plane.Hex + ";" +
+                                                    plane.Lat + ";" +
+                                                    latd + ";" +
+                                                    plane.Lon + ";" +
+                                                    lond + ";" +
+                                                    plane.Alt + ";" +
+                                                    altd + ";" +
+                                                    plane.Track + ";" +
+                                                    trkd + ";" +
+                                                    plane.Speed + ";" +
+                                                    spdd + ";" +
+                                                    plane.Call + ";" +
+                                                    plane.Reg + ";" +
+                                                    plane.From + ";" +
+                                                    plane.To + ";" +
+                                                    plane.VSpeed + ";" +
+                                                    track + ";" +
+                                                    dist +
+                                                    Environment.NewLine;
+
+                                                File.AppendAllText(filename, csv);
+                                            }
+                                            catch
+                                            {
+
+                                            }
+                                        }
+
                                         // all checks successfully done --> add plane to list
                                         planes.Add(plane);
                                         count++;
@@ -369,6 +483,7 @@ namespace AirScout.PlaneFeeds
                                     // write all planes to file
                                     try
                                     {
+                                        // simple logging
                                         using (StreamWriter sw = new StreamWriter(Path.Combine(Arguments.TmpDirectory, "planes.csv")))
                                         {
                                             sw.WriteLine("Time;Hex;Lat;Lon;Alt;Track;Speed;Call;Reg;From;To;VSpeed");

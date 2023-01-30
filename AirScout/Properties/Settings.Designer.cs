@@ -2067,7 +2067,7 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
         public int Planes_ExtendedPlausibilityCheck_MaxErrorDist {
             get {
                 return ((int)(this["Planes_ExtendedPlausibilityCheck_MaxErrorDist"]));
@@ -2813,6 +2813,54 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
             }
             set {
                 this["Map_TrackingGaugesShow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool NewsFeed_Enabled {
+            get {
+                return ((bool)(this["NewsFeed_Enabled"]));
+            }
+            set {
+                this["NewsFeed_Enabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("UNDEFINED")]
+        public global::System.Data.SQLite.DATABASESTATUS RigDatabase_Status {
+            get {
+                return ((global::System.Data.SQLite.DATABASESTATUS)(this["RigDatabase_Status"]));
+            }
+            set {
+                this["RigDatabase_Status"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Planes_TracePositions {
+            get {
+                return ((bool)(this["Planes_TracePositions"]));
+            }
+            set {
+                this["Planes_TracePositions"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PlanePositions")]
+        public string Planes_PositionsDirectory {
+            get {
+                return ((string)(this["Planes_PositionsDirectory"]));
+            }
+            set {
+                this["Planes_PositionsDirectory"] = value;
             }
         }
     }

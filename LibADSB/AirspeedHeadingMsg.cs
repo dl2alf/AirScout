@@ -108,6 +108,27 @@ namespace LibADSB
             }
         }
 
+        [Browsable(false)]
+        [DescriptionAttribute("GeoMinusBaro is available in Airspeed Heading Message")]
+        public bool HasGeoMinusBaro
+        {
+            get
+            {
+                return geo_minus_baro_available;
+            }
+        }
+
+        [Browsable(false)]
+        [DescriptionAttribute("GeoMinusBaro in Airspeed Heading Message [ft]")]
+        public int GeoMinusBaro
+        {
+            get
+            {
+                return geo_minus_baro;
+            }
+        }
+
+
         private byte subtype;
 	    private bool intent_change;
 	    private bool ifr_capability;

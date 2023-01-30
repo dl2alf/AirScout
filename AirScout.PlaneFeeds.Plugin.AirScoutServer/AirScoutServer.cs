@@ -160,7 +160,7 @@ namespace AirScout.PlaneFeeds.Plugin.AirScoutServer
             {
                 using (StreamWriter sw = new StreamWriter(File.Create(filename)))
                 {
-                    XmlSerializer s = new XmlSerializer(this.GetType(), overrides,null,new XmlRootAttribute(),"");
+                    XmlSerializer s = new XmlSerializer(this.GetType(), overrides, null, new XmlRootAttribute(), "");
                     s.Serialize(sw, this);
                 }
             }
@@ -347,8 +347,13 @@ namespace AirScout.PlaneFeeds.Plugin.AirScoutServer
 
                 //                JavaScriptSerializer js = new JavaScriptSerializer();
                 //                dynamic root = js.Deserialize<dynamic>(json);
+
+                // check for empty list 
+                if (json.Length < 20)
+                    return new PlaneFeedPluginPlaneInfoList();
+
                 // get the planes position list
-                List<PlaneJSON> aclist = JsonConvert.DeserializeObject <List<PlaneJSON>>(json);
+                List<PlaneJSON> aclist = JsonConvert.DeserializeObject<List<PlaneJSON>>(json);
                 Console.WriteLine("[" + this.GetType().Name + "]: Created object from JSON is " + aclist.GetType().ToString());
                 // analyze json string for planes data
                 foreach (PlaneJSON ac in aclist)
@@ -356,7 +361,7 @@ namespace AirScout.PlaneFeeds.Plugin.AirScoutServer
                     try
                     {
                         PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
-                        plane.Hex = !String.IsNullOrEmpty(ac.Hex)? ac.Hex : "";
+                        plane.Hex = !String.IsNullOrEmpty(ac.Hex) ? ac.Hex : "";
                         plane.Call = !String.IsNullOrEmpty(ac.Call) ? ac.Call : "";
                         plane.Lat = (ac.Lat != null) ? (double)ac.Lat : double.NaN;
                         plane.Lon = (ac.Lon != null) ? (double)ac.Lon : double.NaN;
@@ -389,7 +394,7 @@ namespace AirScout.PlaneFeeds.Plugin.AirScoutServer
                     }
                 }
                 catch
-                { 
+                {
                     // do nothing if saving fails
                 }
                 // forward exception to parent thread
@@ -603,6 +608,7 @@ namespace AirScout.PlaneFeeds.Plugin.AirScoutServer
             }
             return s;
         }
-
     }
 }
+
+    

@@ -89,84 +89,15 @@ namespace AirScout.CAT
         protected override void OnDoWork(DoWorkEventArgs e)
         {
             StartOptions = (CATWorkerStartOptions)e.Argument;
+
             this.ReportProgress(0, StartOptions.Name + " started.");
+
             // name the thread for debugging
             if (String.IsNullOrEmpty(Thread.CurrentThread.Name))
                 Thread.CurrentThread.Name = StartOptions.Name + "_" + this.GetType().Name;
 
-            // check if any CAT is working by getting all supported rigs
-            // handle exceptions
-            List<SupportedRig> rigs = new List<SupportedRig>();
-            try
-            {
-                rigs = CATWorker.SupportedRigs();
-            }
-            catch (Exception ex)
-            {
-                this.ReportProgress(-1, "Error while getting supported rigs from CAT: " + ex.Message);
-                this.ReportProgress(1, RIGSTATUS.NOCAT);
-                return;
-            }
-
-            // check if any rig is found
-            if (rigs.Count == 0)
-            {
-                this.ReportProgress(-1, "Error while getting supported rigs from CAT: No available CAT found!");
-                this.ReportProgress(1, RIGSTATUS.NORIG);
-                return;
-            }
-
-            // check if the rig is among the currently supported rigs --> get a new IRig object
-            // be careful with ActiveX objects an handle exceptions
+            // initially set Rig to NULL
             Rig = null;
-            try
-            {
-                foreach (SupportedRig rig in rigs)
-                {
-                    if (rig.Type == StartOptions.RigType)
-                    {
-                        switch (rig.CATEngine)
-                        {
-                            case CATENGINE.OMNIRIGX: Rig = new OmniRigX(); break;
-                            case CATENGINE.SCOUTBASE: Rig = new ScoutBaseRig(); break;
-                        }
-
-                        // OK, we have a valid CAT and rig --> complete and download settings
-                        RigSettings settings = new RigSettings();
-                        settings.Type = rig.Type;
-                        settings.Model = rig.Model;
-                        settings.PortName = StartOptions.PortName;
-                        settings.Baudrate = StartOptions.Baudrate;
-                        settings.DataBits = StartOptions.DataBits;
-                        settings.Parity = StartOptions.Parity;
-                        settings.StopBits = StartOptions.StopBits;
-                        settings.RtsMode = StartOptions.RTS;
-                        settings.DtrMode = StartOptions.DTR;
-                        settings.PollMs = StartOptions.Poll;
-                        settings.TimeoutMs = StartOptions.Timeout;
-                        Rig.Settings = settings;
-
-                        // stop search
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                this.ReportProgress(-1, "Error while trying to get a rig object from CAT: " + ex.ToString());
-            }
-
-            // report error if rig is still null
-            if (Rig == null)
-            {
-                this.ReportProgress(-1, "Rig is not supported by any available CAT!");
-                this.ReportProgress(1, RIGSTATUS.NORIG);
-                return;
-            }
-
-            
-            this.ReportProgress(0, "Opening CAT: Success!");
-            this.ReportProgress(2, Rig);
 
             // old values for check changes
             DOPPLERSTRATEGY olddoppler = DOPPLERSTRATEGY.DOPPLER_NONE;
@@ -180,9 +111,100 @@ namespace AirScout.CAT
             // run polling loop
             while (!this.CancellationPending)
             {
+                // get Rig if NULL
+                if (Rig == null)
+                {
+                    // check if any CAT is working by getting all supported rigs
+                    // handle exceptions
+                    List<SupportedRig> rigs = new List<SupportedRig>();
+                    try
+                    {
+                        rigs = CATWorker.SupportedRigs();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ReportProgress(-1, "Error while getting supported rigs from CAT: " + ex.Message);
+                        this.ReportProgress(1, RIGSTATUS.NOCAT);
+                    }
+
+                    // check if any rig is found
+                    if (rigs.Count == 0)
+                    {
+                        this.ReportProgress(-1, "Error while getting supported rigs from CAT: No available CAT found!");
+                        this.ReportProgress(1, RIGSTATUS.NORIG);
+                    }
+
+                    // check if the rig is among the currently supported rigs --> get a new IRig object
+                    // be careful with ActiveX objects an handle exceptions
+                    try
+                    {
+                        foreach (SupportedRig rig in rigs)
+                        {
+                            if (rig.Type == StartOptions.RigType)
+                            {
+                                switch (rig.CATEngine)
+                                {
+                                    case CATENGINE.OMNIRIGX: Rig = new OmniRigX(); break;
+                                    case CATENGINE.SCOUTBASE: Rig = new ScoutBaseRig(); break;
+                                }
+
+                                // OK, we have a valid CAT and rig --> complete and download settings
+                                RigSettings settings = new RigSettings();
+                                settings.Type = rig.Type;
+                                settings.Model = rig.Model;
+                                settings.PortName = StartOptions.PortName;
+                                settings.Baudrate = StartOptions.Baudrate;
+                                settings.DataBits = StartOptions.DataBits;
+                                settings.Parity = StartOptions.Parity;
+                                settings.StopBits = StartOptions.StopBits;
+                                settings.RtsMode = StartOptions.RTS;
+                                settings.DtrMode = StartOptions.DTR;
+                                settings.PollMs = StartOptions.Poll;
+                                settings.TimeoutMs = StartOptions.Timeout;
+                                Rig.Settings = settings;
+
+                                // stop search
+                                break;
+                            }
+                        }
+
+                        this.ReportProgress(0, "Opening CAT: Success!");
+                        this.ReportProgress(2, Rig);
+
+                        // old values for check changes
+                        olddoppler = DOPPLERSTRATEGY.DOPPLER_NONE;
+                        oldrigstat = RIGSTATUS.NONE;
+                        oldrigmode = RIGMODE.NONE;
+                        oldrigsplit = RIGSPLIT.NONE;
+                        oldrigrit = RIGRIT.NONE;
+                        oldrxfreq = -1;
+                        oldtxfreq = -1;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ReportProgress(-1, "Error while trying to get a rig object from CAT: " + ex.ToString());
+                    }
+                }
+
+                // report error if rig is still null
+                if (Rig == null)
+                {
+                    this.ReportProgress(-1, "No rig selected or rig is not supported by any available CAT!");
+                    this.ReportProgress(1, RIGSTATUS.NORIG);
+                    Rig = null;
+                    Thread.Sleep(10000);
+                    continue;
+                }
+
                 try
                 {
                     RIGSTATUS rigstatus = Rig.GetStatus();
+                    if (rigstatus == RIGSTATUS.NONE)
+                    {
+                        throw new Exception("Rig lost during polling!");
+                    }
+
                     if (oldrigstat != rigstatus)
                     {
                         oldrigstat = rigstatus;
@@ -276,10 +298,22 @@ namespace AirScout.CAT
                 }
                 catch (Exception ex)
                 {
-
+                    this.ReportProgress(-1, "Error while polling CAT: " + ex.ToString());
+                    this.ReportProgress(1, RIGSTATUS.NORIG);
+                    Rig = null;
                 }
 
                 Thread.Sleep(Properties.Settings.Default.CAT_Update);
+            }
+
+            // Reset doppler tracking, if any
+            try
+            {
+                Rig.LeaveDoppler();
+            }
+            catch (Exception ex)
+            {
+
             }
 
             // reset status

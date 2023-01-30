@@ -30,6 +30,7 @@ namespace AirScout.Aircrafts
                     // plane already in cache --> check time and update if newer
                     if (plane.Time > oldplane.Time)
                     {
+
                         // keep old values
                         oldplane.OldTime = oldplane.Time;
                         oldplane.OldLat = oldplane.Lat;
@@ -211,8 +212,6 @@ namespace AirScout.Aircrafts
 
         public List<PlaneInfo> GetAll(DateTime at, int ttl)
         {
-            string filename = "positions.csv";
-            string call = "CSN464";
 
             List<PlaneInfo> l = new List<PlaneInfo>();
             DateTime to = at;
@@ -239,6 +238,10 @@ namespace AirScout.Aircrafts
                             double newtrack = (plane.Track - plane.OldTrack) / oldtimediff * newtimediff + plane.Track;
                             double newspeed = (plane.Speed - plane.OldSpeed) / oldtimediff * newtimediff + plane.Speed;
 
+                            /*
+                            string filename = "positions.csv";
+                            string call = "CSN464";
+
                             if (plane.Call == call)
                             {
                                 File.AppendAllText(filename, oldtimediff.ToString() + ";" +
@@ -254,6 +257,8 @@ namespace AirScout.Aircrafts
                                         newspeed.ToString("F8") + ";" +
                                         Environment.NewLine);
                             }
+                            */
+
                             // do plausibility check of calculated values
                             if ((newalt > 0) && (newalt < 50000) &&
                                 (newtrack > 0) && (newtrack < 360) &&
@@ -266,6 +271,7 @@ namespace AirScout.Aircrafts
                             else
                             {
                                 // do nothing
+                                /*
                                 if (plane.Call == call)
                                 {
                                     File.AppendAllText(filename, oldtimediff.ToString() + ";" +
@@ -282,15 +288,18 @@ namespace AirScout.Aircrafts
                                         "invalid values!" +
                                         Environment.NewLine);
                                 }
+                                */
                             }
                         }
                         else
                         {
                             // do nothing
+                            /*
                             if (plane.Call == call)
                             {
                                 File.AppendAllText(filename, oldtimediff.ToString() + ";" + newtimediff.ToString() + "invalid timediff!" + Environment.NewLine);
                             }
+                            */
                         }
                     }
                     else

@@ -39,6 +39,11 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
         public virtual bool Binary { get; set; }
 
         [Browsable(true)]
+        [DescriptionAttribute("Use geometric altitudes only (instead of both barometric/geometric) to enhance tracking accuracy.")]
+        [DefaultValue(false)]
+        public virtual bool UseGeometricAltOnly { get; set; }
+
+        [Browsable(true)]
         [DescriptionAttribute("Report ADS-B messages to console output.")]
         [DefaultValue(true)]
         public virtual bool ReportMessages { get; set; }
@@ -351,7 +356,18 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                     plane.Call = (Settings.MarkLocal) ? "@" + info.Call : info.Call;
                     plane.Lat = info.Lat;
                     plane.Lon = info.Lon;
-                    plane.Alt = info.Alt;
+                    // use geometric altitude, if enabled and available
+                    if (Settings.UseGeometricAltOnly)
+                    {
+                        if (info.GeoMinusBaro != int.MinValue)
+                            plane.Alt = info.BaroAlt + info.GeoMinusBaro;
+                        else
+                            plane.Alt = int.MinValue;
+                    }
+                    else
+                    {
+                        plane.Alt = info.BaroAlt + info.GeoMinusBaro;
+                    }
                     plane.Speed = info.Speed;
                     plane.Track = info.Heading;
                     plane.Reg = "[unknown]";
@@ -359,7 +375,12 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                     plane.Manufacturer = "[unknown]";
                     plane.Model = "[unknown]";
                     plane.Category = 0;
-                    planes.Add(plane);
+
+                    // add only valid positions
+                    if (plane.Alt > 0)
+                    {
+                        planes.Add(plane);
+                    }
                 }
                 // save raw data to file if enabled
                 if (Settings.SaveToFile)
@@ -435,8 +456,8 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                             {
                                 info = "[" + this.GetType().Name + "]: " + msg.RawMessage + "-- > ";
                                 Console.Write(info);
-                                line = info;    
-                                info = Decoder.DecodeMessage(msg.RawMessage, msg.TimeStamp);
+                                line = info;
+                                info = Decoder.DecodeMessage(msg.RawMessage, msg.TimeStamp, Settings.UseGeometricAltOnly);
                                 line = line + info + "\n";
                             }
                             catch (Exception ex)

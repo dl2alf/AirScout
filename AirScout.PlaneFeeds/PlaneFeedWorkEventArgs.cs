@@ -17,6 +17,7 @@ namespace AirScout.PlaneFeeds
         public string LogDirectory = "";
         public string TmpDirectory = "";
         public string DatabaseDirectory = "";
+        public string PlanePositionsDirectory = "";
 
         // Scope für plane positions
         public double MaxLat = 0;
@@ -46,6 +47,9 @@ namespace AirScout.PlaneFeeds
         public string InstanceID;
         public string SessionKey;
         public string GetKeyURL;
+
+        // Log plane positions to file
+        public bool LogPlanePositions = false;
 
     }
 

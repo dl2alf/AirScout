@@ -12,7 +12,7 @@
       <Value Profile="(Default)">500</Value>
     </Setting>
     <Setting Name="CAT_RigType" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">[None]</Value>
     </Setting>
     <Setting Name="CAT_PortName" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

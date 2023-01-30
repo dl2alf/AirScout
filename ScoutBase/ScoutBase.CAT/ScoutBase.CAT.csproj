@@ -33,12 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
-      <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
-    </Reference>
     <Reference Include="INIFileParserDotNetCore, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\INIFileParserDotNetCore.2.5.2\lib\net40\INIFileParserDotNetCore.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -95,9 +91,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SQLiteDatabase\SQLiteDatabase\SQLiteDatabase.csproj">
+      <Project>{6056d3be-7002-4a6a-a9ea-6ff45122a3c7}</Project>
+      <Name>SQLiteDatabase</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScoutBase.Core\ScoutBase.Core.csproj">
       <Project>{ee86e933-d883-4b18-80eb-0fba55ec67c6}</Project>
       <Name>ScoutBase.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScoutBase.Database\ScoutBase.Database.csproj">
+      <Project>{89e6c7a3-6064-479e-a710-37c7293cf47c}</Project>
+      <Name>ScoutBase.Database</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -406,9 +406,10 @@ namespace AirScout.Aircrafts
         public int AircraftBulkInsert(List<AircraftDesignator> ads)
         {
             int errors = 0;
-            try
+
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AircraftDesignator ad in ads)
@@ -423,12 +424,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -436,9 +440,9 @@ namespace AirScout.Aircrafts
         public int AircraftBulkDelete(List<AircraftDesignator> ads)
         {
             int errors = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AircraftDesignator ad in ads)
@@ -453,12 +457,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -468,9 +475,9 @@ namespace AirScout.Aircrafts
             if (ads == null)
                 return 0;
             int i = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AircraftDesignator ad in ads)
@@ -485,12 +492,15 @@ namespace AirScout.Aircrafts
 
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch(Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return i;
         }
@@ -885,9 +895,9 @@ namespace AirScout.Aircrafts
         public int AircraftTypeBulkInsert(List<AircraftTypeDesignator> tds)
         {
             int errors = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AircraftTypeDesignator td in tds)
@@ -902,12 +912,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -915,9 +928,9 @@ namespace AirScout.Aircrafts
         public int AircraftTypeBulkDelete(List<AircraftTypeDesignator> ads)
         {
             int errors = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AircraftTypeDesignator td in ads)
@@ -932,12 +945,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -949,13 +965,23 @@ namespace AirScout.Aircrafts
             int i = 0;
             lock (db)
             {
-                db.BeginTransaction();
-                foreach (AircraftTypeDesignator ad in ads)
+                try
                 {
-                    AircraftTypeInsertOrUpdateIfNewer(ad);
-                    i++;
+                    db.BeginTransaction();
+                    foreach (AircraftTypeDesignator ad in ads)
+                    {
+                        AircraftTypeInsertOrUpdateIfNewer(ad);
+                        i++;
+                    }
                 }
-                db.Commit();
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
+                    db.Commit();
+                }
             }
             return i;
         }
@@ -1285,9 +1311,9 @@ namespace AirScout.Aircrafts
         public int AirlineBulkInsert(List<AirlineDesignator> lds)
         {
             int errors = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AirlineDesignator ld in lds)
@@ -1302,12 +1328,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1315,9 +1344,9 @@ namespace AirScout.Aircrafts
         public int AirlineBulkDelete(List<AirlineDesignator> lds)
         {
             int errors = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AirlineDesignator ld in lds)
@@ -1332,12 +1361,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1348,14 +1380,24 @@ namespace AirScout.Aircrafts
                 return 0;
             int i = 0;
             lock (db)
-            { 
-                db.BeginTransaction();
-                foreach (AirlineDesignator ld in lds)
+            {
+                try
                 {
-                    AirlineInsertOrUpdateIfNewer(ld);
-                    i++;
+                    db.BeginTransaction();
+                    foreach (AirlineDesignator ld in lds)
+                    {
+                        AirlineInsertOrUpdateIfNewer(ld);
+                        i++;
+                    }
                 }
-                db.Commit();
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
+                    db.Commit();
+                }
             }
             return i;
         }
@@ -1691,9 +1733,9 @@ namespace AirScout.Aircrafts
         public int AirportBulkInsert(List<AirportDesignator> pds)
         {
             int errors = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AirportDesignator pd in pds)
@@ -1708,12 +1750,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1721,9 +1766,9 @@ namespace AirScout.Aircrafts
         public int AirportBulkDelete(List<AirportDesignator> pds)
         {
             int errors = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AirportDesignator pd in pds)
@@ -1738,12 +1783,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -1755,13 +1803,23 @@ namespace AirScout.Aircrafts
             int i = 0;
             lock (db)
             {
-                db.BeginTransaction();
-                foreach (AirportDesignator pd in pds)
+                try
                 {
-                    AirportInsertOrUpdateIfNewer(pd);
-                    i++;
+                    db.BeginTransaction();
+                    foreach (AirportDesignator pd in pds)
+                    {
+                        AirportInsertOrUpdateIfNewer(pd);
+                        i++;
+                    }
                 }
-                db.Commit();
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
+                    db.Commit();
+                }
             }
             return i;
         }
@@ -2088,9 +2146,9 @@ namespace AirScout.Aircrafts
         public int AircraftRegistrationBulkInsert(List<AircraftRegistrationDesignator> rds)
         {
             int errors = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AircraftRegistrationDesignator rd in rds)
@@ -2105,12 +2163,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -2118,9 +2179,9 @@ namespace AirScout.Aircrafts
         public int AircraftRegistrationBulkDelete(List<AircraftRegistrationDesignator> rds)
         {
             int errors = 0;
-            try
+            lock (db)
             {
-                lock (db)
+                try
                 {
                     db.BeginTransaction();
                     foreach (AircraftRegistrationDesignator rd in rds)
@@ -2135,12 +2196,15 @@ namespace AirScout.Aircrafts
                             errors++;
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
                     db.Commit();
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.WriteMessage(ex.ToString(), LogLevel.Error);
             }
             return -errors;
         }
@@ -2152,13 +2216,23 @@ namespace AirScout.Aircrafts
             int i = 0;
             lock (db)
             {
-                db.BeginTransaction();
-                foreach (AircraftRegistrationDesignator rd in rds)
+                try
                 {
-                    AircraftRegistrationInsertOrUpdateIfNewer(rd);
-                    i++;
+                    db.BeginTransaction();
+                    foreach (AircraftRegistrationDesignator rd in rds)
+                    {
+                        AircraftRegistrationInsertOrUpdateIfNewer(rd);
+                        i++;
+                    }
                 }
-                db.Commit();
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
+                    db.Commit();
+                }
             }
             return i;
         }
@@ -2262,27 +2336,37 @@ namespace AirScout.Aircrafts
             int i = 0;
             lock (db)
             {
-                db.BeginTransaction();
-                foreach (PlaneInfo plane in planes)
+                try
                 {
-                    try
+                    db.BeginTransaction();
+                    foreach (PlaneInfo plane in planes)
                     {
-                        // update aircraft information
-                        if (PlaneInfoChecker.Check_Hex(plane.Hex) && PlaneInfoChecker.Check_Call(plane.Call) && PlaneInfoChecker.Check_Reg(plane.Reg) && PlaneInfoChecker.Check_Type(plane.Type))
-                            AircraftData.Database.AircraftInsertOrUpdateIfNewer(new AircraftDesignator(plane.Hex, plane.Call, plane.Reg, plane.Type, plane.Time));
-                        // update aircraft type information
-                        if (!String.IsNullOrEmpty(plane.Type))
+                        try
                         {
-                            AircraftTypeInsertOrUpdateIfNewer(new AircraftTypeDesignator("", plane.Type, plane.Manufacturer, plane.Model, plane.Category, DateTime.UtcNow));
+                            // update aircraft information
+                            if (PlaneInfoChecker.Check_Hex(plane.Hex) && PlaneInfoChecker.Check_Call(plane.Call) && PlaneInfoChecker.Check_Reg(plane.Reg) && PlaneInfoChecker.Check_Type(plane.Type))
+                                AircraftData.Database.AircraftInsertOrUpdateIfNewer(new AircraftDesignator(plane.Hex, plane.Call, plane.Reg, plane.Type, plane.Time));
+                            // update aircraft type information
+                            if (!String.IsNullOrEmpty(plane.Type))
+                            {
+                                AircraftTypeInsertOrUpdateIfNewer(new AircraftTypeDesignator("", plane.Type, plane.Manufacturer, plane.Model, plane.Category, DateTime.UtcNow));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                            return -1;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
-                        return -1;
-                    }
                 }
-                db.Commit();
+                catch (Exception ex)
+                {
+                    Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                }
+                finally
+                {
+                    db.Commit();
+                }
             }
             return i;
         }

@@ -68,6 +68,7 @@ using OxyPlot.WindowsForms;
 using OxyPlot.Series;
 using OxyPlot.Axes;
 using System.Data.SQLite;
+using MimeTypes;
 
 namespace AirScout
 {
@@ -85,7 +86,15 @@ namespace AirScout
             // get temp directory from arguments
             if (e != null)
             {
-                tmpdir = (string)e.Argument;
+                tmpdir = ((WebserverStartArgs)e.Argument).TmpDirectory;
+            }
+
+
+            string webserverdir = Path.Combine(Application.StartupPath, "wwwroot");
+            // get webserver directory from arguments
+            if (e != null)
+            {
+                webserverdir = ((WebserverStartArgs)e.Argument).WebserverDirectory;
             }
 
             Log.WriteMessage("started.");
@@ -128,6 +137,7 @@ namespace AirScout
                         WebServerDelivererArgs args = new WebServerDelivererArgs();
                         args.ID = id;
                         args.TmpDirectory = tmpdir;
+                        args.WebserverDirectory = webserverdir;
                         args.Context = context;
                         args.AllPlanes = allplanes;
                         WebserverDeliver bw = new WebserverDeliver();
@@ -362,6 +372,13 @@ namespace AirScout
             settings.FloatFormatHandling = FloatFormatHandling.String;
             settings.Formatting = Newtonsoft.Json.Formatting.Indented;
             json = JsonConvert.SerializeObject(Properties.Settings.Default, settings);
+            return json;
+        }
+        private string DeliverBands(string paramstr)
+        {
+            string json = "";
+            string[] bands = Bands.GetStringValuesExceptNoneAndAll();
+            json = JsonConvert.SerializeObject(bands);
             return json;
         }
 
@@ -806,47 +823,104 @@ namespace AirScout
             WebServerDelivererArgs args = (WebServerDelivererArgs)e.Argument;
             if (String.IsNullOrEmpty(Thread.CurrentThread.Name))
                 Thread.CurrentThread.Name = this.GetType().Name + "_" + args.ID;
+
+            byte[] buffer = new byte[0];
+            string mime = "text/html";
+            HttpStatusCode status = HttpStatusCode.OK;
+
             HttpListenerRequest request = args.Context.Request;
+
             // Obtain a response object.
             HttpListenerResponse response = args.Context.Response;
-            // Construct a default response.
-            string responsestring = "<HTML><BODY> Welcome to AirScout!</BODY></HTML>";
-            // check for content delivery request
-            if (request.RawUrl.ToLower() == "/planes.json")
+
+            // get unescaped raw url from request
+            string rawurl = Uri.UnescapeDataString(request.RawUrl);
+
+            // redirect parameterless calls to index.html
+            if (!rawurl.Contains("/") || (rawurl == "/"))
             {
-                responsestring = DeliverPlanes(args.TmpDirectory);
+                rawurl = "/index.html";
+            }
+
+            // try to create local file name
+            string filename = "";
+            if (SupportFunctions.IsMono)
+            {
+                filename = rawurl.Substring(1);
+            }
+            else
+            {
+                filename = rawurl.Substring(1).Replace("/", "\\");
+            }
+
+            // cut parameters
+            if (filename.Contains("?"))
+                filename = filename.Substring(0, filename.IndexOf("?"));
+
+            // try to find local file and deliver it
+            filename = Path.Combine(args.WebserverDirectory, filename);
+            if (File.Exists(filename))
+            {
+                buffer = File.ReadAllBytes(filename);
+                mime = MimeTypeMap.GetMimeType(Path.GetExtension(filename));
+            }
+            // check for content delivery request
+            else if (request.RawUrl.ToLower() == "/planes.json")
+            {
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverPlanes(args.TmpDirectory));
+                mime = "text/json";
             }
             else if (request.RawUrl.ToLower().StartsWith("/version.json"))
             {
-                responsestring = DeliverVersion(request.RawUrl);
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverVersion(request.RawUrl));
+                mime = "text/json";
             }
             else if (request.RawUrl.ToLower().StartsWith("/settings.json"))
             {
-                responsestring = DeliverSettings(request.RawUrl);
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverSettings(request.RawUrl));
+                mime = "text/json";
+            }
+            else if (request.RawUrl.ToLower().StartsWith("/bands.json"))
+            {
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverBands(request.RawUrl));
+                mime = "text/json";
             }
             else if (request.RawUrl.ToLower().StartsWith("/location.json"))
             {
-                responsestring = DeliverLocation(request.RawUrl);
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverLocation(request.RawUrl));
+                mime = "text/json";
             }
             else if (request.RawUrl.ToLower().StartsWith("/qrv.json"))
             {
-                responsestring = DeliverQRV(request.RawUrl);
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverQRV(request.RawUrl));
+                mime = "text/json";
             }
             else if (request.RawUrl.ToLower().StartsWith("/elevationpath.json"))
             {
-                responsestring = DeliverElevationPath(request.RawUrl);
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverElevationPath(request.RawUrl));
+                mime = "text/json";
             }
             else if (request.RawUrl.ToLower().StartsWith("/propagationpath.json"))
             {
-                responsestring = DeliverPropagationPath(request.RawUrl);
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverPropagationPath(request.RawUrl));
+                mime = "text/json";
             }
             else if (request.RawUrl.ToLower().StartsWith("/nearestplanes.json"))
             {
-                responsestring = DeliverNearestPlanes(request.RawUrl, args.AllPlanes);
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverNearestPlanes(request.RawUrl, args.AllPlanes));
+                mime = "text/json";
             }
-            // copy bytes to buffer
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responsestring);
+            else
+            {
+                // mit Error 404 antworten
+                buffer = System.Text.Encoding.UTF8.GetBytes("Not found!");
+                status = HttpStatusCode.NotFound;
+            }
+
             // Get a response stream and write the response to it.
+            response.Headers.Add(HttpResponseHeader.CacheControl, "no-cache");
+            response.ContentType = mime;
+            response.StatusCode = (int)status;
             response.ContentLength64 = buffer.Length;
             System.IO.Stream output = response.OutputStream;
             output.Write(buffer, 0, buffer.Length);
@@ -860,6 +934,7 @@ namespace AirScout
     {
         public int ID;
         public string TmpDirectory = "";
+        public string WebserverDirectory = "";
         public HttpListenerContext Context;
         public List<PlaneInfo> AllPlanes;
     }

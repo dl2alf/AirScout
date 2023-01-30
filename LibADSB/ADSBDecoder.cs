@@ -15,7 +15,8 @@ namespace LibADSB
         public string Call = "";
         public double Lat = double.NaN;
         public double Lon = double.NaN;
-        public int Alt = int.MinValue;
+        public int BaroAlt = int.MinValue;
+        public int GeoMinusBaro = int.MinValue;
         public int Heading = int.MinValue;
         public int Speed = int.MinValue;
         public AirbornePositionMsg LastEvenAirborne = null;
@@ -76,7 +77,7 @@ namespace LibADSB
             return "[" + info.ICAO24 + "] IdentificationMsg: Call=" + info.Call;
         }
 
-        private string DecodeAirbornePositionMsg(ModeSReply msg, DateTime timestamp)
+        private string DecodeAirbornePositionMsg(ModeSReply msg, DateTime timestamp, bool usegeometricaltonly)
         {
                 // Airborne position message --> we need subsequent messages to decode
             AirbornePositionMsg pos = (AirbornePositionMsg)msg;
@@ -112,9 +113,11 @@ namespace LibADSB
                     info.Lat = localpos[0];
                     info.Lon = localpos[1];
                     if (pos.HasValidAltitude)
-                        info.Alt = pos.Altitude;
+                    {
+                        info.BaroAlt = pos.Altitude;
+                    }
                     info.Timestamp = timestamp;
-                    return "[" + info.ICAO24 + "] AirbornePositionMsg: Lat= " + info.Lat.ToString("F8") + ", Lon=" + info.Lon.ToString("F8") + ", Alt= " + info.Alt.ToString() + ", Time= " + info.Timestamp.ToString("HH:mm:ss.fff");
+                    return "[" + info.ICAO24 + "] AirbornePositionMsg[TC" + pos.FormatTypeCode.ToString() + "]: Lat= " + info.Lat.ToString("F8") + ", Lon=" + info.Lon.ToString("F8") + ", Alt= " + info.BaroAlt.ToString() + ", Time= " + info.Timestamp.ToString("HH:mm:ss.fff");
                 }
                 catch (Exception ex)
                 {
@@ -138,9 +141,9 @@ namespace LibADSB
                             info.Lat = globalpos[0];
                             info.Lon = globalpos[1];
                             if (pos.HasValidAltitude)
-                                info.Alt = pos.Altitude;
+                                info.BaroAlt = pos.Altitude;
                             //                        info.Timestamp = timestamp;
-                            return "[" + info.ICAO24 + "] AirbornePositionMsg: Lat= " + info.Lat.ToString("F8") + ", Lon=" + info.Lon.ToString("F8") + ", Alt= " + info.Alt.ToString() + ", Time= " + info.Timestamp.ToString("HH:mm:ss.fff");
+                            return "[" + info.ICAO24 + "] AirbornePositionMsg[TC" + pos.FormatTypeCode.ToString() + "]: Lat= " + info.Lat.ToString("F8") + ", Lon=" + info.Lon.ToString("F8") + ", Alt= " + info.BaroAlt.ToString() + ", Time= " + info.Timestamp.ToString("HH:mm:ss.fff");
                         }
                         catch
                         {
@@ -166,9 +169,9 @@ namespace LibADSB
                     info.Lat = globalpos[0];
                     info.Lon = globalpos[1];
                     if (pos.HasValidAltitude)
-                        info.Alt = pos.Altitude;
+                        info.BaroAlt = pos.Altitude;
 //                    info.Timestamp = timestamp;
-                    return "[" + info.ICAO24 + "] AirbornePositionMsg: Lat= " + info.Lat.ToString("F8") + ", Lon=" + info.Lon.ToString("F8") + ", Alt= " + info.Alt.ToString() + ", Time= " +info.Timestamp.ToString("HH:mm:ss.fff");
+                    return "[" + info.ICAO24 + "] AirbornePositionMsg[TC" + pos.FormatTypeCode.ToString() + "]: Lat= " + info.Lat.ToString("F8") + ", Lon=" + info.Lon.ToString("F8") + ", Alt= " + info.BaroAlt.ToString() + ", Time= " +info.Timestamp.ToString("HH:mm:ss.fff");
                 }
                 catch
                 {
@@ -201,7 +204,12 @@ namespace LibADSB
                 info.Speed = heading.Airspeed;
             if (heading.HasValidHeading)
                 info.Heading = heading.Heading;
-            return "[" + info.ICAO24 + "] AirspeedHeadingMsg: Speed=" + info.Speed.ToString() + ", Heading= " + info.Heading.ToString();
+            if (heading.HasGeoMinusBaro)
+                info.GeoMinusBaro = heading.GeoMinusBaro;
+            else
+                info.GeoMinusBaro = int.MinValue;
+
+            return "[" + info.ICAO24 + "] AirspeedHeadingMsg: Speed=" + info.Speed.ToString() + ", Heading= " + info.Heading.ToString() + ", GeoMinusBaro=" + info.GeoMinusBaro.ToString();
         }
 
         private string DecodeVelocityOverGroundMsg(ModeSReply msg, DateTime timestamp)
@@ -224,10 +232,14 @@ namespace LibADSB
                 info.Speed = velocity.Velocity;
             if (velocity.HasValidHeading)
                 info.Heading = velocity.Heading;
-            return "[" + info.ICAO24 + "] VelocityOverGroundMsg: Speed=" + info.Speed.ToString() + ", Heading= " + info.Heading.ToString();
+            if (velocity.HasGeoMinusBaro)
+                info.GeoMinusBaro = velocity.GeoMinusBaro;
+            else
+                info.GeoMinusBaro = int.MinValue;
+            return "[" + info.ICAO24 + "] VelocityOverGroundMsg: Speed=" + info.Speed.ToString() + ", Heading= " + info.Heading.ToString() + ", GeoMinusBaro=" + info.GeoMinusBaro.ToString(); ;
         }
 
-        public string DecodeMessage(string raw_msg, DateTime timestamp)
+        public string DecodeMessage(string raw_msg, DateTime timestamp, bool usegeometricaltonly)
         {
             // decode an ADS-B message and add information to list
             // cut off first and last character
@@ -242,7 +254,12 @@ namespace LibADSB
             //                                        Console.WriteLine(msg.ToString());
             // lock adsbinfolist
             lock (adsbinfos)
+          
             {
+                if (raw_msg.Contains("461E21"))
+                { 
+                    int k = 0;
+                }
                 try
                 {
                     if (msg.GetType() == typeof(IdentificationMsg))
@@ -253,7 +270,7 @@ namespace LibADSB
                     else if (msg.GetType() == typeof(AirbornePositionMsg))
                     {
                         // Airborne position message
-                        return DecodeAirbornePositionMsg(msg, timestamp);
+                        return DecodeAirbornePositionMsg(msg, timestamp, usegeometricaltonly);
                     }
                     else if (msg.GetType() == typeof(VelocityOverGroundMsg))
                     {
@@ -289,7 +306,7 @@ namespace LibADSB
                         (!String.IsNullOrEmpty(info.Value.Call)) &&
                         (info.Value.Lat != double.NaN) &&
                         (info.Value.Lon != double.NaN) &&
-                        (info.Value.Alt != int.MinValue) &&
+                        (info.Value.BaroAlt != int.MinValue) &&
                         (info.Value.Speed != int.MinValue) &&
                         (info.Value.Heading != int.MinValue)
                         )

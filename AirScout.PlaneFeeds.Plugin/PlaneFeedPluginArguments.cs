@@ -12,6 +12,7 @@ namespace AirScout.PlaneFeeds.Plugin
         public string LogDirectory = "";
         public string TmpDirectory = "";
         public string DatabaseDirectory = "";
+        public string PlanePositionsDirectory = "";
 
         public double MaxLat = 0;
         public double MinLon = 0;
@@ -31,6 +32,8 @@ namespace AirScout.PlaneFeeds.Plugin
         public string InstanceID;
         public string SessionKey;
         public string GetKeyURL;
+
+        public bool LogPlanePositions = false;
 
     }
 
