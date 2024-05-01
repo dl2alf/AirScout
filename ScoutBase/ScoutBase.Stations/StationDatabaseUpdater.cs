@@ -83,6 +83,7 @@ namespace ScoutBase.Stations
                         json = sr.ReadToEnd();
                     List<LocationDesignator> tmp = StationData.Database.LocationFromJSON(json);
                     List<LocationDesignator> lds = new List<LocationDesignator>();
+                    int rate_limit_cnt = 0;
                     foreach (LocationDesignator ld in tmp)
                     {
                         // skip locations outsid area of interest if option set
@@ -92,7 +93,11 @@ namespace ScoutBase.Stations
                         if (this.CancellationPending)
                             return false;
                         // reduce CPU load
-                        Thread.Sleep(1);
+                        if (++rate_limit_cnt > 100)
+                        {
+                            Thread.Sleep(1);
+                            rate_limit_cnt = 0;
+                        }
                     }
                     // check for empty database
                     if (StationData.Database.LocationCount() == 0)
@@ -133,6 +138,7 @@ namespace ScoutBase.Stations
                         json = sr.ReadToEnd();
                     List<QRVDesignator> tmp = StationData.Database.QRVFromJSON(json);
                     List<QRVDesignator> qrvs = new List<QRVDesignator>();
+                    int rate_limit_cnt = 0;
                     foreach (QRVDesignator qrv in tmp)
                     {
                         // skip locations outsid area of interest if option set
@@ -148,7 +154,11 @@ namespace ScoutBase.Stations
                         if (this.CancellationPending)
                             return false;
                         // reduce CPU load
-                        Thread.Sleep(1);
+                        if (++rate_limit_cnt > 100)
+                        {
+                            Thread.Sleep(1);
+                            rate_limit_cnt = 0;
+                        }
                     }
                     // chek for empty database
                     if (StationData.Database.QRVCount() == 0)
