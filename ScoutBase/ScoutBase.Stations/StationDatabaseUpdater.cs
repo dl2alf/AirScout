@@ -404,11 +404,16 @@ namespace ScoutBase.Stations
                         {
                             // database and/or update changed --> do full check
                             if (!ReadLocationsFromURL(Properties.Settings.Default.Stations_UpdateURL + "locations.zip", Path.Combine(TmpDirectory, "locations.zip"), Path.Combine(TmpDirectory, "locations.json")))
+                            {
                                 errors++;
-                            // save status & timestamps
-                            SaveDatabaseTimeStamp();
-                            SaveDatabaseStatus();
-                            SaveLocationUpdateTimeStamp();
+                            }
+                            else
+                            {
+                                // save status & timestamps
+                                SaveDatabaseTimeStamp();
+                                SaveDatabaseStatus();
+                                SaveLocationUpdateTimeStamp();
+                            }
                         }
                         else
                         {
@@ -425,11 +430,16 @@ namespace ScoutBase.Stations
                         if (HasDatabaseChanged() || HasQRVUpdateChanged())
                         {
                             if (!ReadQRVFromURL(Properties.Settings.Default.Stations_UpdateURL + "qrv.zip", Path.Combine(TmpDirectory, "qrv.zip"), Path.Combine(TmpDirectory, "qrv.json")))
+                            {
                                 errors++;
-                            // save status & timestamps
-                            SaveDatabaseTimeStamp();
-                            SaveDatabaseStatus();
-                            SaveQRVUpdateTimeStamp();
+                            }
+                            else
+                            {
+                                // save status & timestamps
+                                SaveDatabaseTimeStamp();
+                                SaveDatabaseStatus();
+                                SaveQRVUpdateTimeStamp();
+                            }
                         }
                         else
                         {
