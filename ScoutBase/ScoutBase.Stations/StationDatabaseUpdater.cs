@@ -160,7 +160,7 @@ namespace ScoutBase.Stations
                             rate_limit_cnt = 0;
                         }
                     }
-                    // chek for empty database
+                    // check for empty database
                     if (StationData.Database.QRVCount() == 0)
                     {
                         // do bulk insert
