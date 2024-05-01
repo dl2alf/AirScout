@@ -427,7 +427,7 @@ namespace ScoutBase.Stations
                         this.ReportProgress(0, "Updating qrv info from web database...");
                         // get update from url
                         GetUpdateFromURL(Properties.Settings.Default.Stations_UpdateURL + "qrv.zip", Path.Combine(TmpDirectory, "qrv.zip"), Path.Combine(TmpDirectory, "qrv.json"));
-                        if (HasDatabaseChanged() || HasQRVUpdateChanged())
+                        if (HasDatabaseChanged() || HasQRVUpdateChanged() || StationData.Database.QRVCount() == 0)
                         {
                             if (!ReadQRVFromURL(Properties.Settings.Default.Stations_UpdateURL + "qrv.zip", Path.Combine(TmpDirectory, "qrv.zip"), Path.Combine(TmpDirectory, "qrv.json")))
                             {
