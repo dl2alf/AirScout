@@ -371,9 +371,9 @@ namespace ScoutBase.Stations
                 db.DBCommand.Parameters.Clear();
                 db.DBCommand.Parameters.Add(ld.AsString("Call"));
                 db.DBCommand.Parameters.Add(ld.AsString("Loc"));
-                object result = db.ExecuteScalar(db.DBCommand);
-                if (result != null)
-                    return (SQLiteEntry.UNIXTimeToDateTime((int)result));
+                DataTable result = db.Select(db.DBCommand);
+                if (result != null && result.Rows.Count > 0)
+                    return SQLiteEntry.UNIXTimeToDateTime(Convert.ToInt32(result.Rows[0][0]));
             }
             return DateTime.MinValue;
         }
@@ -926,9 +926,9 @@ namespace ScoutBase.Stations
                 db.DBCommand.Parameters.Add(qrv.AsString("Call"));
                 db.DBCommand.Parameters.Add(qrv.AsString("Loc"));
                 db.DBCommand.Parameters.Add(qrv.AsInt32("Band"));
-                object result = db.ExecuteScalar(db.DBCommand);
-                if (result != null)
-                    return (SQLiteEntry.UNIXTimeToDateTime((int)result));
+                DataTable result = db.Select(db.DBCommand);
+                if (result != null && result.Rows.Count > 0)
+                    return SQLiteEntry.UNIXTimeToDateTime(Convert.ToInt32(result.Rows[0][0]));
             }
             return DateTime.MinValue;
         }
