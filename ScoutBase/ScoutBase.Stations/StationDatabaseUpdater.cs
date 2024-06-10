@@ -247,29 +247,17 @@ namespace ScoutBase.Stations
 
         private DateTime GetSavedDatabaseTimeStamp()
         {
-            DateTime dt = DateTime.MinValue;
-            dt = Properties.Settings.Default.Stations_TimeStamp;
-            // change kind to UTC as it is not specified in settings
-            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
-            return dt;
+            return StationData.Database.StationUpdateTimeStamp;
         }
 
         private DateTime GetSavedLocationUpdateTimeStamp()
         {
-            DateTime dt = DateTime.MinValue;
-            dt = Properties.Settings.Default.Locations_Update_TimeStamp;
-            // change kind to UTC as it is not specified in settings
-            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
-            return dt;
+            return StationData.Database.LocationUpdateTimeStamp;
         }
 
         private DateTime GetSavedQRVUpdateTimeStamp()
         {
-            DateTime dt = DateTime.MinValue;
-            dt = Properties.Settings.Default.QRV_Update_TimeStamp;
-            // change kind to UTC as it is not specified in settings
-            dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
-            return dt;
+            return StationData.Database.QRVUpdateTimeStamp;
         }
 
         private DATABASESTATUS GetSavedDatabaseStatus()
@@ -279,7 +267,9 @@ namespace ScoutBase.Stations
 
         private void SaveDatabaseTimeStamp()
         {
-            Properties.Settings.Default.Stations_TimeStamp = GetDatabaseTimeStamp();
+            // we do it twice to trigger an update to the database file - hack and makes me wonder if this timestamp is needed at all
+            StationData.Database.StationUpdateTimeStamp = GetDatabaseTimeStamp();
+            StationData.Database.StationUpdateTimeStamp = GetDatabaseTimeStamp();
         }
 
         private void SaveDatabaseStatus()
@@ -289,12 +279,12 @@ namespace ScoutBase.Stations
 
         private void SaveLocationUpdateTimeStamp()
         {
-            Properties.Settings.Default.Locations_Update_TimeStamp = GetLocationtUpdateTimeStamp();
+            StationData.Database.LocationUpdateTimeStamp = GetLocationtUpdateTimeStamp();
         }
 
         private void SaveQRVUpdateTimeStamp()
         {
-            Properties.Settings.Default.QRV_Update_TimeStamp = GetQRVUpdateTimeStamp();
+            StationData.Database.QRVUpdateTimeStamp = GetQRVUpdateTimeStamp();
         }
 
         private bool HasDatabaseChanged()
@@ -303,7 +293,7 @@ namespace ScoutBase.Stations
             {
                 DateTime dt1 = GetSavedDatabaseTimeStamp();
                 DateTime dt2 = GetDatabaseTimeStamp();
-                return dt1 != dt2;
+                return (dt2 - dt1).TotalSeconds > 5*60; // allow for some time difference
             }
             catch
             {
@@ -410,9 +400,9 @@ namespace ScoutBase.Stations
                             else
                             {
                                 // save status & timestamps
-                                SaveDatabaseTimeStamp();
                                 SaveDatabaseStatus();
                                 SaveLocationUpdateTimeStamp();
+                                SaveDatabaseTimeStamp();
                             }
                         }
                         else
@@ -436,9 +426,9 @@ namespace ScoutBase.Stations
                             else
                             {
                                 // save status & timestamps
-                                SaveDatabaseTimeStamp();
                                 SaveDatabaseStatus();
                                 SaveQRVUpdateTimeStamp();
+                                SaveDatabaseTimeStamp();
                             }
                         }
                         else

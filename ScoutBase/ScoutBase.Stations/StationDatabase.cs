@@ -52,12 +52,15 @@ namespace ScoutBase.Stations
             // add table description manually
             TableDescriptions.Add(LocationDesignator.TableName, "Holds location information.");
             TableDescriptions.Add(QRVDesignator.TableName, "Holds QRV information.");
+            TableDescriptions.Add(TableLastUpdatedTableName, "Holds Timestamps of last update.");
             db = OpenDatabase("stations.db3", DefaultDatabaseDirectory(), Properties.Settings.Default.Database_InMemory);
             // create tables with schemas if not exist
             if (!LocationTableExists())
                 LocationCreateTable();
             if (!QRVTableExists())
                 QRVCreateTable();
+            if (!LastUpdatedTableExists())
+                LastUpdatedCreateTable();
         }
         public string DefaultDatabaseDirectory()
         {
@@ -110,6 +113,9 @@ namespace ScoutBase.Stations
             return Properties.Settings.Default.Stations_UpdateURL;
         }
 
+        private static readonly string TableLastUpdatedTableName = "Table_last_updated";
+        private static readonly string StationTableName = "Station";
+
         #region Location
 
         public bool LocationTableExists(string tablename = "")
@@ -119,6 +125,11 @@ namespace ScoutBase.Stations
             if (String.IsNullOrEmpty(tn))
                 tn = LocationDesignator.TableName;
             return db.TableExists(tn);
+        }
+
+        public bool LastUpdatedTableExists()
+        {
+            return db.TableExists(TableLastUpdatedTableName);
         }
 
         public void LocationCreateTable(string tablename = "")
@@ -133,6 +144,84 @@ namespace ScoutBase.Stations
                 db.DBCommand.Parameters.Clear();
                 db.Execute(db.DBCommand);
             }
+        }
+
+        private void LastUpdatedCreateTable()
+        {
+            // create last updated timestamp table
+            db.DBCommand.CommandText = "CREATE TABLE `" + TableLastUpdatedTableName + "`(TableName TEXT PRIMARY KEY NOT NULL, LastUpdated INT32 Default 0)";
+            db.DBCommand.Parameters.Clear();
+            db.Execute(db.DBCommand);
+        }
+
+        private DateTime GetTableLastUpdatedTimeStamp(string tablename)
+        {
+            DateTime dt = DateTime.SpecifyKind(DateTime.MinValue, DateTimeKind.Utc);
+            if (LastUpdatedTableExists())
+            {
+                lock (db.DBCommand)
+                {
+                    db.DBCommand.CommandText = "SELECT LastUpdated FROM " + TableLastUpdatedTableName + " WHERE TableName = @TableName";
+                    db.DBCommand.Parameters.Clear();
+                    var prm = db.DBCommand.CreateParameter();
+                    prm.ParameterName = "@TableName";
+                    prm.Value = tablename;
+                    db.DBCommand.Parameters.Add(prm);
+                    DataTable result = db.Select(db.DBCommand);
+                    if (result != null && result.Rows.Count > 0)
+                    {
+                        dt = SQLiteEntry.UNIXTimeToDateTime(Convert.ToInt32(result.Rows[0][0]));
+                    }
+                }
+            }
+            return dt;
+        }
+
+        private void SetTableLastUpdatedTimeStamp(string tablename, DateTime dt)
+        {
+            if (!LastUpdatedTableExists())
+                LastUpdatedCreateTable();
+            if (LastUpdatedTableExists())
+            {
+                lock (db.DBCommand)
+                {
+                    db.DBCommand.CommandText = "INSERT INTO " + TableLastUpdatedTableName + "(TableName, LastUpdated) VALUES (@TableName, @LastUpdated) " +
+                        " ON CONFLICT (TableName) DO UPDATE SET LastUpdated = excluded.LastUpdated";
+                    db.DBCommand.Parameters.Clear();
+                    var prm = db.DBCommand.CreateParameter();
+                    prm.ParameterName = "@LastUpdated";
+                    prm.Value = SQLiteEntry.DateTimeToUNIXTime(dt);
+                    db.DBCommand.Parameters.Add(prm);
+                    var prm2 = db.DBCommand.CreateParameter();
+                    prm2.ParameterName = "@TableName";
+                    prm2.Value = tablename;
+                    db.DBCommand.Parameters.Add(prm2);
+                    int result = db.ExecuteNonQuery(db.DBCommand);
+                    if (result != 1)
+                        Console.WriteLine("SetTableLastUpdatedTimeStamp result " + result);
+                }
+            }
+        }
+
+        public DateTime LocationUpdateTimeStamp
+        {
+            get { return GetTableLastUpdatedTimeStamp(LocationDesignator.TableName); }
+
+            set { SetTableLastUpdatedTimeStamp(LocationDesignator.TableName, value); }
+        }
+
+        public DateTime QRVUpdateTimeStamp
+        {
+            get { return GetTableLastUpdatedTimeStamp(QRVDesignator.TableName); }
+
+            set { SetTableLastUpdatedTimeStamp(QRVDesignator.TableName, value); }
+        }
+
+        public DateTime StationUpdateTimeStamp
+        {
+            get { return GetTableLastUpdatedTimeStamp(StationTableName); }
+
+            set { SetTableLastUpdatedTimeStamp(StationTableName, value); }
         }
 
         public long LocationCount()
