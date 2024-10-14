@@ -422,6 +422,10 @@ namespace AirScout
         GMapRoute gmr_NearestFull;
         GMapRoute gmr_NearestVisible;
 
+        // Polygons
+        GMapPolygon gmp_MyBeam;
+        GMapPolygon gmp_DXBeam;
+
         // Markers
         GMapMarker gmm_MyLoc;
         GMapMarker gmm_DXLoc;
@@ -544,7 +548,7 @@ namespace AirScout
 
         // Analysis
         private List<DateTime> AllLastUpdated = new List<DateTime>();
-        private List<AircraftPositionDesignator> AllPositions = new List<AircraftPositionDesignator>();
+        private List<PlaneInfo> AllPositions = new List<PlaneInfo>();
         private long AircraftPositionsCount = 0;
 
         // Nearest plane
@@ -1118,6 +1122,12 @@ namespace AirScout
             Properties.Settings.Default.StationsDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.StationsDatabase_Directory);
             Properties.Settings.Default.ElevationDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.StationsDatabase_Directory);
             Properties.Settings.Default.PropagationDatabase_Directory = QualifyDatabaseDirectory(Properties.Settings.Default.PropagationDatabase_Directory);
+
+            // add Map Providers für Browser view
+//            if ((Properties.Settings.Default.Map_Providers == null) || (Properties.Settings.Default.Map_Providers.Count == 0))
+            {
+                Properties.Settings.Default.Map_Providers = MapProviders.GetAll();
+            }
         }
 
         private void DumpSettingsToLog(string name, SettingsPropertyValueCollection settings)
@@ -1650,12 +1660,6 @@ namespace AirScout
                     }
                 }
 
-                // update image list sizes
-                il_Planes_L.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_L, Properties.Settings.Default.Planes_IconSize_L);
-                il_Planes_M.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_M, Properties.Settings.Default.Planes_IconSize_M);
-                il_Planes_H.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_H, Properties.Settings.Default.Planes_IconSize_H);
-                il_Planes_S.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_S, Properties.Settings.Default.Planes_IconSize_S);
-
                 // try to upgrade user settings from prevoius version on first run
                 try
                 {
@@ -1671,6 +1675,7 @@ namespace AirScout
                         {
                             Log.WriteMessage("Upgrading settings.");
                             Properties.Settings.Default.Upgrade();
+
                             // handle skip to version 1.3.3.1
                             if (String.IsNullOrEmpty(Properties.Settings.Default.Version) || (String.Compare(Properties.Settings.Default.Version, "1.3.3.0") < 0))
                             {
@@ -1752,6 +1757,11 @@ namespace AirScout
                 {
                     Log.WriteMessage(ex.ToString(), LogLevel.Error);
                 }
+
+                // V1.4.3: always reset news site url to its default value
+                Properties.Settings.Default.News_URL = GetPropertyDefaultValue(nameof(Properties.Settings.Default.News_URL));
+
+
                 // get initial widths and heigths
                 gb_Map_Info_DefaultWidth = gb_Map_Info.Width;
                 tc_Main_DefaultHeight = tc_Main.Height;
@@ -2251,6 +2261,7 @@ namespace AirScout
                 WebserverStartArgs args = new WebserverStartArgs();
                 args.TmpDirectory = TmpDirectory;
                 args.WebserverDirectory = WebserverDirectory;
+                args.PlaneFeedPlugins = PlaneFeedPlugins;
                 if ((bw_Webserver != null) && (!bw_Webserver.IsBusy))
                     bw_Webserver.RunWorkerAsync(args);
             }
@@ -2481,6 +2492,12 @@ namespace AirScout
 
         private void InitializeIcons()
         {
+            // update image list sizes
+            il_Planes_L.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_L, Properties.Settings.Default.Planes_IconSize_L);
+            il_Planes_M.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_M, Properties.Settings.Default.Planes_IconSize_M);
+            il_Planes_H.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_H, Properties.Settings.Default.Planes_IconSize_H);
+            il_Planes_S.ImageSize = new System.Drawing.Size(Properties.Settings.Default.Planes_IconSize_S, Properties.Settings.Default.Planes_IconSize_S);
+
             // create extra icons regular size
             Log.WriteMessage("Started.");
             try
@@ -2737,6 +2754,14 @@ namespace AirScout
             // do not initialize webbrowser --> not working on all Linux systems
             if (SupportFunctions.IsMono)
                 return;
+            
+            // remove webbrowser first if already existing
+            if (this.wb_News != null)
+                this.tp_News.Controls.Remove(this.wb_News);
+
+            // V1.4.3: always reset news site url to its default value
+            Properties.Settings.Default.News_URL = GetPropertyDefaultValue(nameof(Properties.Settings.Default.News_URL));
+
             // iniitialize webbrowser on Windows
             this.wb_News = new System.Windows.Forms.WebBrowser();
             // 
@@ -2750,7 +2775,7 @@ namespace AirScout
             this.wb_News.Size = new System.Drawing.Size(844, 197);
             this.wb_News.TabIndex = 0;
             this.wb_News.ScriptErrorsSuppressed = true;
-            this.wb_News.Url = global::AirScout.Properties.Settings.Default.News_URL;
+            this.wb_News.Url = AirScout.Properties.Settings.Default.News_URL;
             this.tp_News.Controls.Add(this.wb_News);
         }
 
@@ -3318,18 +3343,25 @@ namespace AirScout
             Log.WriteMessage("Started.");
             try
             {
-                Bitmap bmp = new Bitmap(this.Width, this.Height);
-                this.DrawToBitmap(bmp, new System.Drawing.Rectangle(new System.Drawing.Point(0, 0), this.Size));
-                EncoderParameters encoderParameters = new EncoderParameters(1);
-                encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L);
-                ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-                foreach (ImageCodecInfo codec in codecs)
-                {
-                    if (codec.FormatID == System.Drawing.Imaging.ImageFormat.Jpeg.Guid)
-                    {
-                        bmp.Save(TmpDirectory + Path.DirectorySeparatorChar + Properties.Settings.Default.Band + "_" + Properties.Settings.Default.MyCall.Replace("/", "_") + "_" + Properties.Settings.Default.DXCall.Replace("/", "_") + "_" + CurrentTime.ToString("yyyyMMdd") + "_" + CurrentTime.ToString("HHmmss") + ".jpg", codec, encoderParameters);
-                    }
-                }
+                this.BringToFront();
+
+                Rectangle r = this.RectangleToScreen(this.ClientRectangle);
+                int borderWidth = r.Left - this.Left;
+
+                Graphics myGraphics = this.CreateGraphics();
+                System.Drawing.Size s = this.Size;
+                Bitmap bmp = new Bitmap(s.Width - 2 * borderWidth, s.Height - borderWidth, myGraphics);
+                Graphics memoryGraphics = Graphics.FromImage(bmp);
+                memoryGraphics.CopyFromScreen(this.DesktopLocation.X + borderWidth, this.DesktopLocation.Y, 0, 0, s);
+
+                bmp.Save(
+                    TmpDirectory +
+                    Path.DirectorySeparatorChar +
+                    Properties.Settings.Default.Band + "_" +
+                    Properties.Settings.Default.MyCall.Replace("/", "_") + "_" +
+                    Properties.Settings.Default.DXCall.Replace("/", "_") + "_" +
+                    CurrentTime.ToString("yyyyMMdd") + "_" +
+                    CurrentTime.ToString("HHmmss") + ".jpg");
             }
             catch (Exception ex)
             {
@@ -3815,7 +3847,7 @@ namespace AirScout
         #region Play & Pause
 
         private void Play()
-        {  
+        {
             PlayMode = AIRSCOUTPLAYMODE.FORWARD;
             // switch tab control according to path mode
             if (PathMode == AIRSCOUTPATHMODE.SINGLE)
@@ -3831,6 +3863,8 @@ namespace AirScout
             tc_Control.Refresh();
             // refresh watch list
             RefreshWatchlistView();
+            // clear all paths
+            ClearAllPathsInMap();
             // update all current paths
             UpdatePaths();
             // clear spectrum
@@ -3911,8 +3945,10 @@ namespace AirScout
             gb_Analysis_Player.Enabled = true;
             tc_Main.Enabled = true;
             tc_Map.Enabled = true;
+
             // stop tracking
             TrackMode = AIRSCOUTTRACKMODE.NONE;
+
             //referesh main window
             this.Refresh();
         }
@@ -3997,17 +4033,23 @@ namespace AirScout
                 gmr_NearestFull = new GMapRoute("fullpath");
                 gmr_NearestFull.Stroke = (ppath.Valid) ? new Pen(Color.Black, 3) : new Pen(Color.Red, 3);
                 gmo_NearestPaths.Routes.Add(gmr_NearestFull);
-                foreach (PropagationPoint ppoint in ppoints)
+
+                // draw path point except the last ones
+                for (int i = 0; i < ppoints.Length - 1; i++)
                 {
-                    gmr_FullPath.Points.Add(new PointLatLng(ppoint.Lat, ppoint.Lon));
-                    gmr_NearestFull.Points.Add(new PointLatLng(ppoint.Lat, ppoint.Lon));
+                    gmr_FullPath.Points.Add(new PointLatLng(ppoints[i].Lat, ppoints[i].Lon));
+                    gmr_NearestFull.Points.Add(new PointLatLng(ppoints[i].Lat, ppoints[i].Lon));
                 }
+                // add last point exactly on dx location
+                gmr_FullPath.Points.Add(new PointLatLng(ppath.Lat2, ppath.Lon2));
+                gmr_NearestFull.Points.Add(new PointLatLng(ppath.Lat2, ppath.Lon2));
+
                 // draw mutual visible path
                 gmr_VisiblePpath = new GMapRoute("visiblepath");
                 gmr_VisiblePpath.Stroke = new Pen(Color.Magenta, 3);
                 gmr_NearestVisible = new GMapRoute("visiblepath");
                 gmr_NearestVisible.Stroke = new Pen(Color.Magenta, 3);
-                for (int i = 0; i < ppoints.Length; i++)
+                for (int i = 0; i < ppoints.Length - 1; i++)
                 {
                     if ((Math.Max(ppoints[i].H1, ppoints[i].H2) > 0) && (Math.Max(ppoints[i].H1, ppoints[i].H2) < Properties.Settings.Default.Planes_MaxAlt))
                     {
@@ -4016,8 +4058,102 @@ namespace AirScout
                         gmr_NearestVisible.Points.Add(p);
                     }
                 }
+
+                if ((Math.Max(ppoints[ppoints.Length - 1].H1, ppoints[ppoints.Length - 1].H2) > 0) && (Math.Max(ppoints[ppoints.Length - 1].H1, ppoints[ppoints.Length - 1].H2) < Properties.Settings.Default.Planes_MaxAlt))
+                {
+                    PointLatLng p = new PointLatLng(ppath.Lat2, ppath.Lon2);
+                    gmr_VisiblePpath.Points.Add(p);
+                    gmr_NearestVisible.Points.Add(p);
+                }
+
                 gmo_PropagationPaths.Routes.Add(gmr_VisiblePpath);
                 gmo_NearestPaths.Routes.Add(gmr_NearestVisible);
+
+                // show antenna beamwidths, if enabled
+                if (Properties.Settings.Default.Map_ShowBeamWidth)
+                {
+                    // calculate antenna beamwidth
+                    double mybeamwidth = SupportFunctions.GetBeamWidthFromGain(ppath.QRV1.AntennaGain);
+                    double myleftbeam = ppath.Bearing12 - mybeamwidth / 2.0;
+                    if (myleftbeam > 360) myleftbeam = myleftbeam - 360;
+                    if (myleftbeam < 0) myleftbeam = myleftbeam + 360;
+                    double myrightbeam = ppath.Bearing12 + mybeamwidth / 2.0;
+                    if (myrightbeam > 360) myrightbeam = myrightbeam - 360;
+                    if (myrightbeam < 0) myrightbeam = myrightbeam + 360;
+
+                    List<PointLatLng> mybeampoints = new List<PointLatLng>();
+                    LatLon.GPoint g;
+
+                    // calculate left beam
+                    for (int i = 0; i < ppoints.Length; i++)
+                    {
+                        g = LatLon.DestinationPoint(ppath.Lat1, ppath.Lon1, myleftbeam, i);
+                        mybeampoints.Add(new PointLatLng(g.Lat, g.Lon));
+                    }
+
+                    // calculate circle
+                    for (int i = 0; i < mybeamwidth; i++)
+                    {
+                        double a = myleftbeam + i;
+                        if (a > 360) a = a - 360;
+                        if (a < 0) a = a + 360;
+                        g = LatLon.DestinationPoint(ppath.Lat1, ppath.Lon1, a, ppoints.Length);
+                        mybeampoints.Add(new PointLatLng(g.Lat, g.Lon));
+                    }
+
+                    // calculate right beam
+                    for (int i = ppoints.Length - 1; i >= 0; i--)
+                    {
+                        g = LatLon.DestinationPoint(ppath.Lat1, ppath.Lon1, myrightbeam, i);
+                        mybeampoints.Add(new PointLatLng(g.Lat, g.Lon));
+                    }
+
+                    gmp_MyBeam = new GMapPolygon(mybeampoints, "mybeam");
+                    gmp_MyBeam.Stroke = new Pen(Color.Gray, 1);
+                    gmp_MyBeam.Fill = new SolidBrush(Color.FromArgb(50, Color.Gray));
+                    gmo_PropagationPaths.Polygons.Add(gmp_MyBeam);
+
+                    // calculate antenna beamwidth
+                    double dxbeamwidth = SupportFunctions.GetBeamWidthFromGain(ppath.QRV2.AntennaGain);
+                    double dxleftbeam = ppath.Bearing21 - dxbeamwidth / 2.0;
+                    if (dxleftbeam > 360) dxleftbeam = dxleftbeam - 360;
+                    if (dxleftbeam < 0) dxleftbeam = dxleftbeam + 360;
+                    double dxrightbeam = ppath.Bearing21 + dxbeamwidth / 2.0;
+                    if (dxrightbeam > 360) dxrightbeam = dxrightbeam - 360;
+                    if (dxrightbeam < 0) dxrightbeam = dxrightbeam + 360;
+
+                    List<PointLatLng> dxbeampoints = new List<PointLatLng>();
+
+                    // calculate left beam
+                    for (int i = 0; i < ppoints.Length; i++)
+                    {
+                        g = LatLon.DestinationPoint(ppath.Lat2, ppath.Lon2, dxleftbeam, i);
+                        dxbeampoints.Add(new PointLatLng(g.Lat, g.Lon));
+                    }
+
+                    // calculate circle
+                    for (int i = 0; i < dxbeamwidth; i++)
+                    {
+                        double a = dxleftbeam + i;
+                        if (a > 360) a = a - 360;
+                        if (a < 0) a = a + 360;
+                        g = LatLon.DestinationPoint(ppath.Lat2, ppath.Lon2, a, ppoints.Length);
+                        dxbeampoints.Add(new PointLatLng(g.Lat, g.Lon));
+                    }
+
+
+                    // calculate right beam
+                    for (int i = ppoints.Length - 1; i >= 0; i--)
+                    {
+                        g = LatLon.DestinationPoint(ppath.Lat2, ppath.Lon2, dxrightbeam, i);
+                        dxbeampoints.Add(new PointLatLng(g.Lat, g.Lon));
+                    }
+
+                    gmp_DXBeam = new GMapPolygon(dxbeampoints, "dxbeam");
+                    gmp_DXBeam.Stroke = new Pen(Color.Gray, 1);
+                    gmp_DXBeam.Fill = new SolidBrush(Color.FromArgb(50, Color.Gray));
+                    gmo_PropagationPaths.Polygons.Add(gmp_DXBeam);
+                }
             }
             catch (Exception ex)
             {
@@ -4048,6 +4184,7 @@ namespace AirScout
                 gmo_PropagationPaths.Clear();
                 gmo_NearestPaths.Clear();
                 gmo_Objects.Clear();
+                gmo_CallsignDetails.Clear();
 
                 // clear all planes and tooltips
                 gmo_Planes.Clear();
@@ -4522,7 +4659,7 @@ namespace AirScout
             if (Properties.Settings.Default.InfoWin_Track)
                 m.ToolTipText += "\nTrack: " + (int)info.Track + "°";
             if (Properties.Settings.Default.InfoWin_Type)
-                m.ToolTipText += "\nType: " + info.Manufacturer + " " + info.Model + " [" + PlaneCategories.GetShortStringValue(info.Category) + "]";
+                m.ToolTipText += "\nType: " + info.Manufacturer.Substring(0, Math.Min(info.Manufacturer.Length, 20)) + " " + info.Model.Substring(0, Math.Min(info.Model.Length, 20)) + " [" + PlaneCategories.GetShortStringValue(info.Category) + "]";
             // set tooltip on if hot
             if (selected)
                 m.ToolTipMode = MarkerTooltipMode.Always;
@@ -4603,7 +4740,7 @@ namespace AirScout
                     m.ToolTipText += "\nSpeed: " + info.Speed.ToString("F0") + "kts";
             }
             if (Properties.Settings.Default.InfoWin_Type)
-                m.ToolTipText += "\nType: " + info.Manufacturer + " " + info.Model + " [" + PlaneCategories.GetShortStringValue(info.Category) + "]";
+                m.ToolTipText += "\nType: " + info.Manufacturer.Substring(0, Math.Min(info.Manufacturer.Length, 20)) + " " + info.Model.Substring(0, Math.Min(info.Model.Length, 20)) + " [" + PlaneCategories.GetShortStringValue(info.Category) + "]";
 
             if (info.Potential > 0)
             {
@@ -4716,14 +4853,7 @@ namespace AirScout
                                 gmo_Planes.Markers.Add(CreatePlaneDetailed(plane, isselected));
                                 break;
                             default:
-                                if (Properties.Settings.Default.InfoWin_AlwaysDetailed)
-                                {
-                                    gmo_Planes.Markers.Add(CreatePlaneDetailed(plane, isselected));
-                                }
-                                else
-                                {
                                     gmo_Planes.Markers.Add(CreatePlaneSimple(plane, isselected));
-                                }
                                 break;
                         }
 
@@ -5090,10 +5220,21 @@ namespace AirScout
                     if (Properties.Settings.Default.Time_Offline > dtp_Analysis_MaxValue.Value)
                         Properties.Settings.Default.Time_Offline = dtp_Analysis_MaxValue.Value;
                     CurrentTime = Properties.Settings.Default.Time_Offline;
-                    tb_Analysis_Time.Text = CurrentTime.ToString("yyyy-MM-hh HH:mm:ss");
+                    tb_Analysis_Time.Text = CurrentTime.ToString("yyyy-MM-dd HH:mm:ss");
                     double span = (CurrentTime - dtp_Analysis_MinValue.Value).TotalSeconds;
                     if ((span > sb_Analysis_Play.Minimum) && (span < sb_Analysis_Play.Maximum))
                         sb_Analysis_Play.Value = (int)span;
+
+                    // clear planes cache and fill in history data
+                    Planes.Clear();
+                    foreach (PlaneInfo info in AllPositions)
+                    {
+                        if ((info.Time >= dtp_Analysis_MinValue.Value) && (info.Time <= CurrentTime))
+                        {
+                            Planes[info.Hex] =  info;
+                        }
+                    }
+
                     UpdatePlanes();
                 }
             }
@@ -5202,8 +5343,8 @@ namespace AirScout
                                 SelectedPlanes.Add((string)item.Tag);
                             }
                         }
-                        // set track mode
-                        if (Properties.Settings.Default.Track_Activate)
+                        // set track mode, when playing
+                        if ((PlayMode == AIRSCOUTPLAYMODE.FORWARD) && Properties.Settings.Default.Track_Activate)
                         {
                             TrackMode = AIRSCOUTTRACKMODE.TRACK;
                         }
@@ -5300,7 +5441,7 @@ namespace AirScout
 
         private void gm_Main_Paint(object sender, PaintEventArgs e)
         {
-            if (Properties.Settings.Default.Map_TrackingGaugesShow && (TrackMode == AIRSCOUTTRACKMODE.TRACK) && (TrackValues != null))
+            if (Properties.Settings.Default.Map_TrackingGaugesShow && (PlayMode == AIRSCOUTPLAYMODE.FORWARD) && (TrackMode == AIRSCOUTTRACKMODE.TRACK) && (TrackValues != null))
             {
                 // paint gauges on top of the map if enabled
                 ag_Azimuth.Value = (float)TrackValues.MyAzimuth;
@@ -6215,6 +6356,7 @@ namespace AirScout
             sb_Analysis_Play.Minimum = 0;
             sb_Analysis_Play.Maximum = (int)(dtp_Analysis_MaxValue.Value - dtp_Analysis_MinValue.Value).TotalSeconds;
             sb_Analysis_Play.Value = 0;
+
         }
 
         private void tp_Analysis_Enter(object sender, EventArgs e)
@@ -6251,6 +6393,7 @@ namespace AirScout
             btn_Map_PlayPause.Enabled = false;
             LifeMode = AIRSCOUTLIFEMODE.HISTORY;
             PlayMode = AIRSCOUTPLAYMODE.PAUSE;
+            StopAllBackgroundWorkers();
             if (!bw_Analysis_DataGetter.IsBusy)
                 bw_Analysis_DataGetter.RunWorkerAsync();
         }
@@ -6277,6 +6420,7 @@ namespace AirScout
             }
             GC.Collect();
             // go into online mode
+            StartAllBackgroundWorkers();
             btn_Analysis_OFF.Enabled = false;
             btn_Analysis_OFF.BackColor = Color.Gray;
             btn_Analysis_Planes_Load.Enabled = false;
@@ -6334,18 +6478,26 @@ namespace AirScout
             try
             {
                 OpenFileDialog Dlg = new OpenFileDialog();
-                Dlg.Filter = "Java Script Object Notation File|*.json|Comma Separated Values|*.csv";
+                Dlg.Filter = "Java Script Object Notation File|*.json|Comma Separated Values|*.csv|History Values|*.hist";
                 Dlg.DefaultExt = "json";
                 Dlg.CheckFileExists = true;
                 Dlg.CheckPathExists = true;
-                Dlg.Multiselect = false;
+                Dlg.Multiselect = true;
                 Dlg.InitialDirectory = TmpDirectory;
+                if (!String.IsNullOrEmpty(Properties.Settings.Default.Analysis_History_LoadFileName))
+                {
+                    Dlg.InitialDirectory = Path.GetDirectoryName(Properties.Settings.Default.Analysis_History_LoadFileName);
+                    Dlg.DefaultExt = Path.GetExtension(Properties.Settings.Default.Analysis_History_LoadFileName).Replace(".", "");
+                    Dlg.FileName = "*." + Dlg.DefaultExt;
+                }
+
                 if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     if (!bw_Analysis_FileLoader.IsBusy)
                     {
+                        Properties.Settings.Default.Analysis_History_LoadFileName = Dlg.FileName;
                         btn_Analysis_Planes_Load.Enabled = false;
-                        bw_Analysis_FileLoader.RunWorkerAsync(Dlg.FileName);
+                        bw_Analysis_FileLoader.RunWorkerAsync(Dlg.FileNames);
                     }
                 }
             }
@@ -6387,6 +6539,7 @@ namespace AirScout
             Dlg.FileName = "Path Information " + Properties.Settings.Default.MyCall.Replace("/", "_") + " to " + Properties.Settings.Default.DXCall.Replace("/", "_");
             Dlg.InitialDirectory = TmpDirectory;
             Dlg.OverwritePrompt = true;
+            string separator = SupportFunctions.GetCSVSeparator();
             if (Dlg.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -6468,23 +6621,36 @@ namespace AirScout
                     ppath.QRV2 = dxqrv;
                     using (StreamWriter sw = new StreamWriter(Dlg.FileName))
                     {
-                        sw.WriteLine("Distance[km];Lat[deg];Lon[deg];Elevation[m]; Min_h1[m]; Min_h2[m]; Min_h[m]; Max_h[m]; F1[m];eps1[deg];eps2[deg];eps1_min[deg];eps2_min[deg];ElevationModel");
+                        sw.WriteLine("Distance[km]" + separator +
+                            "Lat[deg]" + separator +
+                            "Lon[deg]" + separator +
+                            "Elevation[m] " + separator +
+                            "Min_h1[m] " + separator +
+                            "Min_h2[m] " + separator +
+                            "Min_h[m] " + separator +
+                            "Max_h[m] " + separator +
+                            "F1[m]" + separator +
+                            "eps1[deg]" + separator +
+                            "eps2[deg]" + separator +
+                            "eps1_min[deg]" + separator +
+                            "eps2_min[deg]" + separator +
+                            "ElevationModel");
                         for (int i = 0; i < epath.Count; i++)
                         {
                             double dist = (double)i * epath.StepWidth / 1000.0;
                             PropagationPoint p = ppath.GetInfoPoint(dist);
-                            sw.WriteLine(dist.ToString() + ";" +
-                                p.Lat.ToString() + ";" +
-                                p.Lon.ToString() + ";" +
-                                epath.Path[i].ToString() + ";" +
-                                p.H1.ToString() + ";" +
-                                p.H2.ToString() + ";" +
-                                Math.Max(p.H1, p.H2).ToString() + ";" +
-                                Properties.Settings.Default.Planes_MaxAlt.ToString() + ";" +
-                                p.F1.ToString() + ";" +
-                                (Propagation.EpsilonFromHeights(ppath.h1, dist, epath.Path[i],ppath.Radius) / Math.PI * 180.0).ToString() + ";" +
-                                (Propagation.EpsilonFromHeights(ppath.h2, ppath.Distance-dist, epath.Path[i], ppath.Radius) / Math.PI * 180.0).ToString() + ";" +
-                                (ppath.Eps1_Min / Math.PI * 180.0).ToString() + ";" +
+                            sw.WriteLine(dist.ToString() + separator +
+                                p.Lat.ToString() + separator +
+                                p.Lon.ToString() + separator +
+                                epath.Path[i].ToString() + separator +
+                                p.H1.ToString() + separator +
+                                p.H2.ToString() + separator +
+                                Math.Max(p.H1, p.H2).ToString() + separator +
+                                Properties.Settings.Default.Planes_MaxAlt.ToString() + separator +
+                                p.F1.ToString() + separator +
+                                (Propagation.EpsilonFromHeights(ppath.h1, dist, epath.Path[i],ppath.Radius) / Math.PI * 180.0).ToString() + separator +
+                                (Propagation.EpsilonFromHeights(ppath.h2, ppath.Distance-dist, epath.Path[i], ppath.Radius) / Math.PI * 180.0).ToString() + separator +
+                                (ppath.Eps1_Min / Math.PI * 180.0).ToString() + separator +
                                 (ppath.Eps2_Min / Math.PI * 180.0).ToString());
                     }
                 }
@@ -6504,7 +6670,7 @@ namespace AirScout
                 Time_Offline_Interval = 1;
             if ((AllPositions == null) || (AllPositions.Count == 0))
                 return;
-            CrossingHistoryDlg Dlg = new CrossingHistoryDlg(dtp_Analysis_MinValue.Value, dtp_Analysis_MaxValue.Value, Time_Offline_Interval, ref AllPositions);
+            CrossingHistoryDlg Dlg = new CrossingHistoryDlg(dtp_Analysis_MinValue.Value, dtp_Analysis_MaxValue.Value, 60, ref AllPositions);
             Dlg.ShowDialog();
         }
 
@@ -6588,7 +6754,7 @@ namespace AirScout
             if (Properties.Settings.Default.Time_Offline > dtp_Analysis_MaxValue.Value)
                 Properties.Settings.Default.Time_Offline = dtp_Analysis_MaxValue.Value;
             CurrentTime = Properties.Settings.Default.Time_Offline;
-            tb_Analysis_Time.Text = CurrentTime.ToString("yyyy-MM-hh HH:mm:ss");
+            tb_Analysis_Time.Text = CurrentTime.ToString("yyyy-MM-dd HH:mm:ss");
             UpdatePlanes();
 
         }
@@ -6636,6 +6802,7 @@ namespace AirScout
         private void tp_News_Enter(object sender, EventArgs e)
         {
             sc_Map.Panel2Collapsed = true;
+            InitializeWebbrowser();
         }
 
         #endregion
@@ -6891,7 +7058,7 @@ namespace AirScout
                 if (!MaidenheadLocator.Check(dxlocstr))
                     return;
                 // get my location info --> if loc is matching, use precise information automatically
-                LocationDesignator myloc = StationData.Database.LocationFindOrCreate(mycallstr, mylocstr);
+                LocationDesignator myloc = LocationFindOrCreate(mycallstr, mylocstr);
                 // get my QRV info
                 QRVDesignator myqrv = StationData.Database.QRVFindOrCreateDefault(mycallstr, mylocstr, band);
                 // set qrv defaults if zero
@@ -7951,6 +8118,9 @@ namespace AirScout
                                                                                     (long)trackvalues.MyDoppler;
                                 }
 
+                                // log values to console
+                                Console.WriteLine("Doppler[" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss,fff") + "]: Rx=" + trackvalues.RXFrequency + ", Tx=" + trackvalues.TXFrequency);
+
                                 // report values
                                 bw_Track.ReportProgress(3, trackvalues);
 
@@ -8971,10 +9141,13 @@ namespace AirScout
                     }
 
                     // report to status bar
-                    NumberFormatInfo info = new NumberFormatInfo();
-                    info.NumberDecimalSeparator = ";";
-                    info.NumberGroupSeparator = ".";
-                    Say("Rig reports RX: " + rig.GetRxFrequency().ToString(info) + ", TX: " + rig.GetTxFrequency().ToString(info) + "Hz, Mode: " + rig.GetMode().ToString() + ", RIT: " + ((rig.GetRit() == RIGRIT.RITON) ? "ON" : "OFF") + ", Split: " + ((rig.GetSplit() == RIGSPLIT.SPLITON) ? "ON" : "OFF"));
+                     if (rig != null)
+                    {
+                        NumberFormatInfo info = new NumberFormatInfo();
+                        info.NumberDecimalSeparator = ";";
+                        info.NumberGroupSeparator = ".";
+                        Say("Rig reports RX: " + rig.GetRxFrequency().ToString(info) + "Hz, TX: " + rig.GetTxFrequency().ToString(info) + "Hz, Mode: " + rig.GetMode().ToString() + ", RIT: " + ((rig.GetRit() == RIGRIT.RITON) ? "ON" : "OFF") + ", Split: " + ((rig.GetSplit() == RIGSPLIT.SPLITON) ? "ON" : "OFF"));
+                    }
                 }
 
                 // set Tooltip
@@ -9008,6 +9181,7 @@ namespace AirScout
             // name the thread for debugging
             if (String.IsNullOrEmpty(Thread.CurrentThread.Name))
                 Thread.CurrentThread.Name = "bw_Analysis_DataGetter";
+
             Stopwatch st = new Stopwatch();
             st.Start();
             bw_Analysis_DataGetter.ReportProgress(0, "Getting timespan of all positions in database...");
@@ -9018,7 +9192,7 @@ namespace AirScout
                 e.Cancel = true;
                 return;
             }
-            History_YoungestEntry = AircraftPositionData.Database.AircraftPositionYoungestEntry();
+            History_YoungestEntry = AircraftPositionData.Database.AircraftPositionYoungestEntry().AddMinutes(Properties.Settings.Default.Planes_Position_TTL);
             if (bw_Analysis_DataGetter.CancellationPending)
             {
                 e.Cancel = true;
@@ -9034,12 +9208,63 @@ namespace AirScout
             lock (AllPositions)
             {
                 // get all positions from database, can be interrupted
-                AllPositions = AircraftPositionData.Database.AircraftPositionGetAll(this.bw_Analysis_DataGetter);
+                List<AircraftPositionDesignator> aps = AircraftPositionData.Database.AircraftPositionGetAll(this.bw_Analysis_DataGetter);
                 if (bw_Analysis_DataGetter.CancellationPending)
                 {
                     e.Cancel = true;
                     return;
                 }
+
+                // create additional info
+                bw_Analysis_DataGetter.ReportProgress(0, "Create additional info...");
+                Dictionary<string, PlaneInfo> infos = new Dictionary<string, PlaneInfo>();
+                int i = 0;
+                foreach (AircraftPositionDesignator ap in aps)
+                {
+                    // add info to cache if not present
+                    if (!infos.ContainsKey(ap.Hex))
+                    {
+                        AircraftDesignator ac = AircraftData.Database.AircraftFindByHex(ap.Hex);
+                        AircraftTypeDesignator at = null;
+                        if (ac != null)
+                        {
+                            at = AircraftData.Database.AircraftTypeFindByICAO(ac.TypeCode);
+                        }
+                        infos.Add(ap.Hex, new PlaneInfo(
+                            ap.LastUpdated,
+                            ap.Call,
+                            (ac != null) ? ac.Reg : "[unknown]",
+                            ap.Hex,
+                            ap.Lat,
+                            ap.Lon,
+                            ap.Track,
+                            ap.Alt,
+                            ap.Speed,
+                            (ac != null) ? ac.TypeCode : "[unknown]",
+                            (at != null) ? at.Manufacturer : "[unknown]",
+                            (at != null) ? at.Model : "[unknown]",
+                            (at != null) ? at.Category : PLANECATEGORY.NONE
+                        ));
+                    }
+
+                    // get plane info from cache and update position info
+                    PlaneInfo info = new PlaneInfo(infos[ap.Hex]);
+                    info.Time = ap.LastUpdated;
+                    info.Lat = ap.Lat;
+                    info.Lon = ap.Lon;
+                    info.Track = ap.Track;
+                    info.Alt = ap.Alt;
+                    info.Speed = ap.Speed;
+                    AllPositions.Add(info);
+                    i++;
+
+                    if (i % 1000 == 0)
+                        bw_Analysis_DataGetter.ReportProgress(0, "Adding info to " + i.ToString() + " of " + aps.Count.ToString());
+
+                    if (bw_Analysis_DataGetter.CancellationPending)
+                        break;
+                }
+
             }
             st.Stop();
             bw_Analysis_DataGetter.ReportProgress(0, "Getting positions finished, " + AllPositions.Count.ToString() + " positions, " + st.ElapsedMilliseconds.ToString() + " ms.");
@@ -9070,13 +9295,18 @@ namespace AirScout
                 return;
             }
             else
+            {
                 SayAnalysis("Ready.");
+            }
+
             // nothing found in database --> show message box and do not enter analysis mode
             if ((History_YoungestEntry == DateTime.MinValue) || (History_OldestEntry == DateTime.MinValue))
             {
-                MessageBox.Show("Nothing found for analysis. Please let AirScout run in PLAY mode for a while to collect some data.", "AirScout Analysis", MessageBoxButtons.OK);
+                MessageBox.Show("Nothing found for analysis. Please let AirScout run in PLAY mode for a while to collect some data or load a file.", "AirScout Analysis", MessageBoxButtons.OK);
+                btn_Analysis_Planes_Load.Enabled = true;
                 return;
             }
+
             // set scroll bar bounds
             dtp_Analysis_MinValue.Value = History_OldestEntry;
             dtp_Analysis_MaxValue.Value = History_YoungestEntry;
@@ -9119,11 +9349,11 @@ namespace AirScout
                 sw.WriteLine("[");
                 for (int i = 0; i < AllPositions.Count; i++)
                 {
-                    if (AllPositions[i].LastUpdated < dtp_Analysis_MinValue.Value)
+                    if (AllPositions[i].Time < dtp_Analysis_MinValue.Value)
                         continue;
-                    if (AllPositions[i].LastUpdated > dtp_Analysis_MaxValue.Value)
+                    if (AllPositions[i].Time > dtp_Analysis_MaxValue.Value)
                         continue;
-                    string json = AllPositions[i].ToJSON();
+                    string json = JsonConvert.SerializeObject(AllPositions[i]);
                     sw.Write(json);
                     if (i < AllPositions.Count - 1)
                     {
@@ -9147,20 +9377,20 @@ namespace AirScout
             using (StreamWriter sw = new StreamWriter(filename))
             {
                 sw.WriteLine("time[utc];hex;call;lat[deg];lon[deg];alt[ft];track[deg];speed[kts]");
-                foreach (AircraftPositionDesignator ap in AllPositions)
+                foreach (PlaneInfo info in AllPositions)
                 {
-                    if (ap.LastUpdated < dtp_Analysis_MinValue.Value)
+                    if (info.Time < dtp_Analysis_MinValue.Value)
                         continue;
-                    if (ap.LastUpdated > dtp_Analysis_MaxValue.Value)
+                    if (info.Time > dtp_Analysis_MaxValue.Value)
                         continue;
-                    sw.WriteLine(ap.LastUpdated.ToString("yyyy-MM-dd HH:mm:ssZ") + ";" +
-                        ap.Hex + ";" +
-                        ap.Call + ";" +
-                        ap.Lat.ToString("F8", CultureInfo.InvariantCulture) + ";" +
-                        ap.Lon.ToString("F8", CultureInfo.InvariantCulture) + ";" +
-                        ap.Alt.ToString("F8", CultureInfo.InvariantCulture) + ";" +
-                        ap.Track.ToString("F8", CultureInfo.InvariantCulture) + ";" +
-                        ap.Speed.ToString("F8", CultureInfo.InvariantCulture)
+                    sw.WriteLine(info.Time.ToString("yyyy-MM-dd HH:mm:ssZ") + ";" +
+                        info.Hex + ";" +
+                        info.Call + ";" +
+                        info.Lat.ToString("F8", CultureInfo.InvariantCulture) + ";" +
+                        info.Lon.ToString("F8", CultureInfo.InvariantCulture) + ";" +
+                        info.Alt.ToString("F8", CultureInfo.InvariantCulture) + ";" +
+                        info.Track.ToString("F8", CultureInfo.InvariantCulture) + ";" +
+                        info.Speed.ToString("F8", CultureInfo.InvariantCulture)
                         );
                     saved++;
                     if (saved % 1000 == 0)
@@ -9222,7 +9452,7 @@ namespace AirScout
             settings.Formatting = Newtonsoft.Json.Formatting.Indented;
             settings.Culture = CultureInfo.InvariantCulture;
             List<AircraftPositionDesignator> aps = new List<AircraftPositionDesignator>();
-            bw_Analysis_FileLoader.ReportProgress(0, "Opening file...");
+            bw_Analysis_FileLoader.ReportProgress(0, "Opening file " + Path.GetFileName(filename) + "...");
             using (StreamReader sr = new StreamReader(File.Open(filename, FileMode.Open)))
             {
                 // check for starting bracket of array
@@ -9265,10 +9495,97 @@ namespace AirScout
             }
         }
 
+        private void Analysis_Planes_Load_HistJSON(string filename)
+        {
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+            settings.FloatFormatHandling = FloatFormatHandling.String;
+            settings.Formatting = Newtonsoft.Json.Formatting.Indented;
+            settings.Culture = CultureInfo.InvariantCulture;
+            List<AircraftPositionDesignator> aps = new List<AircraftPositionDesignator>();
+            bw_Analysis_FileLoader.ReportProgress(0, "Opening file " + Path.GetFileName(filename) + "...");
+
+            Dictionary<string, HistJSON> planes = new Dictionary<string, HistJSON>();
+            string json = File.ReadAllText(filename, Encoding.UTF8);
+            planes = JsonConvert.DeserializeObject<Dictionary<string, HistJSON>>(json);
+
+            foreach (HistJSON plane in planes.Values)
+            {
+                AircraftPositionDesignator ap = new AircraftPositionDesignator();
+                ap.Hex = plane.id;
+                ap.Lat = plane.latitude;
+                ap.Lon = plane.longitude;
+                ap.Alt = plane.altitude;
+                ap.Track = plane.track;
+                ap.Speed = plane.speed;
+                ap.Call = !String.IsNullOrEmpty(plane.callsign) ? plane.callsign : "[unknown]";
+                ap.LastUpdated = SupportFunctions.UNIXTimeToDateTime(plane.timestamp);
+
+                int errors = 0;
+                // try to find plane in standing data or get it from web source
+                AircraftDesignator ad = AircraftData.Database.AircraftFindByCall(ap.Call);
+                if (ad != null)
+                {
+                    ap.Hex = ad.Hex;
+                }
+                else
+                {
+                    string url = "https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=" + plane.id + "&history=" + plane.timestamp;
+                    HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                    req.Method = "GET";
+                    req.Accept = "application/json";
+                    req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0";
+                    req.CookieContainer = new CookieContainer();
+                    Cookie cookie = new Cookie("FR24ID", "nkd29j9i93psotrbrihstamuhhl12345r68sieg330sisa71hnkl", "/", ".flightradar24.com");
+                    req.CookieContainer.Add(cookie);
+                    try
+                    {
+                        bw_Analysis_FileLoader.ReportProgress(0, "Getting additional info from web for call: " + ap.Call + "...");
+                        var response = (HttpWebResponse)req.GetResponse();
+                        using (var sr = new StreamReader(response.GetResponseStream()))
+                        {
+                            ad = new AircraftDesignator();
+                            json = sr.ReadToEnd();
+                            JObject info = JObject.Parse(json);
+                            JToken hex = info.SelectToken("aircraft.hex");
+                            if (hex != null)
+                            {
+                                ad.Hex = hex.Value<string>().ToUpper();
+                                ad.Call = ap.Call;
+                                JToken reg = info.SelectToken("aircraft.registration");
+                                ad.Reg = ((reg != null) && (reg.Value<string>() != null)) ? reg.Value<string>().ToUpper() : "[unknown]";
+                                JToken type = info.SelectToken("aircraft.model.code");
+                                ad.TypeCode = ((type != null) && (type.Value<string>() != null))? type.Value<string>().ToUpper() : "[unknown]";
+                                ad.LastUpdated = DateTime.UtcNow;
+                                AircraftData.Database.AircraftInsertOrUpdateIfNewer(ad);
+                            }
+                            else
+                                errors++;
+                            
+                            Thread.Sleep(1000);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        errors++;
+                    }
+                } 
+
+                aps.Add(ap);
+
+                if (bw_Analysis_FileLoader.CancellationPending)
+                    return;
+            }
+
+
+            var result = AircraftPositionData.Database.AircraftPositionBulkInsertOrUpdateIfNewer(aps);
+            bw_Analysis_FileLoader.ReportProgress(0, aps.Count.ToString()  + " position updated.");
+        }
+
         private void Analysis_Planes_Load_CSV(string filename)
         {
             List<AircraftPositionDesignator> aps = new List<AircraftPositionDesignator>();
-            bw_Analysis_FileLoader.ReportProgress(0, "Opening file...");
+            bw_Analysis_FileLoader.ReportProgress(0, "Opening file " + Path.GetFileName(filename) + "...");
             using (StreamReader sr = new StreamReader(File.Open(filename, FileMode.Open)))
             {
                 // read header
@@ -9328,16 +9645,29 @@ namespace AirScout
 
         private void bw_Analysis_FileLoader_DoWork(object sender, DoWorkEventArgs e)
         {
-            string filename = (string)e.Argument;
+            string[] filenames = (string[])e.Argument;
             // name the thread for debugging
             if (String.IsNullOrEmpty(Thread.CurrentThread.Name))
                 Thread.CurrentThread.Name = "bw_Analysis_FileLoader";
             try
             {
-                if (filename.ToLower().EndsWith(".json"))
-                    Analysis_Planes_Load_JSON(filename);
-                else if (filename.ToLower().EndsWith(".csv"))
-                    Analysis_Planes_Load_CSV(filename);
+                foreach (string filename in filenames)
+                {
+                    try
+                    {
+                        if (filename.ToLower().EndsWith(".json"))
+                            Analysis_Planes_Load_JSON(filename);
+                        else if (filename.ToLower().EndsWith(".csv"))
+                            Analysis_Planes_Load_CSV(filename);
+                        else if (filename.ToLower().EndsWith(".hist"))
+                            Analysis_Planes_Load_HistJSON(filename);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.WriteMessage(ex.ToString(), LogLevel.Error);
+                        bw_Analysis_FileLoader.ReportProgress(-1, ex.Message);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -9361,7 +9691,15 @@ namespace AirScout
             else
             {
                 btn_Analysis_Planes_Load.Enabled = true;
-                SayAnalysis("Ready.");
+                History_OldestEntry = AircraftPositionData.Database.AircraftPositionOldestEntry();
+                History_YoungestEntry = AircraftPositionData.Database.AircraftPositionYoungestEntry().AddMinutes(Properties.Settings.Default.Planes_Position_TTL);
+
+                if (History_OldestEntry > DateTime.MinValue) dtp_Analysis_MinValue.Value = History_OldestEntry;
+                if ((History_YoungestEntry > DateTime.MinValue) && (History_YoungestEntry > History_OldestEntry)) dtp_Analysis_MaxValue.Value = History_YoungestEntry.AddMinutes(Properties.Settings.Default.Planes_Position_TTL);
+
+                if (!bw_Analysis_DataGetter.IsBusy)
+                    bw_Analysis_DataGetter.RunWorkerAsync();
+
             }
         }
 

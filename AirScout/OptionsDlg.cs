@@ -311,6 +311,11 @@ namespace AirScout
             tb_Options_Elevation_SRTM3_Database_FileSize.Text = ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM3).ToString("F0");
             lbl_Options_Elevation_SRTM1_Database_FileName.Text = GetDatabaseDir(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1));
             tb_Options_Elevation_SRTM1_Database_FileSize.Text = ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1).ToString("F0");
+            lbl_Options_Elevation_ASTER3_Database_FileName.Text = GetDatabaseDir(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.ASTER3));
+            tb_Options_Elevation_ASTER3_Database_FileSize.Text = ElevationData.Database.GetDBSize(ELEVATIONMODEL.ASTER3).ToString("F0");
+            lbl_Options_Elevation_ASTER1_Database_FileName.Text = GetDatabaseDir(ElevationData.Database.GetDBLocation(ELEVATIONMODEL.ASTER1));
+            tb_Options_Elevation_ASTER1_Database_FileSize.Text = ElevationData.Database.GetDBSize(ELEVATIONMODEL.ASTER1).ToString("F0");
+
             lbl_Options_Map_Database_FileName.Text = GetDatabaseDir(MapData.Database.GetDBLocation());
             tb_Options_Map_Database_FileSize.Text = MapData.Database.GetDBSize().ToString("F0");
             tt_Options.SetToolTip(lbl_Options_ScoutBase_Database_FileName, StationData.Database.GetDBLocation() + "\n\n" + "Click here to open database location in Explorer window.");
@@ -321,6 +326,8 @@ namespace AirScout
             tt_Options.SetToolTip(lbl_Options_Elevation_GLOBE_Database_FileName, ElevationData.Database.GetDBLocation(ELEVATIONMODEL.GLOBE) + "\n\n" + "Click here to open database location in Explorer window.");
             tt_Options.SetToolTip(lbl_Options_Elevation_SRTM3_Database_FileName, ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM3) + "\n\n" + "Click here to open database location in Explorer window.");
             tt_Options.SetToolTip(lbl_Options_Elevation_SRTM1_Database_FileName, ElevationData.Database.GetDBLocation(ELEVATIONMODEL.SRTM1) + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_Elevation_ASTER3_Database_FileName, ElevationData.Database.GetDBLocation(ELEVATIONMODEL.ASTER3) + "\n\n" + "Click here to open database location in Explorer window.");
+            tt_Options.SetToolTip(lbl_Options_Elevation_ASTER1_Database_FileName, ElevationData.Database.GetDBLocation(ELEVATIONMODEL.ASTER1) + "\n\n" + "Click here to open database location in Explorer window.");
             tt_Options.SetToolTip(lbl_Options_Map_Database_FileName, MapData.Database.GetDBLocation() + "\n\n" + "Click here to open database location in Explorer window.");
             double total = StationData.Database.GetDBSize() +
                 AircraftData.Database.GetDBSize() +
@@ -330,6 +337,8 @@ namespace AirScout
                 ElevationData.Database.GetDBSize(ELEVATIONMODEL.GLOBE) +
                 ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM3) +
                 ElevationData.Database.GetDBSize(ELEVATIONMODEL.SRTM1) +
+                ElevationData.Database.GetDBSize(ELEVATIONMODEL.ASTER3) +
+                ElevationData.Database.GetDBSize(ELEVATIONMODEL.ASTER1) +
                 MapData.Database.GetDBSize();
             lbl_Options_Database_TotalSize.Text = total.ToString("F0");
             rb_Options_Database_Update_Never.Checked = !Properties.Settings.Default.Background_Update_OnStartup && !Properties.Settings.Default.Background_Update_Periodically;
@@ -449,6 +458,18 @@ namespace AirScout
         private void btn_Options_Elevation_SRTM1_Database_Maintenance_Click(object sender, EventArgs e)
         {
             DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(ElevationData.Database, ELEVATIONMODEL.SRTM1);
+            Dlg.ShowDialog();
+        }
+
+        private void btn_Options_Elevation_ASTER3_Database_Maintenance_Click(object sender, EventArgs e)
+        {
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(ElevationData.Database, ELEVATIONMODEL.ASTER3);
+            Dlg.ShowDialog();
+        }
+
+        private void btn_Options_Elevation_ASTER1_Database_Maintenance_Click(object sender, EventArgs e)
+        {
+            DatabaseMaintenanceDlg Dlg = new DatabaseMaintenanceDlg(ElevationData.Database, ELEVATIONMODEL.ASTER1);
             Dlg.ShowDialog();
         }
 

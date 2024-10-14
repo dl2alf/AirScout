@@ -463,12 +463,22 @@ namespace AirScout.AircraftPositions
             int i = 0;
             lock (db)
             {
-                db.BeginTransaction();
-                foreach (AircraftPositionDesignator ap in aps)
+                try
                 {
-                    i = i + AircraftPositionInsertOrUpdateIfNewer(ap);
+                    db.BeginTransaction();
+                    foreach (AircraftPositionDesignator ap in aps)
+                    {
+                        i = i + AircraftPositionInsertOrUpdateIfNewer(ap);
+                    }
                 }
-                db.Commit();
+                catch
+                {
+
+                }
+                finally
+                {
+                    db.Commit();
+                }
             }
             return i;
         }
@@ -643,7 +653,7 @@ namespace AirScout.AircraftPositions
                     if (caller.WorkerSupportsCancellation && caller.CancellationPending)
                         return new List<AircraftPositionDesignator>();
                     if (caller.WorkerReportsProgress && (i % 1000 == 0))
-                        caller.ReportProgress(0, "Getting position " + i.ToString() + " of");
+                        caller.ReportProgress(0, "Getting position " + i.ToString());
                 }
             }
             reader.Close();

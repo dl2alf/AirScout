@@ -1503,12 +1503,16 @@ namespace AirScout.PlaneFeeds.Plugin.FlexJSON
             string csvfilename = Path.Combine(TmpDirectory, "FlexJSON.csv");
             try
             {
+                string separator = ";";
+                if (CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator != ",")
+                    separator =  ",";
+            
                 using (StreamWriter sw = new StreamWriter(csvfilename))
                 {
                     foreach (string[] infos in PlaneList)
                     {
                         foreach (string info in infos)
-                            sw.Write("\"" + info + "\"" + ";");
+                            sw.Write("\"" + info + "\"" + separator);
                         sw.WriteLine();
                     }
                 }

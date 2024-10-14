@@ -12,6 +12,7 @@ using System.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Data.SQLite;
+using AirScout.Core;
 
 namespace AirScout.AircraftPositions
 {

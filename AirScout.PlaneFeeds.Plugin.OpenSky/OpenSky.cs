@@ -55,7 +55,7 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
         [DescriptionAttribute("Base URL for website.")]
-        [DefaultValue("https://opensky-network.org/api/states/all?lamin=%MINLAT%&lomin=%MINLON%&lamax=%MAXLAT%&lomax=%MAXLON%")]
+        [DefaultValue("https://api.opensky-network.org/api/states/all?lamin=%MINLAT%&lomin=%MINLON%&lamax=%MAXLAT%&lomax=%MAXLON%")]
         public string URL { get; set; }
 
         [Browsable(true)]
@@ -168,6 +168,10 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
             {
                 Console.WriteLine("[" + this.GetType().Name + "]: Cannot load settings from " + filename + ", " + ex.Message);
             }
+
+            // correct URL with V1.4.2.1 automatically
+            this.URL = this.URL.Replace("https://opensky-network.org/api/", "https://api.opensky-network.org/api/");
+            this.Save(true);
         }
 
         /// <summary>

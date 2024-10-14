@@ -43,7 +43,6 @@ namespace ScoutBase.Elevation
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        [JsonIgnore]
         public double Bearing12
         {
             get
@@ -52,7 +51,6 @@ namespace ScoutBase.Elevation
             }
         }
 
-        [JsonIgnore]
         public double Bearing21
         {
             get
@@ -61,7 +59,6 @@ namespace ScoutBase.Elevation
             }
         }
 
-        [JsonIgnore]
 
         public double Distance
         {
@@ -167,12 +164,14 @@ namespace ScoutBase.Elevation
         {
             try
             {
+                string separator = SupportFunctions.GetCSVSeparator();
                 using (StreamWriter sw = new StreamWriter(filename))
                 {
-                    sw.WriteLine("Distance[km];Elevation[m]");
+                    sw.WriteLine("Distance[km]" + separator +
+                        "Elevation[m]");
                     for (int i = 0; i < this.Count; i++)
                     {
-                        sw.WriteLine(((double)i * this.StepWidth / 1000.0).ToString("F8", CultureInfo.InvariantCulture) + ";" + Path[i].ToString());
+                        sw.WriteLine(((double)i * this.StepWidth / 1000.0).ToString("F8") + separator + Path[i].ToString());
                     }
                 }
             }

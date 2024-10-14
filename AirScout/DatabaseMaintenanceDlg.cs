@@ -72,6 +72,9 @@ namespace AirScout
         {
             if (e.Item != null)
             {
+                if (MessageBox.Show("CAUTION! Pressing \"View\" on large databases may take a long time to open the edit dialog.\n\nDo you really want to continue?", "Database Edit", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+
                 DataTable dt;
                 string tablename = e.Item.Text;
                 string columns = "";

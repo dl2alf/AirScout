@@ -57,7 +57,7 @@ namespace ScoutBase.Stations
         {
             Call = "";
             Loc = "";
-            Band = BAND.BNONE;
+            Band = 0;
             AntennaHeight = 0;
             AntennaGain = 0;
             Power = 0;

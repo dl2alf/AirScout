@@ -13,6 +13,10 @@ namespace AirScout.Aircrafts
 
         public int InsertOrUpdateIfNewer (PlaneInfo plane)
         {
+            if (plane.Hex == "732541")
+            {
+                int k = 0;
+            }
             int i = 0;
             if (plane == null)
                 return i;
@@ -216,12 +220,16 @@ namespace AirScout.Aircrafts
             List<PlaneInfo> l = new List<PlaneInfo>();
             DateTime to = at;
             DateTime from = to - new TimeSpan(0, ttl, 0);
+            int outdated = 0;
             lock (this)
             {
                 foreach (PlaneInfo plane in this.Values)
                 {
                     if ((plane.Time < from) || (plane.Time > to))
+                    {
+                        outdated++;
                         continue;
+                    }
                     // create new plane info
                     PlaneInfo info = new PlaneInfo(plane);
                     // estimate new values

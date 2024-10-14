@@ -301,6 +301,10 @@ namespace LibADSB
                 // check for old entries
                 if (info.Value.Timestamp > lastsend)
                 {
+                    if (info.Value.ICAO24 == "3C66E4")
+                    {
+                        Console.WriteLine(info.Value.ToString());
+                    }
                     // check if entry is complete
                     if ((!String.IsNullOrEmpty(info.Value.ICAO24)) &&
                         (!String.IsNullOrEmpty(info.Value.Call)) &&

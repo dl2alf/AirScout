@@ -103,6 +103,7 @@
             this.tsl_Database = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Database_LED_Aircraft = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Database_LED_Stations = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsl_Database_LED_Rig = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Database_LED_GLOBE = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Database_LED_SRTM3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsl_Database_LED_SRTM1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -181,7 +182,6 @@
             this.bw_Analysis_FileSaver = new System.ComponentModel.BackgroundWorker();
             this.bw_Analysis_FileLoader = new System.ComponentModel.BackgroundWorker();
             this.bw_AirportMapper = new System.ComponentModel.BackgroundWorker();
-            this.tsl_Database_LED_Rig = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.sc_Map)).BeginInit();
             this.sc_Map.Panel1.SuspendLayout();
             this.sc_Map.Panel2.SuspendLayout();
@@ -1114,7 +1114,7 @@
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.tsl_Status.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenInner;
             this.tsl_Status.Name = "tsl_Status";
-            this.tsl_Status.Size = new System.Drawing.Size(561, 19);
+            this.tsl_Status.Size = new System.Drawing.Size(592, 19);
             this.tsl_Status.Spring = true;
             this.tsl_Status.Text = "No Messages.";
             this.tsl_Status.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1171,6 +1171,19 @@
             this.tsl_Database_LED_Stations.Size = new System.Drawing.Size(12, 14);
             this.tsl_Database_LED_Stations.Text = " Station database status LED";
             this.tsl_Database_LED_Stations.ToolTipText = "Station database status LED";
+            // 
+            // tsl_Database_LED_Rig
+            // 
+            this.tsl_Database_LED_Rig.AutoSize = false;
+            this.tsl_Database_LED_Rig.BackColor = System.Drawing.Color.Plum;
+            this.tsl_Database_LED_Rig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
+            this.tsl_Database_LED_Rig.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsl_Database_LED_Rig.Image = ((System.Drawing.Image)(resources.GetObject("tsl_Database_LED_Rig.Image")));
+            this.tsl_Database_LED_Rig.Margin = new System.Windows.Forms.Padding(1, 5, 1, 5);
+            this.tsl_Database_LED_Rig.Name = "tsl_Database_LED_Rig";
+            this.tsl_Database_LED_Rig.Size = new System.Drawing.Size(12, 14);
+            this.tsl_Database_LED_Rig.Text = "Rig database status LED";
+            this.tsl_Database_LED_Rig.ToolTipText = "Rig database status LED";
             // 
             // tsl_Database_LED_GLOBE
             // 
@@ -2054,19 +2067,6 @@
             this.bw_AirportMapper.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_AirportMapper_DoWork);
             this.bw_AirportMapper.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_AirportMapper_ProgressChanged);
             this.bw_AirportMapper.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_AirportMapper_RunWorkerCompleted);
-            // 
-            // tsl_Database_LED_Rig
-            // 
-            this.tsl_Database_LED_Rig.AutoSize = false;
-            this.tsl_Database_LED_Rig.BackColor = System.Drawing.Color.Plum;
-            this.tsl_Database_LED_Rig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
-            this.tsl_Database_LED_Rig.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tsl_Database_LED_Rig.Image = ((System.Drawing.Image)(resources.GetObject("tsl_Database_LED_Rig.Image")));
-            this.tsl_Database_LED_Rig.Margin = new System.Windows.Forms.Padding(1, 5, 1, 5);
-            this.tsl_Database_LED_Rig.Name = "tsl_Database_LED_Rig";
-            this.tsl_Database_LED_Rig.Size = new System.Drawing.Size(12, 14);
-            this.tsl_Database_LED_Rig.Text = "Rig database status LED";
-            this.tsl_Database_LED_Rig.ToolTipText = "Rig database status LED";
             // 
             // MapDlg
             // 

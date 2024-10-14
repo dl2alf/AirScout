@@ -158,7 +158,7 @@ namespace ScoutBase.Propagation
         {
             if (StepWidth <= 0)
                 return null;
-            PropagationPoint[] d = new PropagationPoint[(int)Distance + 1];
+            PropagationPoint[] d = new PropagationPoint[(int)Distance + 2];
             // chek against localobstruction , if any
             double eps1_min = Math.Max(Eps1_Min, LocalObstruction);
             for (int i = 0; i < d.Length; i++)
@@ -180,7 +180,12 @@ namespace ScoutBase.Propagation
             // chek against localobstruction , if any
             double eps1_min = Math.Max(Eps1_Min, LocalObstruction);
             LatLon.GPoint p = LatLon.DestinationPoint(Lat1, Lon1, Bearing12, dist);
-            return new PropagationPoint(p.Lat, p.Lon, ScoutBase.Core.Propagation.HeightFromEpsilon(h1, dist, eps1_min, Radius), ScoutBase.Core.Propagation.HeightFromEpsilon(h2, Distance-dist, Eps2_Min, Radius), ScoutBase.Core.Propagation.F1Radius(QRG, Distance, Distance-dist));
+            return new PropagationPoint(
+                p.Lat, 
+                p.Lon, 
+                ScoutBase.Core.Propagation.HeightFromEpsilon(h1, dist, eps1_min, Radius), 
+                ScoutBase.Core.Propagation.HeightFromEpsilon(h2, Distance - dist, Eps2_Min, Radius), 
+                ScoutBase.Core.Propagation.F1Radius(QRG, Distance, Distance - dist));
         }
 
 
@@ -237,9 +242,17 @@ namespace ScoutBase.Propagation
         {
             try
             {
+                string separator = SupportFunctions.GetCSVSeparator();
                 using (StreamWriter sw = new StreamWriter(filename))
                 {
-                    sw.WriteLine("Distance[km];Latitude[deg];Longitude[deg];Elevation[m];Eps1_Min[deg];Eps2_Min[m];Min_H1[m];Min_H2[m]");
+                    sw.WriteLine("Distance[km]" +
+                        "Latitude[deg]" + separator +
+                        "Longitude[deg]" + separator +
+                        "Elevation[m]" + separator +
+                        "Eps1_Min[deg]" + separator +
+                        "Eps2_Min[m]" + separator +
+                        "Min_H1[m]" + separator +
+                        "Min_H2[m]");
                 }
             }
             catch (Exception ex)

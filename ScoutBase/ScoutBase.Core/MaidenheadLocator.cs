@@ -228,6 +228,7 @@ namespace ScoutBase.Core
             // autolength = false -- > return loc with fixed length 
             if (!autolength)
                 return LocFromLatLon(latitude, longitude, smallLettersForSubsquares, precision);
+
             // autolength = true
             int p = 3;
             do

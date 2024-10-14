@@ -25,7 +25,7 @@ namespace AirScout
         DateTime From;
         DateTime To;
         int Stepwidth;
-        List<AircraftPositionDesignator> AllPositions;
+        List<PlaneInfo> AllPositions;
         List<PlaneInfo> NearestPositions = new List<PlaneInfo>();
 
         PropagationPathDesignator PPath;
@@ -35,7 +35,7 @@ namespace AirScout
 
         List<PlaneInfo> Crossings = new List<PlaneInfo>();
 
-        public CrossingHistoryDlg(DateTime from, DateTime to, int stepwidth, ref List<AircraftPositionDesignator> alllpositions)
+        public CrossingHistoryDlg(DateTime from, DateTime to, int stepwidth, ref List<PlaneInfo> alllpositions)
         {
             InitializeComponent();
             From = new DateTime(from.Year, from.Month, from.Day, 0, 0, 0, 0, from.Kind);
@@ -138,19 +138,13 @@ namespace AirScout
             bw_History.ReportProgress(0, "Pre-selecting nearest positions...");
             LatLon.GPoint midpoint = PPath.GetMidPoint();
             double maxdist = PPath.Distance / 2;
-            foreach (AircraftPositionDesignator ap in AllPositions)
+            foreach (PlaneInfo info in AllPositions)
             {
-                if ((ap.LastUpdated >= From) && (ap.LastUpdated <= To) && (LatLon.Distance(ap.Lat, ap.Lon, midpoint.Lat, midpoint.Lon) <= maxdist))
+                if ((info.Time >= From) && (info.Time <= To) && (LatLon.Distance(info.Lat, info.Lon, midpoint.Lat, midpoint.Lon) <= maxdist))
                 {
-                    AircraftDesignator ac = null;
-                    AircraftTypeDesignator at = null;
-                    ac = AircraftData.Database.AircraftFindByHex(ap.Hex);
-                    if (ac != null)
-                        at = AircraftData.Database.AircraftTypeFindByICAO(ac.TypeCode);
-                    PlaneInfo plane = new PlaneInfo(ap.LastUpdated, ap.Call, ((ac != null) && (!String.IsNullOrEmpty(ac.TypeCode)))? ac.Reg : "[unknown]", ap.Hex, ap.Lat, ap.Lon, ap.Track, ap.Alt, ap.Speed, (ac != null) && (!String.IsNullOrEmpty(ac.TypeCode)) ? ac.TypeCode : "[unkomwn]", ((at != null) && (!String.IsNullOrEmpty(at.Manufacturer))) ? at.Manufacturer : "[unknown]", ((at != null) && (!String.IsNullOrEmpty(at.Model))) ? at.Model : "[unknown]", (at != null) ? at.Category : PLANECATEGORY.NONE);
                     lock (NearestPositions)
                     {
-                        NearestPositions.Add(plane);
+                        NearestPositions.Add(info);
                     }
                     if (NearestPositions.Count % 1000 == 0)
                         bw_History.ReportProgress(0, "Pre-selecting nearest positions..." + "[" + NearestPositions.Count.ToString() + "]");
@@ -234,7 +228,44 @@ namespace AirScout
             {
                 tsl_Main.Text = (string)e.UserState;
                 // this.Refresh();
-                ch_Crossing_History.Show();
+                try
+                {
+                    Dictionary<DateTime, int> planeshi = new Dictionary<DateTime, int>();
+                    Dictionary<DateTime, int> planeslo = new Dictionary<DateTime, int>();
+                    foreach (PlaneInfo pl in Crossings)
+                    {
+                        if (pl.Potential == 100)
+                        {
+                            if (!planeshi.ContainsKey(pl.Time))
+                                planeshi[pl.Time] = 0;
+                            planeshi[pl.Time]++;
+                        }
+                        else
+                        {
+                            if (!planeslo.ContainsKey(pl.Time))
+                                planeslo[pl.Time] = 0;
+                            planeslo[pl.Time]++;
+                        }
+                    }
+                    foreach (DateTime time in planeshi.Keys)
+                    {
+                        ch_Crossing_History.Series["Count_Hi"].Points.AddXY(time, planeshi[time]);
+                        if (!planeslo.ContainsKey(time))
+                            ch_Crossing_History.Series["Count_Lo"].Points.AddXY(time, 0);
+                    }
+                    foreach (DateTime time in planeslo.Keys)
+                    {
+                        ch_Crossing_History.Series["Count_Lo"].Points.AddXY(time, planeslo[time]);
+                        if (!planeshi.ContainsKey(time))
+                            ch_Crossing_History.Series["Count_Hi"].Points.AddXY(time, 0);
+                    }
+                    ch_Crossing_History.Show();
+                }
+                catch (Exception ex) 
+                {
+                    tsl_Main.Text = "Error while calculating crossings: " + ex.ToString();
+                    ss_Main.Refresh();
+                }
             }
         }
 
@@ -250,19 +281,19 @@ namespace AirScout
             // drwaing charts
             ch_Crossing_History.Series.Clear();
             ch_Crossing_History.Series.Add("Count_Lo");
-            ch_Crossing_History.Series["Count_Lo"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedColumn;
+            ch_Crossing_History.Series["Count_Lo"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
             ch_Crossing_History.Series["Count_Lo"].Color = Color.Blue;
             ch_Crossing_History.Series["Count_Lo"].BorderWidth = 2;
             ch_Crossing_History.Series["Count_Lo"].BackSecondaryColor = Color.Blue;
             ch_Crossing_History.Series["Count_Lo"].XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            ch_Crossing_History.Series["Count_Lo"]["PointWidth"] = "1";
+//            ch_Crossing_History.Series["Count_Lo"]["PointWidth"] = "1";
             ch_Crossing_History.Series.Add("Count_Hi");
-            ch_Crossing_History.Series["Count_Hi"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedColumn;
+            ch_Crossing_History.Series["Count_Hi"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
             ch_Crossing_History.Series["Count_Hi"].Color = Color.Red;
             ch_Crossing_History.Series["Count_Hi"].BorderWidth = 2;
             ch_Crossing_History.Series["Count_Hi"].BackSecondaryColor = Color.Red;
             ch_Crossing_History.Series["Count_Hi"].XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            ch_Crossing_History.Series["Count_Hi"]["PointWidth"] = "1";
+//            ch_Crossing_History.Series["Count_Hi"]["PointWidth"] = "1";
 
             ch_Crossing_History.ChartAreas[0].AxisX.LabelStyle.Format = "yyyy-MM-dd\nHH:mm:ss";
             bw_History.RunWorkerAsync();
@@ -310,11 +341,32 @@ namespace AirScout
             Dlg.FileName = "Path Crossing History_" + Properties.Settings.Default.MyCall + "_" + Properties.Settings.Default.DXCall + "_" + From.ToString("yyyyMMdd_HHmmss") + "_to_" + To.ToString("yyyyMMdd_HHmmss");
 //            Dlg.InitialDirectory = Application.StartupPath;
             Dlg.OverwritePrompt = true;
+            string separator = SupportFunctions.GetCSVSeparator();
             if (Dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 using (StreamWriter sw = new StreamWriter(Dlg.FileName))
                 {
-                    sw.WriteLine("time[utc];call;lat[deg];lon[deg];type;category;potential;track[deg];alt[m];altdiff[m];dist[km];crossangle[deg];squint[deg];dist1[km];dist2[km];eps1[deg];eps2[deg];theta1[deg];theta2[deg];signal_strength[dB];ambiguous");
+                    sw.WriteLine("time[utc]" +
+                        "call" +
+                        "lat[deg]" +
+                        "lon[deg]" +
+                        "type" +
+                        "category" +
+                        "potential" +
+                        "track[deg]" +
+                        "alt[m]" +
+                        "altdiff[m]" +
+                        "dist[km]" +
+                        "crossangle[deg]" +
+                        "squint[deg]" +
+                        "dist1[km]" +
+                        "dist2[km]" +
+                        "eps1[deg]" +
+                        "eps2[deg]" +
+                        "theta1[deg]" +
+                        "theta2[deg]" +
+                        "signal_strength[dB]" +
+                        "ambiguous");
                     foreach (PlaneInfo plane in Crossings)
                     {
                         double a1 = LatLon.Distance(PPath.Lat1, PPath.Lon1, plane.Lat, plane.Lon);
@@ -322,26 +374,26 @@ namespace AirScout
                         double sl = plane.SignalStrength;
                         if (sl == double.MinValue)
                             sl = -255;
-                        sw.WriteLine(plane.Time.ToString("yyyy-MM-dd HH:mm:ss") + ";" +
-                            plane.Call + ";" +
-                            plane.Lat.ToString("F8", uiculture) + ";" +
-                            plane.Lon.ToString("F8", uiculture) + ";" +
-                            plane.Type + ";" +
-                            plane.Category.ToString() + ";" +
-                            plane.Potential.ToString() + ";" +
-                            plane.Track.ToString("F8", uiculture) + ";" +
-                            plane.Alt_m.ToString("F8", uiculture) + ";" +
-                            plane.AltDiff.ToString("F8", uiculture) + ";" +
-                            plane.IntQRB.ToString("F8", uiculture) + ";" +
-                            (plane.Angle / Math.PI * 180.0).ToString("F8", uiculture) + ";" +
-                            (plane.Squint / Math.PI * 180.0).ToString("F8", uiculture) + ";" +
-                            a1.ToString("F8", uiculture) + ";" +
-                            a2.ToString("F8", uiculture) + ";" +
-                            (plane.Eps1 / Math.PI * 180.0).ToString("F8", uiculture) + ";" +
-                            (plane.Eps2 / Math.PI * 180.0).ToString("F8", uiculture) + ";" +
-                            (plane.Theta1 / Math.PI * 180.0).ToString("F8", uiculture) + ";" +
-                            (plane.Theta2 / Math.PI * 180.0).ToString("F8", uiculture) + ";" +
-                            sl.ToString("F2", uiculture) + ";" +
+                        sw.WriteLine(plane.Time.ToString("yyyy-MM-dd HH:mm:ss") + separator +
+                            plane.Call + separator +
+                            plane.Lat.ToString("F8", uiculture) + separator +
+                            plane.Lon.ToString("F8", uiculture) + separator +
+                            plane.Type + separator +
+                            plane.Category.ToString() + separator +
+                            plane.Potential.ToString() + separator +
+                            plane.Track.ToString("F8", uiculture) + separator +
+                            plane.Alt_m.ToString("F8", uiculture) + separator +
+                            plane.AltDiff.ToString("F8", uiculture) + separator +
+                            plane.IntQRB.ToString("F8", uiculture) + separator +
+                            (plane.Angle / Math.PI * 180.0).ToString("F8", uiculture) + separator +
+                            (plane.Squint / Math.PI * 180.0).ToString("F8", uiculture) + separator +
+                            a1.ToString("F8", uiculture) + separator +
+                            a2.ToString("F8", uiculture) + separator +
+                            (plane.Eps1 / Math.PI * 180.0).ToString("F8", uiculture) + separator +
+                            (plane.Eps2 / Math.PI * 180.0).ToString("F8", uiculture) + separator +
+                            (plane.Theta1 / Math.PI * 180.0).ToString("F8", uiculture) + separator +
+                            (plane.Theta2 / Math.PI * 180.0).ToString("F8", uiculture) + separator +
+                            sl.ToString("F2", uiculture) + separator +
                             plane.Ambiguous.ToString());
                     }
                 }
@@ -356,6 +408,7 @@ namespace AirScout
 
         private void btn_History_Cancel_Click(object sender, EventArgs e)
         {
+            bw_History.CancelAsync();
             this.Close();
         }
 

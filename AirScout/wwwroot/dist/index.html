@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<!--
+* CoreUI - Free Bootstrap Admin Template
+* @version v4.2.2
+* @link https://coreui.io
+* Copyright (c) 2022 creativeLabs Łukasz Holeczek
+* Licensed under MIT (https://coreui.io/license)
+-->
+<!-- Breadcrumb-->
+<html lang="en">
+<head>
+    <base href="./">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="AirScout Aircraft Scatter Prediction">
+    <meta name="author" content="Łukasz Holeczek">
+    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
+    <title>Welcome to AirScout</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendors styles-->
+    <link rel="stylesheet" href="vendors/simplebar/css/simplebar.css">
+    <link rel="stylesheet" href="css/vendors/simplebar.css">
+    <!-- Main styles for this application-->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/examples.css" rel="stylesheet">
+    <link href="vendors/@coreui/chartjs/css/coreui-chartjs.css" rel="stylesheet">
+    <!-- JQuery CSS-->
+    <link rel="stylesheet" href="vendors/tablesorter/css/theme.bootstrap_4.min.css" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="vendors/leaflet/css/leaflet.css" />
+    <!-- AirScout CSS -->
+    <link rel="stylesheet" type="text/css" href="/resources/css/airscout.css" />
+
+</head>
+<body>
+    <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+        <div class="sidebar-brand d-none d-md-flex">
+            AirScout
+        </div>
+
+        <ul class="sidebar-nav" id="sidebar">
+            <li class="nav-group" aria-expanded="true">
+                <div class="list-unstyled collapse show" style="margin:10px" id="generalSubmenu">
+                    <table style="width:95%">
+                        <tr>
+                            <td style="width:5%"> </td>
+                            <td class="label" style="width:25%">UTC:</td>
+                            <td style="width:5%"> </td>
+                            <td style="width:65%; position:relative">
+                                <div class="airscout-status-utc" id="utc">&nbsp;</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:5%"> </td>
+                            <td class="label" style="width:25%">Band:</td>
+                            <td style="width:5%"> </td>
+                            <td style="width:65%; position:relative">
+                                <select class="airscout-select" id="bands"></select>
+                                <input type="text" class="airscout-input" id="band" readonly />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+            <li class="nav-group" aria-expanded="true">
+                <a class="nav-link nav-group-toggle" onclick="onSubSingleClicked()">Single</a>
+                <div class="list-unstyled collapse show" style="margin:10px" id="sub_single">
+                    <table style="width:95%; padding:5px;">
+                        <tr>
+                            <td style="width:5%"> </td>
+                            <td class="label" style="width:25%">MyCall:</td>
+                            <td style="width:5%"> </td>
+                            <td style="width:65%; position:relative">
+                                <select class="airscout-select" id="mycalls"></select>
+                                <input type="text" class="airscout-input" id="mycall" maxlength="14" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:5%"> </td>
+                            <td class="label" style="width:25%">MyLoc:</td>
+                            <td style="width:5%"> </td>
+                            <td style="width:65%; position:relative">
+                                <select class="airscout-select" id="mylocs"></select>
+                                <input type="text" class="airscout-input" id="myloc" maxlength="14" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:5%"> </td>
+                            <td class="label" style="width:25%">DXCall:</td>
+                            <td style="width:5%"> </td>
+                            <td style="width:65%; position:relative">
+                                <select class="airscout-select" id="dxcalls"></select>
+                                <input type="text" class="airscout-input" id="dxcall" maxlength="14" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:5%"> </td>
+                            <td class="label" style="width:25%">DXLoc:</td>
+                            <td style="width:5%"> </td>
+                            <td style="width:65%; position:relative">
+                                <select class="airscout-select" id="dxlocs"></select>
+                                <input type="text" class="airscout-input" id="dxloc" maxlength="14" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:5%"> </td>
+                            <td class="label" style="width:25%">QTF:</td>
+                            <td style="width:5%"> </td>
+                            <td style="width:65%; position:relative">
+                                <div class="airscout-status-text" id="qtf">&nbsp;</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:5%"> </td>
+                            <td class="label" style="width:25%">QRB:</td>
+                            <td style="width:5%"> </td>
+                            <td style="width:65%; position:relative">
+                                <div class="airscout-status-text" id="qrb">&nbsp;</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+            <li class="nav-group" aria-expanded="true">
+                <a class="nav-link nav-group-toggle" onclick="onSubMultiClicked()">Multi</a>
+                <div class="list-unstyled collapse" style="margin:10px" id="sub_multi">
+                    <table class="airscout-watchlist-table tablesorter" style="width:95%" id="watchlist">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>Call</th>
+                                <th>Loc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </li>
+            <li class="nav-group" aria-expanded="true">
+                <a class="nav-link nav-group-toggle" data-coreui-toggle="collapse" data-coreui-target="#sub_quickoptions" href="#">Quick Options</a>
+                <div class="list-unstyled collapse" style="margin:10px" id="sub_quickoptions">
+                    <table style="width:95%">
+                        <tr>
+                            <td class="label" style="width:80%" title="Always center map to midpoint of path">Map Auto Center:</td>
+                            <td align="right" style="width:20%"><input class="form-check-input" type="checkbox" value="" id="autocenter" title="Always center map to midpoint of path" checked></td>
+                        </tr>
+                        <tr>
+                            <td class="label" style="width:80%" title="Set max. circumcircle around midpoint where planes were shown&#xA;0 = AUTO&#xA;-1 = ALL">Max. Circumcircle [km]:</td>
+                            <td style="width:20%"><input type="text" style="width:100%" class="form-input" id="filter_maxcirc" maxlength="4" title="Set max. circumcircle around midpoint where planes were shown&#xA;0 = AUTO&#xA;-1 = ALL" /></td>
+                        </tr>
+                    </table>
+                    <table style="width:95%">
+                        <tr>
+                            <td class="label" style="width:50%" title="Minimum category a plane must have to be shown:">Min. Category:</td>
+                            <td style="width:50%; position:relative">
+                                <select class="airscout-select" id="filter_cat"></select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="wrapper d-flex flex-column min-vh-100 bg-light">
+        <header class="header header-sticky mb-4">
+            <div class="container-fluid">
+                <button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
+                    <svg class="icon icon-lg">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-menu"></use>
+                    </svg>
+                </button><a class="header-brand d-md-none" href="#">
+                    <svg width="118" height="46" alt="CoreUI Logo">
+                        <use xlink:href="assets/brand/coreui.svg#full"></use>
+                    </svg>
+                </a>
+                <ul class="header-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" style="font-size:125%;" href="javascript:play_pause();" id="play_pause">
+                            Play
+                            <svg class="icon icon-lg" style="margin-bottom:-0px;">
+                                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-media-play" id="icon_play_pause"></use>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="header-nav ms-3">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <div class="icon icon-lg" style="padding-bottom:40px"><img src="assets/icons/user.svg" alt="user@email.com"></div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end pt-0">
+                            <a class="dropdown-item" href="#">
+                                <svg class="icon me-2">
+                                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-settings"></use>
+                                </svg> Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">
+                                <svg class="icon me-2">
+                                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
+                                </svg> Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <div class="row container-fluid">
+
+            <!-- Map -->
+            <div class="card mb-4" style="height:800px;resize:vertical;overflow:auto;padding:20px" id="maps">
+                <div id="map" style="width:100%;height:100%"></div>
+            </div>
+            <!-- /Map -->
+            <!-- Charts -->
+            <div class="card mb-4" style="height:400px;resize:vertical;overflow:auto;padding:20px" id="charts">
+                <div style="width: 95%; height:40%; margin: auto;">
+                    <canvas id="chpath"></canvas>
+                </div>
+                <div style="width: 95%; height:40%; margin: auto;">
+                    <canvas id="chelev"></canvas>
+                </div>
+            </div>
+            <!-- /Charts-->
+        </div>
+        <footer class="footer">
+            <div style="width:100%; font-size:75%" class="text-center">
+                AirScout dashoard (c) 2023 DL2ALF, based on free Bootstrap Admin Template by <a href="https://coreui.io">CoreUI </a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- CoreUI and necessary plugins-->
+    <script src="vendors/@coreui/coreui/js/coreui.bundle.min.js"></script>
+    <script src="vendors/simplebar/js/simplebar.min.js"></script>
+
+    <!-- Plugins and scripts required by this view-->
+    <script src="vendors/chart.js/js/chart.min.js"></script>
+    <script src="vendors/@coreui/chartjs/js/coreui-chartjs.js"></script>
+    <script src="vendors/@coreui/utils/js/coreui-utils.js"></script>
+
+    <!-- Leaflet js Files -->
+    <script src="vendors/leaflet/js/leaflet-src.js"></script>
+    <script src="vendors/leaflet/js/leaflet.rotatedMarker.js"></script>
+    <script type="text/javascript" src="vendors/leaflet/js/leaflet-tooltip-layout.js"></script>
+
+    <!-- All Jquery -->
+    <script src="vendors/jquery/js/jquery.min.js"></script>
+    <script src="vendors/tablesorter/js/jquery.tablesorter.min.js"></script>
+    <script src="vendors/tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
+    <script src="vendors/tablesorter/js/parsers/parser-input-select.min.js"></script>
+
+    <!-- All other libraries -->
+    <script src="vendors/reconnecting-websocket/js/reconnecting-websocket.min.js"></script>
+
+    <!-- ============================================================== -->
+    <!-- All AirScout related JavaScript                                -->
+    <!-- ============================================================== -->
+    <!-- ScoutBase js Files -->
+    <script src="/../../resources/js/scoutbase.core.js"></script>
+    <script src="/../../resources/js/scoutbase.stations.js"></script>
+    <script src="/../../resources/js/scoutbase.elevation.js"></script>
+    <script src="/../../resources/js/scoutbase.propagation.js"></script>
+    <!-- AirScout js Files -->
+    <script src="/../../resources/js/airscout.aircrafts.js"></script>
+    <script src="/../../resources/js/airscout.core.js"></script>
+    <script src="/../../resources/js/airscout.feeds.js"></script>
+    <script src="/../../resources/js/airscout.ui.js"></script>
+    <script src="/../../resources/js/airscout.wtkst.js"></script>
+
+    <script>
+
+        // global variables
+
+        var map = null;
+        var charts = null;
+
+        var epath = null;
+        var ppaths = [];
+
+        var planefeed1 = null;
+        var planefeed2 = null;
+        var planefeed3 = null;
+
+        var init = true;
+        var playing = false;
+        var pathMode = PathMode.SINGLE;
+
+        $(document).ready(function () {
+
+            // fill bands drop down and select band
+            if (AirScout.Bands != null) {
+                try {
+                    $.each(AirScout.Bands, function (i, item) {
+                        $('#bands').append($('<option>', {
+                            value: item.value,
+                            text: item.name
+                        }));
+                    });
+                    $("#bands").val(AirScout.Settings.Band);
+                    $("#band").val($('#bands :selected').text());
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+
+            // fill drop downs and select current
+            if (AirScout.Settings.MyCalls != null) {
+                try {
+                    $.each(AirScout.Settings.MyCalls, function (i, item) {
+                        $('#mycalls').append($('<option>', {
+                            value: item,
+                            text: item
+                        }));
+                    });
+                    $("#mycall").val(AirScout.Settings.MyCall);
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+
+            if (AirScout.Settings.Watchlist != null) {
+                try {
+                    var calls = AirScout.Settings.Watchlist.map(e => e['Call']);
+                    // get all unique calls
+                    calls = [...new Set(calls)];
+                    $.each(calls, function (i, item) {
+                        $('#dxcalls').append($('<option>', {
+                            value: item,
+                            text: item
+                        }));
+                    });
+                    $("#dxcall").val(AirScout.Settings.DXCall);
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+
+            $("#myloc").val(MaidenheadLocator.fromLatLon(AirScout.Settings.MyLat, AirScout.Settings.MyLon));
+            $("#dxloc").val(MaidenheadLocator.fromLatLon(AirScout.Settings.DXLat, AirScout.Settings.DXLon));
+
+            if (AirScout.Settings.Map_AutoCenter)
+                $("#autocenter").prop('checked', true);
+            else
+                $("#autocenter").prop('checked', false);
+
+            $("#filter_maxcirc").val(AirScout.Settings.Planes_Filter_Max_Circumcircle);
+
+            // fill min filter_cat drop down and select min filter_cat
+            try {
+                $.each(AirScout.AircraftCategories, function (i, item) {
+                    $('#filter_cat').append($('<option>', {
+                        value: item.value,
+                        text: item.name
+                    }));
+                });
+                $("#filter_cat").val(AirScout.Settings.Planes_Filter_Min_Category).change();
+            }
+            catch (e) {
+                console.error(e);
+            }
+
+            // initialize watchlist
+            if (!AirScout.Settings.Watchlist_SyncWithKST && (AirScout.Settings.Watchlist != null)) {
+                try {
+                    $.each(AirScout.Settings.Watchlist, function (i, item) {
+                        $("#watchlist").append("<tr><td><input type=\"checkbox\"" + (item.checked ? " checked" : "") + " onchange='onWatchlistCheckedChanged(this.checked,\"" + item.call + "\",\"" + item.Loc + "\")'></td><td>" + item.call + "</td><td>" + item.Loc + "</td></tr>");
+                    });
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+            $("#watchlist").tablesorter({
+                headers: {
+                    0: { sorter: "checkbox", filter: false },
+                    1: { sorter: "string", filter: false },
+                    2: { sorter: "string", filter: false },
+                },
+                sortList: [[0, 0], [1, 0], [2, 0]]
+            });
+
+            // start wtKST client
+            wtKST.start();
+
+            // start refresh timer
+            setInterval(refreshtimerTick, 1000);
+
+            init = false;
+
+            // initially check all inputs
+            checkInputs();
+
+            // create map
+            map = new MapArea("map", 50, 11, 10);
+
+            // create charts
+            charts = new ChartArea("chpath", "chelev", 12200);
+
+            // pan map to MyLat/MyLon
+            if (!isNaN(AirScout.Settings.MyLat) && !isNaN(AirScout.Settings.MyLon)) {
+                map.map.setView([AirScout.Settings.MyLat, AirScout.Settings.MyLon], 6);
+            }
+
+            // start feeds
+            startFeeds();
+
+        });
+
+        // Band changed
+        $('#bands').on('change', function () {
+
+            if (init)
+                return;
+
+            AirScout.Settings.Band = parseInt(this.value);
+            $('#band').val(this[this.selectedIndex].text);
+        });
+
+        // MyCall changed
+        $('#mycall').on('input', function () {
+
+            // do nothing at init
+            if (init)
+                return;
+
+            // check inputs
+            checkInputs(this);
+        });
+
+        $('#mycalls').on('change', function () {
+            $('#mycall').val(this[this.selectedIndex].text);
+
+            // do nothing at init
+            if (init)
+                return;
+
+            // check inputs
+            checkInputs(this);
+        });
+
+        // MyLoc changed
+        $('#myloc').on('input', function () {
+
+            // do nothing at init
+            if (init)
+                return;
+
+            // check inputs
+            checkInputs(this);
+        });
+
+        $('#mylocs').on('change', function () {
+            $('#myloc').val(this[this.selectedIndex].text);
+
+            // do nothing at init
+            if (init)
+                return;
+
+            // check inputs
+            checkInputs(this);
+        });
+
+        // DXCall changed
+        $('#dxcall').on('input', function () {
+
+            // do nothing at init
+            if (init)
+                return;
+
+            // check inputs
+            checkInputs(this);
+        });
+
+        $('#dxcalls').on('change', function () {
+            $('#dxcall').val(this[this.selectedIndex].text);
+
+            // do nothing at init
+            if (init)
+                return;
+
+            // check inputs
+            checkInputs(this);
+        });
+
+        // DXLoc changed
+        $('#dxloc').on('input', function () {
+
+            // do nothing at init
+            if (init)
+                return;
+
+            // check inputs
+            checkInputs(this);
+        });
+
+        $('#dxlocs').on('change', function () {
+            $('#dxloc').val(this[this.selectedIndex].text);
+
+            // do nothing at init
+            if (init)
+                return;
+
+            // check inputs
+            checkInputs(this);
+        });
+
+        function checkInputs(element = null) {
+
+            if ((element == null) || (element.id == "mycall") || (element.id == "mycalls")) {
+
+                // check mycall
+                AirScout.Settings.MyCall = $("#mycall").val();
+
+                if (Callsign.check(AirScout.Settings.MyCall)) {
+
+                    var locs = AirScout.getLocations(AirScout.Settings.MyCall);
+                    if ((locs != null) && (locs.length > 0)) {
+                        $('#mylocs').empty();
+                        $.each(locs.map(e => e['loc']), function (i, item) {
+                            $('#mylocs').append($('<option>', {
+                                value: item,
+                                text: item
+                            }));
+                        });
+
+                        // set current values
+                        $("#myloc").val(locs[0].loc);
+                        AirScout.Settings.MyLat = locs[0].lat;
+                        AirScout.Settings.MyLon = locs[0].lon;
+                    }
+                    else {
+                        // set current values
+                        $("#myloc").val("");
+                        $('#mylocs').empty();
+                        AirScout.Settings.MyLat = NaN;
+                        AirScout.Settings.MyLon = NaN;
+                    }
+                }
+                else {
+
+                    $("#myloc").val("");
+                }
+
+            }
+
+            // check myloc
+            if (MaidenheadLocator.check($("#myloc").val())) {
+
+                // set lan/lon
+                var loc = AirScout.getLocation(AirScout.Settings.MyCall, $("#myloc").val());
+                if (loc != null) {
+
+                    // set current values
+                    AirScout.Settings.MyLat = loc.lat;
+                    AirScout.Settings.MyLon = loc.lon;
+
+                    // show with green background if position is not derived from BestCaseElevation && is precise
+                    if (!loc.isBestCase && MaidenheadLocator.isPrecise(AirScout.Settings.MyLat, AirScout.Settings.MyLon)) {
+                        $("#myloc").css("color", "");
+                        $("#myloc").css("background-color", "palegreen");
+                    }
+                    else {
+
+                        // show standard style
+                        $("#myloc").css("color", "");
+                        $("#myloc").css("background-color", "");
+                    }
+                }
+                else {
+                    // set current values from midpoint
+                    var g = GeographicalPoint.FromLoc($("#myloc").val());
+                    AirScout.Settings.MyLat = g.lat;
+                    AirScout.Settings.MyLon = g.lon;
+
+                    // show standard style
+                    $("#myloc").css("color", "");
+                    $("#myloc").css("background-color", "");
+                }
+
+                // set MyLoc in settings
+                AirScout.Settings.MyLoc = MaidenheadLocator.fromLatLon(AirScout.Settings.MyLat, AirScout.Settings.MyLon);
+            }
+            else {
+                $("#myloc").css("color", "red");
+                $("#myloc").css("background-color", "");
+                AirScout.Settings.MyLat = NaN;
+                AirScout.Settings.MyLon = NaN;
+                AirScout.Settings.MyLoc = "";
+            }
+
+            // check dxcall
+            if ((element == null) || (element.id == "dxcall") || (element.id == "dxcalls")) {
+
+                // check dxcall
+                AirScout.Settings.DXCall = $("#dxcall").val();
+
+                if (Callsign.check(AirScout.Settings.DXCall)) {
+
+                    var locs = AirScout.getLocations(AirScout.Settings.DXCall);
+                    if ((locs != null) && (locs.length > 0)) {
+                        $('#dxlocs').empty();
+                        $.each(locs.map(e => e['loc']), function (i, item) {
+                            $('#dxlocs').append($('<option>', {
+                                value: item,
+                                text: item
+                            }));
+                        });
+
+                        // set current values
+                        $("#dxloc").val(locs[0].loc);
+                        AirScout.Settings.DXLat = locs[0].lat;
+                        AirScout.Settings.DXLon = locs[0].lon;
+                    }
+                    else {
+                        // set current values
+                        $("#dxloc").val("");
+                        $('#dxlocs').empty();
+                        AirScout.Settings.DXLat = NaN;
+                        AirScout.Settings.DXLon = NaN;
+                    }
+                }
+                else {
+
+                    $("#dxloc").val("");
+                }
+            }
+
+            // check dxloc
+            if (MaidenheadLocator.check($("#dxloc").val())) {
+
+                // set lan/lon
+                var loc = AirScout.getLocation(AirScout.Settings.DXCall, $("#dxloc").val());
+                if (loc != null) {
+                    // set current values
+                    AirScout.Settings.DXLat = loc.lat;
+                    AirScout.Settings.DXLon = loc.lon;
+
+                    // show with green background if position is not derived from BestCaseElevation && is precise
+                    if (!loc.isBestCase && MaidenheadLocator.isPrecise(AirScout.Settings.DXLat, AirScout.Settings.DXLon)) {
+                        $("#dxloc").css("color", "");
+                        $("#dxloc").css("background-color", "palegreen");
+                    }
+                    else {
+
+                        // show standard style
+                        $("#dxloc").css("color", "");
+                        $("#dxloc").css("background-color", "");
+                    }
+                }
+                else {
+                    // set current values from midpoint
+                    var g = GeographicalPoint.FromLoc($("#dxloc").val());
+                    AirScout.Settings.DXLat = g.lat;
+                    AirScout.Settings.DXLon = g.lon;
+
+                    // show standard style
+                    $("#dxloc").css("color", "");
+                    $("#dxloc").css("background-color", "");
+                }
+
+                // set DXLoc in settings
+                AirScout.Settings.DXLoc = MaidenheadLocator.fromLatLon(AirScout.Settings.DXLat, AirScout.Settings.DXLon);
+            }
+            else {
+                $("#dxloc").css("color", "red");
+                $("#dxloc").css("background-color", "");
+                AirScout.Settings.DXLat = NaN;
+                AirScout.Settings.DXLon = NaN;
+                AirScout.Settings.DXLoc = "";
+            }
+
+            // check all input fields and enable play button
+            if ((AirScout.Settings.MyCall != "") &&
+                (AirScout.Settings.MyLoc != "") &&
+                (AirScout.Settings.MyLat != null) &&
+                !isNaN(AirScout.Settings.MyLat) &&
+                (AirScout.Settings.MyLon != null) &&
+                !isNaN(AirScout.Settings.MyLon) &&
+                (AirScout.Settings.DXCall != "") &&
+                (AirScout.Settings.DXLoc != "") &&
+                (AirScout.Settings.DXLat != null) &&
+                !isNaN(AirScout.Settings.DXLat) &&
+                (AirScout.Settings.DXLon != null) &&
+                !isNaN(AirScout.Settings.DXLon)) {
+
+                $("#play_pause").fadeTo(0, 1.0);
+                $("#play_pause").attr("href", "javascript:play_pause();");
+
+                $("#qrb").text(LatLon.distance(AirScout.Settings.MyLat, AirScout.Settings.MyLon, AirScout.Settings.DXLat, AirScout.Settings.DXLon).toFixed(0));
+                $("#qtf").text(LatLon.bearing(AirScout.Settings.MyLat, AirScout.Settings.MyLon, AirScout.Settings.DXLat, AirScout.Settings.DXLon).toFixed(0));
+            }
+            else {
+
+                $("#play_pause").removeAttr("href");
+                $("#play_pause").fadeTo(0, 0.2);
+                $("#qrb").html("&nbsp;");
+                $("#qtf").html("&nbsp;");
+            }
+        }
+
+        function play_pause() {
+            if (!playing) {
+                play();
+            }
+            else {
+                pause();
+            }
+        }
+
+        // watchlist checked changed
+        function onWatchlistCheckedChanged(checked, call, loc) {
+
+            if (AirScout.Settings.Watchlist == null)
+                return;
+
+            AirScout.Settings.Watchlist.forEach(item => {
+                if ((item.call == call) && (item.Loc == loc))
+                    item.checked = checked;
+            });
+        }
+
+        // map auto center changed
+        $('#autocenter').on('change', function () {
+
+            // do nothing at init
+            if (init)
+                return;
+
+            AirScout.Settings.Map_AutoCenter = $("#autocenter").prop('checked');
+        });
+
+        // max circumcirle changed
+        $('#filter_maxcirc').on('input', function () {
+
+            // do nothing at init
+            if (init)
+                return;
+
+            // check for valid input
+            if ($("#filter_maxcirc").val().isNumber()) {
+                $("#filter_maxcirc").css("color", "");
+                AirScout.Settings.Planes_Filter_Max_Circumcircle = parseInt($("#filter_maxcirc").val());
+            }
+            else {
+                $("#filter_maxcirc").css("color", "red");
+            }
+        });
+
+        // Filter min category changed
+        $('#filter_cat').on('change', function () {
+
+            // do nothing at init
+            if (init)
+                return;
+
+            AirScout.Settings.Planes_Filter_Min_Category = parseInt(this.value);
+        });
+
+        function onSubSingleClicked() {
+
+            $('#sub_single').show();
+            $('#sub_multi').hide();
+
+            $('#charts').show();
+
+            pathMode = PathMode.SINGLE;
+        }
+
+        function onSubMultiClicked() {
+
+            $('#sub_single').hide();
+            $('#sub_multi').show();
+
+            $('#charts').hide();
+
+            pathMode = PathMode.MULTI;
+        }
+
+        // refresh timer
+        function refreshtimerTick() {
+
+            // maintain watchlist
+            if (AirScout.Settings.Watchlist_SyncWithKST && (AirScout.Settings.Watchlist != null)) {
+                try {
+                    // clear table body
+                    $('#watchlist tbody').empty();
+
+                    // fill in new entries
+                    $.each(AirScout.Settings.Watchlist, function (i, item) {
+                        $("#watchlist").append("<tr><td><input type=\"checkbox\"" + (item.checked ? " checked" : "") + " onchange='onWatchlistCheckedChanged(this.checked,\"" + item.call + "\",\"" + item.Loc + "\")'></td><td>" + item.call + "</td><td>" + item.Loc + "</td></tr>");
+                    });
+
+                    // resort table
+                    $("#watchlist").trigger("update");
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+
+            if (!playing)
+                return;
+
+            // get nearest planes
+            const time = new Date();
+            Aircrafts.setNearestPlanes(time, ppaths, AirScout.Settings.Planes_Filter_Max_Circumcircle, AirScout.getBandSettings(AirScout.Settings.Band).MAXDISTANCE, AirScout.Settings.Planes_MaxAlt);
+
+            map.drawPlanes();
+            charts.drawPlanes();
+        }
+
+        function clearAllLayers() {
+
+            map.clearPaths();
+            map.clearPlanes();
+        }
+
+        function startFeeds() {
+
+            // start feeds
+            if (AirScout.PlaneFeedSettings != null) {
+
+                AirScout.PlaneFeedSettings.forEach(settings => {
+
+                    if (settings.Name == AirScout.Settings.Planes_PlaneFeed1) {
+                        if (settings.Name == VRSWebServer.name) {
+
+                            // get the planes
+                            planefeed1 = new VRSWebServer();
+                            planefeed1.start(settings.Value);
+                        }
+                    }
+                });
+            }
+        }
+
+        function stopFeeds() {
+
+            // stop all feeds
+            if (planefeed1 != null) {
+                planefeed1.stop();
+                planefeed1 = null;
+            }
+            if (planefeed2 != null) {
+                planefeed2.stop();
+                planefeed2 = null;
+            }
+            if (planefeed3 != null) {
+                planefeed3.stop();
+                planefeed3 = null;
+            }
+
+        }
+
+        function play() {
+
+            $("#icon_play_pause").attr('xlink:href', "vendors/@coreui/icons/svg/free.svg#cil-media-pause");
+            $("#play_pause").html($("#play_pause").html().replace("Play", "Pause"));
+
+            $('#sidebar').find('*').attr('disabled', true);
+
+            // clear paths
+            ppaths = [];
+
+            if (pathMode == PathMode.SINGLE) {
+
+                // get elevation path
+                epath = AirScout.getElevationPath(AirScout.Settings.MyCall, AirScout.Settings.MyLat, AirScout.Settings.MyLon, AirScout.Settings.DXCall, AirScout.Settings.DXLat, AirScout.Settings.DXLon);
+
+                // get propagation path
+                ppaths.push(AirScout.getPropagationPath(AirScout.Settings.MyCall, AirScout.Settings.MyLat, AirScout.Settings.MyLon, AirScout.Settings.DXCall, AirScout.Settings.DXLat, AirScout.Settings.DXLon, AirScout.Settings.Band));
+
+            }
+            else if (pathMode == PathMode.MULTI) {
+
+                if (AirScout.Settings.Watchlist != null) {
+
+                    AirScout.Settings.Watchlist.forEach(item => {
+
+                        if (item.checked) {
+
+                            // get location
+                            var l = AirScout.getLocation(item.call, item.loc);
+                            // get propagation path
+                            ppaths.push(AirScout.getPropagationPath(AirScout.Settings.MyCall, AirScout.Settings.MyLat, AirScout.Settings.MyLon, item.call, l.lat, l.lon, AirScout.Settings.Band));
+                        }
+                    });
+                }
+            }
+
+            // clear all
+            map.clearAirports();
+            map.clearPaths();
+            map.clearPlanes();
+
+            // draw airports
+            map.drawAirports();
+
+            // draw paths on map
+            map.drawPaths(ppaths);
+
+            if (pathMode == PathMode.SINGLE) {
+
+                // draw charts
+                charts.drawPath(epath, ppaths[0]);
+                charts.drawElev(epath);
+            }
+
+            playing = true;
+
+        }
+
+        function pause() {
+
+            playing = false;
+
+            $("#icon_play_pause").attr('xlink:href', "vendors/@coreui/icons/svg/free.svg#cil-media-play");
+            $("#play_pause").html($("#play_pause").html().replace("Pause", "Play"));
+
+            $('#sidebar').find('*').attr('disabled', false);
+        }
+
+    </script>
+
+</body>
+</html>

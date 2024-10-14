@@ -1320,6 +1320,9 @@ namespace AirScout.CAT
                 {
                     // do nothing
                 }
+
+                // try to access engine
+                var test = OmniRigEngine.InterfaceVersion;
             }
             catch
             {

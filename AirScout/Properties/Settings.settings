@@ -267,7 +267,7 @@
       <Value Profile="(Default)">3600</Value>
     </Setting>
     <Setting Name="News_URL" Type="System.Uri" Scope="User">
-      <Value Profile="(Default)">http://www.airscout.eu/news.html</Value>
+      <Value Profile="(Default)">http://airscout.eu/index.php/news</Value>
     </Setting>
     <Setting Name="Track_UDP_WinTest" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -748,9 +748,6 @@ NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team (2019). AST
     <Setting Name="InfoWin_DXDoppler" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="InfoWin_AlwaysDetailed" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="Map_TrackingGaugesShow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
@@ -765,6 +762,21 @@ NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team (2019). AST
     </Setting>
     <Setting Name="Planes_PositionsDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)">PlanePositions</Value>
+    </Setting>
+    <Setting Name="Map_Saturation" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Map_Providers" Type="AirScout.MapProviders" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="KST_Websocket" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ws://10.0.2.143:9881/AirScout</Value>
+    </Setting>
+    <Setting Name="KST_WebSocket_Timeout" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">150</Value>
+    </Setting>
+    <Setting Name="Map_ShowBeamWidth" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -183,7 +183,7 @@ namespace AirScout.CAT
                     }
                     catch (Exception ex)
                     {
-                        this.ReportProgress(-1, "Error while trying to get a rig object from CAT: " + ex.ToString());
+                        this.ReportProgress(-1, "Error while trying to get a rig object from CAT!");
                     }
                 }
 
@@ -214,6 +214,8 @@ namespace AirScout.CAT
                     // get rig infos when rig is online
                     if (rigstatus == RIGSTATUS.ONLINE)
                     {
+                        this.ReportProgress(1, rigstatus);
+
                         // get mode
                         RIGMODE rigmode = Rig.GetMode();
                         if ( oldrigmode != rigmode)

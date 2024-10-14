@@ -38,9 +38,14 @@
             this.ss_Main = new System.Windows.Forms.StatusStrip();
             this.tsl_Main = new System.Windows.Forms.ToolStripStatusLabel();
             this.bw_Calculate = new System.ComponentModel.BackgroundWorker();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.ud_Opacity = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.ss_Main.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Opacity)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -72,6 +77,7 @@
             this.gm_Options_Traffic.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
             this.gm_Options_Traffic.Name = "gm_Options_Traffic";
             this.gm_Options_Traffic.NegativeMode = false;
+            this.gm_Options_Traffic.Opacity = 1D;
             this.gm_Options_Traffic.PolygonsEnabled = true;
             this.gm_Options_Traffic.RetryLoadTile = 0;
             this.gm_Options_Traffic.RoutesEnabled = true;
@@ -86,6 +92,10 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.ud_Opacity);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.btn_Options_Traffic_Show);
             this.groupBox2.Controls.Add(this.dtp_Options_Traffic_Stop);
             this.groupBox2.Controls.Add(this.dtp_Options_Traffic_Start);
@@ -112,7 +122,7 @@
             // 
             this.dtp_Options_Traffic_Stop.CustomFormat = "yyyy-MM-dd HH:mm";
             this.dtp_Options_Traffic_Stop.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_Options_Traffic_Stop.Location = new System.Drawing.Point(365, 19);
+            this.dtp_Options_Traffic_Stop.Location = new System.Drawing.Point(258, 18);
             this.dtp_Options_Traffic_Stop.Name = "dtp_Options_Traffic_Stop";
             this.dtp_Options_Traffic_Stop.Size = new System.Drawing.Size(131, 20);
             this.dtp_Options_Traffic_Stop.TabIndex = 2;
@@ -121,7 +131,7 @@
             // 
             this.dtp_Options_Traffic_Start.CustomFormat = "yyyy-MM-dd HH:mm";
             this.dtp_Options_Traffic_Start.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtp_Options_Traffic_Start.Location = new System.Drawing.Point(162, 19);
+            this.dtp_Options_Traffic_Start.Location = new System.Drawing.Point(55, 18);
             this.dtp_Options_Traffic_Start.Name = "dtp_Options_Traffic_Start";
             this.dtp_Options_Traffic_Start.Size = new System.Drawing.Size(128, 20);
             this.dtp_Options_Traffic_Start.TabIndex = 1;
@@ -162,6 +172,50 @@
             this.bw_Calculate.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bw_Calculate_ProgressChanged);
             this.bw_Calculate.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_Calculate_RunWorkerCompleted);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(33, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "From:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(226, 22);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(23, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "To:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(415, 22);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(60, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Opacity[%]:";
+            // 
+            // ud_Opacity
+            // 
+            this.ud_Opacity.Location = new System.Drawing.Point(481, 18);
+            this.ud_Opacity.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.ud_Opacity.Name = "ud_Opacity";
+            this.ud_Opacity.Size = new System.Drawing.Size(53, 20);
+            this.ud_Opacity.TabIndex = 7;
+            this.ud_Opacity.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
             // TrafficDlg
             // 
             this.AcceptButton = this.btn_Options_Traffic_Close;
@@ -172,12 +226,14 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "TrafficDlg";
-            this.Text = "TrafficDlg";
+            this.Text = "Show All Traffic";
             this.SizeChanged += new System.EventHandler(this.TrafficDlg_SizeChanged);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ss_Main.ResumeLayout(false);
             this.ss_Main.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ud_Opacity)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -195,5 +251,9 @@
         private System.Windows.Forms.StatusStrip ss_Main;
         private System.Windows.Forms.ToolStripStatusLabel tsl_Main;
         private System.ComponentModel.BackgroundWorker bw_Calculate;
+        private System.Windows.Forms.NumericUpDown ud_Opacity;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
     }
 }

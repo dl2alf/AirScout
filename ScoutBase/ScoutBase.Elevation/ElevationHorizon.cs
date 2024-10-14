@@ -124,14 +124,19 @@ namespace ScoutBase.Elevation
         {
             try
             {
+                string separator = SupportFunctions.GetCSVSeparator();
                 using (StreamWriter sw = new StreamWriter(filename))
                 {
-                    sw.WriteLine("Azimiuth[deg];Distance[km];Elevation[m]");
+                    sw.WriteLine("Azimiuth[deg]" + separator +
+                        "Distance[km]" + separator +
+                        "Elevation[m]");
                     for (int j = 0; j < 360; j++)
                     {
                         for (int i = 0; i < Paths[j].Length; i++)
                         {
-                            sw.WriteLine(j.ToString() + ";" + ((double)i * this.StepWidth / 1000.0).ToString("F8", CultureInfo.InvariantCulture) + ";" + Paths[j][i].ToString());
+                            sw.WriteLine(j.ToString() + separator + 
+                                ((double)i * this.StepWidth / 1000.0).ToString("F8") + separator + 
+                                Paths[j][i].ToString());
                         }
                     }
                 }

@@ -366,7 +366,7 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                     }
                     else
                     {
-                        plane.Alt = info.BaroAlt + info.GeoMinusBaro;
+                        plane.Alt = info.BaroAlt; // + info.GeoMinusBaro;
                     }
                     plane.Speed = info.Speed;
                     plane.Track = info.Heading;

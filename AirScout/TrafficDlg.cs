@@ -109,7 +109,7 @@ namespace AirScout
                 List<AircraftPositionDesignator> allpos = AircraftPositionData.Database.AircraftPositionGetAllByHex(hex, dtp_Options_Traffic_Start.Value, dtp_Options_Traffic_Stop.Value);
                 int count = 0;
                 GMapRoute r = new GMapRoute(hex + count.ToString());
-                r.Stroke = new Pen(Color.Black, 1);
+                r.Stroke = new Pen(Color.FromArgb((int)((double)ud_Opacity.Value * 255.0 / 100.0), Color.Black), 1);
                 foreach (AircraftPositionDesignator pos in allpos)
                 {
                     PointLatLng po = new PointLatLng(pos.Lat, pos.Lon);
@@ -131,7 +131,7 @@ namespace AirScout
                             count++;
                             // create a new one
                             r = new GMapRoute(hex + count.ToString());
-                            r.Stroke = new Pen(Color.Black, 1);
+                            r.Stroke = new Pen(Color.FromArgb((int)((double)ud_Opacity.Value * 255.0 / 100.0), Color.Black), 1);
                         }
                     }
                 }

@@ -53,6 +53,12 @@ namespace ScoutBase.Core
         BALL = 999999999
     }
 
+    public class Band
+    {
+        public string Name { get; set; } = "";
+        public BAND Value { get; set; } = BAND.BNONE;
+    }
+
     public static class Bands
     {
         public static string GetName(BAND band)
@@ -133,8 +139,32 @@ namespace ScoutBase.Core
             return null;
         }
 
+        public static Band[] GetBandsExceptNoneAndAll()
+        {
+            List<Band> bands = new List<Band>();
+            foreach (BAND b in Enum.GetValues(typeof(BAND)))
+            {
+                if ((b != BAND.BNONE) && (b != BAND.BALL))
+                {
+                    Band band = new Band();
+                    band.Value = b;
+                    band.Name = GetStringValue(b);
+                    bands.Add(band);
+                }
+            }
+            if (bands.Count > 0)
+                return bands.ToArray();
+            return null;
+        }
+
         public static BAND ParseStringValue(string bandstr)
         {
+            if (bandstr.ToUpper().Trim() == "NONE")
+                return BAND.BNONE;
+
+            if (bandstr.ToUpper().Trim() == "ALL")
+                return BAND.BALL;
+
             foreach (BAND b in Bands.GetValuesExceptNoneAndAll())
             {
                 if (String.Compare(Bands.GetStringValue(b), bandstr,true) == 0)

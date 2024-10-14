@@ -1,6 +1,19 @@
-﻿2023-xx-xx: V1.4.3.0
+﻿2024-10-13: V1.4.3.1
+====================
+- Bugfix:  Path drawing on the map does not end exactly at DX station's location  --> fixed (tnx VK2BPG)
+- Bugfix:  Beamwidth drawing goes mad when beamwidth sector includes 0° +/- --> fixed (tnx OZ9GE)
+- Bugfix:  Hardcopy via "Save" gives an empty world map without any paths/planes (since ages!)--> fixed (tnx OZ9GE)
+- Bugfix:  ASSETPATH responds "0 nearest planes" under some cirucmstances but in fact there are a lot --> fixed (tnx OK1DIX)
+- Feature: Export CSV with country specific settings of the UI including separator (tnx VK2ZIP)
+
+2024-01-14: V1.4.3.0
 ====================
 
+- Bugfix:  CAT does not return to work when OmniRig is selected and temporarily disappeared (e.g. after wake up from standby) --> fixed
+- Bugfix:  no more planes were shown when plane icon size is changed in settings --> fixed (tnx VK3VG)
+- Bugfix:  "there are news ..." always showing up when another website (with CMS) was visited before --> fixed, always default to AirScout news page on startup
+- Bugfix:  several bug in history analysis --> fixed 
+- Feature: optional show antenna beamwidths on map
 
 2023-01-29: V1.4.2.0
 ====================

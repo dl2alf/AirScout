@@ -307,16 +307,20 @@ namespace AirScout
                 Dlg.FileName = Dlg.FileName + "_" + ElevationData.Database.GetDefaultStepWidth(GetElevationModel()).ToString("F0") + "m";
                 Dlg.FileName = Dlg.FileName + ".csv";
                 Dlg.DefaultExt = ".csv";
+                string separator = SupportFunctions.GetCSVSeparator();
                 if (Dlg.ShowDialog() == DialogResult.OK)
                 {
                     using (StreamWriter sw = new StreamWriter(Dlg.FileName))
                     {
-                        sw.WriteLine("Bearing[deg];Eps_Min[deg];Distance[km];Elevation[m]");
+                        sw.WriteLine("Bearing[deg]" + separator +
+                            "Eps_Min[deg]" + separator +
+                            "Distance[km]" + separator +
+                            "Elevation[m]");
                         for (int i = 0; i < 360; i++)
                         {
-                            sw.WriteLine(i.ToString() + ";" +
-                                (Horizon.Horizon[i].Epsmin / Math.PI * 180).ToString("F8") + ";" +
-                                Horizon.Horizon[i].Dist.ToString("F8") + ";" +
+                            sw.WriteLine(i.ToString() + separator +
+                                (Horizon.Horizon[i].Epsmin / Math.PI * 180).ToString("F8") + separator +
+                                Horizon.Horizon[i].Dist.ToString("F8") + separator +
                                 Horizon.Horizon[i].Elv.ToString("F8"));
                         }
                     }

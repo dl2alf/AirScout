@@ -1866,7 +1866,7 @@ namespace AirScout.Aircrafts
                     if (caller.WorkerSupportsCancellation && caller.CancellationPending)
                         return new List<AirportDesignator>();
                     if (caller.WorkerSupportsCancellation && caller.WorkerReportsProgress && (i % 1000 == 0))
-                        caller.ReportProgress(0, "Getting Airport " + i.ToString() + " of");
+                        caller.ReportProgress(0, "Getting Airport " + i.ToString());
                 }
             }
             reader.Close();

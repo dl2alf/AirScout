@@ -21,6 +21,13 @@ namespace AirScout.Core
         SUPERHEAVY = 4,
     }
 
+    public class PlaneCategory
+    {
+        public string Name { get; set; } = "";
+        public PLANECATEGORY Value { get; set; } = PLANECATEGORY.NONE;
+    }
+
+
     public static class PlaneCategories
     {
         public static string GetName(PLANECATEGORY cat)
@@ -122,6 +129,22 @@ namespace AirScout.Core
             }
             return PLANECATEGORY.NONE;
         }
+
+        public static PlaneCategory[] GetPlaneCategories()
+        {
+            List<PlaneCategory> cats = new List<PlaneCategory>();
+            foreach (PLANECATEGORY b in Enum.GetValues(typeof(PLANECATEGORY)))
+            {
+                PlaneCategory cat = new PlaneCategory();
+                cat.Value = b;
+                cat.Name = GetStringValue(b);
+                cats.Add(cat);
+            }
+            if (cats.Count > 0)
+                return cats.ToArray();
+            return null;
+        }
+
 
     }
 }

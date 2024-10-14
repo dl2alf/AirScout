@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AirScout.PlaneFeeds.Plugin.MEFContract;
 
 namespace AirScout
 {
@@ -9,5 +10,6 @@ namespace AirScout
     {
         public string TmpDirectory = "";
         public string WebserverDirectory = "";
+        public List<IPlaneFeedPlugin> PlaneFeedPlugins = new List<IPlaneFeedPlugin>();
     }
 }

@@ -69,6 +69,8 @@ using OxyPlot.Series;
 using OxyPlot.Axes;
 using System.Data.SQLite;
 using MimeTypes;
+using AirScout.PlaneFeeds;
+using AirScout.PlaneFeeds.Plugin.MEFContract;
 
 namespace AirScout
 {
@@ -89,6 +91,12 @@ namespace AirScout
                 tmpdir = ((WebserverStartArgs)e.Argument).TmpDirectory;
             }
 
+            // get plane feeds
+            List<IPlaneFeedPlugin> planefeedplugins = new List<IPlaneFeedPlugin>();
+            if (e != null)
+            {
+                planefeedplugins = ((WebserverStartArgs)e.Argument).PlaneFeedPlugins;
+            }
 
             string webserverdir = Path.Combine(Application.StartupPath, "wwwroot");
             // get webserver directory from arguments
@@ -140,6 +148,7 @@ namespace AirScout
                         args.WebserverDirectory = webserverdir;
                         args.Context = context;
                         args.AllPlanes = allplanes;
+                        args.PlaneFeedPlugins = planefeedplugins;
                         WebserverDeliver bw = new WebserverDeliver();
                         bw.RunWorkerAsync(args);
                     }
@@ -216,18 +225,83 @@ namespace AirScout
             return elv;
         }
 
-        public LocationDesignator LocationFind(string call, string loc = "")
+        public LocationDesignator LocationFind(string call, string loc = "", string bestcaseelevation = "")
         {
             // check all parameters
             if (!Callsign.Check(call))
                 return null;
             if (!String.IsNullOrEmpty(loc) && !MaidenheadLocator.Check(loc))
                 return null;
+
+            bool best = false;
+            if (!String.IsNullOrEmpty(bestcaseelevation))
+            {
+                // get the best case elevation switch if given
+                best = bestcaseelevation.Trim().ToUpper() == "TRUE";
+            }
+            else
+            {
+                // use own Settings
+                best = Properties.Settings.Default.Path_BestCaseElevation;
+            }
+
+            LocationDesignator ld = null;
+            // loc empty --> get location info only from database
+            if (String.IsNullOrEmpty(loc))
+            {
+                ld = StationData.Database.LocationFind(call);
+
+                // return null if not found
+                if (ld == null)
+                    return null;
+            }
+            // loc set --> get location from database or from center of loc if not found
+            else
+            {
+                ld = StationData.Database.LocationFind(call, loc);
+                if (ld == null)
+                {
+                    ld = new LocationDesignator(call, loc, GEOSOURCE.FROMLOC);
+                }
+            }
+
+            // get elevation
+            ld.Elevation = GetElevation(ld.Lat, ld.Lon);
+            ld.BestCaseElevation = false;
+
+            // modify location in case of best case elevation is selected --> but do not store in database or settings!
+            if (best)
+            {
+                if (!MaidenheadLocator.IsPrecise(ld.Lat, ld.Lon, 3))
+                {
+                    ElvMinMaxInfo maxinfo = GetMinMaxElevationLoc(ld.Loc);
+                    if (maxinfo != null)
+                    {
+                        ld.Lat = maxinfo.MaxLat;
+                        ld.Lon = maxinfo.MaxLon;
+                        ld.Elevation = maxinfo.MaxElv;
+                        ld.Source = GEOSOURCE.FROMBEST;
+                        ld.BestCaseElevation = true;
+                    }
+                }
+            }
+            return ld;
+        }
+
+        public LocationDesignator LocationFindOrCreate(string call, string loc )
+        {
+            // check all parameters
+            if (!Callsign.Check(call))
+                return null;
+            if (!MaidenheadLocator.Check(loc))
+                return null;
+
             // get location info
-            LocationDesignator ld = (String.IsNullOrEmpty(loc)) ? StationData.Database.LocationFind(call) : StationData.Database.LocationFind(call, loc);
-            // return null if not found
+            LocationDesignator ld = StationData.Database.LocationFindOrCreate(call, loc);
+            // return null if not found/not valid
             if (ld == null)
                 return null;
+
             // get elevation
             ld.Elevation = GetElevation(ld.Lat, ld.Lon);
             ld.BestCaseElevation = false;
@@ -249,23 +323,38 @@ namespace AirScout
             return ld;
         }
 
-        public List<LocationDesignator> LocationFindAll(string call)
+        public List<LocationDesignator> LocationFindAll(string call, string bestcaseelevation = "")
         {
             // check all parameters
             if (!Callsign.Check(call))
                 return null;
+
+            bool best = false;
+            if (!String.IsNullOrEmpty(bestcaseelevation))
+            {
+                // get the best case elevation switch if given
+                best = bestcaseelevation.Trim().ToUpper() == "TRUE";
+            }
+            else
+            {
+                // use own Settings
+                best = Properties.Settings.Default.Path_BestCaseElevation;
+            }
+
             // get location info
             List<LocationDesignator> l = StationData.Database.LocationFindAll(call);
+
             // return null if not found
             if (l == null)
                 return null;
+
             foreach (LocationDesignator ld in l)
             {
                 // get elevation
                 ld.Elevation = GetElevation(ld.Lat, ld.Lon);
                 ld.BestCaseElevation = false;
                 // modify location in case of best case elevation is selected --> but do not store in database or settings!
-                if (Properties.Settings.Default.Path_BestCaseElevation)
+                if (best)
                 {
                     if (!MaidenheadLocator.IsPrecise(ld.Lat, ld.Lon, 3))
                     {
@@ -275,6 +364,7 @@ namespace AirScout
                             ld.Lat = maxinfo.MaxLat;
                             ld.Lon = maxinfo.MaxLon;
                             ld.Elevation = maxinfo.MaxElv;
+                            ld.Source = GEOSOURCE.FROMBEST;
                             ld.BestCaseElevation = true;
                         }
                     }
@@ -336,6 +426,16 @@ namespace AirScout
             return elv;
         }
 
+        private string DeliverAircraftList(string tmpdir)
+        {
+            string json = "";
+            var fs = File.OpenRead(tmpdir + Path.DirectorySeparatorChar + "vrsplanes.json");
+            using (StreamReader sr = new StreamReader(fs))
+            {
+                json = sr.ReadToEnd();
+            }
+            return json;
+        }
 
         private string DeliverPlanes(string tmpdir)
         {
@@ -381,6 +481,21 @@ namespace AirScout
             json = JsonConvert.SerializeObject(bands);
             return json;
         }
+        private string DeliverBandValues(string paramstr)
+        {
+            string json = "";
+            Band[] bands = Bands.GetBandsExceptNoneAndAll();
+            json = JsonConvert.SerializeObject(bands);
+            return json;
+        }
+
+        private string DeliverAircraftCategories(string paramstr)
+        {
+            string json = "";
+            PlaneCategory[] cats = PlaneCategories.GetPlaneCategories();
+            json = JsonConvert.SerializeObject(cats);
+            return json;
+        }
 
         private string DeliverLocation(string paramstr)
         {
@@ -388,6 +503,8 @@ namespace AirScout
             // set default values
             string callstr = "";
             string locstr = "";
+            string bestcasestr = "";
+
             // get parameters
             try
             {
@@ -398,6 +515,7 @@ namespace AirScout
                     var pars = System.Web.HttpUtility.ParseQueryString(paramstr);
                     callstr = pars.Get("CALL");
                     locstr = pars.Get("LOC");
+                    bestcasestr = pars.Get("BESTCASEELEVATION");
                 }
             }
             catch (Exception ex)
@@ -405,24 +523,27 @@ namespace AirScout
                 // return error
                 return "Error while parsing parameters!";
             }
+
             // check parameters
+            if (!String.IsNullOrEmpty(bestcasestr) && (bestcasestr != "TRUE") && (bestcasestr != "FALSE"))
+            {
+                return "Error: " + bestcasestr + " is not a valid value for best case elevation (true, false)!";
+            }
+
             if (!Callsign.Check(callstr))
                 return "Error: " + callstr + " is not a valid callsign!";
             LocationDesignator ld = null;
+
             // locstr == null or empty --> return last recent location
             if (String.IsNullOrEmpty(locstr))
             {
-                ld = LocationFind(callstr);
-                if (ld == null)
-                    return "Error: Location not found in database!";
+                ld = LocationFind(callstr, locstr, bestcasestr);
                 json = ld.ToJSON();
                 return json;
             }
             if(locstr == "ALL")
             {
-                List<LocationDesignator> l = LocationFindAll(callstr);
-                if (l == null)
-                    return "Error: Location not found in database!";
+                List<LocationDesignator> l = LocationFindAll(callstr, bestcasestr);
                 JsonSerializerSettings settings = new JsonSerializerSettings();
                 settings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 settings.FloatFormatHandling = FloatFormatHandling.String;
@@ -434,9 +555,7 @@ namespace AirScout
             if (!MaidenheadLocator.Check(locstr))
                 return "Error: " + locstr + " is not a valid Maidenhead locator!";
             // search call in station database, return empty string if not found
-            ld = LocationFind(callstr, locstr);
-            if (ld == null)
-                return "Error: Location not found in database!";
+            ld = LocationFind(callstr, locstr, bestcasestr);
             json = ld.ToJSON();
             return json;
         }
@@ -502,12 +621,27 @@ namespace AirScout
         private string DeliverElevationPath(string paramstr)
         {
             string json = "";
+
             // set default values
             string mycallstr = "";
+            string mylatstr = "";
+            string mylonstr = "";
             string mylocstr = "";
             string dxcallstr = "";
+            string dxlatstr = "";
+            string dxlonstr = "";
             string dxlocstr = "";
+
+            double mylat = double.NaN;
+            double mylon = double.NaN;
+            double dxlat = double.NaN;
+            double dxlon = double.NaN;
+
+            LocationDesignator myloc = null;
+            LocationDesignator dxloc = null;
+
             BAND band = Properties.Settings.Default.Band;
+
             // get parameters
             try
             {
@@ -517,8 +651,12 @@ namespace AirScout
                     paramstr = paramstr.Substring(paramstr.IndexOf("?") + 1).ToUpper();
                     var pars = System.Web.HttpUtility.ParseQueryString(paramstr);
                     mycallstr = pars.Get("MYCALL");
+                    mylatstr = pars.Get("MYLAT");
+                    mylonstr = pars.Get("MYLON");
                     mylocstr = pars.Get("MYLOC");
                     dxcallstr = pars.Get("DXCALL");
+                    dxlatstr = pars.Get("DXLAT");
+                    dxlonstr = pars.Get("DXLON");
                     dxlocstr = pars.Get("DXLOC");
                 }
             }
@@ -532,20 +670,59 @@ namespace AirScout
                 return "Error: " + mycallstr + " is not a valid callsign!";
             if (!Callsign.Check(dxcallstr))
                 return "Error: " + dxcallstr + " is not a valid callsign!";
+            if (!String.IsNullOrEmpty(mylatstr) && !double.TryParse(mylatstr, NumberStyles.Float, CultureInfo.InvariantCulture, out mylat))
+                return "Error: " + mylatstr + " is not a valid latitude!";
+            if (!String.IsNullOrEmpty(mylonstr) && !double.TryParse(mylonstr, NumberStyles.Float, CultureInfo.InvariantCulture, out mylon))
+                return "Error: " + mylonstr + " is not a valid longitude!";
             if (!String.IsNullOrEmpty(mylocstr) && !MaidenheadLocator.Check(mylocstr))
                 return "Error: " + mylocstr + " is not a valid Maidenhead locator!";
+            if (!String.IsNullOrEmpty(dxlatstr) && !double.TryParse(dxlatstr, NumberStyles.Float, CultureInfo.InvariantCulture, out dxlat))
+                return "Error: " + dxlatstr + " is not a valid latitude!";
+            if (!String.IsNullOrEmpty(dxlonstr) && !double.TryParse(dxlonstr, NumberStyles.Float, CultureInfo.InvariantCulture, out dxlon))
+                return "Error: " + dxlonstr + " is not a valid longitude!";
             if (!String.IsNullOrEmpty(dxlocstr) && !MaidenheadLocator.Check(dxlocstr))
                 return "Error: " + dxlocstr + " is not a valid Maidenhead locator!";
-            // search call in station database, return empty string if not found
-            LocationDesignator myloc = LocationFind(mycallstr, mylocstr);
-            if (myloc == null)
-                return "Error: MyLocation not found in database!";
-            LocationDesignator dxloc = LocationFind(dxcallstr, dxlocstr);
-            if (dxloc == null)
-                return "Error: DXLocation not found in database!";
+
+            // try to use database, if lat/lon not given
+            if (double.IsNaN(mylat) || double.IsNaN(mylon))
+            {
+                // search call in station database, return empty string if not found
+                myloc = LocationFind(mycallstr, mylocstr);
+                if (myloc != null)
+                {
+                    mylat = myloc.Lat;
+                    mylon = myloc.Lon;
+                }
+                else
+                {
+                    return "Error: MyLocation not found in database!";
+                }
+            }
+
+            // set locator from lat/lon
+            mylocstr = MaidenheadLocator.LocFromLatLon(mylat, mylon, false, 3);
+
+            // try to use database, if lat/lon not given
+            if (double.IsNaN(dxlat) || double.IsNaN(dxlon))
+            {
+                // search call in station database, return empty string if not found
+                dxloc = LocationFind(dxcallstr, dxlocstr);
+                if (dxloc != null)
+                {
+                    dxlat = dxloc.Lat;
+                    dxlon = dxloc.Lon;
+                }
+                else
+                {
+                    return "Error: DXLocation not found in database!";
+                }
+            }
+
+            // set locator from lat/lon
+            dxlocstr = MaidenheadLocator.LocFromLatLon(dxlat, dxlon, false, 3);
 
             // get qrv info or create default
-            QRVDesignator myqrv = StationData.Database.QRVFindOrCreateDefault(myloc.Call, myloc.Loc, band);
+            QRVDesignator myqrv = StationData.Database.QRVFindOrCreateDefault(mycallstr, mylocstr, band);
             // set qrv defaults if zero
             if (myqrv.AntennaHeight == 0)
                 myqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(band);
@@ -555,7 +732,7 @@ namespace AirScout
                 myqrv.Power = StationData.Database.QRVGetDefaultPower(band);
 
             // get qrv info or create default
-            QRVDesignator dxqrv = StationData.Database.QRVFindOrCreateDefault(dxloc.Call, dxloc.Loc, band);
+            QRVDesignator dxqrv = StationData.Database.QRVFindOrCreateDefault(dxcallstr, dxlocstr, band);
             // set qrv defaults if zero
             if (dxqrv.AntennaHeight == 0)
                 dxqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(band);
@@ -567,10 +744,10 @@ namespace AirScout
             // get or calculate elevation path
             ElevationPathDesignator epath = ElevationData.Database.ElevationPathFindOrCreateFromLatLon(
                 this,
-                myloc.Lat,
-                myloc.Lon,
-                dxloc.Lat,
-                dxloc.Lon,
+                mylat,
+                mylon,
+                dxlat,
+                dxlon,
                 ElevationData.Database.GetDefaultStepWidth(Properties.Settings.Default.ElevationModel),
                 Properties.Settings.Default.ElevationModel);
             if (epath == null)
@@ -590,11 +767,24 @@ namespace AirScout
             string json = "";
             // set default values
             string mycallstr = "";
+            string mylatstr = "";
+            string mylonstr = "";
             string mylocstr = "";
             string dxcallstr = "";
+            string dxlatstr = "";
+            string dxlonstr = "";
             string dxlocstr = "";
-            string bandstr = "";
+
+            double mylat = double.NaN;
+            double mylon = double.NaN;
+            double dxlat = double.NaN;
+            double dxlon = double.NaN;
+
+            LocationDesignator myloc = null;
+            LocationDesignator dxloc = null;
+
             BAND band = Properties.Settings.Default.Band;
+
             // get parameters
             try
             {
@@ -604,10 +794,13 @@ namespace AirScout
                     paramstr = paramstr.Substring(paramstr.IndexOf("?") + 1).ToUpper();
                     var pars = System.Web.HttpUtility.ParseQueryString(paramstr);
                     mycallstr = pars.Get("MYCALL");
+                    mylatstr = pars.Get("MYLAT");
+                    mylonstr = pars.Get("MYLON");
                     mylocstr = pars.Get("MYLOC");
                     dxcallstr = pars.Get("DXCALL");
+                    dxlatstr = pars.Get("DXLAT");
+                    dxlonstr = pars.Get("DXLON");
                     dxlocstr = pars.Get("DXLOC");
-                    bandstr = pars.Get("BAND");
                 }
             }
             catch (Exception ex)
@@ -620,27 +813,63 @@ namespace AirScout
                 return "Error: " + mycallstr + " is not a valid callsign!";
             if (!Callsign.Check(dxcallstr))
                 return "Error: " + dxcallstr + " is not a valid callsign!";
+            if (!String.IsNullOrEmpty(mylatstr) && !double.TryParse(mylatstr, NumberStyles.Float, CultureInfo.InvariantCulture, out mylat))
+                return "Error: " + mylatstr + " is not a valid latitude!";
+            if (!String.IsNullOrEmpty(mylonstr) && !double.TryParse(mylonstr, NumberStyles.Float, CultureInfo.InvariantCulture, out mylon))
+                return "Error: " + mylonstr + " is not a valid longitude!";
             if (!String.IsNullOrEmpty(mylocstr) && !MaidenheadLocator.Check(mylocstr))
                 return "Error: " + mylocstr + " is not a valid Maidenhead locator!";
+            if (!String.IsNullOrEmpty(dxlatstr) && !double.TryParse(dxlatstr, NumberStyles.Float, CultureInfo.InvariantCulture, out dxlat))
+                return "Error: " + dxlatstr + " is not a valid latitude!";
+            if (!String.IsNullOrEmpty(dxlonstr) && !double.TryParse(dxlonstr, NumberStyles.Float, CultureInfo.InvariantCulture, out dxlon))
+                return "Error: " + dxlonstr + " is not a valid longitude!";
             if (!String.IsNullOrEmpty(dxlocstr) && !MaidenheadLocator.Check(dxlocstr))
                 return "Error: " + dxlocstr + " is not a valid Maidenhead locator!";
-            // set band to currently selected if empty
-            if (string.IsNullOrEmpty(bandstr))
-                band = Properties.Settings.Default.Band;
-            else
-                band = Bands.ParseStringValue(bandstr);
-            if (band == BAND.BNONE)
-                return "Error: " + bandstr + " is not a valid band value!";
-            // search call in station database, return empty string if not found
-            LocationDesignator myloc = LocationFind(mycallstr, mylocstr);
-            if (myloc == null)
-                return "Error: MyLocation not found in database!";
-            LocationDesignator dxloc = LocationFind(dxcallstr, dxlocstr);
-            if (dxloc == null)
-                return "Error: DXLocation not found in database!";
+
+            // try to use database, if lat/lon not given
+            if (double.IsNaN(mylat) || double.IsNaN(mylon))
+            {
+                // search call in station database, return empty string if not found
+                myloc = LocationFind(mycallstr, mylocstr);
+                if (myloc != null)
+                {
+                    mylat = myloc.Lat;
+                    mylon = myloc.Lon;
+                }
+                else
+                {
+                    return "Error: MyLocation not found in database!";
+                }
+            }
+            // set locator from lat/lon
+            mylocstr = MaidenheadLocator.LocFromLatLon(mylat, mylon, false, 3);
+
+            // get or create LocationDesignator with elevation info
+            myloc = LocationFindOrCreate(mycallstr, mylocstr);
+
+            // try to use database, if lat/lon not given
+            if (double.IsNaN(dxlat) || double.IsNaN(dxlon))
+            {
+                // search call in station database, return empty string if not found
+                dxloc = LocationFind(dxcallstr, dxlocstr);
+                if (dxloc != null)
+                {
+                    dxlat = dxloc.Lat;
+                    dxlon = dxloc.Lon;
+                }
+                else
+                {
+                    return "Error: DXLocation not found in database!";
+                }
+            }
+            // set locator from lat/lon
+            dxlocstr = MaidenheadLocator.LocFromLatLon(dxlat, dxlon, false, 3);
+
+            // get or create LocationDesignator with elevation info
+            dxloc = LocationFindOrCreate(dxcallstr, dxlocstr);
 
             // get qrv info or create default
-            QRVDesignator myqrv = StationData.Database.QRVFindOrCreateDefault(myloc.Call, myloc.Loc, band);
+            QRVDesignator myqrv = StationData.Database.QRVFindOrCreateDefault(mycallstr, mylocstr, band);
             // set qrv defaults if zero
             if (myqrv.AntennaHeight == 0)
                 myqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(band);
@@ -650,7 +879,7 @@ namespace AirScout
                 myqrv.Power = StationData.Database.QRVGetDefaultPower(band);
 
             // get qrv info or create default
-            QRVDesignator dxqrv = StationData.Database.QRVFindOrCreateDefault(dxloc.Call, dxloc.Loc, band);
+            QRVDesignator dxqrv = StationData.Database.QRVFindOrCreateDefault(dxcallstr, dxlocstr, band);
             // set qrv defaults if zero
             if (dxqrv.AntennaHeight == 0)
                 dxqrv.AntennaHeight = StationData.Database.QRVGetDefaultAntennaHeight(band);
@@ -669,10 +898,10 @@ namespace AirScout
                 this,
                 myloc.Lat,
                 myloc.Lon,
-                GetElevation(myloc.Lat, myloc.Lon) + myqrv.AntennaHeight,
+                myloc.Elevation + myqrv.AntennaHeight,
                 dxloc.Lat,
                 dxloc.Lon,
-                GetElevation(dxloc.Lat, dxloc.Lon) + dxqrv.AntennaHeight,
+                dxloc.Elevation + dxqrv.AntennaHeight,
                 Bands.ToGHz(band),
                 LatLon.Earth.Radius * Properties.Settings.Default.Path_Band_Settings[band].K_Factor,
                 Properties.Settings.Default.Path_Band_Settings[band].F1_Clearance,
@@ -818,6 +1047,62 @@ namespace AirScout
             return json;
         }
 
+        private string DeliverAirports(string paramstr)
+        {
+            string json = "";
+            List<AirportDesignator> airports = AircraftData.Database.AirportGetAll();
+            json = JsonConvert.SerializeObject(airports);
+            return json;
+        }
+
+        private string DeliverPlaneFeedSettings(WebServerDelivererArgs args, string paramstr)
+        {
+            string json = "";
+            IPlaneFeedPlugin planefeed1 = null;
+            IPlaneFeedPlugin planefeed2 = null;
+            IPlaneFeedPlugin planefeed3 = null;
+
+            // get parameters
+            try
+            {
+                List<object> l = new List<object>();
+                foreach (IPlaneFeedPlugin plugin in args.PlaneFeedPlugins)
+                {
+                    if (plugin.Name == Properties.Settings.Default.Planes_PlaneFeed1)
+                        planefeed1 = plugin;
+                    else if (plugin.Name == Properties.Settings.Default.Planes_PlaneFeed2)
+                        planefeed2 = plugin;
+                    else if (plugin.Name == Properties.Settings.Default.Planes_PlaneFeed3)
+                        planefeed3 = plugin;
+                }
+                if (planefeed1 != null)
+                {
+                    KeyValuePair<string, object> feed = new KeyValuePair<string, object>(Properties.Settings.Default.Planes_PlaneFeed1, planefeed1.GetSettings());
+                    l.Add(feed);
+                }
+                if (planefeed2 != null)
+                {
+                    KeyValuePair<string, object> feed = new KeyValuePair<string, object>(Properties.Settings.Default.Planes_PlaneFeed2, planefeed2.GetSettings());
+                    l.Add(feed);
+                }
+                if (planefeed3 != null)
+                {
+                    KeyValuePair<string, object> feed = new KeyValuePair<string, object>(Properties.Settings.Default.Planes_PlaneFeed3, planefeed3.GetSettings());
+                    l.Add(feed);
+                }
+                json = JsonConvert.SerializeObject(l);
+
+                // convert to Name/Value
+                json = json.Replace("\"Key\":", "\"Name\":");
+            }
+            catch (Exception ex)
+            {
+                // return error
+                return "Error while parsing parameters!";
+            }
+            return json;
+        }
+
         protected override void OnDoWork(DoWorkEventArgs e)
         {
             WebServerDelivererArgs args = (WebServerDelivererArgs)e.Argument;
@@ -865,6 +1150,12 @@ namespace AirScout
                 mime = MimeTypeMap.GetMimeType(Path.GetExtension(filename));
             }
             // check for content delivery request
+            else if (request.RawUrl == "/AircraftList.json")
+            {
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverAircraftList(args.TmpDirectory));
+                mime = "text/json";
+            }
+            // check for content delivery request
             else if (request.RawUrl.ToLower() == "/planes.json")
             {
                 buffer = System.Text.Encoding.UTF8.GetBytes(DeliverPlanes(args.TmpDirectory));
@@ -883,6 +1174,16 @@ namespace AirScout
             else if (request.RawUrl.ToLower().StartsWith("/bands.json"))
             {
                 buffer = System.Text.Encoding.UTF8.GetBytes(DeliverBands(request.RawUrl));
+                mime = "text/json";
+            }
+            else if (request.RawUrl.ToLower().StartsWith("/bandvalues.json"))
+            {
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverBandValues(request.RawUrl));
+                mime = "text/json";
+            }
+            else if (request.RawUrl.ToLower().StartsWith("/aircraftcategories.json"))
+            {
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverAircraftCategories(request.RawUrl));
                 mime = "text/json";
             }
             else if (request.RawUrl.ToLower().StartsWith("/location.json"))
@@ -908,6 +1209,16 @@ namespace AirScout
             else if (request.RawUrl.ToLower().StartsWith("/nearestplanes.json"))
             {
                 buffer = System.Text.Encoding.UTF8.GetBytes(DeliverNearestPlanes(request.RawUrl, args.AllPlanes));
+                mime = "text/json";
+            }
+            else if (request.RawUrl.ToLower().StartsWith("/airports.json"))
+            {
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverAirports(request.RawUrl));
+                mime = "text/json";
+            }
+            else if (request.RawUrl.ToLower().StartsWith("/planefeedsettings.json"))
+            {
+                buffer = System.Text.Encoding.UTF8.GetBytes(DeliverPlaneFeedSettings(args, request.RawUrl));
                 mime = "text/json";
             }
             else
@@ -937,5 +1248,6 @@ namespace AirScout
         public string WebserverDirectory = "";
         public HttpListenerContext Context;
         public List<PlaneInfo> AllPlanes;
+        public List<IPlaneFeedPlugin> PlaneFeedPlugins = new List<IPlaneFeedPlugin>();
     }
 }

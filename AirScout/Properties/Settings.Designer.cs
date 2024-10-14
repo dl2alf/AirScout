@@ -12,7 +12,7 @@ namespace AirScout.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -1081,7 +1081,7 @@ namespace AirScout.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.airscout.eu/news.html")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://airscout.eu/index.php/news")]
         public global::System.Uri News_URL {
             get {
                 return ((global::System.Uri)(this["News_URL"]));
@@ -2794,18 +2794,6 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool InfoWin_AlwaysDetailed {
-            get {
-                return ((bool)(this["InfoWin_AlwaysDetailed"]));
-            }
-            set {
-                this["InfoWin_AlwaysDetailed"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool Map_TrackingGaugesShow {
             get {
@@ -2861,6 +2849,65 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
             }
             set {
                 this["Planes_PositionsDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public decimal Map_Saturation {
+            get {
+                return ((decimal)(this["Map_Saturation"]));
+            }
+            set {
+                this["Map_Saturation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::AirScout.MapProviders Map_Providers {
+            get {
+                return ((global::AirScout.MapProviders)(this["Map_Providers"]));
+            }
+            set {
+                this["Map_Providers"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ws://10.0.2.143:9881/AirScout")]
+        public string KST_Websocket {
+            get {
+                return ((string)(this["KST_Websocket"]));
+            }
+            set {
+                this["KST_Websocket"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("150")]
+        public decimal KST_WebSocket_Timeout {
+            get {
+                return ((decimal)(this["KST_WebSocket_Timeout"]));
+            }
+            set {
+                this["KST_WebSocket_Timeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Map_ShowBeamWidth {
+            get {
+                return ((bool)(this["Map_ShowBeamWidth"]));
+            }
+            set {
+                this["Map_ShowBeamWidth"] = value;
             }
         }
     }

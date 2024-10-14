@@ -1,0 +1,133 @@
+/* some additional CSS for AirScout UI */
+
+/* leaflet tooltips for planes */
+.leaflet-plane-tooltip-gray {
+    display: block;
+    width: fit-content;
+    white-space: nowrap;
+    border: 2px solid rgba(0, 0, 76, 0.55);
+    border-radius: 5px;
+    color: navy;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.leaflet-plane-tooltip-magenta {
+    display: block;
+    width: fit-content;
+    white-space: nowrap;
+    border: 2px solid rgba(0, 0, 76, 0.55);
+    border-radius: 5px;
+    color: navy;
+    background-color: rgba(255, 0, 255, 0.7);
+    padding: 5px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.leaflet-plane-tooltip-red {
+    display: block;
+    width: fit-content;
+    white-space: nowrap;
+    border: 2px solid rgba(0, 0, 76, 0.55);
+    border-radius: 5px;
+    color: navy;
+    background-color: rgba(255, 0, 0, 0.7);
+    padding: 5px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.leaflet-plane-tooltip-darkorange {
+    display: block;
+    width: fit-content;
+    white-space: nowrap;
+    border: 2px solid rgba(0, 0, 76, 0.55);
+    border-radius: 5px;
+    color: navy;
+    background-color: rgba(255, 140, 0, 0.7);
+    padding: 5px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.leaflet-plane-tooltip-hidden {
+    display: none;
+}
+
+    /* table styles */
+    td .label {
+    color: white;
+}
+
+/* Selects */
+.airscout-select {
+    color: black;
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* Inputs */
+.airscout-input {
+    color: black;
+    background-color: white;
+    position: absolute;
+    top: 1px;
+    left: 0px;
+    width: 85%;
+    height: 89%;
+    text-transform: uppercase;
+    border-style: none;
+    line-height: normal;
+}
+
+input:disabled {
+    cursor: default;
+    background-color: rgba(239, 239, 239, 1.0);
+}
+
+/* UTC status box */
+.airscout-status-utc {
+    color: white;
+    background-color: orange;
+    padding-left: 3px;
+    font-weight: 400;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+/* QTF/QRB status box */
+.airscout-status-text {
+    color: black;
+    background-color: antiquewhite;
+    padding-left: 3px;
+    font-weight: 400;
+    width: 100%;
+    margin-bottom:1px;
+}
+
+/* Watchlist*/
+.airscout-watchlist-table th {
+    color: black;
+    background-color: white;
+    border: 1px solid gray;
+    border-collapse: collapse;
+    padding-left:3px;
+}
+
+.airscout-watchlist-table td {
+    color: black;
+    background-color: white;
+    border: 1px solid gray;
+    border-collapse: collapse;
+    padding-left: 3px;
+}

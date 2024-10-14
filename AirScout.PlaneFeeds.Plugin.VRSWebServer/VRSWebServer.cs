@@ -13,6 +13,8 @@ using System.Xml.Serialization;
 using System.Xml.Linq;
 using System.ComponentModel.Composition;
 using Newtonsoft.Json;
+using System.Windows.Forms;
+using System.Threading;
 
 namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
 {
@@ -54,6 +56,7 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
         [Browsable(true)]
         [CategoryAttribute("Web Feed (redundant)")]
         [DescriptionAttribute("Base URL for redundant website.")]
+        [DefaultValue("http://localhost:7780/VirtualRadar/AircraftList.json?ldv=%LASTDV%&stm=%UNIXTIME%&lat=%MYLAT%&lng=%MYLON%&fDstL=%MINDISTKM%&fDstU=%MAXDISTKM%&fAltL=%MINALTFT%&fAltU=%MAXALTFT%")]
         public string URL2 { get; set; }
 
         [Browsable(true)]
@@ -129,58 +132,155 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
             // be careful because Linux file system is case sensitive
             if (String.IsNullOrEmpty(filename))
                 filename = new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase.Replace(".dll", ".cfg").Replace(".DLL", ".CFG")).LocalPath;
-            // do nothing if file not exists
-            if (!File.Exists(filename))
-                return;
-            try
+
+            // create logfilename 
+            string logfile = new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase.Replace(".dll", ".cfg").Replace(".DLL", ".CFG")).LocalPath.ToLower().Replace(".cfg", ".log");
+
+            // NASTY!!! delete logfile if it is getting too big
+            if (!File.Exists(logfile))
             {
-                string xml = "";
-                using (StreamReader sr = new StreamReader(File.OpenRead(filename)))
+                try
                 {
-                    xml = sr.ReadToEnd();
-                }
-                XDocument xdoc = XDocument.Parse(xml);
-                PropertyInfo[] properties = this.GetType().GetProperties();
-                foreach (PropertyInfo p in properties)
-                {
-                    if (!loadall)
+                    if (new System.IO.FileInfo(logfile).Length > 1024 * 1024)
                     {
-                        // check on XmlIgnore attribute, skip if set
-                        object[] attr = p.GetCustomAttributes(typeof(XmlIgnoreAttribute), false);
-                        if (attr.Length > 0)
-                            continue;
+                        File.Delete(logfile);
                     }
+                }
+                catch
+                {
+
+                }
+            }
+
+            // fix issues with loading of configuration
+            bool loaded = false;
+            int retries = 0;
+
+            while (!loaded && (retries < 10))
+            {
+                // do nothing if file not exists
+                if (File.Exists(filename))
+                {
                     try
                     {
-                        // get matching element
-                        XElement typenode = xdoc.Element(this.GetType().Name);
-                        if (typenode != null)
+                        string xml = "";
+                        using (StreamReader sr = new StreamReader(File.OpenRead(filename)))
                         {
-                            XElement element = typenode.Element(p.Name);
-                            if (element != null)
+                            xml = sr.ReadToEnd();
+                        }
+                        XDocument xdoc = XDocument.Parse(xml);
+                        PropertyInfo[] properties = this.GetType().GetProperties();
+                        foreach (PropertyInfo p in properties)
+                        {
+                            if (!loadall)
                             {
-                                // fix issues with URL in V1.4.0.0 --> do not load URL from file if not containing filters
-                                if ((p.Name != "URL") || (element.Value.ToString().Contains("?")))
+                                // check on XmlIgnore attribute, skip if set
+                                object[] attr = p.GetCustomAttributes(typeof(XmlIgnoreAttribute), false);
+                                if (attr.Length > 0)
+                                    continue;
+                            }
+                            try
+                            {
+                                // get matching element
+                                XElement typenode = xdoc.Element(this.GetType().Name);
+                                if (typenode != null)
                                 {
-                                    p.SetValue(this, Convert.ChangeType(element.Value, p.PropertyType), null);
+                                    XElement element = typenode.Element(p.Name);
+                                    if (element != null)
+                                    {
+                                        // fix issues with URL in V1.4.0.0 --> do not load URL from file if not containing filters
+                                        if ((p.Name != "URL") || (element.Value.ToString().Contains("?")))
+                                        {
+                                            p.SetValue(this, Convert.ChangeType(element.Value, p.PropertyType), null);
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Ignoring property URL do to version conflict: " + element.Value);
+                                        }
+                                    }
                                 }
-                                else
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("[" + this.GetType().Name + "]: Error while loading property[" + p.Name + " from " + filename + ", " + ex.Message);
+                                try
                                 {
-                                    Console.WriteLine("Ignoring property URL do to version conflict: " + element.Value);
+                                    File.AppendAllText(logfile, "[" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "] Error while loading property " + p.Name + ": " + ex.ToString() + "\n");
+                                }
+                                catch
+                                {
+
                                 }
                             }
                         }
+
+                        loaded = true;
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("[" + this.GetType().Name + "]: Error while loading property[" + p.Name + " from " + filename + ", " + ex.Message);
+                        Console.WriteLine("[" + this.GetType().Name + "]: Cannot load settings from " + filename + ", " + ex.Message);
+                        try
+                        {
+                            File.AppendAllText(logfile, "[" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "] Error while loading settings from " + filename + ": " + ex.ToString() + "\n");
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        File.AppendAllText(logfile, "[" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "] The settings file " + filename + " was not found. Using default values.\n");
+                    }
+                    catch
+                    {
+
                     }
                 }
 
+                Thread.Sleep(100);
+
+                retries++;
             }
-            catch (Exception ex)
+
+            if (!loaded)
             {
-                Console.WriteLine("[" + this.GetType().Name + "]: Cannot load settings from " + filename + ", " + ex.Message);
+                string content = "<file not found>";
+                if (File.Exists(filename))
+                    content = File.ReadAllText(filename);
+                string message = "[" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "] There was a problem loading the VRS Webserver settings from " +
+                    filename +
+                    "\nFile content is: \n\n "
+                    + content +
+                    "\n\nPlease report it to DL2ALF\n";
+                try
+                {
+                    File.AppendAllText(message, logfile);
+                }
+                catch
+                {
+
+                }
+            }
+            else
+            {
+                try
+                {
+                    string settings = File.ReadAllText(filename);
+                    File.AppendAllText(logfile, "[" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") +
+                        "] Settings loaded from " + filename + ": \n\n" +
+                         settings +
+                        "\n\n");
+                }
+                catch
+                {
+
+                }
+
+
             }
         }
 
@@ -195,6 +295,26 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
             // be careful because Linux file system is case sensitive
             if (String.IsNullOrEmpty(filename))
                 filename = new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase.Replace(".dll", ".cfg").Replace(".DLL", ".CFG")).LocalPath;
+
+            // create logfilename 
+            string logfile = new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase.Replace(".dll", ".cfg").Replace(".DLL", ".CFG")).LocalPath.ToLower().Replace(".cfg", ".log");
+
+            // NASTY!!! delete logfile if it is getting too big
+            if (!File.Exists(logfile))
+            {
+                try
+                {
+                    if (new System.IO.FileInfo(logfile).Length > 1024 * 1024)
+                    {
+                        File.Delete(logfile);
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+
             XmlAttributeOverrides overrides = new XmlAttributeOverrides();
             if (saveall)
             {
@@ -213,6 +333,20 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
                     XmlSerializer s = new XmlSerializer(this.GetType(), overrides);
                     s.Serialize(sw, this);
                 }
+
+                try
+                {
+                    string settings = File.ReadAllText(filename);
+                    File.AppendAllText(logfile, "[" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") +
+                        "] Saving settings to " + filename + ": \n\n" +
+                       settings +
+                        "\n\n");
+                }
+                catch
+                {
+
+                }
+
             }
             catch (Exception ex)
             {
@@ -288,7 +422,7 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
         {
             get
             {
-                return false;
+                return true;
             }
         }
 
@@ -296,7 +430,7 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
         {
             get
             {
-                return false;
+                return true;
             }
         }
 
@@ -342,12 +476,41 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
 
         public void ImportSettings()
         {
-            // nothing to do
+            OpenFileDialog Dlg = new OpenFileDialog();
+            Dlg.FileName = "*.feed";
+            Dlg.DefaultExt = "feed";
+            Dlg.Filter = "Plane Feeds (*.feed)|*.feed";
+            Dlg.CheckFileExists = true;
+            if (Dlg.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    Settings.Load(false, Dlg.FileName);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("[" + this.GetType().Name + "]: Cannot import from " + Dlg.FileName + ", " + ex.Message);
+                }
+            }
         }
 
         public void ExportSettings()
         {
-            // nothing to do
+            SaveFileDialog Dlg = new SaveFileDialog();
+            Dlg.DefaultExt = "feed";
+            Dlg.Filter = "Plane Feeds (*.feed)|*.feed";
+            Dlg.OverwritePrompt = true;
+            if (Dlg.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    Settings.Save(false, Dlg.FileName);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException("[" + this.GetType().Name + "]: Cannot export to " + Dlg.FileName + ", " + ex.Message);
+                }
+            }
         }
 
         public void Start(PlaneFeedPluginArgs args)
@@ -522,13 +685,19 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
 
             }
 
-            // save raw data to file if enabled
+            // save raw data by timestamp to file if enabled
             if (Settings.SaveToFile)
             {
                 using (StreamWriter sw = new StreamWriter(args.TmpDirectory + Path.DirectorySeparatorChar + this.GetType().Name + "_" + DateTime.UtcNow.ToString("yyyy-MM-dd HH_mm_ss") + ".json"))
                 {
                     sw.WriteLine(json);
                 }
+            }
+
+            // always save raw data to one file
+            using (StreamWriter sw = new StreamWriter(args.TmpDirectory + Path.DirectorySeparatorChar + "vrsplanes.json"))
+            {
+                sw.WriteLine(json);
             }
 
             // reset counters if before getting too near to overflow

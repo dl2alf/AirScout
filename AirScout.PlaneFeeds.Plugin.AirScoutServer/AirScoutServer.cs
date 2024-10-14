@@ -345,39 +345,75 @@ namespace AirScout.PlaneFeeds.Plugin.AirScoutServer
             {
                 Console.WriteLine("[" + this.GetType().Name + "]: Deserializing data from JSON");
 
-                //                JavaScriptSerializer js = new JavaScriptSerializer();
-                //                dynamic root = js.Deserialize<dynamic>(json);
-
                 // check for empty list 
                 if (json.Length < 20)
                     return new PlaneFeedPluginPlaneInfoList();
 
-                // get the planes position list
-                List<PlaneJSON> aclist = JsonConvert.DeserializeObject<List<PlaneJSON>>(json);
-                Console.WriteLine("[" + this.GetType().Name + "]: Created object from JSON is " + aclist.GetType().ToString());
-                // analyze json string for planes data
-                foreach (PlaneJSON ac in aclist)
+                // check for older versions
+                if (json.Contains("\"full_count\":") && json.Contains("\"version\":1"))
                 {
-                    try
+                    // get the planes position list
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+                    Dictionary<string, object> root = js.Deserialize<Dictionary<string, object>>(json);
+                    string[] aclist = json.Split('[');
+                    foreach(string key in root.Keys)
                     {
-                        PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
-                        plane.Hex = !String.IsNullOrEmpty(ac.Hex) ? ac.Hex : "";
-                        plane.Call = !String.IsNullOrEmpty(ac.Call) ? ac.Call : "";
-                        plane.Lat = (ac.Lat != null) ? (double)ac.Lat : double.NaN;
-                        plane.Lon = (ac.Lon != null) ? (double)ac.Lon : double.NaN;
-                        plane.Alt = (ac.Alt != null) ? (double)ac.Alt : double.NaN;
-                        plane.Track = (ac.Track != null) ? (double)ac.Track : double.NaN;
-                        plane.Speed = (ac.Speed != null) ? (double)ac.Speed : double.NaN;
-                        plane.Type = !String.IsNullOrEmpty(ac.Type) ? ac.Type : "";
-                        plane.Category = (ac.Category != null) ? (int)ac.Category : 0;
-                        plane.Manufacturer = !String.IsNullOrEmpty(ac.Manufacturer) ? ac.Manufacturer : "";
-                        plane.Model = !String.IsNullOrEmpty(ac.Model) ? ac.Model : "";
-                        plane.Time = (ac.Time != null) ? UNIXTimeToDateTime((int)ac.Time) : DateTime.MinValue;
-                        planes.Add(plane);
+                        if (!key.StartsWith("0")) continue;
+
+                        dynamic ac = root[key];
+                        try
+                        {
+                            PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
+                            plane.Hex = !String.IsNullOrEmpty(ac[0]) ? ac[0] : "";
+                            plane.Call = !String.IsNullOrEmpty(ac[16]) ? ac[16] : "";
+                            plane.Lat = (double)ac[1];
+                            plane.Lon = (double)ac[2];
+                            plane.Alt = (double)ac[4];
+                            plane.Track = (double)ac[3];
+                            plane.Speed = (double)ac[5];
+                            plane.Type = !String.IsNullOrEmpty(ac[8]) ? ac[8] : "";
+                            plane.Category = 0;
+                            plane.Manufacturer = "";
+                            plane.Model = "";
+                            plane.Time = UNIXTimeToDateTime((int)ac[10]);
+                            planes.Add(plane);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("[" + this.GetType().Name + "]: " + ex.Message);
+                        }
                     }
-                    catch (Exception ex)
+                }
+                else
+                {
+                    // get the planes position list
+                    List<PlaneJSON> aclist = JsonConvert.DeserializeObject<List<PlaneJSON>>(json);
+                    Console.WriteLine("[" + this.GetType().Name + "]: Created object from JSON is " + aclist.GetType().ToString());
+
+                    // analyze json string for planes data
+                    foreach (PlaneJSON ac in aclist)
                     {
-                        Console.WriteLine("[" + this.GetType().Name + "]: " + ex.Message);
+                        try
+                        {
+                            PlaneFeedPluginPlaneInfo plane = new PlaneFeedPluginPlaneInfo();
+                            plane.Hex = !String.IsNullOrEmpty(ac.Hex) ? ac.Hex : "";
+                            plane.Call = !String.IsNullOrEmpty(ac.Call) ? ac.Call : "";
+                            plane.Lat = (ac.Lat != null) ? (double)ac.Lat : double.NaN;
+                            plane.Lon = (ac.Lon != null) ? (double)ac.Lon : double.NaN;
+                            plane.Alt = (ac.Alt != null) ? (double)ac.Alt : double.NaN;
+                            plane.Track = (ac.Track != null) ? (double)ac.Track : double.NaN;
+                            plane.Speed = (ac.Speed != null) ? (double)ac.Speed : double.NaN;
+                            plane.Type = !String.IsNullOrEmpty(ac.Type) ? ac.Type : "";
+                            plane.Category = (ac.Category != null) ? (int)ac.Category : 0;
+                            plane.Manufacturer = !String.IsNullOrEmpty(ac.Manufacturer) ? ac.Manufacturer : "";
+                            plane.Model = !String.IsNullOrEmpty(ac.Model) ? ac.Model : "";
+                            plane.Time = (ac.Time != null) ? UNIXTimeToDateTime((int)ac.Time) : DateTime.MinValue;
+                            planes.Add(plane);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("[" + this.GetType().Name + "]: " + ex.Message);
+                        }
                     }
                 }
             }

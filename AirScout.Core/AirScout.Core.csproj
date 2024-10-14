@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="BandSettings.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="HistSON.cs" />
     <Compile Include="PlaneCategory.cs" />
     <Compile Include="PlaneInfo.cs" />
     <Compile Include="PlaneJSON.cs" />

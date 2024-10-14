@@ -23,7 +23,8 @@ namespace ScoutBase.CAT
         {
             try
             {
-                File.AppendAllText(LogFileName, "[" + args.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss,fff") + "][" + args.LogLevel.ToString() + "]: " + args.Message + Environment.NewLine) ;
+                Console.WriteLine(args.Message);
+//                File.AppendAllText(LogFileName, "[" + args.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss,fff") + "][" + args.LogLevel.ToString() + "]: " + args.Message + Environment.NewLine) ;
                 if (LogNotify != null)
                 {
                     LogNotify.Invoke(args);

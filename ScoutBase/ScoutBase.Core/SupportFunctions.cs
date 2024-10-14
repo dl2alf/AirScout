@@ -37,6 +37,16 @@ namespace ScoutBase.Core
         }
 
         /// <summary>
+        /// Estimates 3dB beamwidth from antenna gain
+        /// </summary>
+        /// <param name="gain">Antenna gain in dBd</param>
+        /// <returns>3dB beamwidth in degrees</returns>
+        public static double GetBeamWidthFromGain(double gain)
+        {
+            return Math.Sqrt(41253.0 / Math.Pow(10, (gain + 2.15) / 10.0));
+        }
+
+        /// <summary>
         /// Returns true if running under Linux/Mono
         /// </summary>
         public static bool IsMono
@@ -423,6 +433,15 @@ namespace ScoutBase.Core
                 return DateTime.MaxValue;
             DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             return dt.AddSeconds(ut);
+        }
+
+        public static string GetCSVSeparator()
+        {
+            string sep = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator;
+            if (sep.Equals(","))
+                return ";";
+            else
+                return ",";
         }
 
     }

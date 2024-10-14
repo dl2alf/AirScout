@@ -404,11 +404,31 @@ namespace AirScout.PlaneFeeds
                                         if (feedargs.LogPlanePositions)
                                         {
                                             // extended logging
+                                            string separator = SupportFunctions.GetCSVSeparator();
                                             string filename = Path.Combine(feedargs.PlanePositionsDirectory, plane.Hex + ".csv");
-
                                             if (!File.Exists(filename))
                                             {
-                                                File.WriteAllText(filename, "Time;TimeD;Hex;Lat;LatD;Lon;LonD;Alt;AltD;Track;TrackD;Speed;SpeedD;Call;Reg;From;To;VSpeed;CalcTrack;CalcDist" + Environment.NewLine);
+                                                File.WriteAllText(filename,
+                                                    "Time" + separator +
+                                                    "TimeD" + separator +
+                                                    "Hex" + separator +
+                                                    "Lat" + separator +
+                                                    "LatD" + separator +
+                                                    "Lon" + separator +
+                                                    "LonD" + separator +
+                                                    "Alt" + separator +
+                                                    "AltD" + separator +
+                                                    "Track" + separator +
+                                                    "TrackD" + separator +
+                                                    "Speed" + separator +
+                                                    "SpeedD" + separator +
+                                                    "Call" + separator +
+                                                    "Reg" + separator +
+                                                    "From" + separator +
+                                                    "To" + separator +
+                                                    "VSpeed" + separator +
+                                                    "CalcTrack" + separator +
+                                                    "CalcDist" + separator + Environment.NewLine);
                                             }
                                             try
                                             {
@@ -429,25 +449,25 @@ namespace AirScout.PlaneFeeds
                                                     trkd = lastplane.Track - plane.Track;
                                                 }
 
-                                                string csv = plane.Time + ";" +
-                                                    timed + ";" + 
-                                                    plane.Hex + ";" +
-                                                    plane.Lat + ";" +
-                                                    latd + ";" +
-                                                    plane.Lon + ";" +
-                                                    lond + ";" +
-                                                    plane.Alt + ";" +
-                                                    altd + ";" +
-                                                    plane.Track + ";" +
-                                                    trkd + ";" +
-                                                    plane.Speed + ";" +
-                                                    spdd + ";" +
-                                                    plane.Call + ";" +
-                                                    plane.Reg + ";" +
-                                                    plane.From + ";" +
-                                                    plane.To + ";" +
-                                                    plane.VSpeed + ";" +
-                                                    track + ";" +
+                                                string csv = plane.Time + separator +
+                                                    timed + separator + 
+                                                    plane.Hex + separator +
+                                                    plane.Lat + separator +
+                                                    latd + separator +
+                                                    plane.Lon + separator +
+                                                    lond + separator +
+                                                    plane.Alt + separator +
+                                                    altd + separator +
+                                                    plane.Track + separator +
+                                                    trkd + separator +
+                                                    plane.Speed + separator +
+                                                    spdd + separator +
+                                                    plane.Call + separator +
+                                                    plane.Reg + separator +
+                                                    plane.From + separator +
+                                                    plane.To + separator +
+                                                    plane.VSpeed + separator +
+                                                    track + separator +
                                                     dist +
                                                     Environment.NewLine;
 
@@ -484,22 +504,34 @@ namespace AirScout.PlaneFeeds
                                     try
                                     {
                                         // simple logging
+                                        string separator = SupportFunctions.GetCSVSeparator();
                                         using (StreamWriter sw = new StreamWriter(Path.Combine(Arguments.TmpDirectory, "planes.csv")))
                                         {
-                                            sw.WriteLine("Time;Hex;Lat;Lon;Alt;Track;Speed;Call;Reg;From;To;VSpeed");
+                                            sw.WriteLine("Time" + separator +
+                                                "Hex" + separator +
+                                                "Lat" + separator +
+                                                "Lon" + separator +
+                                                "Alt" + separator +
+                                                "Track" + separator +
+                                                "Speed" + separator +
+                                                "Call" + separator +
+                                                "Reg" + separator +
+                                                "From" + separator +
+                                                "To" + separator +
+                                                "VSpeed");
                                             foreach (PlaneInfo plane in planes)
                                             {
-                                                sw.WriteLine(plane.Time + ";" +
-                                                plane.Hex + ";" +
-                                                plane.Lat + ";" +
-                                                plane.Lon + ";" +
-                                                plane.Alt + ";" +
-                                                plane.Track + ";" +
-                                                plane.Speed + ";" +
-                                                plane.Call + ";" +
-                                                plane.Reg + ";" +
-                                                plane.From + ";" +
-                                                plane.To + ";" +
+                                                sw.WriteLine(plane.Time + separator +
+                                                plane.Hex + separator +
+                                                plane.Lat + separator +
+                                                plane.Lon + separator +
+                                                plane.Alt + separator +
+                                                plane.Track + separator +
+                                                plane.Speed + separator +
+                                                plane.Call + separator +
+                                                plane.Reg + separator +
+                                                plane.From + separator +
+                                                plane.To + separator +
                                                 plane.VSpeed);
                                             }
                                         }

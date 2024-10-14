@@ -872,7 +872,6 @@ namespace ScoutBase.Stations
                     db.DBCommand.Parameters.Clear();
                     db.DBCommand.Parameters.Add(qrv.AsString("Call"));
                     db.DBCommand.Parameters.Add(qrv.AsString("Loc"));
-                    db.DBCommand.Parameters.Add(qrv.AsInt32("Band"));
                     DataTable Result = db.Select(db.DBCommand);
                     if ((Result != null) && (Result.Rows.Count > 0))
                     {
@@ -1199,13 +1198,13 @@ namespace ScoutBase.Stations
                 case BAND.B1_2G:
                     return 18.0;
                 case BAND.B2_3G:
-                    return 22.0;
+                    return 20.0;
                 case BAND.B3_4G:
-                    return 25.0;
+                    return 22.0;
                 case BAND.B5_7G:
-                    return 30.0;
+                    return 25.0;
                 case BAND.B10G:
-                    return 35.0;
+                    return 30.0;
                 case BAND.B24G:
                     return 40.0;
                 case BAND.B47G:
