@@ -306,3 +306,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/AirScout.PlaneFeeds.Plugin.ADSBSupport/AirScout.PlaneFeeds.Plugin.ADSBSupport.csproj
