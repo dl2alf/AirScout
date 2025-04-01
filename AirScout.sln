@@ -83,8 +83,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.VRSWebServer", "AirScout.PlaneFeeds.Plugin.VRSWebServer\AirScout.PlaneFeeds.Plugin.VRSWebServer.csproj", "{5C096747-2BF0-4D36-BAA7-226CF71619A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.ADSBSupport", "AirScout.PlaneFeeds.Plugin.ADSBSupport\AirScout.PlaneFeeds.Plugin.ADSBSupport.csproj", "{92BE00A4-E85E-4856-9713-B051FF6DB000}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
