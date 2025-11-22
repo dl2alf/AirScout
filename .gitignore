@@ -8,6 +8,16 @@
 AirScoutDatabaseManager/
 ElevationTileGenerator/
 HorizonGenerator/
+RainScout/
+Radars/
+RainScout.Core/
+RainScout.Radars/
+ElevationCoverageMapper/
+HamLibSharp/
+WinTestSimulator/
+CATCheck/
+BouncyCastle/
+AirScout.PlaneFeeds.Plugin.ADSBSupport/
 
 # User-specific files
 *.suo
@@ -307,3 +317,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /AirScout.PlaneFeeds.Plugin.ADSBSupport/AirScout.PlaneFeeds.Plugin.ADSBSupport.csproj
+/AirScout.PlaneFeeds.Plugin.BinCraft/AirScout.PlaneFeeds.Plugin.BinCraft.csproj
