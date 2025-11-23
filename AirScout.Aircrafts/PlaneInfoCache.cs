@@ -13,10 +13,6 @@ namespace AirScout.Aircrafts
 
         public int InsertOrUpdateIfNewer (PlaneInfo plane)
         {
-            if (plane.Hex == "732541")
-            {
-                int k = 0;
-            }
             int i = 0;
             if (plane == null)
                 return i;

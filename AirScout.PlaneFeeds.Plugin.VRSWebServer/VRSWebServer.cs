@@ -37,7 +37,7 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
         [DescriptionAttribute("Base URL for website.")]
-        [DefaultValue("http://localhost:7780/VirtualRadar/AircraftList.json?ldv=%LASTDV%&stm=%UNIXTIME%&lat=%MYLAT%&lng=%MYLON%&fDstL=%MINDISTKM%&fDstU=%MAXDISTKM%&fAltL=%MINALTFT%&fAltU=%MAXALTFT%")]
+        [DefaultValue("http://localhost:7780/VirtualRadar/AircraftList.json?fSBnd=%MINLAT%&fNBnd=%MAXLAT%&fWBnd=%MINLON%&fEBnd=%MAXLON%")]
         public string URL { get; set; }
 
         [Browsable(true)]
@@ -56,7 +56,7 @@ namespace AirScout.PlaneFeeds.Plugin.VRSWebServer
         [Browsable(true)]
         [CategoryAttribute("Web Feed (redundant)")]
         [DescriptionAttribute("Base URL for redundant website.")]
-        [DefaultValue("http://localhost:7780/VirtualRadar/AircraftList.json?ldv=%LASTDV%&stm=%UNIXTIME%&lat=%MYLAT%&lng=%MYLON%&fDstL=%MINDISTKM%&fDstU=%MAXDISTKM%&fAltL=%MINALTFT%&fAltU=%MAXALTFT%")]
+        [DefaultValue("")]
         public string URL2 { get; set; }
 
         [Browsable(true)]

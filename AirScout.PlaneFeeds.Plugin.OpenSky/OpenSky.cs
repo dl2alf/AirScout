@@ -15,6 +15,11 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Collections;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using Newtonsoft.Json.Linq;
+using System.Runtime.InteropServices;
 
 //TODO: Rename namespace to a name of your choice
 namespace AirScout.PlaneFeeds.Plugin.OpenSky
@@ -55,28 +60,34 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
         [DescriptionAttribute("Base URL for website.")]
-        [DefaultValue("https://api.opensky-network.org/api/states/all?lamin=%MINLAT%&lomin=%MINLON%&lamax=%MAXLAT%&lomax=%MAXLON%")]
+        [DefaultValue("https://api.opensky-network.org/api/states/all")]
         public string URL { get; set; }
 
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
-        [DescriptionAttribute("Username for Authentication (blank for anonymous)")]
-        [DefaultValue("")]
-        public string Username { get; set; }
-
-        [Browsable(true)]
-        [CategoryAttribute("Web Feed")]
-        [DescriptionAttribute("Password for Authentication (blank for anonymous)")]
-        [DefaultValue("")]
-        [PasswordPropertyText(true)]
-        public string Password { get; set; }
-
-        [Browsable(true)]
-        [CategoryAttribute("Web Feed")]
-        [DescriptionAttribute("Timeout for loading the site.")]
+        [DescriptionAttribute("Cycle for fetching plane positions [sec].")]
         [DefaultValue(90)]
         [XmlIgnore]
-        public int Timeout { get; set; }
+        public int Cycle { get; set; }
+
+        [Browsable(true)]
+        [CategoryAttribute("Web Feed")]
+        [DescriptionAttribute("URL for obtaining an OAuth2 access token")]
+        [DefaultValue("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token")]
+        public string OAuthTokenURL { get; set; }
+
+        [Browsable(true)]
+        [CategoryAttribute("Web Feed")]
+        [DescriptionAttribute("Client ID for OAuth2 (blank for anonymous)")]
+        [DefaultValue("")]
+        public string OAuthClientID { get; set; }
+
+        [Browsable(true)]
+        [CategoryAttribute("Web Feed")]
+        [DescriptionAttribute("Password for OAuth2 (blank for anonymous)")]
+        [DefaultValue("")]
+        [PasswordPropertyText(true)]
+        public string OAuthSecret { get; set; }
 
 
         public OpenSkySettings()
@@ -163,15 +174,27 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                     }
                 }
 
+                // correct URL with V1.4.2.1 automatically
+                this.URL = this.URL.Replace("https://opensky-network.org/api/", "https://api.opensky-network.org/api/");
+                this.Save(true);
+
+                // NASTY!!! correct URL with V1.4.4.0 automatically
+                // detect with searching for new parameter in XML
+                if (!xml.Contains("OAuthClientID"))
+                {
+                    // cleanup URL parameter as they may not work anymore
+                    this.URL = "https://api.opensky-network.org/api/states/all";
+                    this.Save(true);
+
+                    Console.WriteLine("OpenSky Plugin: cleaning up URL to: " + this.URL);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("[" + this.GetType().Name + "]: Cannot load settings from " + filename + ", " + ex.Message);
             }
 
-            // correct URL with V1.4.2.1 automatically
-            this.URL = this.URL.Replace("https://opensky-network.org/api/", "https://api.opensky-network.org/api/");
-            this.Save(true);
+
         }
 
         /// <summary>
@@ -253,8 +276,10 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                 return "Web feed from the OpenSky Network.\n" +
                     "For details see https://opensky-network.org.\n\n" +
                     "As this is a community network, please consider to run a personal ADSB-receiver and to contribute your data to this network.\n\n" +
-                    "The daily limit for anonymous requests to OpenSky Network is 100. You can extend the limit to 1000 if you are an registerd user.\n" +
-                    "For this, please enter your username & password here.";
+                    "The number of requests is limited. Each single request counts 4 credits.\n" +
+                    "The daily limit for anonymous users is 400, for registerd users 4000 credits.\n" +
+                    "The authentication for registered users has changed to OAuth2. Username/Password will not work anymore.\n" +
+                    "To get new credentials, go the website, create an account and download your client ID and client secret there.";
             }
         }
         public bool HasSettings
@@ -336,6 +361,24 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
             // add code for startup here
         }
 
+        private string GetAccessToken()
+        {
+            using (var client = new HttpClient())
+            {
+                var authHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes(Settings.OAuthClientID + ":" + Settings.OAuthSecret));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
+
+                var content = new StringContent("grant_type=client_credentials", Encoding.UTF8, "application/x-www-form-urlencoded");
+
+                var response = client.PostAsync(Settings.OAuthTokenURL, content).Result;
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = response.Content.ReadAsStringAsync().Result;
+                var json = JsonDocument.Parse(responseContent);
+                return json.RootElement.GetProperty("access_token").GetString();
+            }
+        }
+
         public PlaneFeedPluginPlaneInfoList GetPlanes(PlaneFeedPluginArgs args)
         {
             // intialize variables
@@ -358,21 +401,27 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
             // calculate url and get json
             String url = VC.ReplaceAllVars(Settings.URL);
             Console.WriteLine("[" + this.GetType().Name + "]: Creating web request: " + url);
-            // this will only run on .NET 4.0 if you have installed .NET 4.5 or later frameworks on your machine!
-            //            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-            //            HttpWebRequest webrequest = (HttpWebRequest)HttpWebRequest.Create(url);
-            //            webrequest.Timeout = Settings.Timeout * 1000;
-            //            webrequest.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0";
-            //            webrequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-            //            Console.WriteLine("[" + this.GetType().Name + "]: Getting web response");
-            //            HttpWebResponse webresponse = (HttpWebResponse)webrequest.GetResponse();
-            //            Console.WriteLine("[" + this.GetType().Name + "]: Reading stream");
-            //            using (StreamReader sr = new StreamReader(webresponse.GetResponseStream()))
-            //           {
-            //                json = sr.ReadToEnd();
-            //            }
             DateTime downloadstart = DateTime.UtcNow;
-            json = OSNTlsClient.DownloadFile(url, Settings.Timeout * 1000, Settings.Username, Settings.Password);
+            if (!String.IsNullOrEmpty(Settings.OAuthClientID) && !String.IsNullOrEmpty(Settings.OAuthSecret))
+            {
+                using (var client = new HttpClient())
+                {
+                    var token = GetAccessToken();
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    var response = client.GetAsync(Settings.URL).Result;
+                    response.EnsureSuccessStatusCode();
+
+                    json = response.Content.ReadAsStringAsync().Result;
+                }
+            }
+            else
+            {
+                using (var client = new WebClient())
+                {
+                    json = client.DownloadString(Settings.URL);
+                }
+            }
+
             Console.WriteLine("[" + this.GetType().Name + "]: Content downloaded, " + (DateTime.UtcNow - downloadstart).TotalMilliseconds.ToString("F0") + "ms.");
 
             // check for errors
@@ -451,6 +500,8 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                             // discard planes stopped
                             if (plane.Speed <= 0)
                                 continue;
+
+                            //Console.WriteLine(plane.Hex + ": " + cat + "-->" + plane.Category);
 
                             planes.Add(plane);
                         }

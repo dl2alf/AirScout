@@ -778,5 +778,32 @@ NASA/METI/AIST/Japan Spacesystems, and U.S./Japan ASTER Science Team (2019). AST
     <Setting Name="Map_ShowBeamWidth" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="Map_UserSuppliedOverlay_MinLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">49</Value>
+    </Setting>
+    <Setting Name="Map_UserSuppliedOverlay_MaxLat" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">59</Value>
+    </Setting>
+    <Setting Name="Map_UserSuppliedOverlay_MinLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">-14.5</Value>
+    </Setting>
+    <Setting Name="Map_UserSuppliedOverlay_MaxLon" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="Map_UserSuppliedOverlay_Opacity" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.5</Value>
+    </Setting>
+    <Setting Name="Map_UserSuppliedOverlay_FromZoomLevel" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Map_UserSuppliedOverlay_ToZoomLevel" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="Map_UserSuppliedOverlay_Filename" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Map_ShowUserSuppliedOverlay" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

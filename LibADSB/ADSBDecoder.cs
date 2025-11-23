@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.IO;
+using System.Reflection;
 
 namespace LibADSB
 {
@@ -23,7 +25,30 @@ namespace LibADSB
         public AirbornePositionMsg LastOddAirborne = null;
         public DateTime LastEvenTimestamp = DateTime.MinValue;
         public DateTime LastOddTimestamp = DateTime.MinValue;
+        public DateTime LastPosTimestamp = DateTime.MinValue;
         public bool NICSupplementA = false;
+        public int NumPos = 0;
+
+        public string ToCSV()
+        {
+            string s = "";
+            s = s + this.Timestamp.ToString("yyyy-MM-dd HH:mm:ss,fff") + ";";
+            s = s + (ICAO24 != null ? this.ICAO24 : "[null]") + ";";
+            s = s + (Call != null ? this.Call : "[null]") + ";";
+            s = s + this.Lat.ToString("F8") + ";";
+            s = s + this.Lon.ToString("F8") + ";";
+            s = s + this.BaroAlt.ToString() + ";";
+            s = s + this.GeoMinusBaro.ToString() + ";";
+            s = s + this.Heading.ToString() + ";";
+            s = s + this.Speed.ToString() + ";";
+            s = s + this.LastEvenTimestamp.ToString("yyyy-MM-dd HH:mm:ss,fff") + ";";
+            s = s + this.LastOddTimestamp.ToString("yyyy-MM-dd HH:mm:ss,fff") + ";";
+            s = s + this.LastPosTimestamp.ToString("yyyy-MM-dd HH:mm:ss,fff") + ";";
+            s = s + this.NICSupplementA.ToString() + ";";
+            s = s + this.NumPos.ToString() + ";";
+
+            return s;
+        }
 
     }
 
@@ -46,6 +71,10 @@ namespace LibADSB
 
         private Dictionary<string, ADSBInfo> adsbinfos;
 
+        private List<string> Watch = new List<string>();
+
+        private string LogFileName = "";
+
         public ADSBDecoder()
             : this(5)
         {
@@ -55,13 +84,43 @@ namespace LibADSB
         {
             ttl = TTL;
             adsbinfos = new Dictionary<string, ADSBInfo>();
+
+            // create logfile
+            //LogFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "adsbwatch.csv");
+            //try
+            //{
+            //    string header = "UTC;Procedure; Message; Raw Data;Info.Timestamp;Info.ICAO24;Info.Call;Info.Lat;Info.Lon;Info.BaroAlt;Info.GeoMinusBaro;" +
+            //        "Info.Heading;Info.Speed;Info.;Info.LastEvenTimestamp;Info.LastOddTimestamp;Info.LastPosTimestamp;Info.NICSupplementA;Info.NumPos = 0\n";
+            //    File.WriteAllText(LogFileName, header);
+            //}
+            //catch
+            //{
+
+            //}
+
+        }
+
+        private void Log(string procedure, string msg, string raw, ADSBInfo info)
+        {
+            //try
+            //{
+            //    msg = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss,fff") + ";" + procedure + ";" + msg + ";" + raw + ";" + (info != null ? info.ToCSV() : "[null]") + "\n";
+            //    File.AppendAllText(LogFileName, msg);
+            //}
+            //catch
+            //{
+
+            //}
         }
 
         private string DecodeIdentificationMsg(ModeSReply msg, DateTime timestamp)
         {
             IdentificationMsg ident = (IdentificationMsg)msg;
             if (msg.ICAO24 == null)
+            {
+                Log("DecodeIdentificationMsg", "IdentifyMsg: No ICAO24 found.", "", null);
                 return "IdentifyMsg: No ICAO24 found.";
+            }
             string icao24 = BitConverter.ToString(msg.ICAO24).Replace("-", String.Empty);
             // check if ICAO is already stored in lookup table
             ADSBInfo info = null;
@@ -74,15 +133,19 @@ namespace LibADSB
             }
             // add call sign
             info.Call = ident.getIdentity();
+            Log("DecodeIdentificationMsg", "[" + info.ICAO24 + "] IdentificationMsg received", msg.RawMessage, info);
             return "[" + info.ICAO24 + "] IdentificationMsg: Call=" + info.Call;
         }
 
         private string DecodeAirbornePositionMsg(ModeSReply msg, DateTime timestamp, bool usegeometricaltonly)
         {
-                // Airborne position message --> we need subsequent messages to decode
+            // Airborne position message --> we need subsequent messages to decode
             AirbornePositionMsg pos = (AirbornePositionMsg)msg;
             if (msg.ICAO24 == null)
+            {
+                Log("DecodeAirbornePositionMsg", "AirbornePositionMsg: No ICAO24 found.", msg.RawMessage, null);
                 return "AirbornePositionMsg: No ICAO24 found.";
+            }
             string icao24 = BitConverter.ToString(msg.ICAO24).Replace("-", String.Empty);
             // check if ICAO is already stored in lookup table
             ADSBInfo info = null;
@@ -93,17 +156,19 @@ namespace LibADSB
                 info.ICAO24 = icao24;
                 adsbinfos.Add(icao24, info);
             }
+
             // adsbinfo found --> update information and calculate position
             // contains valid position?
             if (!pos.HasValidPosition)
             {
                 // no --> return error meesage
+                Log("DecodeAirbornePositionMsg", "No valid position found.", msg.RawMessage, info);
                 return "[" + info.ICAO24 + "] AirbornePositionMsg: No valid position found.";
             }
             info.ICAO24 = icao24;
             info.NICSupplementA = pos.NICSupplementA;
-            // position calculated before
-            if (!double.IsNaN(info.Lat) & !double.IsNaN(info.Lon))
+            // position calculated before and not too old
+            if (!double.IsNaN(info.Lat) && !double.IsNaN(info.Lon))
             {
                 try
                 {
@@ -117,12 +182,21 @@ namespace LibADSB
                         info.BaroAlt = pos.Altitude;
                     }
                     info.Timestamp = timestamp;
+                    info.NumPos++;
+                    Log("DecodeAirbornePositionMsg", "Get local position, AirbornePositionMsg[TC" + pos.FormatTypeCode.ToString() + "]", msg.RawMessage, info);
                     return "[" + info.ICAO24 + "] AirbornePositionMsg[TC" + pos.FormatTypeCode.ToString() + "]: Lat= " + info.Lat.ToString("F8") + ", Lon=" + info.Lon.ToString("F8") + ", Alt= " + info.BaroAlt.ToString() + ", Time= " + info.Timestamp.ToString("HH:mm:ss.fff");
                 }
                 catch (Exception ex)
                 {
+                    Log("DecodeAirbornePositionMsg", "Get local position, Exception[" + ex.Message + "]", msg.RawMessage, info);
+                    info.LastPosTimestamp = DateTime.MinValue;
+                    info.NumPos = 0;
                 }
             }
+            Log("DecodeAirbornePositionMsg", "Valid position not calculated so far or outdated.", msg.RawMessage, info);
+            info.LastPosTimestamp = DateTime.MinValue;
+            info.NumPos = 0;
+
             // no position calculated before    
             if (pos.IsOddFormat)
             {
@@ -132,7 +206,7 @@ namespace LibADSB
                     info.LastOddAirborne = pos;
                     info.LastOddTimestamp = DateTime.UtcNow;
                     // check if even message was received before and not older than 10secs--> calculate global CPR
-                    if ((info.LastEvenAirborne != null) && ((info.LastOddTimestamp - info.LastOddTimestamp).TotalSeconds <= 10))
+                    if ((info.LastEvenAirborne != null) && ((info.LastOddTimestamp - info.LastEvenTimestamp).TotalSeconds <= 10))
                     {
                         try
                         {
@@ -142,14 +216,21 @@ namespace LibADSB
                             info.Lon = globalpos[1];
                             if (pos.HasValidAltitude)
                                 info.BaroAlt = pos.Altitude;
-                            //                        info.Timestamp = timestamp;
+                            info.LastPosTimestamp = timestamp;
+                            info.NumPos++;
+                            Log("DecodeAirbornePositionMsg", "Get global position from odd message, AirbornePositionMsg[TC" + pos.FormatTypeCode.ToString() + "]", msg.RawMessage, info);
                             return "[" + info.ICAO24 + "] AirbornePositionMsg[TC" + pos.FormatTypeCode.ToString() + "]: Lat= " + info.Lat.ToString("F8") + ", Lon=" + info.Lon.ToString("F8") + ", Alt= " + info.BaroAlt.ToString() + ", Time= " + info.Timestamp.ToString("HH:mm:ss.fff");
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            Log("DecodeAirbornePositionMsg", "Get global position from odd message, Exception[" + ex.Message + "]", msg.RawMessage, info);
+                            info.LastPosTimestamp = DateTime.MinValue;
+                            info.NumPos = 0;
                             return "[" + info.ICAO24 + "] AirbornePositionMsg: Error while decoding position";
                         }
                     }
+ 
+                    Log("DecodeAirbornePositionMsg", "Get global position from odd message, no decoding possible yet" , msg.RawMessage, info);
                     return "[" + info.ICAO24 + "] AirbornePositionMsg: No decoding possible yet";
                 }
                 catch (Exception ex)
@@ -160,7 +241,7 @@ namespace LibADSB
             info.LastEvenAirborne = pos;
             info.LastEvenTimestamp = DateTime.UtcNow;
             // check if odd message was received before and not older than 10secs --> calculate global CPR
-            if ((info.LastOddAirborne != null) && ((info.LastEvenTimestamp-info.LastOddTimestamp).TotalSeconds <= 10))
+            if ((info.LastOddAirborne != null) && ((info.LastEvenTimestamp - info.LastOddTimestamp).TotalSeconds <= 10))
             {
                 try
                 {
@@ -170,16 +251,22 @@ namespace LibADSB
                     info.Lon = globalpos[1];
                     if (pos.HasValidAltitude)
                         info.BaroAlt = pos.Altitude;
-//                    info.Timestamp = timestamp;
+                    info.LastPosTimestamp = timestamp;
+                    info.NumPos++;
+                    Log("DecodeAirbornePositionMsg", "Get global position from even message, AirbornePositionMsg[TC" + pos.FormatTypeCode.ToString() + "]", msg.RawMessage, info);
                     return "[" + info.ICAO24 + "] AirbornePositionMsg[TC" + pos.FormatTypeCode.ToString() + "]: Lat= " + info.Lat.ToString("F8") + ", Lon=" + info.Lon.ToString("F8") + ", Alt= " + info.BaroAlt.ToString() + ", Time= " +info.Timestamp.ToString("HH:mm:ss.fff");
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log("DecodeAirbornePositionMsg", "Get global position from even message, Exception[" + ex.Message + "]", msg.RawMessage, info);
+                    info.LastPosTimestamp = DateTime.MinValue;
+                    info.NumPos = 0;
                     return "[" + info.ICAO24 + "] AirbornePositionMsg: Error while decoding position";
                 }
             }
             else
             {
+                Log("DecodeAirbornePositionMsg", "Get global position from even message, no decoding possible yet", msg.RawMessage, info);
                 return "[" + info.ICAO24 + "] AirbornePositionMsg:No decoding possible yet";
             }
         }
@@ -188,7 +275,11 @@ namespace LibADSB
         {
             AirspeedHeadingMsg heading = (AirspeedHeadingMsg)msg;
             if (msg.ICAO24 == null)
+            {
+                Log("DecodeAirspeedHeadingMsg", "AirspeedHeadingMsg: No ICAO24 found.", msg.RawMessage, null);
                 return "AirspeedHeadingMsg: No ICAO24 found.";
+            }
+
             string icao24 = BitConverter.ToString(msg.ICAO24).Replace("-", String.Empty);
             // check if ICAO is already stored in lookup table
             ADSBInfo info = null;
@@ -209,6 +300,7 @@ namespace LibADSB
             else
                 info.GeoMinusBaro = int.MinValue;
 
+            Log("DecodeAirspeedHeadingMsg", "AirspeedHeadingMsg reveceived", msg.RawMessage, info);
             return "[" + info.ICAO24 + "] AirspeedHeadingMsg: Speed=" + info.Speed.ToString() + ", Heading= " + info.Heading.ToString() + ", GeoMinusBaro=" + info.GeoMinusBaro.ToString();
         }
 
@@ -216,7 +308,10 @@ namespace LibADSB
         {
             VelocityOverGroundMsg velocity = (VelocityOverGroundMsg)msg;
             if (msg.ICAO24 == null)
+            {
+                Log("DecodeVelocityOverGroundMsg", "VelocityOverGroundMsg: No ICAO24 found.", msg.RawMessage, null);
                 return "VelocityOverGroundMsg: No ICAO24 found.";
+            }
             string icao24 = BitConverter.ToString(msg.ICAO24).Replace("-", String.Empty);
             // check if ICAO is already stored in lookup table
             ADSBInfo info = null;
@@ -236,6 +331,8 @@ namespace LibADSB
                 info.GeoMinusBaro = velocity.GeoMinusBaro;
             else
                 info.GeoMinusBaro = int.MinValue;
+
+            Log("DecodeVelocityOverGroundMsg", "VelocityOverGroundMsg received", msg.RawMessage, info);
             return "[" + info.ICAO24 + "] VelocityOverGroundMsg: Speed=" + info.Speed.ToString() + ", Heading= " + info.Heading.ToString() + ", GeoMinusBaro=" + info.GeoMinusBaro.ToString(); ;
         }
 
@@ -248,6 +345,7 @@ namespace LibADSB
             ModeSReply msg = LibADSB.Decoder.GenericDecoder(raw_msg);
             if (!msg.CheckParity)
             {
+//                Log("DecodeMessage", "Parity error, no decode.", null);
                 return ("Parity error, no decode.");
             }
             // parity is OK, let's start to sort the messages and calculate
@@ -256,10 +354,6 @@ namespace LibADSB
             lock (adsbinfos)
           
             {
-                if (raw_msg.Contains("461E21"))
-                { 
-                    int k = 0;
-                }
                 try
                 {
                     if (msg.GetType() == typeof(IdentificationMsg))
@@ -289,11 +383,31 @@ namespace LibADSB
                     return "Error while decoding " + s + ": " + ex.Message;
                 }
             }
+//            Log("DecodeMessage", "Unknown message.", null);
             return ("Unknown message.");
         }
 
         public ArrayList GetPlanes()
         {
+            // read watch file
+            string filename = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "adsbwatch.txt");
+            try
+            {
+                Watch.Clear();
+                using (StreamReader sr = new StreamReader(filename))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine();
+                        Watch.Add(line);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+
             ArrayList list = new ArrayList();
             // return a list of ADSBInfos
             foreach (KeyValuePair<string, ADSBInfo> info in adsbinfos)
@@ -301,10 +415,6 @@ namespace LibADSB
                 // check for old entries
                 if (info.Value.Timestamp > lastsend)
                 {
-                    if (info.Value.ICAO24 == "3C66E4")
-                    {
-                        Console.WriteLine(info.Value.ToString());
-                    }
                     // check if entry is complete
                     if ((!String.IsNullOrEmpty(info.Value.ICAO24)) &&
                         (!String.IsNullOrEmpty(info.Value.Call)) &&

@@ -88,6 +88,9 @@ namespace LibADSB
             }
         }
 
+        [DescriptionAttribute("Raw Message")]
+        public string RawMessage { get; set; } = "";
+
         // Private properties
         private byte downlink_format; // 0-31
 	    private byte capabilities; // three bits after the downlink format
@@ -160,6 +163,9 @@ namespace LibADSB
 	     */
 	    public ModeSReply (string raw_message)
         {
+            // keep raw message
+            RawMessage = raw_message;
+
 		    // check format invariants
 		    int length = raw_message.Length;
 		    if (length != 14 && length != 28)

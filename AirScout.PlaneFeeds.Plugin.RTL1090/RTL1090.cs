@@ -446,8 +446,9 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                             msg = ReceiveBinaryMsg(sr.BaseStream);
                         else
                             msg = ReceiveAVRMsg(sr);
+
                         // decode the message
-                        if (msg.RawMessage.StartsWith("*") && msg.RawMessage.EndsWith(";"))
+                        if ((msg.RawMessage != null) && msg.RawMessage.StartsWith("*") && msg.RawMessage.EndsWith(";"))
                         {
                             // try to decode the message
                             string info = "";
@@ -634,19 +635,26 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
 
         private RTLMessage ReceiveAVRMsg(StreamReader sr)
         {
+            // create empty message
             RTLMessage msg = new RTLMessage();
+            
             // read AVR format input
             msg.RawMessage = sr.ReadLine();
+
+            // return empty message, if somethin goes wrong
+            if (msg.RawMessage == null)
+                return msg;
+
+            // standard AVR message
             if (msg.RawMessage.StartsWith("*"))
             {
-                // standard AVR message
                 // no timestamp in telegram --> set timestamp after reading
                 msg.TimeStamp = DateTime.UtcNow;
                 msg.SignalStrength = 0;
             }
+            // extended AVR message wit MLAT
             else if (msg.RawMessage.StartsWith("@"))
             {
-                // extended AVR message wit MLAT
                 // convert into standard message format
                 // extract time string
                 string time = msg.RawMessage.Substring(1, 12);
@@ -654,6 +662,7 @@ namespace AirScout.PlaneFeeds.Plugin.RTL1090
                 msg.TimeStamp = DateTime.UtcNow;
                 msg.RawMessage = "*" + msg.RawMessage.Remove(0, 13);
             }
+
             return msg;
         }
     }

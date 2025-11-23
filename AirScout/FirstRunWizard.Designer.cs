@@ -164,7 +164,7 @@
             this.wp_TermsAndConditions.Controls.Add(this.rb_TermsAndConditions);
             this.wp_TermsAndConditions.Name = "wp_TermsAndConditions";
             this.wp_TermsAndConditions.NextPage = this.wp_GeneralCoverage;
-            this.wp_TermsAndConditions.Size = new System.Drawing.Size(586, 398);
+            this.wp_TermsAndConditions.Size = new System.Drawing.Size(586, 396);
             this.sw_FirstRun.SetStepText(this.wp_TermsAndConditions, "Agree to the Terms and Conditions");
             this.wp_TermsAndConditions.TabIndex = 2;
             this.wp_TermsAndConditions.Text = "Agree to the Terms and C.";

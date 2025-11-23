@@ -1,4 +1,13 @@
-﻿2024-10-13: V1.4.3.1
+﻿2025-11-22: V1.4.4.2
+====================
+- Feature:  add an user supplied overlay to map (tnx G0HIK)
+- Bugfix:   when entering a max. circumcirle > 0kms, no more intersection points are calculcated, e.g all planes appear in grey -> fixed (tnx DL8AAU)
+- Bugfix:   Elevation tile cache not working anymore due to changes in MS registry, resulting in very long calculations especially with SRTM1 -> fixed (tnx SO3Z)
+- Bugfix:   sometimes deadlocks appear when opening the Options dialog, due to no-cooperative plane feed worker threads --> fixed
+- Bugfix:   the QRZ lookup does not use call signs from input boxes but those stored in settings --> fixed (tnx DL8AAU)
+- Feature:  introducing some new plane feeds (experimental)
+
+2024-10-13: V1.4.3.1
 ====================
 - Bugfix:  Path drawing on the map does not end exactly at DX station's location  --> fixed (tnx VK2BPG)
 - Bugfix:  Beamwidth drawing goes mad when beamwidth sector includes 0° +/- --> fixed (tnx OZ9GE)

@@ -677,6 +677,9 @@ namespace ScoutBase.Elevation
             OrderedDictionary cache = GetElevationDictionary(model);
             // load new tile from cache or database
             string loc = MaidenheadLocator.LocFromLatLon(lat, lon, false, 3);
+
+            Console.WriteLine("Looking for tile " + loc);
+
             ElevationTileDesignator td = null;
             if (cache != null)
             {
@@ -696,11 +699,10 @@ namespace ScoutBase.Elevation
                     // maintain cache size --> remove 
                     if (cache.Count > GetCacheSize(model))
                     {
-                        // maintain cache size --> remove 
-                        if (cache.Count > GetCacheSize(model))
-                        {
-                            cache.RemoveAt(0);
-                        }
+                        cache.RemoveAt(0);
+                    }
+                    else
+                    {
                         cache.Add(loc, td);
                     }
                 }

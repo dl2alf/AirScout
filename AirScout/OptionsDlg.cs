@@ -645,7 +645,7 @@ namespace AirScout
         {
             try
             {
-                WebRequest myWebRequest = WebRequest.Create(Properties.Settings.Default.QRZ_URL_Database + Properties.Settings.Default.MyCall);
+                WebRequest myWebRequest = WebRequest.Create(Properties.Settings.Default.QRZ_URL_Database + tb_Options_MyCall.Text);
                 myWebRequest.Timeout = 10000;
                 WebResponse myWebResponse = myWebRequest.GetResponse();
                 Stream ReceiveStream = myWebResponse.GetResponseStream();
@@ -803,7 +803,7 @@ namespace AirScout
         {
             try
             {
-                WebRequest DXWebRequest = WebRequest.Create(Properties.Settings.Default.QRZ_URL_Database + Properties.Settings.Default.DXCall);
+                WebRequest DXWebRequest = WebRequest.Create(Properties.Settings.Default.QRZ_URL_Database + tb_Options_DXCall.Text);
                 DXWebRequest.Timeout = 10000;
                 WebResponse DXWebResponse = DXWebRequest.GetResponse();
                 Stream ReceiveStream = DXWebResponse.GetResponseStream();
@@ -3356,6 +3356,16 @@ namespace AirScout
             public List<QRVDesignator> qrvs;
         }
 
+        private void btn_Options_UserSupplied_Filename_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog Dlg = new OpenFileDialog();
+            Dlg.FileName = Properties.Settings.Default.Map_UserSuppliedOverlay_Filename;
+            Dlg.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.tiff";
+            if (Dlg.ShowDialog() == DialogResult.OK) 
+            {
+                Properties.Settings.Default.Map_UserSuppliedOverlay_Filename = Dlg.FileName;
+            }
+        }
     }
 
 }

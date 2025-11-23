@@ -17,6 +17,7 @@ using System.Text;
 using System.Configuration;
 using System.Xml.Serialization;
 using System.Security.Cryptography;
+using Microsoft.VisualBasic.Devices;
 
 namespace ScoutBase.Core
 {
@@ -86,21 +87,16 @@ namespace ScoutBase.Core
         [System.ComponentModel.DesignerCategory("")]
         public static class MemoryCounter
         {
-            static PerformanceCounter available;
-
-            static MemoryCounter()
-            {
-                available = new PerformanceCounter("Memory", "Available MBytes");
-            }
-
             /// <summary>
             /// Get the amount of available memory in MBytes
             /// </summary>
             /// <returns>The amount of memory available in MBytes.</returns>
             public static double GetAvailable()
             {
-                // returns the current overall CPU load
-                return available.NextValue();
+                ComputerInfo computerInfo = new ComputerInfo();
+
+                // c# get available memory with the help of the Visual Basic assembly
+                return (double)computerInfo.AvailablePhysicalMemory;
             }
         }
 

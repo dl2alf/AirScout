@@ -12,7 +12,7 @@ namespace AirScout.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.11.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -2908,6 +2908,114 @@ Digital data base on the World Wide Web (URL: http://www.ngdc.noaa.gov/mgg/topo/
             }
             set {
                 this["Map_ShowBeamWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("49")]
+        public double Map_UserSuppliedOverlay_MinLat {
+            get {
+                return ((double)(this["Map_UserSuppliedOverlay_MinLat"]));
+            }
+            set {
+                this["Map_UserSuppliedOverlay_MinLat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("59")]
+        public double Map_UserSuppliedOverlay_MaxLat {
+            get {
+                return ((double)(this["Map_UserSuppliedOverlay_MaxLat"]));
+            }
+            set {
+                this["Map_UserSuppliedOverlay_MaxLat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-14.5")]
+        public double Map_UserSuppliedOverlay_MinLon {
+            get {
+                return ((double)(this["Map_UserSuppliedOverlay_MinLon"]));
+            }
+            set {
+                this["Map_UserSuppliedOverlay_MinLon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public double Map_UserSuppliedOverlay_MaxLon {
+            get {
+                return ((double)(this["Map_UserSuppliedOverlay_MaxLon"]));
+            }
+            set {
+                this["Map_UserSuppliedOverlay_MaxLon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public decimal Map_UserSuppliedOverlay_Opacity {
+            get {
+                return ((decimal)(this["Map_UserSuppliedOverlay_Opacity"]));
+            }
+            set {
+                this["Map_UserSuppliedOverlay_Opacity"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public decimal Map_UserSuppliedOverlay_FromZoomLevel {
+            get {
+                return ((decimal)(this["Map_UserSuppliedOverlay_FromZoomLevel"]));
+            }
+            set {
+                this["Map_UserSuppliedOverlay_FromZoomLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public decimal Map_UserSuppliedOverlay_ToZoomLevel {
+            get {
+                return ((decimal)(this["Map_UserSuppliedOverlay_ToZoomLevel"]));
+            }
+            set {
+                this["Map_UserSuppliedOverlay_ToZoomLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Map_UserSuppliedOverlay_Filename {
+            get {
+                return ((string)(this["Map_UserSuppliedOverlay_Filename"]));
+            }
+            set {
+                this["Map_UserSuppliedOverlay_Filename"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Map_ShowUserSuppliedOverlay {
+            get {
+                return ((bool)(this["Map_ShowUserSuppliedOverlay"]));
+            }
+            set {
+                this["Map_ShowUserSuppliedOverlay"] = value;
             }
         }
     }

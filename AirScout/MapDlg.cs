@@ -73,6 +73,7 @@ using OxyPlot.Series;
 using OxyPlot.Axes;
 using System.Data.SQLite;
 using DeviceId;
+using DeviceId.Windows.Wmi;
 using AirScout.Properties;
 using AirScout.Core;
 using AirScout.Aircrafts;
@@ -415,6 +416,7 @@ namespace AirScout
         GMapOverlay gmo_Locators = new GMapOverlay("Locators");
         GMapOverlay gmo_Distances = new GMapOverlay("Distances");
         GMapOverlay gmo_CallsignDetails = new GMapOverlay("CallsignDetails");
+        GMapOverlay gmo_UserSupplied = new GMapOverlay("UserSupplied");
 
         // Routes
         GMapRoute gmr_FullPath;
@@ -577,6 +579,9 @@ namespace AirScout
 
         // Location grid updating
         public bool UpdateLocationGrid = false;
+
+        // User Supplied Overlay
+        public Image UserSupplied = null;
 
         #region Startup & Initialization
 
@@ -763,8 +768,8 @@ namespace AirScout
                 if (!SupportFunctions.IsMono)
                 {
                     Log.WriteMessage("Registering AirScout: Creating Device ID [MACAddress]:" + devid.AddMacAddress().ToString());
-                    Log.WriteMessage("Registering AirScout: Creating Device ID [Processor]:" + devid.AddProcessorId().ToString());
-                    Log.WriteMessage("Registering AirScout: Creating Device ID [Motherboard]:" + devid.AddMotherboardSerialNumber().ToString());
+                    Log.WriteMessage("Registering AirScout: Creating Device ID [Processor]:" + devid.OnWindows(windows => windows.AddProcessorId().ToString()));
+                    Log.WriteMessage("Registering AirScout: Creating Device ID [Motherboard]:" + devid.OnWindows(windows => windows.AddMotherboardSerialNumber().ToString()));
                 }
                 // store in settings if not set so far
                 if (String.IsNullOrEmpty(Properties.Settings.Default.AirScout_Device_ID) || (devid.ToString() != Properties.Settings.Default.AirScout_Device_ID))
@@ -1086,7 +1091,7 @@ namespace AirScout
             // check if band is BNONE --> set to 1.2G
             if (Properties.Settings.Default.Band == BAND.BNONE)
                 Properties.Settings.Default.Band = BAND.B1_2G;
-            // chekc if band settings are NULL --> set to default
+            // check if band settings are NULL --> set to default
             if (Properties.Settings.Default.Path_Band_Settings == null)
                 Properties.Settings.Default.Path_Band_Settings = new BandSettings(true);
             // check if watchlist in null --> create new
@@ -1162,6 +1167,11 @@ namespace AirScout
             }
             if (Properties.Settings.Default.MyCalls.Count == 0)
                 Properties.Settings.Default.MyCalls.Add("DL2ALF");
+
+            // check if band settings are NULL --> set to default
+            if (Properties.Settings.Default.Path_Band_Settings == null)
+                Properties.Settings.Default.Path_Band_Settings = new BandSettings(true);
+
             // checking window size & location
             Rectangle bounds = Screen.FromControl(this).Bounds;
             if ((Properties.Settings.Default.General_WindowLocation.X < bounds.Left) ||
@@ -1349,6 +1359,7 @@ namespace AirScout
             gmo_Routes.Clear();
             gmo_Locators.Clear();
             gmo_Distances.Clear();
+            gmo_UserSupplied.Clear();
 
             // add all overlays
             gm_Main.Overlays.Add(gmo_Locators);
@@ -1360,6 +1371,7 @@ namespace AirScout
             gm_Main.Overlays.Add(gmo_Planes);
             gm_Main.Overlays.Add(gmo_Callsigns);
             gm_Main.Overlays.Add(gmo_CallsignDetails);
+            gm_Main.Overlays.Add(gmo_UserSupplied);
 
             gm_Main.Opacity = (double)Properties.Settings.Default.Map_Opacity;
 
@@ -1455,6 +1467,112 @@ namespace AirScout
             }
 
         }
+
+        public static Image SetImgOpacity(Image imgPic, float imgOpac)
+        {
+            Bitmap bmpPic = new Bitmap(imgPic.Width, imgPic.Height);
+            Graphics gfxPic = Graphics.FromImage(bmpPic);
+
+            ColorMatrix cmxPic = new ColorMatrix();
+            cmxPic.Matrix33 = imgOpac;
+            ImageAttributes iaPic = new ImageAttributes();
+            iaPic.SetColorMatrix(cmxPic, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+            gfxPic.DrawImage(imgPic, new Rectangle(0, 0, bmpPic.Width, bmpPic.Height), 0, 0, imgPic.Width, imgPic.Height, GraphicsUnit.Pixel, iaPic);
+            gfxPic.Dispose();
+
+            return bmpPic;
+        }
+
+        public static Bitmap ResizeImage(Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
+        }
+
+        private void InitializeUserSupplied()
+        {
+            try
+            {
+
+                // check parameters
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_MinLat < -90) Properties.Settings.Default.Map_UserSuppliedOverlay_MinLat = -90;
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLat > 90) Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLat = 90;
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_MinLon < -180) Properties.Settings.Default.Map_UserSuppliedOverlay_MinLon = -180;
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLon > 180) Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLon = 180;
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLat < Properties.Settings.Default.Map_UserSuppliedOverlay_MinLat)
+                    Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLat = Properties.Settings.Default.Map_UserSuppliedOverlay_MinLat;
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLon < Properties.Settings.Default.Map_UserSuppliedOverlay_MinLon)
+                    Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLon = Properties.Settings.Default.Map_UserSuppliedOverlay_MinLon;
+
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_Opacity < 0) Properties.Settings.Default.Map_UserSuppliedOverlay_Opacity = 0;
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_Opacity > 1) Properties.Settings.Default.Map_UserSuppliedOverlay_Opacity = 1;
+
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_FromZoomLevel < gm_Main.MinZoom)
+                    Properties.Settings.Default.Map_UserSuppliedOverlay_FromZoomLevel = gm_Main.MinZoom;
+                if (Properties.Settings.Default.Map_UserSuppliedOverlay_ToZoomLevel < gm_Main.MaxZoom)
+                    Properties.Settings.Default.Map_UserSuppliedOverlay_ToZoomLevel = gm_Main.MaxZoom;
+
+                // load image, if not loaded so far
+                if (UserSupplied == null) UserSupplied = SetImgOpacity(new Bitmap(
+                    Properties.Settings.Default.Map_UserSuppliedOverlay_Filename), 
+                    (float)Properties.Settings.Default.Map_UserSuppliedOverlay_Opacity);
+
+                double minlat = Properties.Settings.Default.Map_UserSuppliedOverlay_MinLat;
+                double maxlat = Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLat;
+                double minlon = Properties.Settings.Default.Map_UserSuppliedOverlay_MinLon;
+                double maxlon = Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLon;
+
+                // calculate image size and position according to zoom level
+                double midlat = Properties.Settings.Default.Map_UserSuppliedOverlay_MinLat + (Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLat - Properties.Settings.Default.Map_UserSuppliedOverlay_MinLat) / 2;
+                double midlon = Properties.Settings.Default.Map_UserSuppliedOverlay_MinLon + (Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLon - Properties.Settings.Default.Map_UserSuppliedOverlay_MinLon) / 2;
+
+                GPoint min = gm_Main.FromLatLngToLocal(
+                    new PointLatLng(
+                        (float)Properties.Settings.Default.Map_UserSuppliedOverlay_MinLat,
+                        (float)Properties.Settings.Default.Map_UserSuppliedOverlay_MinLon)
+                );
+                GPoint max = gm_Main.FromLatLngToLocal(
+                    new PointLatLng(
+                        (float)Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLat,
+                        (float)Properties.Settings.Default.Map_UserSuppliedOverlay_MaxLon)
+                );
+
+                System.Drawing.Size size = new System.Drawing.Size((int)(max.X - min.X), (int)(min.Y - max.Y));
+
+                Bitmap bm = new Bitmap(UserSupplied, size);
+
+                gmo_UserSupplied.Markers.Clear();
+
+                GMarkerGoogle m = new GMarkerGoogle(new PointLatLng(midlat, midlon), ToolTipFont, bm);
+                m.IsHitTestVisible = false;
+
+                gmo_UserSupplied.Markers.Add(m);
+            }
+            catch (Exception ex)
+            {
+                Log.WriteMessage("Error while creating user supplied overlay: " + ex.ToString(), LogLevel.Error);
+            }
+        }
+
         private void InitializeLocators()
         {
             // NASTY!! still throws execption sometimes
@@ -5264,6 +5382,9 @@ namespace AirScout
 
             // (re)initialize locator overlay
             InitializeLocators();
+
+            // (re)initialize user supplied overlay
+            InitializeUserSupplied();
         }
 
         private void gm_Main_OnMarkerClick(GMapMarker item, MouseEventArgs e)
@@ -5546,6 +5667,7 @@ namespace AirScout
             this.BeginInvoke((Action)delegate ()
             {
                 InitializeLocators();
+                InitializeUserSupplied();
             });
         }
 
