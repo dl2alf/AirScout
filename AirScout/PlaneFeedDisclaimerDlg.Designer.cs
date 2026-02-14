@@ -78,7 +78,7 @@
             this.Controls.Add(this.btn_DeepLinkDlg_Accept);
             this.Name = "PlaneFeedDisclaimerDlg";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Use of Deep Links from Internet Server";
+            this.Text = "Plane Feed Disclaimer";
             this.ResumeLayout(false);
 
         }

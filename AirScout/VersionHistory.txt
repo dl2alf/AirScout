@@ -1,4 +1,8 @@
-﻿2025-11-22: V1.4.4.2
+﻿2026-02-14: V1.4.5.0
+====================
+- Feature:  new plane feed from ADSBSupport
+
+2025-11-22: V1.4.4.2
 ====================
 - Feature:  add an user supplied overlay to map (tnx G0HIK)
 - Bugfix:   when entering a max. circumcirle > 0kms, no more intersection points are calculcated, e.g all planes appear in grey -> fixed (tnx DL8AAU)

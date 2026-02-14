@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace ADSBSupport.Interface.WebSite
+namespace ADSBSupportServer.Interface.WebSite
 {
     /// <summary>
     /// The list of aircraft that is sent to the browser as a JSON file.
@@ -25,15 +25,15 @@ namespace ADSBSupport.Interface.WebSite
         /// <summary>
         /// Gets the list of aircraft to show to the user.
         /// </summary>
-        [DataMember(Name = "acList", IsRequired = true)]
-        public List<AircraftJson> Aircraft { get; private set; }
+        [DataMember(Name = "planes", IsRequired = true)]
+        public List<AircraftJson> Planes { get; private set; }
 
         /// <summary>
         /// Creates a new object.
         /// </summary>
         public AircraftListJson()
         {
-            Aircraft = new List<AircraftJson>();
+            Planes = new List<AircraftJson>();
         }
     }
 }

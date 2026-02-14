@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace ADSBSupport.Interface.WebSite
+namespace ADSBSupportServer.Interface.WebSite
 {
     /// <summary>
     /// The object that describes an aircraft in JSON files that are sent to the browser.
@@ -94,7 +94,7 @@ namespace ADSBSupport.Interface.WebSite
         /// Gets or sets a value indicating the wake turbulence category of the aircraft (see <see cref="WakeTurbulenceCategory"/>).
         /// </summary>
         [DataMember(Name = "category", IsRequired = false, EmitDefaultValue = false)]
-        public int? Category { get; set; }
+        public string Category { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating that the aircraft is on the ground.

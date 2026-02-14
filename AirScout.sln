@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout", "AirScout\AirScout.csproj", "{17498590-2CFF-4D24-BFB8-549D14BD2545}"
 EndProject
@@ -88,6 +88,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.Readsb", "AirScout.PlaneFeeds.Plugin.Readsb\AirScout.PlaneFeeds.Plugin.Readsb.csproj", "{203FDB85-2088-4F6B-9E24-8C91C538B679}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.BinCraft", "AirScout.PlaneFeeds.Plugin.BinCraft\AirScout.PlaneFeeds.Plugin.BinCraft.csproj", "{104E9433-C262-423B-AAAE-EC9D25F06071}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.ADSBSupport", "AirScout.PlaneFeeds.Plugin.ADSBSupport\AirScout.PlaneFeeds.Plugin.ADSBSupport.csproj", "{92BE00A4-E85E-4856-9713-B051FF6DB000}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -859,6 +861,24 @@ Global
 		{104E9433-C262-423B-AAAE-EC9D25F06071}.WSL|Mixed Platforms.Build.0 = Debug|Any CPU
 		{104E9433-C262-423B-AAAE-EC9D25F06071}.WSL|x86.ActiveCfg = Debug|Any CPU
 		{104E9433-C262-423B-AAAE-EC9D25F06071}.WSL|x86.Build.0 = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Debug|x86.Build.0 = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Release|x86.ActiveCfg = Release|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.Release|x86.Build.0 = Release|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.WSL|Any CPU.ActiveCfg = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.WSL|Any CPU.Build.0 = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.WSL|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.WSL|Mixed Platforms.Build.0 = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.WSL|x86.ActiveCfg = Debug|Any CPU
+		{92BE00A4-E85E-4856-9713-B051FF6DB000}.WSL|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

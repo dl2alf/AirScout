@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ScoutBase.Core
+namespace AirScout.PlaneFeeds.Plugin.ADSBSupport
 {
     public static class Encryption
     {
