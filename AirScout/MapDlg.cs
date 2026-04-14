@@ -544,6 +544,7 @@ namespace AirScout
         // Watchlist control
         private bool WatchlistUpdating = false;
         private bool WatchlistAllCheckedChanging = false;
+        private bool WatchListUpdated = false;
         bool WatchlistAllChecked = false;
         CheckBoxState WatchlistAllCheckedState = CheckBoxState.UncheckedNormal;
         System.Drawing.Point WatchlistOldMousePos = new System.Drawing.Point(0, 0);
@@ -5067,6 +5068,14 @@ namespace AirScout
             // update status
             UpdateStatus();
 
+            if (WatchListUpdated)
+            {
+                WatchListUpdated = false;
+                UpdatePaths();
+                UpdateWatchlistInMap();
+                RefreshWatchlistView();
+            }
+
             // check for filter settings
             // and color filter box
             int planes_filter_minalt = 0;
@@ -6051,9 +6060,10 @@ namespace AirScout
 
         private void lv_Control_Watchlist_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // ignore when in PLAY mode
-            if (!WatchlistUpdating && (PlayMode == AIRSCOUTPLAYMODE.FORWARD))
-                e.NewValue = e.CurrentValue;
+            // kick workers when in PLAY mode
+            if (!WatchlistUpdating && (PlayMode == AIRSCOUTPLAYMODE.FORWARD)) {
+                WatchListUpdated = true;
+            }
         }
 
         private void lv_Control_Watchlist_ItemChecked(object sender, ItemCheckedEventArgs e)
