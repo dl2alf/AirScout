@@ -2474,7 +2474,7 @@ namespace AirScout.Aircrafts
         }
 
         // selects all planes from a list which are in range of the midpoint of a given propagation path
-        public List<PlaneInfo> GetNearestPlanes(DateTime at, PropagationPathDesignator ppath, List<PlaneInfo> planes, double maxradius, double maxdist, double maxalt)
+        public List<PlaneInfo> GetNearestPlanes(DateTime at, PropagationPathDesignator ppath, List<PlaneInfo> planes, double maxradius, double maxdist, double maxalt, double maxdelta)
         {
             List<PlaneInfo> l = new List<PlaneInfo>();
             // return empty list on empty list or null
@@ -2592,7 +2592,7 @@ namespace AirScout.Aircrafts
                                 // plane is high enough
                                 plane.Potential = 100;
                             }
-                            else if (imin.Min_H <= maxalt)
+                            else if ((imin.Min_H <= maxalt) && (plane.AltDiff > maxdelta))
                             {
                                 // plane is not high enough yet but might be in the future
                                 plane.Potential = 50;
@@ -2620,7 +2620,7 @@ namespace AirScout.Aircrafts
                                     // plane wil cross path in a suitable altitude
                                     plane.Potential = 75;
                                 }
-                                else
+                                else if (plane.AltDiff > -maxdelta)
                                 {
                                     // plane wil cross path not in a suitable altitude
                                     plane.Potential = 50;

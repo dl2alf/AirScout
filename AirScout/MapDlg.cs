@@ -5098,7 +5098,7 @@ namespace AirScout
                 NearestPlane = null;
                 double highestpotential = 0;
                 // get nearest planes per path
-                List<PlaneInfo> nearestplanes = AircraftData.Database.GetNearestPlanes(DateTime.UtcNow, ppath, allplanes, Properties.Settings.Default.Planes_Filter_Max_Circumcircle, Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].MaxDistance, Properties.Settings.Default.Planes_MaxAlt);
+                List<PlaneInfo> nearestplanes = AircraftData.Database.GetNearestPlanes(DateTime.UtcNow, ppath, allplanes, Properties.Settings.Default.Planes_Filter_Max_Circumcircle, Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].MaxDistance, Properties.Settings.Default.Planes_MaxAlt, Properties.Settings.Default.Planes_MaxDelta);
 
                 foreach (PlaneInfo plane in nearestplanes)
                 {
@@ -7222,7 +7222,7 @@ namespace AirScout
                     Properties.Settings.Default.ElevationModel,
                     myobstr);
                 List<PlaneInfo> allplanes = Planes.GetAll(DateTime.UtcNow, Properties.Settings.Default.Planes_Position_TTL);
-                List<PlaneInfo> nearestplanes = AircraftData.Database.GetNearestPlanes(DateTime.UtcNow, ppath, allplanes, Properties.Settings.Default.Planes_Filter_Max_Circumcircle, Properties.Settings.Default.Path_Band_Settings[band].MaxDistance, Properties.Settings.Default.Planes_MaxAlt);
+                List<PlaneInfo> nearestplanes = AircraftData.Database.GetNearestPlanes(DateTime.UtcNow, ppath, allplanes, Properties.Settings.Default.Planes_Filter_Max_Circumcircle, Properties.Settings.Default.Path_Band_Settings[band].MaxDistance, Properties.Settings.Default.Planes_MaxAlt, Properties.Settings.Default.Planes_MaxDelta);
                 count = 0;
                 string planes = "";
                 wtMessage SendMsg = new wtMessage(WTMESSAGES.ASNEAREST,
