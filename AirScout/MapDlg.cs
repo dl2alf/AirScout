@@ -1694,6 +1694,19 @@ namespace AirScout
             }
         }
 
+        private bool IsVisibleOnAnyScreen(Rectangle rect)
+        {
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                if (screen.WorkingArea.IntersectsWith(rect))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private void MapDlg_Load(object sender, EventArgs e)
         {
             try
@@ -2021,8 +2034,23 @@ namespace AirScout
             {
                 if (!SupportFunctions.IsMono)
                 {
-                    this.Size = Properties.Settings.Default.General_WindowSize;
-                    this.Location = Properties.Settings.Default.General_WindowLocation;
+                    // Set window location and size
+                    if (Settings.Default.General_WindowLocation != null &&
+                        Settings.Default.General_WindowSize != null &&
+                        IsVisibleOnAnyScreen(new Rectangle(Settings.Default.General_WindowLocation, Settings.Default.General_WindowSize)))
+                    {
+                        Location = Settings.Default.General_WindowLocation;
+                        Size = Settings.Default.General_WindowSize;
+                    }
+                    else
+                    {
+                        if (Settings.Default.General_WindowSize != null &&
+                            Settings.Default.General_WindowSize != System.Drawing.Size.Empty)
+                            Size = Settings.Default.General_WindowSize;
+                        StartPosition = FormStartPosition.Manual;
+                        Location = new System.Drawing.Point(Screen.PrimaryScreen.WorkingArea.Width - this.Width,
+                                             Screen.PrimaryScreen.WorkingArea.Height - this.Height);
+                    }
                     this.WindowState = Properties.Settings.Default.General_WindowState;
                 }
                 else
@@ -3438,9 +3466,11 @@ namespace AirScout
                     // restore window size, state and location
                     try
                     {
+                        if (IsVisibleOnAnyScreen(new Rectangle(Properties.Settings.Default.General_WindowLocation, Properties.Settings.Default.General_WindowSize))) { 
                         this.WindowState = Properties.Settings.Default.General_WindowState;
                         this.Size = Properties.Settings.Default.General_WindowSize;
                         this.Location = Properties.Settings.Default.General_WindowLocation;
+                    }
                     }
                     catch (Exception ex)
                     {
