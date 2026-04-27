@@ -130,7 +130,22 @@ namespace AirScout.Properties {
                 this["Planes_MaxAlt"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int Planes_MaxDelta
+        {
+            get
+            {
+                return ((int)(this["Planes_MaxDelta"]));
+            }
+            set
+            {
+                this["Planes_MaxDelta"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("14")]

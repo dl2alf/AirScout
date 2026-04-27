@@ -1037,7 +1037,7 @@ namespace AirScout
             }
             */
             // get nearest planes
-            List<PlaneInfo> nearestplanes = AircraftData.Database.GetNearestPlanes(DateTime.UtcNow, ppath, allplanes, Properties.Settings.Default.Planes_Filter_Max_Circumcircle, Properties.Settings.Default.Path_Band_Settings[band].MaxDistance, Properties.Settings.Default.Planes_MaxAlt);
+            List<PlaneInfo> nearestplanes = AircraftData.Database.GetNearestPlanes(DateTime.UtcNow, ppath, allplanes, Properties.Settings.Default.Planes_Filter_Max_Circumcircle, Properties.Settings.Default.Path_Band_Settings[band].MaxDistance, Properties.Settings.Default.Planes_MaxAlt, Properties.Settings.Default.Planes_MaxDelta);
             // convert nearestplanes to json
             JsonSerializerSettings settings = new JsonSerializerSettings();
             settings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;

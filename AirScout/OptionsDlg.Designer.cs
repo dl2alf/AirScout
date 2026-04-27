@@ -73,6 +73,7 @@
             this.label94 = new System.Windows.Forms.Label();
             this.label95 = new System.Windows.Forms.Label();
             this.label92 = new System.Windows.Forms.Label();
+            this.label220 = new System.Windows.Forms.Label();
             this.label93 = new System.Windows.Forms.Label();
             this.label91 = new System.Windows.Forms.Label();
             this.cb_Options_Planes_Filter_Min_Cat = new System.Windows.Forms.ComboBox();
@@ -598,6 +599,8 @@
             this.pc_Options_UserSupplied_Opacity = new AirScout.PercentageControl();
             this.tb_Options_UserSupplied_Filename = new System.Windows.Forms.TextBox();
             this.btn_Options_UserSupplied_Filename = new System.Windows.Forms.Button();
+            this.labelMaxDelta = new System.Windows.Forms.Label();
+            this.tb_Options_Planes_MaxDelta = new ScoutBase.Core.Int32TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Donate)).BeginInit();
             this.tab_Options_Planes.SuspendLayout();
             this.groupBox36.SuspendLayout();
@@ -986,7 +989,7 @@
             // 
             this.groupBox36.Controls.Add(this.cb_Options_TracePositions);
             this.groupBox36.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox36.Location = new System.Drawing.Point(12, 394);
+            this.groupBox36.Location = new System.Drawing.Point(12, 424);
             this.groupBox36.Name = "groupBox36";
             this.groupBox36.Size = new System.Drawing.Size(645, 48);
             this.groupBox36.TabIndex = 40;
@@ -1037,7 +1040,7 @@
             this.groupBox40.Controls.Add(this.label53);
             this.groupBox40.Controls.Add(this.label32);
             this.groupBox40.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox40.Location = new System.Drawing.Point(12, 283);
+            this.groupBox40.Location = new System.Drawing.Point(12, 313);
             this.groupBox40.Name = "groupBox40";
             this.groupBox40.Size = new System.Drawing.Size(291, 105);
             this.groupBox40.TabIndex = 38;
@@ -1086,7 +1089,7 @@
             this.groupBox38.Controls.Add(this.label7);
             this.groupBox38.Controls.Add(this.label5);
             this.groupBox38.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox38.Location = new System.Drawing.Point(309, 283);
+            this.groupBox38.Location = new System.Drawing.Point(309, 313);
             this.groupBox38.Name = "groupBox38";
             this.groupBox38.Size = new System.Drawing.Size(348, 105);
             this.groupBox38.TabIndex = 37;
@@ -1160,16 +1163,44 @@
             this.groupBox26.Controls.Add(this.label94);
             this.groupBox26.Controls.Add(this.label95);
             this.groupBox26.Controls.Add(this.label92);
+            this.groupBox26.Controls.Add(this.label220);
             this.groupBox26.Controls.Add(this.label93);
             this.groupBox26.Controls.Add(this.label91);
             this.groupBox26.Controls.Add(this.cb_Options_Planes_Filter_Min_Cat);
+            this.groupBox26.Controls.Add(this.labelMaxDelta);
+            this.groupBox26.Controls.Add(this.tb_Options_Planes_MaxDelta);
             this.groupBox26.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox26.Location = new System.Drawing.Point(309, 126);
             this.groupBox26.Name = "groupBox26";
-            this.groupBox26.Size = new System.Drawing.Size(348, 151);
+            this.groupBox26.Size = new System.Drawing.Size(348, 181);
             this.groupBox26.TabIndex = 33;
             this.groupBox26.TabStop = false;
             this.groupBox26.Text = "Plane Live Position Filters";
+            // 
+            // labelMaxDelta
+            // 
+            this.labelMaxDelta.AutoSize = true;
+            this.labelMaxDelta.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMaxDelta.Location = new System.Drawing.Point(8, 146);
+            this.labelMaxDelta.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelMaxDelta.Name = "labelMaxDelta";
+            this.labelMaxDelta.Size = new System.Drawing.Size(318, 17);
+            this.labelMaxDelta.TabIndex = 41;
+            this.labelMaxDelta.Text = "Max. el. delta path to plane";
+            // 
+            // tb_Options_Planes_MaxDelta
+            // 
+            this.tb_Options_Planes_MaxDelta.DataBindings.Add(new System.Windows.Forms.Binding("Value", global::AirScout.Properties.Settings.Default, "Planes_MaxDelta", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tb_Options_Planes_MaxDelta.FormatSpecifier = "F0";
+            this.tb_Options_Planes_MaxDelta.Location = new System.Drawing.Point(192, 144);
+            this.tb_Options_Planes_MaxDelta.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tb_Options_Planes_MaxDelta.MaxValue = 15000;
+            this.tb_Options_Planes_MaxDelta.MinValue = 0;
+            this.tb_Options_Planes_MaxDelta.Name = "tb_Options_Planes_MaxDelta";
+            this.tb_Options_Planes_MaxDelta.Size = new System.Drawing.Size(52, 22);
+            this.tb_Options_Planes_MaxDelta.TabIndex = 44;
+            this.tb_Options_Planes_MaxDelta.Value = 0;
+            this.tb_Options_Planes_MaxDelta.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             // 
             // label96
             // 
@@ -1209,6 +1240,16 @@
             this.label92.Size = new System.Drawing.Size(15, 13);
             this.label92.TabIndex = 37;
             this.label92.Text = "m";
+            // 
+            // label220
+            // 
+            this.label220.AutoSize = true;
+            this.label220.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label220.Location = new System.Drawing.Point(254, 146);
+            this.label220.Name = "label220";
+            this.label220.Size = new System.Drawing.Size(15, 13);
+            this.label220.TabIndex = 37;
+            this.label220.Text = "m";
             // 
             // label93
             // 
@@ -8163,6 +8204,7 @@
         private System.Windows.Forms.Label label94;
         private System.Windows.Forms.Label label95;
         private System.Windows.Forms.Label label92;
+        private System.Windows.Forms.Label label220;
         private System.Windows.Forms.Label label93;
         private System.Windows.Forms.Label label96;
         private System.Windows.Forms.GroupBox groupBox11;
@@ -8210,6 +8252,7 @@
         private ScoutBase.Core.Int32TextBox tb_Options_Planes_Filter_MinAlt;
         private ScoutBase.Core.Int32TextBox tb_Options_Planes_MaxAlt;
         private ScoutBase.Core.Int32TextBox tb_Options_Planes_MinAlt;
+        private ScoutBase.Core.Int32TextBox tb_Options_Planes_MaxDelta;
         private ScoutBase.Core.Int32TextBox tb_Options_Planes_Positions_TTL;
         private ScoutBase.Core.DoubleTextBox tb_Options_Alarm_Distance;
         private ScoutBase.Core.Int32TextBox tb_Options_Server_Port;
@@ -8565,5 +8608,6 @@
         private System.Windows.Forms.Label label209;
         private System.Windows.Forms.Button btn_Options_UserSupplied_Filename;
         private System.Windows.Forms.TextBox tb_Options_UserSupplied_Filename;
+        private System.Windows.Forms.Label labelMaxDelta;
     }
 }

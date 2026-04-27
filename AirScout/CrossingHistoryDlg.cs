@@ -189,7 +189,7 @@ namespace AirScout
                 }
                 List<PlaneInfo> allplanes = ac.GetAll(time, Properties.Settings.Default.Planes_Position_TTL);
                 // get nearest planes
-                List<PlaneInfo> nearestplanes = AircraftData.Database.GetNearestPlanes(time, PPath, allplanes, Properties.Settings.Default.Planes_Filter_Max_Circumcircle, Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].MaxDistance, Properties.Settings.Default.Planes_MaxAlt);
+                List<PlaneInfo> nearestplanes = AircraftData.Database.GetNearestPlanes(time, PPath, allplanes, Properties.Settings.Default.Planes_Filter_Max_Circumcircle, Properties.Settings.Default.Path_Band_Settings[Properties.Settings.Default.Band].MaxDistance, Properties.Settings.Default.Planes_MaxAlt, Properties.Settings.Default.Planes_MaxDelta);
                 if ((nearestplanes != null) && (nearestplanes.Count() > 0))
                 {
                     // get all planes crossing the path
