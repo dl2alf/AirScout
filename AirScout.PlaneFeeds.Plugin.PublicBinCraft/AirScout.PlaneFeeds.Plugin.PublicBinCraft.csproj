@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\ILMerge.3.0.29\build\ILMerge.props" Condition="Exists('..\packages\ILMerge.3.0.29\build\ILMerge.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AirScout.PlaneFeeds.Plugin.PublicBinCraft</RootNamespace>
+    <AssemblyName>AirScout.PlaneFeeds.Plugin.PublicBinCraft</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- NOTE: HintPaths below assume the same package layout as AirScout.PlaneFeeds.Plugin.BinCraft.
+         SpecificVersion=False so a version/token mismatch degrades to a normal missing-reference
+         warning instead of aborting reference resolution for the whole project (which otherwise
+         manifests as every builtin type, including System.Object, showing as undefined).
+         If Visual Studio still reports these as missing after NuGet restore, use the Package
+         Manager Console: Update-Package -reinstall -ProjectName AirScout.PlaneFeeds.Plugin.PublicBinCraft
+         - it will rewrite these References with the correct paths/versions. -->
+    <Reference Include="ZstdNet">
+      <HintPath>..\packages\ZstdNet.1.4.5\lib\net45\ZstdNet.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PublicBinCraft.cs" />
+    <Compile Include="PublicBinCraftParser.cs" />
+    <Compile Include="BinaryUtils.cs" />
+    <Compile Include="NativeLoader.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="libzstd.x64.dll" />
+    <EmbeddedResource Include="libzstd.x86.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AirScout.PlaneFeeds.Plugin\AirScout.PlaneFeeds.Plugin.csproj">
+      <Project>{36945dbd-96c8-41e7-9168-f83c42e67af3}</Project>
+      <Name>AirScout.PlaneFeeds.Plugin</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets'))" />
+    <Error Condition="!Exists('..\packages\ILMerge.3.0.29\build\ILMerge.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ILMerge.3.0.29\build\ILMerge.props'))" />
+  </Target>
+  <Import Project="..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets" Condition="Exists('..\packages\ILMerge.MSBuild.Task.1.0.7\build\ILMerge.MSBuild.Task.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir $(SolutionDir)\Airscout\$(OutDir)\Plugin\
+copy $(ProjectDir)\$(OutDir)\ILMerge\*$(TargetExt)  $(SolutionDir)\Airscout\$(OutDir)\Plugin\ /y</PostBuildEvent>
+  </PropertyGroup>
+</Project>
