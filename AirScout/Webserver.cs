@@ -160,7 +160,7 @@ namespace AirScout
                         // gain additional access rights for that specific host url
                         // user will be prompted for allow changes
                         // DO NOT USE THE "listener=yes" option as recommended!!!
-                        string args = "http add urlacl " + hosturl + " user=" + userName;
+                        string args = "http add urlacl " + hosturl + " user=\"" + userName + "\"";
                         ProcessStartInfo psi = new ProcessStartInfo("netsh", args);
                         psi.Verb = "runas";
                         psi.CreateNoWindow = true;

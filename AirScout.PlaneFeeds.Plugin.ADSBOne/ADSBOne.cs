@@ -38,7 +38,7 @@ namespace AirScout.PlaneFeeds.Plugin.ADSBOne
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
         [DescriptionAttribute("Base URL for website.")]
-        [DefaultValue("https://api.adsb.one/v2/point/%MYLAT%/%MYLON%/%MAXDISTKM%")]
+        [DefaultValue("https://api.airplanes.live/v2/point/%MYLAT%/%MYLON%/250")]
         public string URL { get; set; }
 
         public ADSBOneServerSettings()

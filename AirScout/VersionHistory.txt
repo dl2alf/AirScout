@@ -1,6 +1,12 @@
-﻿2026-02-14: V1.4.5.0
+﻿xxxx-xx-xx: V1.4.5.1
+====================
+- Bugfix:  Web server cannot open listening port when user name contains spaces, netsh command failed --> fixed (tnx DL3LAR)
+
+2026-04-27: V1.4.5.0
 ====================
 - Feature:  new plane feed from ADSBSupport
+- Feature:  sort out planes with far too low crossing altitudess, new option "max delta elevation between plane and path" (tnx DB1BM)
+- Feature:  online add/remove call signs from watchlist in Multi-Mode while playing, no more need to stop playing (tnx DB1BM)
 
 2025-11-22: V1.4.4.2
 ====================

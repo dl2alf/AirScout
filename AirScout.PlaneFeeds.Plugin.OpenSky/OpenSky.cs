@@ -60,7 +60,8 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
         [Browsable(true)]
         [CategoryAttribute("Web Feed")]
         [DescriptionAttribute("Base URL for website.")]
-        [DefaultValue("https://api.opensky-network.org/api/states/all")]
+        [DefaultValue("https://opensky-network.org/api/states/all")]
+
         public string URL { get; set; }
 
         [Browsable(true)]
@@ -188,6 +189,10 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
 
                     Console.WriteLine("OpenSky Plugin: cleaning up URL to: " + this.URL);
                 }
+
+                // correct URL with V1.4.7.0 automatically
+                this.URL = this.URL.Replace("https://api.opensky-network.org/api/", "https://opensky-network.org/api/");
+                this.Save(true);
             }
             catch (Exception ex)
             {
@@ -407,6 +412,7 @@ namespace AirScout.PlaneFeeds.Plugin.OpenSky
                 using (var client = new HttpClient())
                 {
                     var token = GetAccessToken();
+                    Console.WriteLine("Received access token: " + token);
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     var response = client.GetAsync(Settings.URL).Result;
                     response.EnsureSuccessStatusCode();
