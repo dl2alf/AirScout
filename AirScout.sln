@@ -91,6 +91,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.ADSBSupport", "AirScout.PlaneFeeds.Plugin.ADSBSupport\AirScout.PlaneFeeds.Plugin.ADSBSupport.csproj", "{92BE00A4-E85E-4856-9713-B051FF6DB000}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirScout.PlaneFeeds.Plugin.PublicBinCraft", "AirScout.PlaneFeeds.Plugin.PublicBinCraft\AirScout.PlaneFeeds.Plugin.PublicBinCraft.csproj", "{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -843,6 +845,24 @@ Global
 		{203FDB85-2088-4F6B-9E24-8C91C538B679}.WSL|Mixed Platforms.Build.0 = Debug|Any CPU
 		{203FDB85-2088-4F6B-9E24-8C91C538B679}.WSL|x86.ActiveCfg = Debug|Any CPU
 		{203FDB85-2088-4F6B-9E24-8C91C538B679}.WSL|x86.Build.0 = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Debug|x86.Build.0 = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Release|x86.ActiveCfg = Release|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.Release|x86.Build.0 = Release|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.WSL|Any CPU.ActiveCfg = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.WSL|Any CPU.Build.0 = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.WSL|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.WSL|Mixed Platforms.Build.0 = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.WSL|x86.ActiveCfg = Debug|Any CPU
+		{48A2367E-BEB7-4DD1-B8FC-456B9FF122DE}.WSL|x86.Build.0 = Debug|Any CPU
 		{104E9433-C262-423B-AAAE-EC9D25F06071}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{104E9433-C262-423B-AAAE-EC9D25F06071}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{104E9433-C262-423B-AAAE-EC9D25F06071}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
