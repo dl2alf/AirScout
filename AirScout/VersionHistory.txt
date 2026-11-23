@@ -1,12 +1,14 @@
-﻿xxxx-xx-xx: V1.4.5.1
+﻿2026-08-29: V1.4.5.1
 ====================
 - Bugfix:  Web server cannot open listening port when user name contains spaces, netsh command failed --> fixed (tnx DL3LAR)
+- Bugfix:  Put window back to screen when screen configuration has changed (e.g. external monitor removed) --> fixed (tnx DB1BM)
+- Feature: New plane feed for binCraft endpoints (tnx YO5LD) 
 
 2026-04-27: V1.4.5.0
 ====================
-- Feature:  new plane feed from ADSBSupport
-- Feature:  sort out planes with far too low crossing altitudess, new option "max delta elevation between plane and path" (tnx DB1BM)
-- Feature:  online add/remove call signs from watchlist in Multi-Mode while playing, no more need to stop playing (tnx DB1BM)
+- Feature: New plane feed from ADSBSupport
+- Feature: New option "max delta elevation between plane and path" in Options/Planes to sort out planes with far too low crossing altitudes (tnx DB1BM)
+- Feature: Allow continuous online add/remove of call signs from watchlist in Multi-Mode while playing, no more need to stop playing (tnx DB1BM)
 
 2025-11-22: V1.4.4.2
 ====================

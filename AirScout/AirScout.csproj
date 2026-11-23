@@ -130,21 +130,21 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DeviceId, Version=6.8.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
-      <HintPath>..\packages\DeviceId.6.8.0\lib\net40\DeviceId.dll</HintPath>
+    <Reference Include="DeviceId, Version=6.11.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeviceId.6.11.0\lib\net40\DeviceId.dll</HintPath>
     </Reference>
-    <Reference Include="DeviceId.Windows, Version=6.8.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
-      <HintPath>..\packages\DeviceId.Windows.6.8.0\lib\net40\DeviceId.Windows.dll</HintPath>
+    <Reference Include="DeviceId.Windows, Version=6.11.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeviceId.Windows.6.11.0\lib\net40\DeviceId.Windows.dll</HintPath>
     </Reference>
-    <Reference Include="DeviceId.Windows.Wmi, Version=6.8.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
-      <HintPath>..\packages\DeviceId.Windows.Wmi.6.8.0\lib\net40\DeviceId.Windows.Wmi.dll</HintPath>
+    <Reference Include="DeviceId.Windows.Wmi, Version=6.11.0.0, Culture=neutral, PublicKeyToken=f755c371b5c59c52, processorArchitecture=MSIL">
+      <HintPath>..\packages\DeviceId.Windows.Wmi.6.11.0\lib\net40\DeviceId.Windows.Wmi.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MimeTypes, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ajayumi.MimeTypeMap.2.5.0\lib\net40\MimeTypes.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
